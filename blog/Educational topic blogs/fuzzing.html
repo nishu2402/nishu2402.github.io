@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fuzzing — Automated Vulnerability Discovery | Nisarg Chasmawala</title>
+<meta name="description" content="Fuzzing: A deep dive into automated vulnerability discovery — by Nisarg Chasmawala (Shroff), Offensive Security Engineer.">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --g:#00ff41;--c:#00e5ff;--p:#bf00ff;--r:#ff003c;--o:#ffd700;
+  --bg:#030509;--t1:#d4ffe0;--t2:#7aad82;--t3:#2e4a32;
+  --mono:'Share Tech Mono',monospace;--dsp:'Orbitron',sans-serif;--body:'Rajdhani',sans-serif;
+  --glow:0 0 20px rgba(0,255,65,.4),0 0 60px rgba(0,255,65,.15);
+  --cglow:0 0 20px rgba(0,229,255,.4),0 0 60px rgba(0,229,255,.1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;overflow-x:hidden}
+body{background:var(--bg);color:var(--t1);font-family:var(--body);font-size:17px;line-height:1.8;overflow-x:hidden;cursor:none}
+
+/* ── BACKGROUND LAYERS ── */
+#bg-particle{position:fixed;inset:0;z-index:0;pointer-events:none}
+#bg-hex{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.35}
+#bg-scan{position:fixed;inset:0;z-index:9999;pointer-events:none;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,255,65,.009) 2px,rgba(0,255,65,.009) 4px)}
+#bg-vignette{position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse at 50% 50%,transparent 50%,rgba(3,5,9,.85) 100%)}
+#bg-noise{position:fixed;inset:0;z-index:2;pointer-events:none;opacity:.04;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:200px 200px;animation:grain .4s steps(1) infinite}
+@keyframes grain{0%{transform:translate(0,0)}10%{transform:translate(-2%,-2%)}20%{transform:translate(2%,2%)}30%{transform:translate(-1%,1%)}40%{transform:translate(1%,-1%)}50%{transform:translate(-3%,1%)}60%{transform:translate(1%,3%)}70%{transform:translate(-1%,-2%)}80%{transform:translate(2%,1%)}90%{transform:translate(-2%,2%)}}
+
+/* ── CURSOR ── */
+#cur{position:fixed;width:10px;height:10px;border-radius:50%;background:var(--g);box-shadow:var(--glow);pointer-events:none;z-index:99999;transform:translate(-50%,-50%);transition:width .1s,height .1s}
+#cur2{position:fixed;width:30px;height:30px;border-radius:50%;border:1px solid rgba(0,255,65,.5);pointer-events:none;z-index:99998;transform:translate(-50%,-50%);transition:left .08s,top .08s}
+#cur3{position:fixed;width:50px;height:50px;border-radius:50%;border:1px solid rgba(0,255,65,.2);pointer-events:none;z-index:99997;transform:translate(-50%,-50%);transition:left .15s,top .15s}
+
+/* ── PROGRESS ── */
+#prog{position:fixed;top:0;left:0;height:2px;background:linear-gradient(to right,var(--g),var(--c));box-shadow:0 0 10px var(--g),0 0 20px var(--c);z-index:10000;width:0%;transition:width .05s}
+
+/* ── TOPBAR ── */
+.topbar{position:fixed;top:0;left:0;right:0;height:58px;background:rgba(3,5,9,.88);border-bottom:1px solid rgba(0,255,65,.12);backdrop-filter:blur(20px) saturate(1.5);z-index:1000;display:flex;align-items:center;justify-content:space-between;padding:0 32px}
+.tb-left{display:flex;flex-direction:column;gap:2px}
+.tb-name{font-family:var(--dsp);font-size:13px;font-weight:900;color:var(--t1);letter-spacing:3px;text-shadow:0 0 20px rgba(255,255,255,.2)}
+.tb-roles{font-family:var(--mono);font-size:9px;letter-spacing:1.5px;overflow:hidden;white-space:nowrap}
+.tb-inner{display:inline-block;color:var(--c);animation:ticker 18s linear infinite}
+@keyframes ticker{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
+.tb-status{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;color:var(--g)}
+.tb-dot{width:7px;height:7px;border-radius:50%;background:var(--g);box-shadow:0 0 10px var(--g);animation:tdot 1.2s ease-in-out infinite}
+@keyframes tdot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.7)}}
+
+/* ── TOC ── */
+.toc{position:fixed;right:20px;top:50%;transform:translateY(-50%);z-index:200;display:flex;flex-direction:column;gap:10px}
+.toc-i{display:flex;align-items:center;gap:8px;cursor:pointer}
+.toc-d{width:6px;height:6px;border-radius:50%;border:1px solid var(--t3);transition:all .25s;flex-shrink:0}
+.toc-i.active .toc-d,.toc-i:hover .toc-d{background:var(--g);border-color:var(--g);box-shadow:0 0 10px var(--g)}
+.toc-l{font-family:var(--mono);font-size:10px;color:var(--t3);opacity:0;transform:translateX(6px);transition:all .2s;white-space:nowrap}
+.toc-i:hover .toc-l,.toc-i.active .toc-l{opacity:1;transform:none;color:var(--g)}
+@media(max-width:1000px){.toc{display:none}}
+
+/* ── WRAPPER ── */
+.wrap{position:relative;z-index:10;max-width:980px;margin:0 auto;padding:0 28px}
+
+/* ── HERO ── */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:100px 0 60px;position:relative}
+.hero-canvas-wrap{position:absolute;right:-80px;top:50%;transform:translateY(-52%);width:500px;height:500px;pointer-events:none}
+#hero-geo{width:100%;height:100%}
+.hero-tag{font-family:var(--mono);font-size:11px;letter-spacing:4px;color:var(--c);text-transform:uppercase;margin-bottom:18px;opacity:0;animation:fup .6s ease forwards .3s;display:flex;align-items:center;gap:12px}
+.hero-tag::before{content:'';width:40px;height:1px;background:linear-gradient(to right,transparent,var(--c))}
+.hero-tag::after{content:'';flex:1;max-width:100px;height:1px;background:linear-gradient(to right,var(--c),transparent)}
+.hero-title{font-family:var(--dsp);font-size:clamp(30px,5.5vw,68px);font-weight:900;line-height:1.0;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;opacity:0;animation:fup .7s ease forwards .5s}
+.ht-line1{display:block;color:var(--g);text-shadow:0 0 40px rgba(0,255,65,.6),0 0 100px rgba(0,255,65,.25),0 4px 0 rgba(0,200,50,.3)}
+.ht-sub{display:block;font-size:.44em;letter-spacing:6px;color:rgba(200,255,220,.5);font-weight:400;margin-top:10px}
+.gw{position:relative;display:inline-block}
+.gw::before,.gw::after{content:attr(data-t);position:absolute;top:0;left:0;width:100%;font-family:var(--dsp);font-weight:900;font-size:inherit;letter-spacing:inherit;text-transform:uppercase}
+.gw::before{color:var(--c);animation:ga 5s infinite;clip-path:polygon(0 0,100% 0,100% 33%,0 33%)}
+.gw::after{color:var(--r);animation:gb 5s infinite;clip-path:polygon(0 66%,100% 66%,100% 100%,0 100%)}
+@keyframes ga{0%,85%,100%{transform:none;opacity:0}87%{transform:translate(-5px,2px);opacity:.9}89%{transform:translate(5px,-2px);opacity:.7}91%{transform:translate(-3px,1px);opacity:.85}93%{transform:none;opacity:0}}
+@keyframes gb{0%,87%,100%{transform:none;opacity:0}89%{transform:translate(5px,3px);opacity:.8}91%{transform:translate(-5px,-2px);opacity:.6}93%{transform:translate(3px,1px);opacity:.75}95%{transform:none;opacity:0}}
+.hero-desc{font-size:17px;font-weight:300;color:var(--t2);max-width:560px;line-height:1.75;margin-bottom:36px;opacity:0;animation:fup .8s ease forwards .8s;margin-top:20px}
+.hero-meta{display:flex;gap:24px;flex-wrap:wrap;opacity:0;animation:fup .8s ease forwards 1s}
+.m-item{display:flex;flex-direction:column;gap:3px}
+.m-lbl{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--t3);text-transform:uppercase}
+.m-val{font-family:var(--mono);font-size:12px;color:var(--c)}
+.hero-scroll-hint{position:absolute;bottom:24px;left:0;display:flex;align-items:center;gap:12px;opacity:0;animation:fin 1s ease forwards 1.8s}
+.hs-line{width:60px;height:1px;background:linear-gradient(to right,var(--g),transparent)}
+.hs-txt{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--t3)}
+.hs-pulse{width:6px;height:6px;border-radius:50%;background:var(--g);box-shadow:0 0 8px var(--g);animation:tdot 1.5s ease-in-out infinite}
+
+/* ── SECTIONS ── */
+.sec{margin-bottom:100px}
+.sec-hd{display:flex;align-items:center;gap:14px;margin-bottom:40px}
+.sec-n{font-family:var(--mono);font-size:10px;color:var(--p);letter-spacing:2px;min-width:44px}
+.sec-ln{flex:1;height:1px;background:linear-gradient(to right,rgba(0,229,255,.35),transparent)}
+.sec-t{font-family:var(--dsp);font-size:clamp(15px,2.6vw,22px);font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--c);text-shadow:var(--cglow)}
+.tw-cursor{display:inline-block;width:2px;height:1em;background:var(--c);margin-left:4px;animation:blink 1s step-end infinite;vertical-align:middle}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+/* ── PANELS ── */
+.panel{background:rgba(0,255,65,.025);border:1px solid rgba(0,255,65,.12);border-radius:4px;padding:32px;margin-bottom:22px;position:relative;overflow:hidden;transition:border-color .3s,box-shadow .3s,transform .3s;transform-style:preserve-3d}
+.panel::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:linear-gradient(to bottom,var(--g),transparent);opacity:0;transition:opacity .3s}
+.panel::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.015) 0%,transparent 60%);pointer-events:none}
+.panel:hover{border-color:rgba(0,229,255,.4);box-shadow:0 0 50px rgba(0,229,255,.07),inset 0 0 40px rgba(0,229,255,.025),0 20px 60px rgba(0,0,0,.3);transform:translateY(-3px) translateZ(6px)}
+.panel:hover::before{opacity:1}
+.panel p{color:var(--t2);margin-bottom:12px}
+.panel p:last-child{margin-bottom:0}
+.panel-t{font-family:var(--dsp);font-size:12px;font-weight:700;letter-spacing:3px;color:var(--g);text-transform:uppercase;margin-bottom:18px;display:flex;align-items:center;gap:12px}
+.panel-t::after{content:'';flex:1;height:1px;background:linear-gradient(to right,rgba(0,255,65,.2),transparent)}
+
+/* ── PHASE / CONCEPT CARDS ── */
+.vgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:18px;margin-bottom:28px;perspective:1200px}
+.vc{background:rgba(191,0,255,.03);border:1px solid rgba(191,0,255,.15);border-radius:4px;padding:24px;position:relative;overflow:hidden;cursor:default;transform-style:preserve-3d;transition:box-shadow .25s;will-change:transform}
+.vc::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.04) 0%,transparent 50%);opacity:0;transition:opacity .25s}
+.vc::after{content:'';position:absolute;top:0;right:0;width:0;height:0;border-top:32px solid rgba(191,0,255,.25);border-left:32px solid transparent}
+.vc:hover::before{opacity:1}
+.vcn{font-family:var(--mono);font-size:44px;color:rgba(191,0,255,.09);position:absolute;top:6px;right:12px;line-height:1}
+.vcname{font-family:var(--dsp);font-size:11px;font-weight:700;letter-spacing:2px;color:var(--p);text-transform:uppercase;margin-bottom:10px}
+.vcdesc{font-size:14px;color:var(--t2);line-height:1.65;font-weight:300}
+.tag{display:inline-block;margin-top:12px;font-family:var(--mono);font-size:9px;letter-spacing:2px;padding:3px 10px;border-radius:2px;text-transform:uppercase}
+.tag-p{background:rgba(191,0,255,.1);color:var(--p);border:1px solid rgba(191,0,255,.28)}
+.tag-c{background:rgba(0,229,255,.08);color:var(--c);border:1px solid rgba(0,229,255,.25)}
+.tag-g{background:rgba(0,255,65,.08);color:var(--g);border:1px solid rgba(0,255,65,.22)}
+.tag-o{background:rgba(255,215,0,.08);color:var(--o);border:1px solid rgba(255,215,0,.22)}
+
+/* ── TOOL CARDS ── */
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;margin:20px 0;perspective:800px}
+.tc{background:rgba(0,229,255,.03);border:1px solid rgba(0,229,255,.1);border-radius:4px;padding:20px;transition:all .25s;position:relative;overflow:hidden;transform-style:preserve-3d}
+.tc::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(to right,var(--c),transparent);transform:scaleX(0);transform-origin:left;transition:transform .3s}
+.tc:hover{border-color:rgba(0,229,255,.4);background:rgba(0,229,255,.06);box-shadow:var(--cglow),0 12px 40px rgba(0,0,0,.2);transform:translateY(-3px)}
+.tc:hover::after{transform:scaleX(1)}
+.tcname{font-family:var(--mono);font-size:13px;color:var(--c);margin-bottom:6px}
+.tctag{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--o);text-transform:uppercase;margin-bottom:10px;display:block}
+.tcdesc{font-size:13px;color:var(--t3);line-height:1.5}
+
+/* ── TECHNIQUE CARDS (RED) ── */
+.atk{background:rgba(255,0,60,.03);border:1px solid rgba(255,0,60,.12);border-radius:4px;padding:28px;margin-bottom:24px;position:relative;overflow:hidden;transition:all .3s;transform-style:preserve-3d}
+.atk::before{content:'';position:absolute;top:0;right:0;width:0;height:0;border-top:32px solid rgba(255,0,60,.25);border-left:32px solid transparent}
+.atk::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,0,60,.03),transparent);opacity:0;transition:opacity .3s;pointer-events:none}
+.atk:hover{border-color:rgba(255,0,60,.4);box-shadow:0 0 60px rgba(255,0,60,.05),0 20px 60px rgba(0,0,0,.3);transform:translateY(-3px)}
+.atk:hover::after{opacity:1}
+.atk-name{font-family:var(--dsp);font-size:12px;font-weight:700;letter-spacing:3px;color:var(--r);text-transform:uppercase;margin-bottom:14px}
+.atk-body{color:var(--t2);font-size:15px;margin-bottom:16px;line-height:1.75}
+
+/* ── IMPACT CARDS (GOLD) ── */
+.igrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin:20px 0;perspective:1000px}
+.icard{background:rgba(255,215,0,.03);border:1px solid rgba(255,215,0,.14);border-radius:4px;padding:22px;transition:all .25s;transform-style:preserve-3d;position:relative;overflow:hidden}
+.icard::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,215,0,.04),transparent);opacity:0;transition:opacity .3s}
+.icard::after{content:'';position:absolute;top:0;right:0;width:0;height:0;border-top:26px solid rgba(255,215,0,.2);border-left:26px solid transparent}
+.icard:hover{border-color:rgba(255,215,0,.38);box-shadow:0 0 30px rgba(255,215,0,.07),0 16px 40px rgba(0,0,0,.25);transform:translateY(-3px)}
+.icard:hover::before{opacity:1}
+.icard-year{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--o);text-transform:uppercase;margin-bottom:6px;display:block}
+.icard-name{font-family:var(--dsp);font-size:11px;font-weight:700;letter-spacing:2px;color:var(--o);text-transform:uppercase;margin-bottom:10px}
+.icard-desc{font-size:14px;color:var(--t2);line-height:1.65;font-weight:300}
+
+/* ── STEP LIST ── */
+.steps{list-style:none;margin:16px 0}
+.steps li{display:flex;gap:16px;padding:13px 0;border-bottom:1px solid rgba(0,255,65,.05);font-size:15px;color:var(--t2);align-items:flex-start}
+.steps li:last-child{border-bottom:none}
+.step-n{font-family:var(--mono);font-size:11px;color:var(--g);flex-shrink:0;margin-top:2px;min-width:28px}
+
+/* ── FLOW DIAGRAM ── */
+.flow{display:flex;align-items:center;gap:0;margin:24px 0;flex-wrap:wrap}
+.flow-node{background:rgba(0,255,65,.06);border:1px solid rgba(0,255,65,.25);border-radius:4px;padding:14px 18px;text-align:center;flex:1;min-width:120px}
+.flow-node-title{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--g);text-transform:uppercase;margin-bottom:4px}
+.flow-node-sub{font-size:12px;color:var(--t3);line-height:1.4}
+.flow-arrow{font-family:var(--mono);font-size:18px;color:var(--c);padding:0 6px;flex-shrink:0;opacity:.6}
+
+/* ── MITIGATION GRID (CYAN) ── */
+.mgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin:20px 0}
+.mcard{background:rgba(0,229,255,.03);border:1px solid rgba(0,229,255,.12);border-radius:4px;padding:22px;transition:all .25s;position:relative;overflow:hidden}
+.mcard::after{content:'';position:absolute;top:0;right:0;width:0;height:0;border-top:26px solid rgba(0,229,255,.2);border-left:26px solid transparent}
+.mcard:hover{border-color:rgba(0,229,255,.4);box-shadow:var(--cglow),0 16px 40px rgba(0,0,0,.2);transform:translateY(-3px)}
+.mcard-name{font-family:var(--dsp);font-size:11px;font-weight:700;letter-spacing:2px;color:var(--c);text-transform:uppercase;margin-bottom:10px}
+.mcard-desc{font-size:14px;color:var(--t2);line-height:1.65;font-weight:300}
+
+/* ── CODE BLOCKS ── */
+.cb{background:rgba(0,0,0,.7);border:1px solid rgba(0,255,65,.1);border-left:3px solid var(--g);border-radius:0 4px 4px 0;padding:22px 26px;margin:16px 0;position:relative;overflow-x:auto;transition:all .3s;cursor:pointer}
+.cb::before{content:attr(data-l);position:absolute;top:0;right:0;font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--g);background:rgba(0,255,65,.07);padding:3px 12px;border-bottom-left-radius:4px;text-transform:uppercase}
+.cb::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(to right,var(--g),transparent);opacity:0;transition:opacity .3s}
+.cb:hover{border-color:rgba(0,255,65,.35);box-shadow:0 0 30px rgba(0,255,65,.04)}
+.cb:hover::after{opacity:.5}
+.cb code{font-family:var(--mono);font-size:13px;color:var(--g);white-space:pre;display:block;line-height:1.9}
+.cmd{color:var(--c)}.flag{color:var(--o)}.cmt{color:var(--t3)}.str{color:#ff79c6}.prm{color:#bd93f9}.kw{color:var(--r)}.fn{color:#8be9fd}
+
+/* ── ALERTS ── */
+.alert{border-radius:4px;padding:16px 20px;margin:20px 0;display:flex;gap:14px;align-items:flex-start}
+.al-w{background:rgba(255,215,0,.04);border:1px solid rgba(255,215,0,.18);border-left:3px solid var(--o)}
+.al-i{background:rgba(0,229,255,.04);border:1px solid rgba(0,229,255,.14);border-left:3px solid var(--c)}
+.al-ic{font-family:var(--mono);font-size:13px;flex-shrink:0;margin-top:2px}
+.al-w .al-ic{color:var(--o)}.al-i .al-ic{color:var(--c)}
+.al-tx{font-size:14px;color:var(--t2);line-height:1.6}
+
+/* ── CTA ── */
+.cta{background:linear-gradient(135deg,rgba(0,255,65,.04),rgba(0,229,255,.04));border:1px solid rgba(0,229,255,.3);border-radius:4px;padding:60px 50px;text-align:center;position:relative;overflow:hidden;margin-top:80px}
+.cta::before{content:'FUZZ';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:var(--dsp);font-size:190px;font-weight:900;color:rgba(0,255,65,.018);pointer-events:none;white-space:nowrap;letter-spacing:20px}
+.cta-t{font-family:var(--dsp);font-size:20px;font-weight:700;letter-spacing:4px;color:var(--g);text-transform:uppercase;margin-bottom:16px;text-shadow:var(--glow)}
+.cta-p{color:var(--t2);font-size:16px;max-width:540px;margin:0 auto 32px;line-height:1.75}
+.cta-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+.btn{font-family:var(--mono);font-size:11px;letter-spacing:3px;text-transform:uppercase;padding:13px 30px;border-radius:2px;text-decoration:none;display:inline-block;transition:all .25s}
+.btn-p{border:1px solid var(--g);color:var(--g);background:rgba(0,255,65,.06)}
+.btn-p:hover{background:var(--g);color:var(--bg);box-shadow:var(--glow)}
+.btn-s{border:1px solid var(--c);color:var(--c);background:rgba(0,229,255,.05)}
+.btn-s:hover{background:var(--c);color:var(--bg);box-shadow:var(--cglow)}
+
+/* ── FOOTER ── */
+.footer{border-top:1px solid rgba(0,255,65,.1);padding:32px 0;margin-top:60px;display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:20px}
+.f-l{font-family:var(--mono);font-size:11px;color:var(--t3);letter-spacing:1.5px;line-height:2}
+.f-alias{color:var(--g);font-size:10px;letter-spacing:3px;text-shadow:0 0 8px var(--g)}
+.f-r{font-family:var(--mono);font-size:11px;color:var(--t3);text-align:right;line-height:2}
+.f-r a{color:var(--g);text-decoration:none;transition:text-shadow .2s}
+.f-r a:hover{text-shadow:var(--glow)}
+
+/* ── DIVIDER ── */
+.div{height:1px;background:linear-gradient(to right,transparent,rgba(0,255,65,.15),transparent);margin:60px 0;position:relative}
+.div::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:6px;height:6px;border-radius:50%;background:var(--g);box-shadow:0 0 12px var(--g)}
+
+/* ── ANIMATIONS ── */
+@keyframes fup{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+@keyframes fin{from{opacity:0}to{opacity:1}}
+.rv{opacity:0;transform:translateY(30px);transition:opacity .8s,transform .8s}
+.rv-l{opacity:0;transform:translateX(-30px);transition:opacity .8s,transform .8s}
+.rv-r{opacity:0;transform:translateX(30px);transition:opacity .8s,transform .8s}
+.rv.on,.rv-l.on,.rv-r.on{opacity:1;transform:none}
+
+/* ── RESPONSIVE ── */
+@media(max-width:700px){.vgrid,.tgrid,.igrid,.mgrid{grid-template-columns:1fr}.hero-canvas-wrap{display:none}.cta{padding:36px 20px}.flow{flex-direction:column}.flow-arrow{transform:rotate(90deg)}}
+</style>
+</head>
+<body>
+
+<canvas id="bg-particle"></canvas>
+<canvas id="bg-hex"></canvas>
+<div id="bg-vignette"></div>
+<div id="bg-noise"></div>
+<div id="bg-scan"></div>
+<div id="cur"></div><div id="cur2"></div><div id="cur3"></div>
+<div id="prog"></div>
+
+<!-- ══ TOPBAR ══ -->
+<nav class="topbar">
+  <div class="tb-left">
+    <span class="tb-name">NISARG CHASMAWALA (SHROFF)</span>
+    <div class="tb-roles">
+      <span class="tb-inner">
+        Penetration Tester &nbsp;|&nbsp; Vulnerability Assessment &nbsp;|&nbsp;
+        Cybersecurity Researcher &nbsp;|&nbsp; Offensive Security Engineer &nbsp;|&nbsp;
+        Digital Forensics &nbsp;|&nbsp; Penetration Tester &nbsp;|&nbsp; Vulnerability Assessment &nbsp;|&nbsp;
+        Cybersecurity Researcher &nbsp;|&nbsp; Offensive Security Engineer &nbsp;|&nbsp; Digital Forensics
+      </span>
+    </div>
+  </div>
+  <div class="tb-status"><span class="tb-dot"></span>SYS ONLINE</div>
+</nav>
+
+<!-- ══ TOC ══ -->
+<nav class="toc" id="toc">
+  <div class="toc-i active" onclick="goTo('#hero')" data-s="hero"><div class="toc-d"></div><span class="toc-l">INTRO</span></div>
+  <div class="toc-i" onclick="goTo('#what')" data-s="what"><div class="toc-d"></div><span class="toc-l">WHAT IS FUZZING</span></div>
+  <div class="toc-i" onclick="goTo('#how')" data-s="how"><div class="toc-d"></div><span class="toc-l">HOW IT WORKS</span></div>
+  <div class="toc-i" onclick="goTo('#types')" data-s="types"><div class="toc-d"></div><span class="toc-l">TYPES</span></div>
+  <div class="toc-i" onclick="goTo('#tools')" data-s="tools"><div class="toc-d"></div><span class="toc-l">TOOLS</span></div>
+  <div class="toc-i" onclick="goTo('#impact')" data-s="impact"><div class="toc-d"></div><span class="toc-l">REAL WORLD</span></div>
+  <div class="toc-i" onclick="goTo('#setup')" data-s="setup"><div class="toc-d"></div><span class="toc-l">GET STARTED</span></div>
+  <div class="toc-i" onclick="goTo('#defence')" data-s="defence"><div class="toc-d"></div><span class="toc-l">DEFENCE</span></div>
+</nav>
+
+<div class="wrap">
+
+<!-- ══════════════════════════════════
+     HERO
+══════════════════════════════════ -->
+<section class="hero" id="hero">
+  <div class="hero-canvas-wrap"><canvas id="hero-geo"></canvas></div>
+
+  <div class="hero-tag">NISARG CHASMAWALA &nbsp;//&nbsp; ALIAS: HEAVEN</div>
+
+  <h1 class="hero-title">
+    <div class="gw" data-t="FUZZING">
+      <span class="ht-line1">FUZZING</span>
+    </div>
+    <span class="ht-sub">AUTOMATED VULNERABILITY DISCOVERY — FIELD GUIDE</span>
+  </h1>
+
+  <p class="hero-desc">
+    A comprehensive deep dive into fuzzing — the automated technique that powers vulnerability 
+    discovery at scale. From foundational theory and fuzzing architectures through coverage-guided 
+    mutation engines, real-world CVE discoveries, and hands-on setup with AFL++, LibFuzzer, and Honggfuzz.
+  </p>
+
+  <div class="hero-meta">
+    <div class="m-item"><span class="m-lbl">Author</span><span class="m-val">Nisarg Chasmawala (Shroff)</span></div>
+    <div class="m-item"><span class="m-lbl">Alias</span><span class="m-val">HEAVEN</span></div>
+    <div class="m-item"><span class="m-lbl">Category</span><span class="m-val">Fuzzing · Vulnerability Research</span></div>
+    <div class="m-item"><span class="m-lbl">Level</span><span class="m-val">Beginner → Advanced</span></div>
+  </div>
+
+  <div class="hero-scroll-hint">
+    <div class="hs-line"></div>
+    <span class="hs-txt">SCROLL TO BEGIN</span>
+    <div class="hs-pulse"></div>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- ══════════════════════════════════
+     01 — WHAT IS FUZZING
+══════════════════════════════════ -->
+<section class="sec rv" id="what">
+  <div class="sec-hd">
+    <span class="sec-n">01 //</span>
+    <h2 class="sec-t">What is Fuzzing?<span class="tw-cursor"></span></h2>
+    <div class="sec-ln"></div>
+  </div>
+
+  <div class="panel rv-l">
+    <p><strong style="color:var(--t1)">Fuzzing</strong> (or fuzz testing) is an automated software testing technique that feeds a target program with large volumes of malformed, semi-random, or intentionally unexpected input — then monitors the program's behaviour for crashes, hangs, memory corruption, assertion failures, and other anomalies that indicate an exploitable vulnerability.</p>
+    <p>Unlike traditional testing which validates that correct inputs produce correct outputs, fuzzing deliberately explores the boundary between expected and undefined behaviour. It operates on a simple but powerful premise: <em>if you throw enough unexpected data at a program, eventually it will reveal the assumptions its developer got wrong</em>. Those wrong assumptions are where vulnerabilities live.</p>
+    <p>First documented by Barton Miller at the University of Wisconsin in 1988, fuzzing has evolved from simple random input generation into sophisticated, coverage-guided systems capable of finding deep, multi-path vulnerabilities in millions of lines of code — automatically, continuously, and at scale.</p>
+  </div>
+
+  <div class="alert al-i rv">
+    <span class="al-ic">[ i ]</span>
+    <p class="al-tx">Google's <strong>OSS-Fuzz</strong> project — which applies continuous fuzzing to critical open-source libraries — has discovered over <strong>10,000 vulnerabilities</strong> across more than 1,000 projects since its launch. Fuzzing is not optional at this scale; it is infrastructure.</p>
+  </div>
+
+  <div class="vgrid rv">
+    <div class="vc">
+      <span class="vcn">01</span>
+      <div class="vcname">Crashes &amp; Segfaults</div>
+      <div class="vcdesc">The most visible fuzzing signal — a program crash (SIGSEGV, SIGABRT, SIGBUS) typically indicates a memory corruption bug: buffer overflow, stack smash, null dereference, or heap corruption. Every unique crash is a potential security finding.</div>
+      <span class="tag tag-c">SIGNAL</span>
+    </div>
+    <div class="vc">
+      <span class="vcn">02</span>
+      <div class="vcname">Hangs &amp; Timeouts</div>
+      <div class="vcdesc">Infinite loops, deadlocks, or excessive CPU consumption triggered by specific inputs indicate logic errors or denial-of-service vulnerabilities. A program that hangs on a crafted input gives an attacker a reliable DoS primitive.</div>
+      <span class="tag tag-o">SIGNAL</span>
+    </div>
+    <div class="vc">
+      <span class="vcn">03</span>
+      <div class="vcname">Memory Errors</div>
+      <div class="vcdesc">Tools like AddressSanitizer (ASan) and MemorySanitizer (MSan) instrument binaries to detect out-of-bounds reads and writes, use-after-free, heap overflows, and stack overflows — finding bugs that cause no visible crash but are fully exploitable.</div>
+      <span class="tag tag-p">SIGNAL</span>
+    </div>
+    <div class="vc">
+      <span class="vcn">04</span>
+      <div class="vcname">Assertion Failures</div>
+      <div class="vcdesc">When a program's internal invariant checks (assert statements, contract violations) are triggered by fuzzer input, it reveals inputs that violate the developer's explicit assumptions about program state — a direct path to vulnerability analysis.</div>
+      <span class="tag tag-g">SIGNAL</span>
+    </div>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- ══════════════════════════════════
+     02 — HOW IT WORKS
+══════════════════════════════════ -->
+<section class="sec rv" id="how">
+  <div class="sec-hd">
+    <span class="sec-n">02 //</span>
+    <h2 class="sec-t">How Fuzzing Works<span class="tw-cursor"></span></h2>
+    <div class="sec-ln"></div>
+  </div>
+
+  <div class="panel rv-l">
+    <p>Modern coverage-guided fuzzing is a tight feedback loop: generate input → execute target → measure which code paths were exercised → prioritise inputs that reached new code → repeat. This feedback mechanism is what separates modern fuzzers from naive random input generators. By concentrating computational effort on inputs that explore new execution paths, coverage-guided fuzzers reach deep program logic that pure random testing would take orders of magnitude longer to discover.</p>
+  </div>
+
+  <div class="flow rv">
+    <div class="flow-node">
+      <div class="flow-node-title">Input Corpus</div>
+      <div class="flow-node-sub">Seed files or generated starting inputs</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-node">
+      <div class="flow-node-title">Mutation Engine</div>
+      <div class="flow-node-sub">Bit flips, splicing, dictionary injection</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-node">
+      <div class="flow-node-title">Execution</div>
+      <div class="flow-node-sub">Run target with mutated input</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-node">
+      <div class="flow-node-title">Coverage Monitor</div>
+      <div class="flow-node-sub">Measure new code paths hit</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-node">
+      <div class="flow-node-title">Crash Triage</div>
+      <div class="flow-node-sub">Deduplicate, classify, report</div>
+    </div>
+  </div>
+
+  <div class="panel rv">
+    <div class="panel-t">The Four Phases of a Fuzzing Run</div>
+    <ul class="steps">
+      <li>
+        <span class="step-n">01.</span>
+        <span><strong style="color:var(--t1)">Input Generation</strong> — The fuzzer starts from a seed corpus (real-world sample files or crafted inputs) and applies mutation strategies: bit flipping, byte substitution, block deletion, structure-aware splicing, and dictionary-based injection of interesting values (e.g. INT_MAX, null bytes, format strings). Generation-based fuzzers build inputs from a grammar or protocol specification from scratch.</span>
+      </li>
+      <li>
+        <span class="step-n">02.</span>
+        <span><strong style="color:var(--t1)">Execution</strong> — The mutated input is fed to the target application via stdin, a file path, a network socket, an API call, or any other defined interface. The fuzzer manages process forking (or persistent mode) to maximise execution speed — AFL++ can execute over 10,000 test cases per second on simple targets.</span>
+      </li>
+      <li>
+        <span class="step-n">03.</span>
+        <span><strong style="color:var(--t1)">Monitoring &amp; Instrumentation</strong> — The target binary is instrumented (at compile time or via binary-only instrumentation like QEMU mode) to report which basic blocks were executed. AddressSanitizer runs in parallel to catch memory errors that don't produce visible crashes. Timeouts detect infinite loops.</span>
+      </li>
+      <li>
+        <span class="step-n">04.</span>
+        <span><strong style="color:var(--t1)">Crash Logging &amp; Triage</strong> — When a crash, hang, or sanitiser violation is detected, the exact input is saved. Modern fuzzers use stack hash deduplication to group crashes by root cause, preventing the same bug from appearing as thousands of unique findings. Each unique crash is then analysed to determine exploitability.</span>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- ══════════════════════════════════
+     03 — TYPES OF FUZZING
+══════════════════════════════════ -->
+<section class="sec rv" id="types">
+  <div class="sec-hd">
+    <span class="sec-n">03 //</span>
+    <h2 class="sec-t">Fuzzing Techniques &amp; Approaches<span class="tw-cursor"></span></h2>
+    <div class="sec-ln"></div>
+  </div>
+
+  <div class="panel rv-l">
+    <p>Fuzzing is not a single technique — it is a family of related approaches that differ in how much knowledge of the target they leverage, how inputs are generated, and how coverage is measured. Choosing the right fuzzing strategy for a given target significantly impacts how quickly and how deeply vulnerabilities are discovered.</p>
+  </div>
+
+  <div class="atk rv">
+    <div class="atk-name">⟩ Black-Box Fuzzing (Dumb Fuzzing)</div>
+    <div class="atk-body">Black-box fuzzing treats the target application as a completely opaque system — it sends random or semi-random inputs with no knowledge of the target's internal structure, source code, or expected input format. It is the simplest form of fuzzing to set up and requires no binary modification. Its primary weakness is inefficiency: without feedback on which code paths inputs are exercising, it is statistically unlikely to reach deeply nested conditions or complex parser logic. Best applied as an initial sweep or when source code is unavailable and binary instrumentation is impractical.</div>
+    <div class="cb" data-l="Black-Box — Radamsa Random Mutation">
+      <code><span class="cmt"># Radamsa: black-box mutation fuzzer — generates variants of sample inputs</span>
+<span class="cmd">echo</span> <span class="str">"normal input"</span> | <span class="cmd">radamsa</span>
+
+<span class="cmt"># Fuzz a file parser — generate 1000 mutated samples and feed to target</span>
+<span class="cmd">radamsa</span> <span class="flag">-n 1000</span> <span class="flag">-o</span> <span class="str">'fuzz-%n.bin'</span> sample.pdf
+<span class="kw">for</span> f in fuzz-*.bin; <span class="kw">do</span>
+    <span class="cmd">timeout</span> 5 ./target_parser <span class="str">"$f"</span> 2>&1 | <span class="cmd">grep</span> <span class="flag">-i</span> <span class="str">'segfault\|abort\|crash'</span>
+<span class="kw">done</span></code>
+    </div>
+  </div>
+
+  <div class="atk rv">
+    <div class="atk-name">⟩ Coverage-Guided Fuzzing (Grey-Box)</div>
+    <div class="atk-body">Coverage-guided fuzzing instruments the target binary to report which basic blocks (or edges between basic blocks) each input exercises. Inputs that reach new code paths are added to the seed corpus and mutated further; inputs that cover no new code are discarded. This feedback loop allows the fuzzer to systematically explore the program's execution space, efficiently reaching deep conditional logic that pure random mutation would never encounter. AFL, AFL++, libFuzzer, and Honggfuzz all use this approach — it is the current gold standard in practical fuzzing.</div>
+    <div class="cb" data-l="AFL++ — Coverage-Guided Fuzzing Quickstart">
+      <code><span class="cmt"># Step 1: Compile target with AFL++ instrumentation (tracks edge coverage)</span>
+<span class="cmd">AFL_USE_ASAN=1</span> <span class="cmd">afl-clang-fast</span> <span class="flag">-o</span> target_fuzz ./target.c
+
+<span class="cmt"># Step 2: Create seed corpus — real-world sample inputs for the target</span>
+<span class="cmd">mkdir</span> -p corpus/ crashes/
+<span class="cmd">echo</span> <span class="str">"sample"</span> > corpus/seed1.txt
+<span class="cmd">cp</span> /path/to/real/samples/* corpus/
+
+<span class="cmt"># Step 3: Launch AFL++ with AddressSanitizer enabled</span>
+<span class="cmd">afl-fuzz</span> <span class="flag">-i</span> corpus/ <span class="flag">-o</span> output/ <span class="flag">-m none</span> -- ./target_fuzz <span class="flag">@@</span>
+
+<span class="cmt"># Step 4: Monitor coverage — view AFL++ status screen statistics</span>
+<span class="cmt"># Key metrics: exec/sec, paths found, crashes, hangs, stability</span>
+
+<span class="cmt"># Run multiple parallel instances for faster coverage (4 cores)</span>
+<span class="cmd">afl-fuzz</span> <span class="flag">-i</span> corpus/ <span class="flag">-o</span> output/ <span class="flag">-M</span> fuzzer01 -- ./target_fuzz <span class="flag">@@</span> &
+<span class="cmd">afl-fuzz</span> <span class="flag">-i</span> corpus/ <span class="flag">-o</span> output/ <span class="flag">-S</span> fuzzer02 -- ./target_fuzz <span class="flag">@@</span> &</code>
+    </div>
+  </div>
+
+  <div class="atk rv">
+    <div class="atk-name">⟩ White-Box / Concolic Fuzzing (Smart Fuzzing)</div>
+    <div class="atk-body">White-box fuzzing uses full knowledge of the target — source code, binary analysis, or dynamic symbolic execution (concolic execution) — to generate inputs that satisfy specific path conditions. Symbolic execution treats program inputs as symbolic variables and uses a constraint solver (SAT/SMT solver) to find concrete values that reach previously unexplored branches. This approach can crack complex validation checks (magic bytes, checksums, version fields) that purely random mutation would take billions of attempts to satisfy. Tools: KLEE, S2E, angr, Mayhem.</div>
+    <div class="cb" data-l="angr — Symbolic Execution Path Exploration">
+      <code><span class="cmt"># Use angr to symbolically explore a binary and find inputs that reach a target address</span>
+<span class="kw">import</span> angr
+
+proj = angr.<span class="fn">Project</span>(<span class="str">'./target_binary'</span>, auto_load_libs=<span class="kw">False</span>)
+
+<span class="cmt"># Define start and goal states (e.g., reach the "success" path, avoid "fail")</span>
+state = proj.factory.<span class="fn">entry_state</span>()
+simgr = proj.factory.<span class="fn">simulation_manager</span>(state)
+
+<span class="cmt"># Explore: find paths reaching target address, avoid dead-end addresses</span>
+simgr.<span class="fn">explore</span>(
+    find=<span class="num">0x4008f0</span>,    <span class="cmt"># Address of "success" branch</span>
+    avoid=<span class="num">0x400901</span>   <span class="cmt"># Address of "failure/reject" branch</span>
+)
+
+<span class="kw">if</span> simgr.found:
+    solution_state = simgr.found[<span class="num">0</span>]
+    <span class="fn">print</span>(<span class="str">"Input found:"</span>, solution_state.posix.<span class="fn">dumps</span>(<span class="num">0</span>))</code>
+    </div>
+  </div>
+
+  <div class="atk rv">
+    <div class="atk-name">⟩ Mutation-Based vs. Generation-Based</div>
+    <div class="atk-body">
+      <strong style="color:var(--t1)">Mutation-based fuzzing</strong> starts with an existing valid input corpus and applies transformation strategies — bit flips, byte replacement, chunk insertion, block duplication, splicing two inputs together — to generate new test cases. Fast to set up, does not require input format knowledge, but can be constrained by the quality of the seed corpus.<br><br>
+      <strong style="color:var(--t1)">Generation-based fuzzing</strong> builds inputs entirely from scratch using a grammar, protocol specification, or format model. It can immediately produce structurally valid inputs that pass early parsing stages, reaching deeper application logic. Requires significant upfront investment in writing the grammar or model, but is vastly more effective for complex structured formats like PDF, TLS, or custom binary protocols.
+    </div>
+    <div class="cb" data-l="Boofuzz — Generation-Based Network Protocol Fuzzing">
+      <code><span class="cmt"># Boofuzz: Python-based generation fuzzer for network protocols</span>
+<span class="kw">from</span> boofuzz <span class="kw">import</span> *
+
+session = <span class="fn">Session</span>(target=<span class="fn">Target</span>(connection=<span class="fn">TCPSocketConnection</span>(<span class="str">"TARGET_IP"</span>, <span class="num">80</span>)))
+
+<span class="cmt"># Define an HTTP GET request structure — fuzzer mutates each field</span>
+<span class="fn">s_initialize</span>(<span class="str">"HTTP GET"</span>)
+<span class="fn">s_string</span>(<span class="str">"GET"</span>, fuzzable=<span class="kw">False</span>)
+<span class="fn">s_delim</span>(<span class="str">" "</span>)
+<span class="fn">s_string</span>(<span class="str">"/"</span>)                    <span class="cmt"># Fuzzes the URI path</span>
+<span class="fn">s_delim</span>(<span class="str">" "</span>)
+<span class="fn">s_string</span>(<span class="str">"HTTP/1.1"</span>, fuzzable=<span class="kw">False</span>)
+<span class="fn">s_static</span>(<span class="str">"\r\nHost: TARGET_IP\r\n\r\n"</span>)
+
+<span class="cmt"># Connect the request to the session and run</span>
+session.<span class="fn">connect</span>(<span class="fn">s_get</span>(<span class="str">"HTTP GET"</span>))
+session.<span class="fn">fuzz</span>()   <span class="cmt"># Automatically iterates through all fuzz cases</span></code>
+    </div>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- ══════════════════════════════════
+     04 — TOOLS
+══════════════════════════════════ -->
+<section class="sec rv" id="tools">
+  <div class="sec-hd">
+    <span class="sec-n">04 //</span>
+    <h2 class="sec-t">Essential Fuzzing Toolset<span class="tw-cursor"></span></h2>
+    <div class="sec-ln"></div>
+  </div>
+
+  <div class="panel rv-l">
+    <p>The fuzzing ecosystem has matured significantly over the past decade — moving from simple random generators to sophisticated, multi-strategy frameworks with sanitiser integration, distributed execution, and intelligent crash triage. The tools below represent the current state of the art across different target types and use cases.</p>
+  </div>
+
+  <div class="tgrid rv">
+    <div class="tc">
+      <div class="tcname">AFL++</div>
+      <span class="tctag">Coverage-Guided · C/C++</span>
+      <div class="tcdesc">The community-maintained successor to AFL — faster, smarter, and more extensible. Supports LLVM, GCC, QEMU (binary-only), and Frida modes. The de facto standard for binary fuzzing</div>
+    </div>
+    <div class="tc">
+      <div class="tcname">LibFuzzer</div>
+      <span class="tctag">In-Process · Clang/LLVM</span>
+      <div class="tcdesc">Clang's built-in in-process fuzzing engine. Runs the fuzz target in the same process for extreme speed. Integrates natively with ASan, MSan, and UBSan. Used by Google for Chrome and major OSS</div>
+    </div>
+    <div class="tc">
+      <div class="tcname">Honggfuzz</div>
+      <span class="tctag">Coverage-Guided · Intel PT</span>
+      <div class="tcdesc">Supports hardware-level coverage via Intel Processor Trace — enables fuzzing closed-source binaries with accurate edge coverage. Highly efficient for multi-process targets</div>
+    </div>
+    <div class="tc">
+      <div class="tcname">Peach Fuzzer</div>
+      <span class="tctag">Generation-Based · Protocols</span>
+      <div class="tcdesc">XML-based grammar (Pit files) defines target protocol or file format — generates structurally valid but malicious inputs. Industry standard for ICS, automotive, and proprietary protocol testing</div>
+    </div>
+    <div class="tc">
+      <div class="tcname">Boofuzz</div>
+      <span class="tctag">Network · Python</span>
+      <div class="tcdesc">Python-native successor to Sulley — defines fuzzing sessions for TCP/UDP network protocols. Includes session management, crash detection, and target monitoring callbacks</div>
+    </div>
+    <div class="tc">
+      <div class="tcname">Radamsa</div>
+      <span class="tctag">Black-Box · Any Format</span>
+      <div class="tcdesc">General-purpose black-box mutation fuzzer. Reads sample inputs and generates structurally related but corrupted variants. Zero configuration — ideal for rapid initial testing</div>
+    </div>
+    <div class="tc">
+      <div class="tcname">ClusterFuzz</div>
+      <span class="tctag">Distributed · Cloud-Scale</span>
+      <div class="tcdesc">Google's distributed fuzzing infrastructure — orchestrates thousands of AFL++ and LibFuzzer instances across cloud VMs. Powers OSS-Fuzz. Open-source and deployable on GCP or locally</div>
+    </div>
+    <div class="tc">
+      <div class="tcname">OSS-Fuzz</div>
+      <span class="tctag">Continuous · Open Source</span>
+      <div class="tcdesc">Google's free continuous fuzzing service for critical open-source projects. Automatically builds, runs, and triages findings. Integrates with project CI — submit your project via GitHub PR</div>
+    </div>
+  </div>
+
+  <div class="cb rv" data-l="LibFuzzer — In-Process Fuzz Target (C)">
+    <code><span class="cmt">/* LibFuzzer harness — minimal fuzz target structure */</span>
+<span class="kw">#include</span> <span class="str">&lt;stdint.h&gt;</span>
+<span class="kw">#include</span> <span class="str">&lt;stddef.h&gt;</span>
+
+<span class="cmt">/* LLVMFuzzerTestOneInput — LibFuzzer calls this with every generated input */</span>
+<span class="fn">int</span> LLVMFuzzerTestOneInput(<span class="kw">const</span> <span class="fn">uint8_t</span> *data, <span class="fn">size_t</span> size) {
+    <span class="kw">if</span> (size < <span class="num">1</span>) <span class="kw">return</span> <span class="num">0</span>;
+
+    <span class="cmt">/* Call the function under test with fuzzer-controlled data */</span>
+    <span class="fn">target_parse_function</span>(data, size);
+
+    <span class="kw">return</span> <span class="num">0</span>;   <span class="cmt">/* Return 0 — non-zero signals input should be discarded */</span>
+}
+
+<span class="cmt">/* Compile with: clang -fsanitize=fuzzer,address -o fuzz_target harness.c target.c
+   Run with:     ./fuzz_target corpus/ -max_len=1024 -jobs=4 */</span></code>
+  </div>
+
+  <div class="cb rv" data-l="Honggfuzz — Persistent Mode Setup">
+    <code><span class="cmt"># Compile target with Honggfuzz instrumentation</span>
+<span class="cmd">hfuzz-clang</span> <span class="flag">-o</span> target_hf target.c
+
+<span class="cmt"># Run Honggfuzz with persistent mode and Intel PT hardware coverage</span>
+<span class="cmd">honggfuzz</span> <span class="flag">--input</span> corpus/ <span class="flag">--output</span> crashes/ \
+  <span class="flag">--logfile</span> hfuzz.log \
+  <span class="flag">--threads</span> <span class="num">8</span> \
+  <span class="flag">--timeout</span> <span class="num">10</span> \
+  <span class="flag">--</span> ./target_hf <span class="flag">___FILE___</span>
+
+<span class="cmt"># View live statistics</span>
+<span class="cmd">tail</span> <span class="flag">-f</span> hfuzz.log</code>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- ══════════════════════════════════
+     05 — REAL-WORLD IMPACT
+══════════════════════════════════ -->
+<section class="sec rv" id="impact">
+  <div class="sec-hd">
+    <span class="sec-n">05 //</span>
+    <h2 class="sec-t">Real-World Impact &amp; CVE Discoveries<span class="tw-cursor"></span></h2>
+    <div class="sec-ln"></div>
+  </div>
+
+  <div class="panel rv-l">
+    <p>Fuzzing has been responsible for some of the most significant vulnerability discoveries in the history of software security. The findings below are not theoretical — they are real CVEs that affected hundreds of millions of users, triggered emergency patches, and in several cases reshaped how entire industries approach software testing. Fuzzing did not just find these bugs; in many cases it was the <em>only</em> realistic method capable of finding them.</p>
+  </div>
+
+  <div class="igrid rv">
+    <div class="icard">
+      <span class="icard-year">CVE-2014-0160</span>
+      <div class="icard-name">Heartbleed — OpenSSL</div>
+      <div class="icard-desc">A buffer over-read in OpenSSL's TLS heartbeat extension allowed attackers to read up to 64KB of server memory per request — leaking private keys, session tokens, and credentials. Fuzzing techniques applied to the TLS handshake parser later confirmed the bug class. Affected an estimated two-thirds of all HTTPS servers globally at time of disclosure.</div>
+    </div>
+    <div class="icard">
+      <span class="icard-year">2015 — Ongoing</span>
+      <div class="icard-name">Chrome Browser Security</div>
+      <div class="icard-desc">Google's ClusterFuzz infrastructure runs millions of AFL++ and LibFuzzer iterations per day against Chrome's V8 JavaScript engine, PDF parser, image decoders, and media stack. As of today, ClusterFuzz has found over 30,000 bugs in Chrome alone — the majority before any external researcher or attacker discovered them.</div>
+    </div>
+    <div class="icard">
+      <span class="icard-year">2017 — Ongoing</span>
+      <div class="icard-name">Windows Security (MSRC)</div>
+      <div class="icard-desc">Microsoft's Security Response Center extensively deploys fuzzing across Windows kernel components, Office document parsers, Edge browser, and cryptographic libraries. Fuzzing is a mandatory gate in Microsoft's Security Development Lifecycle (SDL) for all new and updated components.</div>
+    </div>
+    <div class="icard">
+      <span class="icard-year">CVE-2016-5195</span>
+      <div class="icard-name">Dirty COW — Linux Kernel</div>
+      <div class="icard-desc">A race condition in the Linux kernel's copy-on-write memory management mechanism. While originally found via manual analysis, coverage-guided kernel fuzzing tools (Syzkaller) have since been responsible for discovering hundreds of similar Linux kernel vulnerabilities — the majority never reaching public exploit status due to fuzzing-led pre-disclosure.</div>
+    </div>
+    <div class="icard">
+      <span class="icard-year">2017 — Ongoing</span>
+      <div class="icard-name">OSS-Fuzz Programme</div>
+      <div class="icard-desc">Google's OSS-Fuzz service has continuously fuzzed over 1,000 critical open-source projects including OpenSSL, FFmpeg, libpng, SQLite, cURL, and the Linux kernel. To date it has found over 10,000 vulnerabilities — the vast majority silently patched before any adversary could exploit them.</div>
+    </div>
+    <div class="icard">
+      <span class="icard-year">CVE-2021-44228</span>
+      <div class="icard-name">Log4Shell Context</div>
+      <div class="icard-desc">While Log4Shell itself was discovered via manual research, its discovery demonstrated precisely where fuzzing's blind spots lie — semantic logic vulnerabilities in string interpolation are extremely difficult to detect via crash-based fuzzing. This has driven significant investment in sanitiser-based and semantic fuzzing techniques.</div>
+    </div>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- ══════════════════════════════════
+     06 — GETTING STARTED
+══════════════════════════════════ -->
+<section class="sec rv" id="setup">
+  <div class="sec-hd">
+    <span class="sec-n">06 //</span>
+    <h2 class="sec-t">Getting Started — Hands-On Setup<span class="tw-cursor"></span></h2>
+    <div class="sec-ln"></div>
+  </div>
+
+  <div class="panel rv-l">
+    <p>The fastest path from zero to running a real fuzzer is AFL++ against a deliberately vulnerable binary. The workflow below — environment setup, target compilation, corpus creation, fuzzer launch, and crash analysis — applies directly to real targets. Once comfortable with this loop, the same principles extend to LibFuzzer harnesses, network protocol fuzzing with Boofuzz, and kernel fuzzing with Syzkaller.</p>
+  </div>
+
+  <div class="alert al-w rv">
+    <span class="al-ic">[ ⚠ ]</span>
+    <p class="al-tx"><strong>Isolate your fuzzing environment.</strong> Run fuzzers inside a VM or container — never directly on your host system. Fuzzing generates enormous I/O load, can exhaust disk space with crash outputs, and occasionally triggers kernel panics on vulnerable targets. Use a dedicated low-privilege environment with resource limits enforced.</p>
+  </div>
+
+  <div class="cb rv" data-l="Environment Setup — AFL++ on Ubuntu/Debian">
+    <code><span class="cmt"># Install AFL++ and required dependencies</span>
+<span class="cmd">sudo apt-get install</span> <span class="flag">-y</span> build-essential clang llvm python3-dev git \
+    libssl-dev libglib2.0-dev pkg-config
+
+<span class="cmt"># Clone and build AFL++ from source (recommended over package manager)</span>
+<span class="cmd">git clone</span> https://github.com/AFLplusplus/AFLplusplus
+<span class="cmd">cd</span> AFLplusplus && <span class="cmd">make</span> <span class="flag">distrib</span> && <span class="cmd">sudo make install</span>
+
+<span class="cmt"># Verify installation</span>
+<span class="cmd">afl-fuzz</span> <span class="flag">--version</span>
+
+<span class="cmt"># Install AddressSanitizer (bundled with Clang) and verify</span>
+<span class="cmd">clang</span> <span class="flag">-fsanitize=address</span> <span class="flag">-o</span> asan_test test.c && ./asan_test
+
+<span class="cmt"># Tune system for maximum fuzzing performance</span>
+<span class="cmd">echo</span> core | <span class="cmd">sudo tee</span> /proc/sys/kernel/core_pattern
+<span class="cmd">echo</span> performance | <span class="cmd">sudo tee</span> /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor</code>
+  </div>
+
+  <div class="cb rv" data-l="End-to-End — Fuzzing a Vulnerable C Binary with AFL++">
+    <code><span class="cmt"># Step 1: Write or obtain the target — this is a deliberately vulnerable parser</span>
+<span class="kw">cat</span> > vulnerable_target.c <span class="str">&lt;&lt; 'EOF'
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+void parse_input(char *input) {
+    char buf[64];
+    strcpy(buf, input);   /* No bounds check — stack buffer overflow */
+}
+int main(int argc, char *argv[]) {
+    FILE *f = fopen(argv[1], "r");
+    char line[512]; fgets(line, 512, f); fclose(f);
+    parse_input(line);
+    return 0;
+}
+EOF</span>
+
+<span class="cmt"># Step 2: Compile with AFL++ instrumentation + AddressSanitizer</span>
+<span class="cmd">AFL_USE_ASAN=1</span> <span class="cmd">afl-clang-fast</span> <span class="flag">-o</span> target_instrumented vulnerable_target.c
+
+<span class="cmt"># Step 3: Create seed corpus with representative inputs</span>
+<span class="cmd">mkdir</span> -p corpus/ results/
+<span class="cmd">echo</span> <span class="str">"hello world"</span> > corpus/seed1.txt
+<span class="cmd">echo</span> <span class="str">"test data 123"</span> > corpus/seed2.txt
+
+<span class="cmt"># Step 4: Launch AFL++ — @@ is replaced with the input file path</span>
+<span class="cmd">afl-fuzz</span> <span class="flag">-i</span> corpus/ <span class="flag">-o</span> results/ <span class="flag">-m none</span> -- ./target_instrumented <span class="flag">@@</span>
+
+<span class="cmt"># Step 5: When crashes appear — triage with GDB and ASan output</span>
+<span class="cmd">gdb</span> -q ./target_instrumented <span class="str">"results/default/crashes/id:000000,*"</span>
+<span class="cmd">run</span></code>
+  </div>
+
+  <div class="cb rv" data-l="Crash Analysis — ASan + GDB Triage Workflow">
+    <code><span class="cmt"># List all unique crash inputs found by AFL++</span>
+<span class="cmd">ls</span> -la results/default/crashes/
+
+<span class="cmt"># Replay a crash with ASan enabled — get detailed memory error report</span>
+<span class="cmd">./target_instrumented</span> results/default/crashes/id:000000,sig:06,*
+
+<span class="cmt"># ASan output shows: error type, address, allocation info, stack trace
+# Example ASan output:
+# ==ERROR: AddressSanitizer: stack-buffer-overflow on address 0x7fff...
+# WRITE of size 1 at 0x7fff... thread T0
+# #0 0x... in strcpy /lib/.../string.c
+# #1 0x... in parse_input vulnerable_target.c:5
+
+# Minimise crash to smallest reproducing input (faster debugging)</span>
+<span class="cmd">afl-tmin</span> <span class="flag">-i</span> results/default/crashes/id:000000,* <span class="flag">-o</span> min_crash.bin -- ./target_instrumented <span class="flag">@@</span>
+
+<span class="cmt"># Use afl-cov to visualise which lines triggered the crash</span>
+<span class="cmd">afl-cov</span> <span class="flag">-d</span> results/ <span class="flag">--coverage-cmd</span> <span class="str">"./target_instrumented AFL_FILE"</span> <span class="flag">--code-dir</span> .</code>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- ══════════════════════════════════
+     07 — DEFENCE & INTEGRATION
+══════════════════════════════════ -->
+<section class="sec rv" id="defence">
+  <div class="sec-hd">
+    <span class="sec-n">07 //</span>
+    <h2 class="sec-t">Integrating Fuzzing into Your Security Practice<span class="tw-cursor"></span></h2>
+    <div class="sec-ln"></div>
+  </div>
+
+  <div class="panel rv-l">
+    <p>Fuzzing is most powerful when it is continuous, not periodic. A single fuzzing run at release time is far less effective than a fuzzing pipeline integrated into CI/CD that runs on every commit. The following best practices — borrowed from Google, Microsoft, and the OSS-Fuzz programme — represent the current industry standard for building fuzzing into a mature security development lifecycle.</p>
+  </div>
+
+  <div class="mgrid rv">
+    <div class="mcard">
+      <div class="mcard-name">CI/CD Integration</div>
+      <div class="mcard-desc">Integrate fuzzing into your pipeline using ClusterFuzz or OSS-Fuzz. On every pull request, run a short fuzzing session (minutes) with the accumulated corpus. Treat fuzzer crashes as build failures — no merge until the crash is understood and fixed or explicitly accepted as low-risk.</div>
+    </div>
+    <div class="mcard">
+      <div class="mcard-name">Sanitiser Stack</div>
+      <div class="mcard-desc">Always fuzz with sanitisers enabled: <strong>AddressSanitizer</strong> (memory errors), <strong>UndefinedBehaviourSanitizer</strong> (integer overflows, misaligned access), <strong>MemorySanitizer</strong> (uninitialised reads). Sanitisers convert silent memory corruption into loud, reproducible crashes — dramatically increasing fuzzer effectiveness.</div>
+    </div>
+    <div class="mcard">
+      <div class="mcard-name">Corpus Management</div>
+      <div class="mcard-desc">Maintain a persistent, deduplicated corpus that accumulates across fuzzing runs. Seed it with real-world inputs from your application (captured requests, real files). Periodically run corpus minimisation (<code>afl-cmin</code>) to remove redundant seeds and keep the corpus lean and effective.</div>
+    </div>
+    <div class="mcard">
+      <div class="mcard-name">Crash Triage Pipeline</div>
+      <div class="mcard-desc">Automate crash deduplication using stack trace hashing — the same root cause crash from thousands of inputs should appear as one unique finding. Use <strong>afl-tmin</strong> and <strong>afl-cmin</strong> to minimise crashes to their smallest reproducing input before handing off to developers. Document exploitability assessment for each unique crash.</div>
+    </div>
+    <div class="mcard">
+      <div class="mcard-name">Structured Input Targets</div>
+      <div class="mcard-desc">For targets with complex input formats (PDF, XML, TLS, custom binary protocols), invest in grammar-based or structure-aware fuzzing. Libprotobuf-mutator and grammar-based fuzzing dramatically increase the depth of testing for structured inputs that AFL++ mutation alone struggles to reach.</div>
+    </div>
+    <div class="mcard">
+      <div class="mcard-name">Scope Your Attack Surface</div>
+      <div class="mcard-desc">Map every point where untrusted data enters your application — file parsers, network sockets, IPC interfaces, environment variables, command-line arguments, shared memory. Each entry point is a fuzzing target. Prioritise by reachability from an unauthenticated attacker and by privilege level of the receiving component.</div>
+    </div>
+  </div>
+
+  <div class="panel rv">
+    <div class="panel-t">Fuzzing Maturity Levels</div>
+    <ul class="steps">
+      <li><span class="step-n">L1.</span><span><strong style="color:var(--t1)">Ad-hoc</strong> — Fuzzing run manually by a security researcher during an assessment or before a major release. No persistence, no automation. Better than nothing, but misses regressions introduced between runs.</span></li>
+      <li><span class="step-n">L2.</span><span><strong style="color:var(--t1)">Scheduled</strong> — Fuzzing runs automatically on a schedule (nightly or weekly) with basic crash alerting. Corpus is preserved across runs. Development team receives crash reports with minimised inputs.</span></li>
+      <li><span class="step-n">L3.</span><span><strong style="color:var(--t1)">CI-Integrated</strong> — Every commit triggers a short fuzzing session. Crashes block merge. Full sanitiser stack enabled. Corpus is stored in version control alongside the code and evolves continuously.</span></li>
+      <li><span class="step-n">L4.</span><span><strong style="color:var(--t1)">Continuous at Scale</strong> — ClusterFuzz or equivalent runs thousands of parallel fuzzer instances 24/7. Structured inputs use grammar-based fuzzing. Automated crash deduplication, triage, and bug filing. Fuzzing metrics tracked as a security KPI (paths covered, unique crashes per week, mean-time-to-find).</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ══ CTA ══ -->
+<div class="cta rv">
+  <div class="cta-t">// Feed It. Watch It Break. Make It Stronger. //</div>
+  <p class="cta-p">Fuzzing is one of the highest-leverage investments in software security — automated, scalable, and continuously active. Start with AFL++ on a single parser, build a LibFuzzer harness for your most critical library, and contribute to OSS-Fuzz. Every crash found by a fuzzer is a vulnerability that a real attacker will never get to exploit.</p>
+  <div class="cta-btns">
+    <a href="https://github.com/nishu2402" class="btn btn-p" target="_blank" rel="noopener">GitHub — nishu2402</a>
+    <a href="https://nishu2402.github.io" class="btn btn-s" target="_blank" rel="noopener">View Portfolio</a>
+  </div>
+</div>
+
+<!-- ══ FOOTER ══ -->
+<footer class="footer">
+  <div class="f-l">
+    Nisarg Chasmawala (Shroff)<br>
+    <span class="f-alias">// HEAVEN</span>
+  </div>
+  <div class="f-r">
+    Offensive Security Engineer · MSc Cyber Security, BCU<br>
+    CEH Master · CPENT · CHFI · ISO 27001 Lead Auditor<br>
+    <a href="https://github.com/nishu2402" target="_blank" rel="noopener">github.com/nishu2402</a>
+  </div>
+</footer>
+
+</div>
+
+<script>
+/* ─── CURSOR ─── */
+const cur=document.getElementById('cur'),cur2=document.getElementById('cur2'),cur3=document.getElementById('cur3');
+let mx=0,my=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px'});
+(function loop(){cur2.style.left=mx+'px';cur2.style.top=my+'px';cur3.style.left=mx+'px';cur3.style.top=my+'px';requestAnimationFrame(loop)})();
+document.querySelectorAll('a,.btn,.vc,.tc,.atk,.icard,.mcard,.panel,.cb').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cur.style.width='18px';cur.style.height='18px';cur.style.background='rgba(0,255,65,.25)'});
+  el.addEventListener('mouseleave',()=>{cur.style.width='10px';cur.style.height='10px';cur.style.background='var(--g)'});
+});
+
+/* ─── PROGRESS ─── */
+window.addEventListener('scroll',()=>{document.getElementById('prog').style.width=((window.scrollY/(document.body.scrollHeight-window.innerHeight))*100)+'%'});
+
+/* ═══ PARTICLE NETWORK ═══ */
+(function(){
+  const c=document.getElementById('bg-particle'),ctx=c.getContext('2d');
+  let W,H,mouseX=innerWidth/2,mouseY=innerHeight/2;
+  const N=200,MAX=140;let P=[];
+  class Particle{
+    constructor(){this.reset(true)}
+    reset(i){this.x=Math.random()*W;this.y=i?Math.random()*H:H+10;this.z=Math.random()*3+.5;this.vx=(Math.random()-.5)*.4;this.vy=(Math.random()-.5)*.4-.1;this.life=Math.random()*300+200;this.maxLife=this.life;this.r=Math.random()*1.5+.5;const r=Math.random();this.color=r<.7?'0,255,65':r<.9?'0,229,255':'191,0,255'}
+    update(){const dx=this.x-mouseX,dy=this.y-mouseY,d=Math.sqrt(dx*dx+dy*dy);if(d<120){const f=(120-d)/120;this.vx+=dx/d*f*.6;this.vy+=dy/d*f*.6}this.vx*=.98;this.vy*=.98;this.x+=this.vx;this.y+=this.vy;this.life--;if(this.life<=0||this.x<-50||this.x>W+50||this.y<-50||this.y>H+50)this.reset(false)}
+    draw(){const a=(this.life/this.maxLife)*.7*this.z;ctx.beginPath();ctx.arc(this.x,this.y,this.r*this.z,0,Math.PI*2);ctx.fillStyle=`rgba(${this.color},${a})`;ctx.fill()}
+  }
+  function resize(){W=c.width=innerWidth;H=c.height=innerHeight}
+  function drawLines(){for(let i=0;i<P.length;i++)for(let j=i+1;j<P.length;j++){const a=P[i],b=P[j],dx=a.x-b.x,dy=a.y-b.y,d=Math.sqrt(dx*dx+dy*dy);if(d<MAX){const al=(1-d/MAX)*.18,g=ctx.createLinearGradient(a.x,a.y,b.x,b.y);g.addColorStop(0,`rgba(${a.color},${al})`);g.addColorStop(1,`rgba(${b.color},${al})`);ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.strokeStyle=g;ctx.lineWidth=(a.z+b.z)/2*.5;ctx.stroke()}}}
+  function drawRing(){const g=ctx.createRadialGradient(mouseX,mouseY,0,mouseX,mouseY,80);g.addColorStop(0,'rgba(0,255,65,0)');g.addColorStop(.7,'rgba(0,255,65,0.04)');g.addColorStop(1,'rgba(0,255,65,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(mouseX,mouseY,80,0,Math.PI*2);ctx.fill()}
+  function animate(){ctx.clearRect(0,0,W,H);drawRing();drawLines();P.forEach(p=>{p.update();p.draw()});requestAnimationFrame(animate)}
+  resize();window.addEventListener('resize',resize);document.addEventListener('mousemove',e=>{mouseX=e.clientX;mouseY=e.clientY});
+  P=Array.from({length:N},()=>new Particle());animate();
+})();
+
+/* ═══ HEX GRID ═══ */
+(function(){
+  const c=document.getElementById('bg-hex'),ctx=c.getContext('2d');
+  let W,H,t=0;const S=40;
+  function resize(){W=c.width=innerWidth;H=c.height=innerHeight}
+  function hexPath(cx,cy,s){ctx.beginPath();for(let i=0;i<6;i++){const a=Math.PI/180*(60*i-30);i===0?ctx.moveTo(cx+s*Math.cos(a),cy+s*Math.sin(a)):ctx.lineTo(cx+s*Math.cos(a),cy+s*Math.sin(a))}ctx.closePath()}
+  function draw(){ctx.clearRect(0,0,W,H);t+=.008;const sy=window.scrollY,cols=Math.ceil(W/(S*1.732))+2,rows=Math.ceil(H/(S*1.5))+2;for(let r=-1;r<rows;r++)for(let col=-1;col<cols;col++){const cx=col*S*1.732+(r%2)*S*.866,cy=r*S*1.5-(sy*.03)%((S*1.5));const w=Math.sin(t+col*.3+r*.2)*.5+.5,p=Math.sin(t*1.4+col*.5-r*.3)*.5+.5;hexPath(cx,cy,S-2);ctx.strokeStyle=`rgba(0,255,65,${.02+w*.07})`;ctx.lineWidth=.6;ctx.stroke();if(w>.92){hexPath(cx,cy,S-2);ctx.fillStyle=`rgba(0,255,65,${.02+p*.03})`;ctx.fill()}}requestAnimationFrame(draw)}
+  resize();window.addEventListener('resize',resize);draw();
+})();
+
+/* ═══ HERO 3D — TORUS WIREFRAME ═══ */
+(function(){
+  const c=document.getElementById('hero-geo');if(!c)return;
+  const ctx=c.getContext('2d'),S=500;c.width=S;c.height=S;
+  const R=130,r=50,segsU=28,segsV=18;
+  const pts=[];
+  for(let u=0;u<segsU;u++){
+    for(let v=0;v<segsV;v++){
+      const a=2*Math.PI*u/segsU,b=2*Math.PI*v/segsV;
+      pts.push([
+        (R+r*Math.cos(b))*Math.cos(a),
+        (R+r*Math.cos(b))*Math.sin(a),
+        r*Math.sin(b)
+      ]);
+    }
+  }
+  const edges=[];
+  for(let u=0;u<segsU;u++){
+    for(let v=0;v<segsV;v++){
+      const a=u*segsV+v,b=u*segsV+(v+1)%segsV,d=((u+1)%segsU)*segsV+v;
+      edges.push([a,b],[a,d]);
+    }
+  }
+  let rx=0,ry=0,rz=0,mrx=0,mry=0;
+  document.addEventListener('mousemove',e=>{mrx=(e.clientY/innerHeight-.5)*.4;mry=(e.clientX/innerWidth-.5)*.5});
+  function rot([x,y,z],rx,ry,rz){
+    let y1=y*Math.cos(rx)-z*Math.sin(rx),z1=y*Math.sin(rx)+z*Math.cos(rx);
+    let x2=x*Math.cos(ry)+z1*Math.sin(ry),z2=-x*Math.sin(ry)+z1*Math.cos(ry);
+    let x3=x2*Math.cos(rz)-y1*Math.sin(rz),y3=x2*Math.sin(rz)+y1*Math.cos(rz);
+    return[x3,y3,z2];
+  }
+  function proj([x,y,z]){const f=420,d=f/(f+z+R+r);return[x*d+S/2,y*d+S/2,z]}
+  function draw(){
+    ctx.clearRect(0,0,S,S);
+    rx+=.005+mrx*.009;ry+=.008+mry*.012;rz+=.003;
+    const pv=pts.map(v=>proj(rot(v,rx,ry,rz)));
+    edges.forEach(([a,b])=>{
+      const pa=pv[a],pb=pv[b];
+      const dep=((pa[2]+pb[2])/(2*(R+r))+1)/2;
+      const al=0.05+dep*.55;
+      const g=ctx.createLinearGradient(pa[0],pa[1],pb[0],pb[1]);
+      g.addColorStop(0,`rgba(0,255,65,${al})`);
+      g.addColorStop(.5,`rgba(0,229,255,${al*.75})`);
+      g.addColorStop(1,`rgba(0,255,65,${al})`);
+      ctx.beginPath();ctx.moveTo(pa[0],pa[1]);ctx.lineTo(pb[0],pb[1]);
+      ctx.strokeStyle=g;ctx.lineWidth=.4+dep*1.2;ctx.stroke();
+    });
+    pv.forEach(([px,py,pz])=>{
+      const d=(pz+R+r)/(2*(R+r));if(d<.25)return;
+      ctx.beginPath();ctx.arc(px,py,d*2.2,0,Math.PI*2);
+      ctx.fillStyle=`rgba(0,255,65,${d*.85})`;ctx.fill();
+      const g=ctx.createRadialGradient(px,py,0,px,py,d*8);
+      g.addColorStop(0,`rgba(0,229,255,${d*.14})`);g.addColorStop(1,'rgba(0,229,255,0)');
+      ctx.fillStyle=g;ctx.beginPath();ctx.arc(px,py,d*8,0,Math.PI*2);ctx.fill();
+    });
+    const g=ctx.createRadialGradient(S/2,S/2,0,S/2,S/2,60);
+    g.addColorStop(0,'rgba(0,255,65,0.07)');g.addColorStop(1,'rgba(0,255,65,0)');
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(S/2,S/2,60,0,Math.PI*2);ctx.fill();
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ═══ 3D MAGNETIC TILT ═══ */
+document.querySelectorAll('.vc').forEach(card=>{
+  card.addEventListener('mousemove',e=>{
+    const r=card.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
+    card.style.transform=`perspective(700px) rotateX(${-y*16}deg) rotateY(${x*16}deg) translateZ(12px) scale(1.03)`;
+    card.style.boxShadow=`${-x*24}px ${-y*24}px 50px rgba(191,0,255,.18),0 24px 60px rgba(0,0,0,.4)`;
+  });
+  card.addEventListener('mouseleave',()=>{
+    card.style.transform='perspective(700px) rotateX(0) rotateY(0) translateZ(0) scale(1)';
+    card.style.boxShadow='';card.style.transition='transform .4s,box-shadow .4s';
+    setTimeout(()=>card.style.transition='',400);
+  });
+});
+
+/* ═══ SCROLL REVEAL ═══ */
+const rv=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('on')}),{threshold:.08});
+document.querySelectorAll('.rv,.rv-l,.rv-r').forEach(el=>rv.observe(el));
+
+/* ═══ TOC ═══ */
+const sIds=['hero','what','how','types','tools','impact','setup','defence'];
+const tItems=document.querySelectorAll('.toc-i');
+const so=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)tItems.forEach(t=>t.classList.toggle('active',t.dataset.s===x.target.id))})},{threshold:.25});
+sIds.forEach(id=>{const el=document.getElementById(id);if(el)so.observe(el)});
+function goTo(h){document.querySelector(h)?.scrollIntoView({behavior:'smooth'})}
+
+/* ═══ CODE COPY ═══ */
+document.querySelectorAll('.cb').forEach(b=>{
+  b.title='Click to copy';
+  b.addEventListener('click',()=>{
+    navigator.clipboard.writeText(b.querySelector('code').innerText).catch(()=>{});
+    const o=b.getAttribute('data-l');b.setAttribute('data-l',o+' ✓ COPIED');
+    setTimeout(()=>b.setAttribute('data-l',o),2000);
+  });
+});
+</script>
+</body>
+</html>
