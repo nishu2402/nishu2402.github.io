@@ -219,7 +219,33 @@ body{background:var(--bg);color:var(--t1);font-family:var(--body);font-size:17px
 .rv.on,.rv-l.on,.rv-r.on{opacity:1;transform:none}
 
 /* ── RESPONSIVE ── */
-@media(max-width:700px){.vgrid,.tgrid,.igrid,.mgrid{grid-template-columns:1fr}.hero-canvas-wrap{display:none}.cta{padding:36px 20px}.flow{flex-direction:column}.flow-arrow{transform:rotate(90deg)}}
+@media(max-width:700px){.vgrid,.tgrid,.igrid,.mgrid,.ai-grid{grid-template-columns:1fr}.hero-canvas-wrap{display:none}.cta{padding:36px 20px}.flow{flex-direction:column}.flow-arrow{transform:rotate(90deg)}}
+
+/* ── AI STYLES ── */
+:root{--pglow:0 0 20px rgba(191,0,255,.4),0 0 60px rgba(191,0,255,.1)}
+.sec-ai .sec-t{color:#bf00ff;text-shadow:var(--pglow)}
+.sec-ai .sec-n{color:var(--c)}
+.sec-ai .sec-ln{background:linear-gradient(to right,rgba(191,0,255,.35),transparent)}
+.sec-ai .tw-cursor{background:#bf00ff}
+.div-ai{background:linear-gradient(to right,transparent,rgba(191,0,255,.22),transparent)}
+.div-ai::after{background:#bf00ff;box-shadow:0 0 12px #bf00ff}
+.panel-ai{background:rgba(191,0,255,.03);border-color:rgba(191,0,255,.18)}
+.panel-ai:hover{border-color:rgba(191,0,255,.45)}
+.panel-ai .panel-t{color:#bf00ff}
+.panel-ai .panel-t::after{background:linear-gradient(to right,rgba(191,0,255,.2),transparent)}
+.panel-ai::before{background:linear-gradient(to bottom,#bf00ff,transparent)}
+.ai-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px;margin:20px 0}
+.ai-card{background:rgba(191,0,255,.04);border:1px solid rgba(191,0,255,.18);border-radius:4px;padding:22px;position:relative;overflow:hidden;transition:all .3s}
+.ai-card::after{content:'';position:absolute;top:0;right:0;width:0;height:0;border-top:26px solid rgba(191,0,255,.25);border-left:26px solid transparent}
+.ai-card:hover{border-color:rgba(191,0,255,.5);box-shadow:var(--pglow),0 16px 40px rgba(0,0,0,.25);transform:translateY(-3px)}
+.ai-ico{font-size:24px;margin-bottom:10px;display:block}
+.ai-name{font-family:var(--dsp);font-size:11px;font-weight:700;letter-spacing:2px;color:#bf00ff;text-transform:uppercase;margin-bottom:10px}
+.ai-desc{font-size:14px;color:var(--t2);line-height:1.65;font-weight:300}
+.cb-ai{border-left-color:#bf00ff !important}
+.cb-ai::before{color:#bf00ff !important;background:rgba(191,0,255,.07) !important}
+.al-p{background:rgba(191,0,255,.04);border:1px solid rgba(191,0,255,.18);border-left:3px solid #bf00ff}
+.al-p .al-ic{color:#bf00ff}
+</style>
 </style>
 </head>
 <body>
@@ -258,6 +284,7 @@ body{background:var(--bg);color:var(--t1);font-family:var(--body);font-size:17px
   <div class="toc-i" onclick="goTo('#impact')" data-s="impact"><div class="toc-d"></div><span class="toc-l">REAL WORLD</span></div>
   <div class="toc-i" onclick="goTo('#setup')" data-s="setup"><div class="toc-d"></div><span class="toc-l">GET STARTED</span></div>
   <div class="toc-i" onclick="goTo('#defence')" data-s="defence"><div class="toc-d"></div><span class="toc-l">DEFENCE</span></div>
+  <div class="toc-i" onclick="goTo('#ai')" data-s="ai"><div class="toc-d"></div><span class="toc-l">AI INTEGRATION</span></div>
 </nav>
 
 <div class="wrap">
@@ -816,6 +843,195 @@ EOF</span>
   </div>
 </section>
 
+<!-- ══ AI DIVIDER ══ -->
+<div class="div div-ai"></div>
+
+<!-- ══════════════════════════════════
+     AI INTEGRATION
+══════════════════════════════════ -->
+<section class="sec rv sec-ai" id="ai">
+  <div class="sec-hd">
+    <span class="sec-n">09 //</span>
+    <h2 class="sec-t">AI Integration in Fuzzing &amp; Vulnerability Discovery<span class="tw-cursor"></span></h2>
+    <div class="sec-ln"></div>
+  </div>
+
+  <div class="panel panel-ai rv-l">
+    <p>Fuzzing and Artificial Intelligence are a natural partnership — fuzzing is fundamentally a problem of generating vast numbers of inputs intelligently to maximise the discovery of unexpected behaviour, and AI excels at learning patterns, making intelligent decisions under uncertainty, and generating structured outputs at scale. The convergence of ML with coverage-guided fuzzing has produced a new generation of fuzzers that reach vulnerability-triggering code paths that traditional mutation-based approaches would take months to discover, if ever.</p>
+    <p>On the defensive side, AI is transforming how organisations triage crash reports, deduplicate fuzzing findings, predict which code areas are most likely to harbour vulnerabilities, and prioritise remediation from the enormous finding sets that continuous fuzzing pipelines generate. Understanding AI's role across both sides of the fuzzing discipline is now essential for any security engineer working on vulnerability discovery or secure software development.</p>
+  </div>
+
+  <div class="alert al-p rv">
+    <span class="al-ic">[ AI ]</span>
+    <p class="al-tx">Google's AI-powered fuzzing research demonstrated that LLM-generated fuzz targets for open-source projects achieved <strong>higher code coverage than human-written fuzz targets</strong> in controlled comparisons — with the AI automatically identifying edge cases, boundary conditions, and API interaction patterns that human fuzzer authors commonly overlook.</p>
+  </div>
+
+  <h3 style="font-family:var(--mono);font-size:11px;letter-spacing:3px;color:#bf00ff;text-transform:uppercase;margin:28px 0 16px;">AI-Powered Offensive Fuzzing Capabilities</h3>
+  <div class="ai-grid rv">
+    <div class="ai-card">
+      <span class="ai-ico">🧠</span>
+      <div class="ai-name">ML-Guided Input Generation</div>
+      <div class="ai-desc">Machine learning models trained on coverage data learn which input mutations consistently increase code coverage and steer generation toward unexplored paths — moving beyond random byte flipping to semantically-aware mutations that exercise parser state machines, trigger conditional branches, and reach deeply-nested code paths that random fuzzing statistically never reaches.</div>
+    </div>
+    <div class="ai-card">
+      <span class="ai-ico">📝</span>
+      <div class="ai-name">LLM-Generated Fuzz Targets</div>
+      <div class="ai-desc">Large language models analyse target library source code or documentation and automatically generate complete, compilable libFuzzer / AFL++ harnesses — identifying the most useful entry points, constructing appropriate input grammars, and writing driver code that exercises the API surface effectively. Google's OSS-Fuzz AI integration uses this approach at scale across hundreds of open-source projects.</div>
+    </div>
+    <div class="ai-card">
+      <span class="ai-ico">🎯</span>
+      <div class="ai-name">Directed / Targeted Fuzzing</div>
+      <div class="ai-desc">AI models analyse the call graph, data flow, and code history of a target to identify the highest-risk code regions — recently modified functions, complex parsing logic, unsafe memory operations, and historically buggy subsystems — then direct fuzzing energy specifically toward those areas rather than diffusing effort uniformly across the entire codebase.</div>
+    </div>
+    <div class="ai-card">
+      <span class="ai-ico">🔤</span>
+      <div class="ai-name">Grammar &amp; Protocol Inference</div>
+      <div class="ai-desc">ML models infer the implicit grammar of target input formats from a small corpus of valid samples — learning the structure of file formats, network protocols, and API schemas without requiring manually-specified grammars. This enables grammatically-valid fuzzing of structured targets (PDF parsers, network daemons, JSON APIs) where purely random mutation wastes nearly all executions on inputs rejected at the parser before reaching interesting code.</div>
+    </div>
+    <div class="ai-card">
+      <span class="ai-ico">🧬</span>
+      <div class="ai-name">Mutation Strategy Optimisation</div>
+      <div class="ai-desc">Reinforcement learning agents observe which mutation operators — bit flip, byte replacement, block insertion, dictionary substitution — produce coverage increases in the current fuzzing session and dynamically adjust mutation probability weights, concentrating effort on the strategies that are working for this specific target rather than applying fixed operator probabilities.</div>
+    </div>
+    <div class="ai-card">
+      <span class="ai-ico">⚡</span>
+      <div class="ai-name">Seed Corpus Generation</div>
+      <div class="ai-desc">LLMs generate diverse, high-quality initial seed corpora for fuzzing campaigns — producing structurally varied, edge-case-rich inputs that maximise initial coverage without requiring a manually curated seed collection. For targets with complex input formats, AI-generated seeds consistently outperform random or minimal seeds in triggering interesting code paths from the very start of a fuzzing campaign.</div>
+    </div>
+  </div>
+
+  <h3 style="font-family:var(--mono);font-size:11px;letter-spacing:3px;color:#bf00ff;text-transform:uppercase;margin:32px 0 16px;">AI-Powered Fuzzing Defence &amp; Triage</h3>
+  <div class="ai-grid rv">
+    <div class="ai-card">
+      <span class="ai-ico">📊</span>
+      <div class="ai-name">Automated Crash Triage &amp; Deduplication</div>
+      <div class="ai-desc">ML models cluster crash reports by root cause — grouping the hundreds of unique crash inputs that trigger the same underlying bug into a single deduplicated finding. Stack trace similarity analysis, memory access pattern comparison, and code path clustering collapse a continuous fuzzing pipeline's raw crash output into a manageable, prioritised set of unique vulnerabilities for human review.</div>
+    </div>
+    <div class="ai-card">
+      <span class="ai-ico">🔮</span>
+      <div class="ai-name">Vulnerability Prediction</div>
+      <div class="ai-desc">ML models trained on historical vulnerability data analyse code metrics — function complexity, pointer arithmetic density, loop bound patterns, and inter-procedural data flow — to predict which code regions are statistically most likely to contain exploitable vulnerabilities, enabling security teams to focus fuzzing compute budget on the highest-risk areas first.</div>
+    </div>
+    <div class="ai-card">
+      <span class="ai-ico">🛡</span>
+      <div class="ai-name">AI-Integrated CI/CD Fuzzing</div>
+      <div class="ai-desc">AI orchestration layers manage continuous fuzzing pipelines in CI/CD — automatically triggering fuzz campaigns against changed code paths when PRs are merged, scaling compute resources based on campaign progress, rotating seed corpora, and posting triage-annotated crash reports directly to the issue tracker with root cause analysis and suggested remediation before any human reviews the output.</div>
+    </div>
+    <div class="ai-card">
+      <span class="ai-ico">🔍</span>
+      <div class="ai-name">Root Cause Analysis Automation</div>
+      <div class="ai-desc">LLMs analyse crash stack traces, memory sanitiser output (ASAN/MSAN/UBSAN), and the triggering input to automatically classify vulnerability type (stack overflow, heap use-after-free, integer overflow, OOB read/write), explain the root cause in plain language, and identify the specific line of code responsible — dramatically reducing the time from crash discovery to developer-ready bug report.</div>
+    </div>
+    <div class="ai-card">
+      <span class="ai-ico">🧹</span>
+      <div class="ai-name">Input Minimisation</div>
+      <div class="ai-desc">AI-guided delta debugging reduces crash-triggering inputs to their minimal form — stripping every byte that is not necessary to reproduce the crash. Minimal test cases are faster to reproduce, easier to analyse, and produce cleaner bug reports. ML models learn which input regions are structurally critical to the crash and avoid mutations in those areas during minimisation.</div>
+    </div>
+    <div class="ai-card">
+      <span class="ai-ico">📈</span>
+      <div class="ai-name">Coverage Gap Analysis</div>
+      <div class="ai-desc">AI analyses accumulated coverage maps from long-running fuzzing campaigns to identify code regions that have never been reached — automatically generating targeted seeds, modifying mutation strategies, and suggesting additional harness entry points specifically designed to exercise the uncovered paths, ensuring fuzzing campaigns continue to make progress rather than plateauing.</div>
+    </div>
+  </div>
+
+  <div class="panel panel-ai rv" style="margin-top:28px">
+    <div class="panel-t">AI-Enhanced Fuzzing Tools &amp; Platforms</div>
+    <table style="width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12px;margin:8px 0">
+      <thead><tr>
+        <th style="text-align:left;padding:10px 14px;color:#bf00ff;border-bottom:1px solid rgba(191,0,255,.25);letter-spacing:2px;font-size:10px;text-transform:uppercase">Tool</th>
+        <th style="text-align:left;padding:10px 14px;color:#bf00ff;border-bottom:1px solid rgba(191,0,255,.25);letter-spacing:2px;font-size:10px;text-transform:uppercase">AI Capability</th>
+        <th style="text-align:left;padding:10px 14px;color:#bf00ff;border-bottom:1px solid rgba(191,0,255,.25);letter-spacing:2px;font-size:10px;text-transform:uppercase">Fuzzing Use Case</th>
+      </tr></thead>
+      <tbody>
+        <tr><td style="padding:9px 14px;color:var(--g);border-bottom:1px solid rgba(0,255,65,.05);font-weight:700">AFL++ + ML scheduling</td><td style="padding:9px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">Reinforcement learning mutation weighting</td><td style="padding:9px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">Dynamic mutation strategy that learns which operators produce coverage gains for this target</td></tr>
+        <tr><td style="padding:9px 14px;color:var(--g);border-bottom:1px solid rgba(0,255,65,.05);font-weight:700">Google OSS-Fuzz + LLM</td><td style="padding:9px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">GPT-4 fuzz target generation</td><td style="padding:9px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">Automatic libFuzzer harness writing for open-source libraries at scale</td></tr>
+        <tr><td style="padding:9px 14px;color:var(--g);border-bottom:1px solid rgba(0,255,65,.05);font-weight:700">LibAFL</td><td style="padding:9px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">Composable ML-integrated fuzzer framework</td><td style="padding:9px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">Build custom AI-guided fuzzers with pluggable ML mutation and scheduling components</td></tr>
+        <tr><td style="padding:9px 14px;color:var(--g);border-bottom:1px solid rgba(0,255,65,.05);font-weight:700">ClusterFuzz / FuzzBench</td><td style="padding:9px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">Automated campaign orchestration + triage</td><td style="padding:9px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">Google's infrastructure for continuous at-scale fuzzing with automated crash deduplication</td></tr>
+        <tr><td style="padding:9px 14px;color:var(--g);border-bottom:1px solid rgba(0,255,65,.05);font-weight:700">GPT-4 / Claude</td><td style="padding:9px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">Harness generation + crash analysis</td><td style="padding:9px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">Write fuzz harnesses from API docs, analyse ASAN output, generate seed corpora</td></tr>
+        <tr><td style="padding:9px 14px;color:var(--g);font-weight:700">Mayhem (ForAllSecure)</td><td style="padding:9px 14px;color:var(--t2)">Autonomous AI-driven fuzzing platform</td><td style="padding:9px 14px;color:var(--t2)">Fully automated binary fuzzing with AI-powered triage, deduplication, and PoC generation</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="cb cb-ai rv" data-l="AI-Assisted — LLM Fuzz Harness Generation (Python + GPT)">
+    <code><span class="cmt"># Use GPT to generate a libFuzzer harness for a target library</span>
+<span class="kw">import</span> openai
+
+<span class="cmt"># Provide the target function signature and API context</span>
+target_api = <span class="str">"""
+// Target: libpng image parsing library
+// Function to fuzz: png_read_png()
+// Header: png.h
+// Key structs: png_structp, png_infop
+
+#include "png.h"
+png_structp png_create_read_struct(const char *user_png_ver,
+    png_voidp error_ptr, png_error_ptr error_fn, png_error_ptr warn_fn);
+png_infop png_create_info_struct(png_structp png_ptr);
+void png_read_png(png_structp png_ptr, png_infop info_ptr,
+    int transforms, png_voidp params);
+"""</span>
+
+client = openai.<span class="fn">OpenAI</span>()
+response = client.chat.completions.<span class="fn">create</span>(
+    model=<span class="str">"gpt-4o"</span>,
+    messages=[{<span class="str">"role"</span>:<span class="str">"user"</span>, <span class="str">"content"</span>: <span class="str">f"""
+You are an expert fuzzing engineer writing a libFuzzer harness.
+Generate a complete, compilable C libFuzzer harness for this API:
+
+{target_api}
+
+Requirements:
+1. Implement LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
+2. Pass fuzzer data as a memory-backed PNG stream
+3. Handle all errors gracefully (no aborts on invalid input — those hide crashes)
+4. Include setjmp/longjmp error handling for libpng
+5. Free all allocated resources to avoid false positive memory leaks
+6. Add comments explaining each section
+7. Include compilation command at the top as a comment
+"""</span>}]
+)
+<span class="fn">print</span>(response.choices[<span class="num">0</span>].message.content)</code>
+  </div>
+
+  <div class="cb cb-ai rv" data-l="AI — Automated Crash Triage &amp; Bug Report Generation">
+    <code><span class="cmt"># Feed ASAN crash output into GPT for automated root cause analysis</span>
+<span class="kw">import</span> openai
+
+asan_output = <span class="str">"""
+=================================================================
+==12345==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x602000001a50
+READ of size 4 at 0x602000001a50 thread T0
+    #0 0x5555557a1234 in parse_chunk /src/parser.c:287
+    #1 0x5555557a5678 in process_data /src/parser.c:412
+    #2 0x5555557a9012 in LLVMFuzzerTestOneInput /src/fuzz_target.c:23
+SUMMARY: AddressSanitizer: heap-buffer-overflow /src/parser.c:287 in parse_chunk
+Shadow bytes around the buggy address: ...
+"""</span>
+
+response = openai.OpenAI().chat.completions.<span class="fn">create</span>(
+    model=<span class="str">"gpt-4o"</span>,
+    messages=[{<span class="str">"role"</span>:<span class="str">"user"</span>, <span class="str">"content"</span>: <span class="str">f"""
+You are a vulnerability researcher. Analyse this ASAN crash report:
+
+{asan_output}
+
+Provide:
+1. VULNERABILITY TYPE — exact CWE classification
+2. ROOT CAUSE — what went wrong at the code level
+3. EXPLOITABILITY — can this be exploited? Why/why not?
+4. CVSSv3 SCORE — estimated score with vector string
+5. REMEDIATION — specific code fix for parse_chunk() at line 287
+6. REGRESSION TEST — what input property should a unit test verify?
+7. MITRE ATT&CK — relevant technique if this were exploited
+"""</span>}]
+)
+<span class="fn">print</span>(response.choices[<span class="num">0</span>].message.content)</code>
+  </div>
+</section>
+
+<div class="div"></div>
+
 <!-- ══ CTA ══ -->
 <div class="cta rv">
   <div class="cta-t">// Feed It. Watch It Break. Make It Stronger. //</div>
@@ -966,7 +1182,7 @@ const rv=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting)x.target.
 document.querySelectorAll('.rv,.rv-l,.rv-r').forEach(el=>rv.observe(el));
 
 /* ═══ TOC ═══ */
-const sIds=['hero','what','how','types','tools','impact','setup','defence'];
+const sIds=['hero','what','how','types','tools','impact','setup','defence','ai'];
 const tItems=document.querySelectorAll('.toc-i');
 const so=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)tItems.forEach(t=>t.classList.toggle('active',t.dataset.s===x.target.id))})},{threshold:.25});
 sIds.forEach(id=>{const el=document.getElementById(id);if(el)so.observe(el)});

@@ -213,7 +213,33 @@ body{background:var(--bg);color:var(--t1);font-family:var(--body);font-size:17px
 .rv.on,.rv-l.on,.rv-r.on{opacity:1;transform:none}
 
 /* ── RESPONSIVE ── */
-@media(max-width:700px){.vgrid,.tgrid,.mgrid-post{grid-template-columns:1fr}.hero-canvas-wrap{display:none}.cta{padding:36px 20px}.cta::before{font-size:80px}}
+@media(max-width:700px){.vgrid,.tgrid,.mgrid-post,.ai-grid{grid-template-columns:1fr}.hero-canvas-wrap{display:none}.cta{padding:36px 20px}.cta::before{font-size:80px}}
+
+/* ── AI STYLES ── */
+:root{--pglow:0 0 20px rgba(191,0,255,.4),0 0 60px rgba(191,0,255,.1)}
+.sec-ai .sec-t{color:#bf00ff;text-shadow:var(--pglow)}
+.sec-ai .sec-n{color:var(--c)}
+.sec-ai .sec-ln{background:linear-gradient(to right,rgba(191,0,255,.35),transparent)}
+.sec-ai .tw-cursor{background:#bf00ff}
+.div-ai{background:linear-gradient(to right,transparent,rgba(191,0,255,.22),transparent)}
+.div-ai::after{background:#bf00ff;box-shadow:0 0 12px #bf00ff}
+.panel-ai{background:rgba(191,0,255,.03);border-color:rgba(191,0,255,.18)}
+.panel-ai:hover{border-color:rgba(191,0,255,.45)}
+.panel-ai .panel-t{color:#bf00ff}
+.panel-ai .panel-t::after{background:linear-gradient(to right,rgba(191,0,255,.2),transparent)}
+.panel-ai::before{background:linear-gradient(to bottom,#bf00ff,transparent)}
+.ai-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px;margin:20px 0}
+.ai-card{background:rgba(191,0,255,.04);border:1px solid rgba(191,0,255,.18);border-radius:4px;padding:22px;position:relative;overflow:hidden;transition:all .3s}
+.ai-card::after{content:'';position:absolute;top:0;right:0;width:0;height:0;border-top:26px solid rgba(191,0,255,.25);border-left:26px solid transparent}
+.ai-card:hover{border-color:rgba(191,0,255,.5);box-shadow:var(--pglow),0 16px 40px rgba(0,0,0,.25);transform:translateY(-3px)}
+.ai-ico{font-size:24px;margin-bottom:10px;display:block}
+.ai-name{font-family:var(--dsp);font-size:11px;font-weight:700;letter-spacing:2px;color:#bf00ff;text-transform:uppercase;margin-bottom:10px}
+.ai-desc{font-size:14px;color:var(--t2);line-height:1.65;font-weight:300}
+.cb-ai{border-left-color:#bf00ff !important}
+.cb-ai::before{color:#bf00ff !important;background:rgba(191,0,255,.07) !important}
+.al-p{background:rgba(191,0,255,.04);border:1px solid rgba(191,0,255,.18);border-left:3px solid #bf00ff}
+.al-p .al-ic{color:#bf00ff}
+</style>
 </style>
 </head>
 <body>
@@ -253,6 +279,7 @@ body{background:var(--bg);color:var(--t1);font-family:var(--body);font-size:17px
   <div class="toc-i" onclick="goTo('#post')" data-s="post"><div class="toc-d"></div><span class="toc-l">POST-EXPLOIT</span></div>
   <div class="toc-i" onclick="goTo('#payloads')" data-s="payloads"><div class="toc-d"></div><span class="toc-l">PAYLOADS</span></div>
   <div class="toc-i" onclick="goTo('#evasion')" data-s="evasion"><div class="toc-d"></div><span class="toc-l">EVASION</span></div>
+  <div class="toc-i" onclick="goTo('#ai')" data-s="ai"><div class="toc-d"></div><span class="toc-l">AI INTEGRATION</span></div>
 </nav>
 
 <div class="wrap">
@@ -902,6 +929,180 @@ body{background:var(--bg);color:var(--t1);font-family:var(--body);font-size:17px
   </div>
 </section>
 
+<!-- ══ AI DIVIDER ══ -->
+<div class="div div-ai"></div>
+
+<!-- ══════════════════════════════════
+     AI INTEGRATION
+══════════════════════════════════ -->
+<section class="sec rv sec-ai" id="ai">
+  <div class="sec-hd">
+    <span class="sec-n">10 //</span>
+    <h2 class="sec-t">AI Integration in Metasploit &amp; Exploitation Workflows<span class="tw-cursor"></span></h2>
+    <div class="sec-ln"></div>
+  </div>
+
+  <div class="panel panel-ai rv-l">
+    <p>Artificial Intelligence is fundamentally changing how penetration testers use Metasploit and approach exploitation workflows. The traditionally manual and time-intensive phases — vulnerability research, module selection, payload customisation, evasion tuning, and post-exploitation triage — are all being accelerated by AI tools that compress expert knowledge into actionable recommendations. Understanding how AI integrates with the Metasploit workflow makes every practitioner more effective and every engagement more thorough.</p>
+    <p>On the defensive side, AI-powered endpoint detection and response (EDR) platforms have made generic Meterpreter payloads and known MSF exploit signatures instantly detectable — pushing the security community toward more sophisticated evasion techniques and reinforcing why understanding AI-driven defence is as important as mastering the offensive tools themselves.</p>
+  </div>
+
+  <div class="alert al-p rv">
+    <span class="al-ic">[ AI ]</span>
+    <p class="al-tx">AI models can analyse a target's Nmap scan output and automatically recommend the most relevant Metasploit modules, ranked by likelihood of success for that specific service version — replacing the manual process of searching ExploitDB, cross-referencing CVEs, and selecting modules from experience. This translates to faster, more comprehensive engagement coverage, particularly against large or unfamiliar target environments.</p>
+  </div>
+
+  <h3 style="font-family:var(--mono);font-size:11px;letter-spacing:3px;color:#bf00ff;text-transform:uppercase;margin:28px 0 16px;">AI-Powered Offensive MSF Capabilities</h3>
+  <div class="ai-grid rv">
+    <div class="ai-card">
+      <span class="ai-ico">🎯</span>
+      <div class="ai-name">Intelligent Module Selection</div>
+      <div class="ai-desc">LLMs cross-reference discovered service versions, OS fingerprints, and open port combinations against the full Metasploit module library and public CVE databases — instantly recommending the highest-probability exploit modules for a given target, ranked by reliability rating, CVSSv3 score, and known exploit stability. Eliminates time wasted on incompatible or outdated module choices.</div>
+    </div>
+    <div class="ai-card">
+      <span class="ai-ico">⚗️</span>
+      <div class="ai-name">AI Payload Customisation</div>
+      <div class="ai-desc">AI analyses the target environment — OS architecture, installed security software, network egress restrictions, and available ports — to recommend the optimal payload type and configuration. For example, automatically selecting <code style="color:var(--c);font-family:var(--mono)">reverse_https</code> over <code style="color:var(--c);font-family:var(--mono)">reverse_tcp</code> when outbound HTTPS is the only permitted egress, or recommending process injection targets that blend with normal system activity.</div>
+    </div>
+    <div class="ai-card">
+      <span class="ai-ico">🕶</span>
+      <div class="ai-name">Adaptive EDR Evasion</div>
+      <div class="ai-desc">AI models generate novel payload variants — custom shellcode loaders, reflective DLL injection techniques, and in-memory execution chains — specifically tuned to evade the behavioural signatures of the EDR product detected on the target. Rather than relying on known-bad Meterpreter patterns that all EDRs detect, AI iteratively mutates the payload until it passes detection, enabling realistic simulation of advanced threat actor capabilities.</div>
+    </div>
+    <div class="ai-card">
+      <span class="ai-ico">🗺</span>
+      <div class="ai-name">Post-Exploitation Path Planning</div>
+      <div class="ai-desc">After initial access, AI analyses the compromised system's role, network position, and available post-exploitation data to recommend the optimal sequence of post-exploitation modules — suggesting which privilege escalation technique to attempt first, which credential dumps are most likely to succeed, and which lateral movement paths lead most directly to the highest-value targets in the engagement scope.</div>
+    </div>
+    <div class="ai-card">
+      <span class="ai-ico">🔄</span>
+      <div class="ai-name">Automated Session Management</div>
+      <div class="ai-desc">AI-driven agent frameworks manage multiple concurrent Meterpreter sessions autonomously — automatically running situational awareness commands on new sessions, backgrounding stable sessions, upgrading shell sessions to Meterpreter, and routing subsequent exploitation through optimal pivot sessions — freeing the tester to focus on strategic decisions rather than session housekeeping.</div>
+    </div>
+    <div class="ai-card">
+      <span class="ai-ico">📝</span>
+      <div class="ai-name">Automated Engagement Reporting</div>
+      <div class="ai-desc">LLMs process MSF workspace data — discovered hosts, exploited vulnerabilities, captured credentials, session logs — and generate structured penetration test findings complete with CVSSv3 scores, MITRE ATT&amp;CK TTP mappings, business impact narratives, and developer-actionable remediation steps. Eliminates the post-engagement reporting bottleneck that typically consumes 30–50% of total engagement time.</div>
+    </div>
+  </div>
+
+  <h3 style="font-family:var(--mono);font-size:11px;letter-spacing:3px;color:#bf00ff;text-transform:uppercase;margin:32px 0 16px;">AI-Powered Defence Against MSF-Based Attacks</h3>
+  <div class="ai-grid rv">
+    <div class="ai-card">
+      <span class="ai-ico">🛡</span>
+      <div class="ai-name">Behavioural EDR Detection</div>
+      <div class="ai-desc">Modern EDR platforms (CrowdStrike Falcon, Microsoft Defender for Endpoint, SentinelOne) use ML models trained on millions of attack sequences to detect Meterpreter behaviour at the process and memory level — recognising reflective DLL injection patterns, in-memory shellcode execution, LSASS access, and suspicious API call sequences entirely independently of file signatures. Generic MSF payloads are detected within seconds.</div>
+    </div>
+    <div class="ai-card">
+      <span class="ai-ico">🔍</span>
+      <div class="ai-name">Network Traffic Analysis</div>
+      <div class="ai-desc">ML models analyse network flow data to detect Meterpreter C2 communication patterns — even when encrypted over HTTPS. Beacon timing regularity, packet size distributions, connection persistence anomalies, and unusual process-to-network associations all produce signatures that AI-driven NDR platforms flag as potential C2 activity, regardless of the encryption layer.</div>
+    </div>
+    <div class="ai-card">
+      <span class="ai-ico">🧠</span>
+      <div class="ai-name">AI-Powered SIEM Correlation</div>
+      <div class="ai-desc">AI correlation engines in modern SIEM platforms (Microsoft Sentinel with Copilot, Splunk with AI-driven alerts) automatically connect exploit activity indicators across multiple event sources — correlating a failed authentication on one host, a new process creation on another, and unusual outbound traffic on a third into a unified attack story that rule-based correlation would never assemble.</div>
+    </div>
+    <div class="ai-card">
+      <span class="ai-ico">🚨</span>
+      <div class="ai-name">Automated Threat Hunting</div>
+      <div class="ai-desc">AI threat hunting tools proactively search for indicators of Metasploit-based compromise across endpoint telemetry — scanning for known Meterpreter memory signatures, suspicious Sysmon process creation chains, anomalous PowerShell execution, and encoded command-line arguments that match MSF staging patterns — detecting threats that evade real-time alerts by operating below individual detection thresholds.</div>
+    </div>
+    <div class="ai-card">
+      <span class="ai-ico">⚡</span>
+      <div class="ai-name">Automated Incident Response</div>
+      <div class="ai-desc">AI-driven SOAR platforms respond automatically to confirmed Metasploit-based attack indicators — isolating the compromised host, terminating suspicious processes, revoking active sessions, blocking C2 IP ranges at the firewall, capturing forensic memory dumps, and notifying the SOC with a pre-built attack timeline — all within seconds of detection, before lateral movement can begin.</div>
+    </div>
+    <div class="ai-card">
+      <span class="ai-ico">🔮</span>
+      <div class="ai-name">Vulnerability Prioritisation</div>
+      <div class="ai-desc">AI models analyse the organisation's full vulnerability inventory and cross-reference it against real-time threat intelligence — identifying which vulnerabilities have working Metasploit modules, active exploitation in the wild, and the highest potential impact given the organisation's specific network topology. Enables risk-based patching that neutralises the most MSF-accessible attack paths first.</div>
+    </div>
+  </div>
+
+  <div class="panel panel-ai rv" style="margin-top:28px">
+    <div class="panel-t">AI Tools for MSF-Enhanced Penetration Testing</div>
+    <table style="width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12px;margin:8px 0">
+      <thead><tr>
+        <th style="text-align:left;padding:10px 14px;color:#bf00ff;border-bottom:1px solid rgba(191,0,255,.25);letter-spacing:2px;font-size:10px;text-transform:uppercase">Tool</th>
+        <th style="text-align:left;padding:10px 14px;color:#bf00ff;border-bottom:1px solid rgba(191,0,255,.25);letter-spacing:2px;font-size:10px;text-transform:uppercase">AI Capability</th>
+        <th style="text-align:left;padding:10px 14px;color:#bf00ff;border-bottom:1px solid rgba(191,0,255,.25);letter-spacing:2px;font-size:10px;text-transform:uppercase">MSF Workflow Use Case</th>
+      </tr></thead>
+      <tbody>
+        <tr><td style="padding:9px 14px;color:var(--g);border-bottom:1px solid rgba(0,255,65,.05);font-weight:700">GPT-4 / Claude</td><td style="padding:9px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">Module selection &amp; payload advice</td><td style="padding:9px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">Feed Nmap output → AI recommends best MSF modules, payload type, and LHOST config for each service</td></tr>
+        <tr><td style="padding:9px 14px;color:var(--g);border-bottom:1px solid rgba(0,255,65,.05);font-weight:700">PentestGPT</td><td style="padding:9px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">LLM-guided pentest workflow</td><td style="padding:9px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">Step-by-step MSF exploitation guidance, post-exploitation suggestions, and finding documentation</td></tr>
+        <tr><td style="padding:9px 14px;color:var(--g);border-bottom:1px solid rgba(0,255,65,.05);font-weight:700">Metasploit Pro</td><td style="padding:9px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">Automated exploitation &amp; reporting</td><td style="padding:9px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">Commercial MSF tier with AI-assisted attack chaining and automated report generation</td></tr>
+        <tr><td style="padding:9px 14px;color:var(--g);border-bottom:1px solid rgba(0,255,65,.05);font-weight:700">CrowdStrike Falcon</td><td style="padding:9px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">ML behavioural EDR</td><td style="padding:9px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">Detects Meterpreter injection, LSASS access, and MSF staging patterns in real time</td></tr>
+        <tr><td style="padding:9px 14px;color:var(--g);border-bottom:1px solid rgba(0,255,65,.05);font-weight:700">Microsoft Sentinel + Copilot</td><td style="padding:9px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">LLM-powered SIEM correlation</td><td style="padding:9px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">Natural-language threat hunting for MSF-based attack indicators across all telemetry sources</td></tr>
+        <tr><td style="padding:9px 14px;color:var(--g);font-weight:700">Nuclei + AI templates</td><td style="padding:9px 14px;color:var(--t2)">AI-generated vulnerability templates</td><td style="padding:9px 14px;color:var(--t2)">Rapid pre-check templates for MSF-exploitable CVEs — confirm vulnerability before launching exploit</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="cb cb-ai rv" data-l="AI-Assisted — Nmap to MSF Module Recommendation (Python + GPT)">
+    <code><span class="cmt"># Feed Nmap scan output into GPT for intelligent MSF module selection</span>
+<span class="kw">import</span> openai, subprocess, json
+
+<span class="cmt"># Run Nmap scan against target</span>
+nmap_out = subprocess.<span class="fn">run</span>(
+    [<span class="str">'nmap'</span>,<span class="str">'-sV'</span>,<span class="str">'-T4'</span>,<span class="str">'--open'</span>,<span class="str">'-oJ'</span>,<span class="str">'-'</span>, <span class="prm">'&lt;TARGET-IP&gt;'</span>],
+    capture_output=<span class="kw">True</span>, text=<span class="kw">True</span>
+).stdout
+
+client = openai.<span class="fn">OpenAI</span>()
+response = client.chat.completions.<span class="fn">create</span>(
+    model=<span class="str">"gpt-4o"</span>,
+    messages=[{<span class="str">"role"</span>:<span class="str">"user"</span>, <span class="str">"content"</span>: <span class="str">f"""
+You are an expert Metasploit penetration tester on an authorised engagement.
+Analyse this Nmap scan output and provide a prioritised MSF attack plan:
+
+{nmap_out[:3000]}
+
+For each discovered service, provide:
+1. MSF MODULE PATH — exact use path (e.g. exploit/windows/smb/ms17_010_eternalblue)
+2. RELIABILITY — module reliability rating and why
+3. RECOMMENDED PAYLOAD — best payload for this target OS/arch
+4. REQUIRED OPTIONS — all set commands needed (RHOSTS, LHOST, LPORT, etc.)
+5. PRE-CHECK — Nmap NSE script or auxiliary module to confirm vulnerability safely
+6. DETECTION RISK — likelihood of triggering EDR/IDS and mitigation advice
+"""</span>}]
+)
+<span class="fn">print</span>(response.choices[<span class="num">0</span>].message.content)</code>
+  </div>
+
+  <div class="cb cb-ai rv" data-l="AI — Automated MSF Engagement Finding Generator">
+    <code><span class="cmt"># Convert MSF session evidence into a professional pentest finding</span>
+<span class="kw">import</span> openai, json
+
+finding = {
+    <span class="str">"exploit_module"</span>: <span class="str">"exploit/windows/smb/ms17_010_eternalblue"</span>,
+    <span class="str">"target"</span>: <span class="str">"192.168.1.50 — Windows Server 2008 R2 SP1 x64"</span>,
+    <span class="str">"payload"</span>: <span class="str">"windows/x64/meterpreter/reverse_tcp"</span>,
+    <span class="str">"result"</span>: <span class="str">"SYSTEM shell obtained — no credentials required"</span>,
+    <span class="str">"post_exploitation"</span>: <span class="str">"hashdump retrieved 47 NTLM hashes; domain joined; DC reachable"</span>,
+    <span class="str">"patch_status"</span>: <span class="str">"MS17-010 not applied — last patched March 2016"</span>
+}
+
+prompt = <span class="str">f"""
+As a senior penetration tester, write a complete engagement finding:
+{json.dumps(finding, indent=2)}
+
+Include: Title, CVSSv3 score and vector, Severity, Technical Description,
+Business Impact (lateral movement to DC, credential exposure, ransomware risk),
+Steps to Reproduce (exact MSF command sequence), Evidence summary,
+Remediation (specific patch KB, compensating controls), and MITRE ATT&CK TTPs.
+"""</span>
+
+r = openai.OpenAI().chat.completions.<span class="fn">create</span>(
+    model=<span class="str">"gpt-4o"</span>,
+    messages=[{<span class="str">"role"</span>:<span class="str">"user"</span>,<span class="str">"content"</span>:prompt}]
+)
+<span class="fn">print</span>(r.choices[<span class="num">0</span>].message.content)</code>
+  </div>
+</section>
+
+<div class="div"></div>
+
 <!-- ══ CTA ══ -->
 <div class="cta rv">
   <div class="cta-t">// Know Your Tools. Master Your Craft. //</div>
@@ -1085,7 +1286,7 @@ const rv=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting)x.target.
 document.querySelectorAll('.rv,.rv-l,.rv-r').forEach(el=>rv.observe(el));
 
 /* ═══ TOC TRACKING ═══ */
-const sIds=['hero','what','architecture','setup','recon','exploit','post','payloads','evasion'];
+const sIds=['hero','what','architecture','setup','recon','exploit','post','payloads','evasion','ai'];
 const tItems=document.querySelectorAll('.toc-i');
 const so=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)tItems.forEach(t=>t.classList.toggle('active',t.dataset.s===x.target.id))})},{threshold:.25});
 sIds.forEach(id=>{const el=document.getElementById(id);if(el)so.observe(el)});

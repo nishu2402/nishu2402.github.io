@@ -241,7 +241,33 @@ body{background:var(--bg);color:var(--t1);font-family:var(--body);font-size:17px
 .rv.on,.rv-l.on,.rv-r.on{opacity:1;transform:none}
 
 /* ── RESPONSIVE ── */
-@media(max-width:700px){.vgrid,.tgrid,.mgrid{grid-template-columns:1fr}.hero-canvas-wrap{display:none}.cta{padding:36px 20px}.cta::before{font-size:80px}}
+@media(max-width:700px){.vgrid,.tgrid,.mgrid,.ai-grid{grid-template-columns:1fr}.hero-canvas-wrap{display:none}.cta{padding:36px 20px}.cta::before{font-size:80px}}
+
+/* ── AI STYLES ── */
+:root{--pglow:0 0 20px rgba(191,0,255,.4),0 0 60px rgba(191,0,255,.1)}
+.sec-ai .sec-t{color:#bf00ff;text-shadow:var(--pglow)}
+.sec-ai .sec-n{color:var(--c)}
+.sec-ai .sec-ln{background:linear-gradient(to right,rgba(191,0,255,.35),transparent)}
+.sec-ai .tw-cursor{background:#bf00ff}
+.div-ai{background:linear-gradient(to right,transparent,rgba(191,0,255,.22),transparent)}
+.div-ai::after{background:#bf00ff;box-shadow:0 0 12px #bf00ff}
+.panel-ai{background:rgba(191,0,255,.03);border-color:rgba(191,0,255,.18)}
+.panel-ai:hover{border-color:rgba(191,0,255,.45)}
+.panel-ai .panel-t{color:#bf00ff}
+.panel-ai .panel-t::after{background:linear-gradient(to right,rgba(191,0,255,.2),transparent)}
+.panel-ai::before{background:linear-gradient(to bottom,#bf00ff,transparent)}
+.ai-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px;margin:20px 0}
+.ai-card{background:rgba(191,0,255,.04);border:1px solid rgba(191,0,255,.18);border-radius:4px;padding:22px;position:relative;overflow:hidden;transition:all .3s}
+.ai-card::after{content:'';position:absolute;top:0;right:0;width:0;height:0;border-top:26px solid rgba(191,0,255,.25);border-left:26px solid transparent}
+.ai-card:hover{border-color:rgba(191,0,255,.5);box-shadow:var(--pglow),0 16px 40px rgba(0,0,0,.25);transform:translateY(-3px)}
+.ai-ico{font-size:24px;margin-bottom:10px;display:block}
+.ai-name{font-family:var(--dsp);font-size:11px;font-weight:700;letter-spacing:2px;color:#bf00ff;text-transform:uppercase;margin-bottom:10px}
+.ai-desc{font-size:14px;color:var(--t2);line-height:1.65;font-weight:300}
+.cb-ai{border-left-color:#bf00ff !important}
+.cb-ai::before{color:#bf00ff !important;background:rgba(191,0,255,.07) !important}
+.al-p{background:rgba(191,0,255,.04);border:1px solid rgba(191,0,255,.18);border-left:3px solid #bf00ff}
+.al-p .al-ic{color:#bf00ff}
+</style>
 </style>
 </head>
 <body>
@@ -281,6 +307,7 @@ body{background:var(--bg);color:var(--t1);font-family:var(--body);font-size:17px
   <div class="toc-i" onclick="goTo('#network')" data-s="network"><div class="toc-d"></div><span class="toc-l">PHASE IV — NETWORK</span></div>
   <div class="toc-i" onclick="goTo('#storage')" data-s="storage"><div class="toc-d"></div><span class="toc-l">PHASE V — STORAGE</span></div>
   <div class="toc-i" onclick="goTo('#defence')" data-s="defence"><div class="toc-d"></div><span class="toc-l">DEFENCE</span></div>
+  <div class="toc-i" onclick="goTo('#ai')" data-s="ai"><div class="toc-d"></div><span class="toc-l">AI INTEGRATION</span></div>
 </nav>
 
 <div class="wrap">
@@ -899,6 +926,181 @@ ios nsuserdefaults get
   </div>
 </section>
 
+<!-- ══ AI DIVIDER ══ -->
+<div class="div div-ai"></div>
+
+<!-- ══════════════════════════════════
+     AI INTEGRATION
+══════════════════════════════════ -->
+<section class="sec rv sec-ai" id="ai">
+  <div class="sec-hd">
+    <span class="sec-n">10 //</span>
+    <h2 class="sec-t">AI Integration in Mobile Penetration Testing<span class="tw-cursor"></span></h2>
+    <div class="sec-ln"></div>
+  </div>
+
+  <div class="panel panel-ai rv-l">
+    <p>Artificial Intelligence is reshaping mobile application security from both the offensive and defensive sides. Mobile assessments are uniquely labour-intensive — they span binary analysis, runtime instrumentation, network interception, API testing, and local storage forensics simultaneously across two distinct platform ecosystems. AI compresses the most time-consuming phases of mobile assessments: automated static analysis of decompiled APK and IPA code, intelligent traffic pattern analysis, and dynamic API vulnerability discovery that would take days of manual work.</p>
+    <p>On the defensive side, AI powers the app store malware detection systems that scan millions of submissions, the runtime anomaly detection embedded in MDM platforms, and the automated SAST pipelines that scan mobile codebases for vulnerabilities before they reach production. Understanding AI's role across both sides is now a core competency for any mobile security practitioner.</p>
+  </div>
+
+  <div class="alert al-p rv">
+    <span class="al-ic">[ AI ]</span>
+    <p class="al-tx">LLMs can analyse decompiled Android Java source (from jadx) or iOS Objective-C headers (from class-dump) and automatically identify hardcoded API keys, insecure cryptographic patterns, missing certificate validation, and dangerous WebView configurations — producing a prioritised finding list in seconds that would take a manual reviewer hours to produce from the same decompiled output.</p>
+  </div>
+
+  <h3 style="font-family:var(--mono);font-size:11px;letter-spacing:3px;color:#bf00ff;text-transform:uppercase;margin:28px 0 16px;">AI-Powered Offensive Mobile Assessment</h3>
+  <div class="ai-grid rv">
+    <div class="ai-card">
+      <span class="ai-ico">🔬</span>
+      <div class="ai-name">AI-Assisted Static Analysis</div>
+      <div class="ai-desc">LLMs analyse decompiled mobile application code — Android Java from jadx, iOS Objective-C/Swift headers from class-dump — automatically identifying hardcoded credentials, API keys, insecure cryptographic implementations, missing input validation, and dangerous API usage patterns. Produces a prioritised vulnerability list from thousands of lines of decompiled code in seconds rather than hours of manual review.</div>
+    </div>
+    <div class="ai-card">
+      <span class="ai-ico">🔧</span>
+      <div class="ai-name">Intelligent Frida Script Generation</div>
+      <div class="ai-desc">LLMs generate targeted Frida instrumentation scripts based on class and method names identified during static analysis — automatically hooking authentication methods, SSL validation functions, and root/jailbreak detection checks without requiring the tester to write JavaScript from scratch. Input a method signature, receive a working hook that logs arguments, return values, and call stacks.</div>
+    </div>
+    <div class="ai-card">
+      <span class="ai-ico">📡</span>
+      <div class="ai-name">API Traffic Pattern Analysis</div>
+      <div class="ai-desc">ML models analyse intercepted mobile API traffic from Burp Suite — automatically identifying authentication token formats, parameter patterns, and endpoint structures — then generating targeted test cases for IDOR, mass assignment, and authentication bypass based on the semantic meaning of discovered API fields. Compresses hours of manual API endpoint mapping into an automated analysis pass.</div>
+    </div>
+    <div class="ai-card">
+      <span class="ai-ico">🔐</span>
+      <div class="ai-name">SSL Pinning Bypass Generation</div>
+      <div class="ai-desc">AI analyses the app's networking libraries and SSL pinning implementation from static analysis — identifying whether it uses OkHttp, Volley, NSURLSession, or a custom implementation — and generates a targeted Frida bypass script specific to that implementation. More reliable than generic bypass scripts that fail against custom pinning implementations or multi-layered certificate validation.</div>
+    </div>
+    <div class="ai-card">
+      <span class="ai-ico">💾</span>
+      <div class="ai-name">Sensitive Data Pattern Detection</div>
+      <div class="ai-desc">ML classifiers scan mobile application local storage — SQLite databases, SharedPreferences XML, NSUserDefaults plists, and cached network responses — automatically identifying and classifying sensitive data: credentials, session tokens, PII, financial data, and cryptographic material. Eliminates manual column-by-column inspection of large local databases and nested preference files.</div>
+    </div>
+    <div class="ai-card">
+      <span class="ai-ico">📊</span>
+      <div class="ai-name">Automated Mobile Finding Reports</div>
+      <div class="ai-desc">LLMs convert raw mobile assessment evidence — jadx code snippets, Objection session output, Burp captured requests, local storage extracts — into structured OWASP MASVS-aligned findings with CVSSv3 scores, platform-specific business impact narratives, and developer-actionable remediation steps targeting the exact Android/iOS API that needs to replace the vulnerable code pattern.</div>
+    </div>
+  </div>
+
+  <h3 style="font-family:var(--mono);font-size:11px;letter-spacing:3px;color:#bf00ff;text-transform:uppercase;margin:32px 0 16px;">AI-Powered Mobile Defence &amp; Detection</h3>
+  <div class="ai-grid rv">
+    <div class="ai-card">
+      <span class="ai-ico">🛡</span>
+      <div class="ai-name">AI-Powered Mobile SAST</div>
+      <div class="ai-desc">Commercial SAST platforms (MobSF, Checkmarx, Veracode Mobile) now integrate ML models that scan mobile codebases for OWASP Mobile Top 10 vulnerabilities — detecting insecure data storage, improper platform usage, weak cryptography, and insufficient input validation in both Android and iOS codebases with dramatically lower false-positive rates than rule-based static analysis alone.</div>
+    </div>
+    <div class="ai-card">
+      <span class="ai-ico">🔍</span>
+      <div class="ai-name">App Store Malware Detection</div>
+      <div class="ai-desc">Google Play Protect and Apple's App Review process both use ML classifiers to analyse submitted applications for malware, privacy violations, and policy breaches — scanning bytecode patterns, API usage sequences, network destinations, and permission requests against models trained on millions of known-malicious samples. Detects novel malware variants through behavioural similarity rather than signature matching.</div>
+    </div>
+    <div class="ai-card">
+      <span class="ai-ico">📱</span>
+      <div class="ai-name">MDM Anomaly Detection</div>
+      <div class="ai-desc">AI-enhanced MDM platforms (Microsoft Intune, Jamf, VMware Workspace ONE) use ML to baseline normal device behaviour — typical app usage, network destinations, data volumes, and location patterns — alerting when enrolled devices deviate in ways that indicate compromise, jailbreak/root, or policy violation. Detects mobile compromise indicators that traditional compliance policies cannot identify.</div>
+    </div>
+    <div class="ai-card">
+      <span class="ai-ico">🕵</span>
+      <div class="ai-name">Runtime Behaviour Analysis</div>
+      <div class="ai-desc">AI-powered mobile threat defence (MTD) solutions (Lookout, Zimperium zIPS, Pradeo) run on-device ML models that continuously analyse application behaviour at runtime — detecting suspicious API call patterns, unexpected network connections, cryptographic key extraction attempts, and dynamic code loading that indicates exploitation or malicious SDK activity without requiring cloud connectivity.</div>
+    </div>
+    <div class="ai-card">
+      <span class="ai-ico">🔮</span>
+      <div class="ai-name">Predictive Vulnerability Management</div>
+      <div class="ai-desc">AI correlates mobile application dependency inventories against real-time CVE feeds, active exploit availability, and threat intelligence — predicting which third-party SDK vulnerabilities in the app's dependency tree are most likely to be exploited imminently and require emergency patching, enabling risk-based mobile release decisions rather than reactive emergency updates.</div>
+    </div>
+    <div class="ai-card">
+      <span class="ai-ico">🤖</span>
+      <div class="ai-name">AI-Driven Privacy Analysis</div>
+      <div class="ai-desc">ML models analyse mobile application data flows — tracking what personal data is collected, where it is transmitted, and which third-party SDKs receive it — automatically flagging privacy violations and GDPR/CCPA compliance issues. Provides developers and security teams with a data flow map of the application's personal data handling that manual code review could never produce at the same depth and completeness.</div>
+    </div>
+  </div>
+
+  <div class="panel panel-ai rv" style="margin-top:28px">
+    <div class="panel-t">AI Tools for Mobile Security</div>
+    <table style="width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12px;margin:8px 0">
+      <thead><tr>
+        <th style="text-align:left;padding:10px 14px;color:#bf00ff;border-bottom:1px solid rgba(191,0,255,.25);letter-spacing:2px;font-size:10px;text-transform:uppercase">Tool / Platform</th>
+        <th style="text-align:left;padding:10px 14px;color:#bf00ff;border-bottom:1px solid rgba(191,0,255,.25);letter-spacing:2px;font-size:10px;text-transform:uppercase">AI Capability</th>
+        <th style="text-align:left;padding:10px 14px;color:#bf00ff;border-bottom:1px solid rgba(191,0,255,.25);letter-spacing:2px;font-size:10px;text-transform:uppercase">Mobile Security Use Case</th>
+      </tr></thead>
+      <tbody>
+        <tr><td style="padding:9px 14px;color:var(--g);border-bottom:1px solid rgba(0,255,65,.05);font-weight:700">MobSF + AI triage</td><td style="padding:9px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">ML-enhanced static &amp; dynamic analysis</td><td style="padding:9px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">Automated OWASP MASVS-aligned analysis of APK and IPA with AI-prioritised findings</td></tr>
+        <tr><td style="padding:9px 14px;color:var(--g);border-bottom:1px solid rgba(0,255,65,.05);font-weight:700">GPT-4 / Claude</td><td style="padding:9px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">Decompiled code review &amp; Frida generation</td><td style="padding:9px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">Paste jadx Java output → AI identifies vulnerabilities and writes targeted Frida hooks</td></tr>
+        <tr><td style="padding:9px 14px;color:var(--g);border-bottom:1px solid rgba(0,255,65,.05);font-weight:700">Zimperium zIPS</td><td style="padding:9px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">On-device ML threat detection</td><td style="padding:9px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">Real-time detection of network attacks, OS exploits, and malicious app behaviour on enrolled devices</td></tr>
+        <tr><td style="padding:9px 14px;color:var(--g);border-bottom:1px solid rgba(0,255,65,.05);font-weight:700">Checkmarx Mobile</td><td style="padding:9px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">AI-assisted SAST for iOS/Android</td><td style="padding:9px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">CI/CD-integrated mobile SAST with ML false-positive reduction across Swift, ObjC, Java, Kotlin</td></tr>
+        <tr><td style="padding:9px 14px;color:var(--g);border-bottom:1px solid rgba(0,255,65,.05);font-weight:700">Pradeo Security</td><td style="padding:9px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">Behavioural app &amp; network analysis</td><td style="padding:9px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">AI-driven mobile threat defence detecting SDK data leakage and runtime exploitation</td></tr>
+        <tr><td style="padding:9px 14px;color:var(--g);font-weight:700">Nuclei + mobile templates</td><td style="padding:9px 14px;color:var(--t2)">AI-generated API test templates</td><td style="padding:9px 14px;color:var(--t2)">Automated testing of mobile backend API endpoints for OWASP API Top 10 vulnerabilities</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="cb cb-ai rv" data-l="AI-Assisted — Decompiled APK Vulnerability Analysis (Python + GPT)">
+    <code><span class="cmt"># Feed jadx decompiled Java into GPT for automated vulnerability triage</span>
+<span class="kw">import</span> openai, subprocess
+
+<span class="cmt"># Decompile APK with jadx and extract a key class for analysis</span>
+subprocess.<span class="fn">run</span>([<span class="str">'jadx'</span>, <span class="str">'-d'</span>, <span class="str">'jadx_output/'</span>, <span class="str">'target.apk'</span>])
+
+<span class="cmt"># Read a high-value class — e.g. authentication or crypto manager</span>
+<span class="kw">with</span> <span class="fn">open</span>(<span class="str">'jadx_output/sources/com/target/auth/AuthManager.java'</span>) <span class="kw">as</span> f:
+    java_code = f.read()[:<span class="num">4000</span>]  <span class="cmt"># First 4000 chars</span>
+
+client = openai.<span class="fn">OpenAI</span>()
+response = client.chat.completions.<span class="fn">create</span>(
+    model=<span class="str">"gpt-4o"</span>,
+    messages=[{<span class="str">"role"</span>:<span class="str">"user"</span>, <span class="str">"content"</span>: <span class="str">f"""
+You are a senior mobile application penetration tester.
+Analyse this decompiled Android Java code for security vulnerabilities:
+
+{java_code}
+
+Provide:
+1. VULNERABILITY LIST — all issues found, each with OWASP MASVS reference
+2. HARDCODED SECRETS — any credentials, keys, or tokens discovered
+3. FRIDA HOOK — write a Frida script to hook the most critical vulnerable method
+4. EXPLOIT SCENARIO — how each finding could be exploited by an attacker
+5. CVSS SCORES — estimated score for each critical/high finding
+6. REMEDIATION — specific Android API replacements for each insecure pattern
+"""</span>}]
+)
+<span class="fn">print</span>(response.choices[<span class="num">0</span>].message.content)</code>
+  </div>
+
+  <div class="cb cb-ai rv" data-l="AI — Mobile Pentest Finding Report Generator">
+    <code><span class="cmt"># Generate a professional mobile pentest finding from raw evidence</span>
+<span class="kw">import</span> openai, json
+
+finding = {
+    <span class="str">"platform"</span>: <span class="str">"Android 13 — com.target.banking v4.2.1"</span>,
+    <span class="str">"vulnerability"</span>: <span class="str">"Insecure Data Storage — Session Token in SharedPreferences"</span>,
+    <span class="str">"evidence"</span>: <span class="str">"adb pull /data/data/com.target.banking/shared_prefs/auth.xml — contains cleartext JWT"</span>,
+    <span class="str">"token_extracted"</span>: <span class="str">"eyJhbGciOiJIUzI1NiJ9... (valid 30-day session token)"</span>,
+    <span class="str">"impact"</span>: <span class="str">"Any app with READ_EXTERNAL_STORAGE or root access can steal active sessions"</span>,
+    <span class="str">"device_required"</span>: <span class="str">"Rooted device OR physical access to unlocked device"</span>
+}
+
+prompt = <span class="str">f"""
+As a senior mobile security researcher, write a complete pentest finding:
+{json.dumps(finding, indent=2)}
+
+Include: Title, CVSSv3 score and vector, Severity, OWASP MASVS reference,
+Technical Description, Business Impact (account takeover, fraud risk),
+Steps to Reproduce (exact ADB commands), Evidence, Remediation
+(Android Keystore migration with code example), and MITRE ATT&CK mapping.
+"""</span>
+
+r = openai.OpenAI().chat.completions.<span class="fn">create</span>(
+    model=<span class="str">"gpt-4o"</span>,
+    messages=[{<span class="str">"role"</span>:<span class="str">"user"</span>,<span class="str">"content"</span>:prompt}]
+)
+<span class="fn">print</span>(r.choices[<span class="num">0</span>].message.content)</code>
+  </div>
+</section>
+
+<div class="div"></div>
+
 <!-- ══ CTA ══ -->
 <div class="cta rv">
   <div class="cta-t">// Secure the App. Protect the Data. Test Everything. //</div>
@@ -1083,7 +1285,7 @@ const rv=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting)x.target.
 document.querySelectorAll('.rv,.rv-l,.rv-r').forEach(el=>rv.observe(el));
 
 /* ═══ TOC TRACKING ═══ */
-const sIds=['hero','what','vulns','pre','sast','dast','network','storage','defence'];
+const sIds=['hero','what','vulns','pre','sast','dast','network','storage','defence','ai'];
 const tItems=document.querySelectorAll('.toc-i');
 const so=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)tItems.forEach(t=>t.classList.toggle('active',t.dataset.s===x.target.id))})},{threshold:.25});
 sIds.forEach(id=>{const el=document.getElementById(id);if(el)so.observe(el)});

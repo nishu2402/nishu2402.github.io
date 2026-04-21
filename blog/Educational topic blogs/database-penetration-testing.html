@@ -232,7 +232,32 @@ body{background:var(--bg);color:var(--t1);font-family:var(--body);font-size:17px
 .rv.on,.rv-l.on,.rv-r.on{opacity:1;transform:none}
 
 /* ── RESPONSIVE ── */
-@media(max-width:700px){.vgrid,.tgrid,.mgrid,.sgrid{grid-template-columns:1fr}.hero-canvas-wrap{display:none}.cta{padding:36px 20px}.cta::before{font-size:80px}}
+@media(max-width:700px){.vgrid,.tgrid,.mgrid,.sgrid,.ai-grid{grid-template-columns:1fr}.hero-canvas-wrap{display:none}.cta{padding:36px 20px}.cta::before{font-size:80px}}
+
+/* ── AI STYLES ── */
+:root{--pglow:0 0 20px rgba(191,0,255,.4),0 0 60px rgba(191,0,255,.1)}
+.sec-ai .sec-t{color:#bf00ff;text-shadow:var(--pglow)}
+.sec-ai .sec-n{color:var(--c)}
+.sec-ai .sec-ln{background:linear-gradient(to right,rgba(191,0,255,.35),transparent)}
+.sec-ai .tw-cursor{background:#bf00ff}
+.div-ai{background:linear-gradient(to right,transparent,rgba(191,0,255,.22),transparent)}
+.div-ai::after{background:#bf00ff;box-shadow:0 0 12px #bf00ff}
+.panel-ai{background:rgba(191,0,255,.03);border-color:rgba(191,0,255,.18)}
+.panel-ai:hover{border-color:rgba(191,0,255,.45)}
+.panel-ai .panel-t{color:#bf00ff}
+.panel-ai .panel-t::after{background:linear-gradient(to right,rgba(191,0,255,.2),transparent)}
+.panel-ai::before{background:linear-gradient(to bottom,#bf00ff,transparent)}
+.ai-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px;margin:20px 0}
+.ai-card{background:rgba(191,0,255,.04);border:1px solid rgba(191,0,255,.18);border-radius:4px;padding:22px;position:relative;overflow:hidden;transition:all .3s}
+.ai-card::after{content:'';position:absolute;top:0;right:0;width:0;height:0;border-top:26px solid rgba(191,0,255,.25);border-left:26px solid transparent}
+.ai-card:hover{border-color:rgba(191,0,255,.5);box-shadow:var(--pglow),0 16px 40px rgba(0,0,0,.25);transform:translateY(-3px)}
+.ai-ico{font-size:24px;margin-bottom:10px;display:block}
+.ai-name{font-family:var(--dsp);font-size:11px;font-weight:700;letter-spacing:2px;color:#bf00ff;text-transform:uppercase;margin-bottom:10px}
+.ai-desc{font-size:14px;color:var(--t2);line-height:1.65;font-weight:300}
+.cb-ai{border-left-color:#bf00ff !important}
+.cb-ai::before{color:#bf00ff !important;background:rgba(191,0,255,.07) !important}
+.al-p{background:rgba(191,0,255,.04);border:1px solid rgba(191,0,255,.18);border-left:3px solid #bf00ff}
+.al-p .al-ic{color:#bf00ff}
 </style>
 </head>
 <body>
@@ -278,6 +303,7 @@ body{background:var(--bg);color:var(--t1);font-family:var(--body);font-size:17px
   <div class="toc-i" onclick="goTo('#exploit')" data-s="exploit"><div class="toc-d"></div><span class="toc-l">EXPLOITATION</span></div>
   <div class="toc-i" onclick="goTo('#post')" data-s="post"><div class="toc-d"></div><span class="toc-l">POST-EXPLOIT</span></div>
   <div class="toc-i" onclick="goTo('#mitigate')" data-s="mitigate"><div class="toc-d"></div><span class="toc-l">DEFENCE</span></div>
+  <div class="toc-i" onclick="goTo('#ai')" data-s="ai"><div class="toc-d"></div><span class="toc-l">AI INTEGRATION</span></div>
 </nav>
 
 <div class="wrap">
@@ -293,7 +319,7 @@ body{background:var(--bg);color:var(--t1);font-family:var(--body);font-size:17px
   <div class="hero-tag">NISARG CHASMAWALA &nbsp;//&nbsp; ALIAS: HEAVEN</div>
 
   <h1 class="hero-title">
-    <div class="gw" data-t="DATABASE PEN">
+    <div class="gw" data-t="DATABASE PEN-TESTING">
       <span class="ht-line1">DATABASE PEN-TESTING</span>
     </div>
     <span class="ht-sub">TESTING METHODOLOGY — COMPLETE FIELD GUIDE</span>
@@ -795,6 +821,183 @@ body{background:var(--bg);color:var(--t1);font-family:var(--body);font-size:17px
   </div>
 </section>
 
+<!-- ══════ AI DIVIDER ══════ -->
+<div class="div div-ai"></div>
+
+<!-- ══════════════════════════════════
+     AI INTEGRATION
+══════════════════════════════════ -->
+<section class="sec rv sec-ai" id="ai">
+  <div class="sec-hd">
+    <span class="sec-n">09 //</span>
+    <h2 class="sec-t">AI Integration in Database Penetration Testing<span class="tw-cursor"></span></h2>
+    <div class="sec-ln"></div>
+  </div>
+
+  <div class="panel panel-ai rv-l">
+    <p>Artificial Intelligence is reshaping database security from both directions — accelerating the discovery and exploitation of database vulnerabilities during offensive assessments, while simultaneously powering the anomaly detection, query analysis, and automated response capabilities that defenders rely on to protect the most valuable data stores in any organisation. Databases are uniquely high-value targets: they are where credentials, financial records, customer data, and intellectual property ultimately reside. The stakes on both sides are correspondingly high.</p>
+    <p>For database penetration testers, AI tools compress the time-intensive phases of schema enumeration, SQL injection payload generation, and stored procedure analysis. For database defenders, AI-driven Database Activity Monitoring (DAM) and User Entity Behaviour Analytics (UEBA) provide the continuous, query-level visibility that legacy perimeter controls cannot offer.</p>
+  </div>
+
+  <div class="alert al-p rv">
+    <span class="al-ic">[ AI ]</span>
+    <p class="al-tx">LLMs can analyse a database schema dump and automatically generate targeted SQL injection payloads, privilege escalation queries, and data exfiltration strategies specific to that schema's structure — replacing hours of manual query crafting with seconds of AI-assisted attack planning. This capability is used today by both commercial red team platforms and advanced threat actors.</p>
+  </div>
+
+  <h3 style="font-family:var(--mono);font-size:11px;letter-spacing:3px;color:#bf00ff;text-transform:uppercase;margin:28px 0 16px;">AI-Powered Offensive Database Assessment</h3>
+  <div class="ai-grid rv">
+    <div class="ai-card">
+      <span class="ai-ico">💉</span>
+      <div class="ai-name">Intelligent SQLi Payload Generation</div>
+      <div class="ai-desc">LLMs generate context-aware SQL injection payloads tuned to the specific DBMS version, WAF signature set, and application input context observed during testing — going beyond generic wordlists to produce payloads that encode, fragment, and obfuscate specifically for the detected defences, dramatically increasing bypass success rates against hardened targets.</div>
+    </div>
+    <div class="ai-card">
+      <span class="ai-ico">🗂</span>
+      <div class="ai-name">Schema-Aware Attack Planning</div>
+      <div class="ai-desc">AI analyses extracted database schemas and automatically identifies the highest-value tables — locating credentials, PII, financial records, and session tokens by column name pattern matching and data type analysis. Produces a prioritised exfiltration plan that routes the assessment toward the most impactful data first, rather than indiscriminate table enumeration.</div>
+    </div>
+    <div class="ai-card">
+      <span class="ai-ico">🔐</span>
+      <div class="ai-name">Credential Hash Cracking Optimisation</div>
+      <div class="ai-desc">ML models analyse extracted password hash metadata — algorithm, salt format, length distribution — and generate optimised hashcat rule sets and wordlists tuned to the specific organisation's likely password patterns (inferred from username formats, company name, and breach data correlations), increasing crack rates compared to generic wordlist approaches.</div>
+    </div>
+    <div class="ai-card">
+      <span class="ai-ico">⚙️</span>
+      <div class="ai-name">Stored Procedure Vulnerability Analysis</div>
+      <div class="ai-desc">LLMs review exported stored procedure and function definitions for dangerous patterns — dynamic SQL construction with unsanitised parameters, EXECUTE with user-controlled input, OPENROWSET abuse paths, and privilege escalation via EXECUTE AS — identifying injection sinks that manual code review frequently misses in large procedure libraries.</div>
+    </div>
+    <div class="ai-card">
+      <span class="ai-ico">🤖</span>
+      <div class="ai-name">Automated WAF Bypass Generation</div>
+      <div class="ai-desc">AI models learn from observed WAF response patterns — which payloads are blocked, which encodings pass — and iteratively generate bypass variants using comment injection, whitespace substitution, alternative syntax, HTTP parameter pollution, and encoding chains until a working payload is identified, compressing what previously required extensive manual trial-and-error.</div>
+    </div>
+    <div class="ai-card">
+      <span class="ai-ico">📊</span>
+      <div class="ai-name">Automated Finding Documentation</div>
+      <div class="ai-desc">LLMs convert raw SQLmap output, manual injection evidence, and extracted data samples into structured penetration test findings — complete with CVSSv3 scores, OWASP category mapping, business impact narratives, and developer-actionable remediation guidance — eliminating the reporting bottleneck that traditionally follows intensive database assessments.</div>
+    </div>
+  </div>
+
+  <h3 style="font-family:var(--mono);font-size:11px;letter-spacing:3px;color:#bf00ff;text-transform:uppercase;margin:32px 0 16px;">AI-Powered Database Defence &amp; Monitoring</h3>
+  <div class="ai-grid rv">
+    <div class="ai-card">
+      <span class="ai-ico">👁</span>
+      <div class="ai-name">Database Activity Monitoring (DAM)</div>
+      <div class="ai-desc">ML-powered DAM platforms (Imperva, IBM Guardium, Oracle Audit Vault) baseline normal query patterns per user and application — alerting in real time on anomalous SELECT volumes, schema enumeration queries, bulk data exports, privilege escalation attempts, and after-hours administrative access that rules-based systems cannot reliably detect without overwhelming false positives.</div>
+    </div>
+    <div class="ai-card">
+      <span class="ai-ico">🔍</span>
+      <div class="ai-name">AI SQL Injection Detection</div>
+      <div class="ai-desc">ML models embedded in WAFs and database proxies classify incoming queries by syntax pattern, payload structure, and behavioural fingerprint — detecting SQL injection attempts including heavily obfuscated and encoded payloads that evade signature-based detection. Models retrain continuously on observed attack patterns, narrowing the window between new technique emergence and detection.</div>
+    </div>
+    <div class="ai-card">
+      <span class="ai-ico">🧠</span>
+      <div class="ai-name">Query Behaviour Analytics</div>
+      <div class="ai-desc">AI analyses the full query history of each application account and user — learning which tables are normally accessed, which join patterns are typical, and what data volumes are expected. Any deviation — a reporting account suddenly accessing the users table, a read-only account attempting INSERT, or 10× normal data volume in a single query — triggers an immediate alert for investigation.</div>
+    </div>
+    <div class="ai-card">
+      <span class="ai-ico">🔮</span>
+      <div class="ai-name">Predictive Vulnerability Assessment</div>
+      <div class="ai-desc">ML models scan database configuration, version data, enabled features, and exposed stored procedures against known CVE databases and attack pattern libraries — producing a risk-prioritised vulnerability list that predicts which weaknesses are most likely to be exploited against this specific database configuration, enabling targeted hardening before the next assessment.</div>
+    </div>
+    <div class="ai-card">
+      <span class="ai-ico">🚨</span>
+      <div class="ai-name">Automated Incident Response</div>
+      <div class="ai-desc">AI-driven SOAR playbooks respond automatically to confirmed database attack indicators — blocking the offending IP at the database firewall, terminating the suspicious session, revoking the compromised account's access, triggering a forensic query log snapshot, and notifying the security team with a pre-built incident timeline — all within seconds of detection.</div>
+    </div>
+    <div class="ai-card">
+      <span class="ai-ico">🗝</span>
+      <div class="ai-name">Sensitive Data Discovery</div>
+      <div class="ai-desc">AI-powered data classification tools (Microsoft Purview, Varonis, BigID) scan database schemas and sample data to automatically identify and tag PII, financial data, credentials, and health records — enabling organisations to apply appropriate access controls and encryption to their most sensitive data stores without manual column-by-column review of thousands of tables.</div>
+    </div>
+  </div>
+
+  <div class="panel panel-ai rv" style="margin-top:28px">
+    <div class="panel-t">Practical AI Tools for Database Security</div>
+    <table style="width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12px;margin:8px 0">
+      <thead><tr>
+        <th style="text-align:left;padding:10px 14px;color:#bf00ff;border-bottom:1px solid rgba(191,0,255,.25);letter-spacing:2px;font-size:10px;text-transform:uppercase">Tool</th>
+        <th style="text-align:left;padding:10px 14px;color:#bf00ff;border-bottom:1px solid rgba(191,0,255,.25);letter-spacing:2px;font-size:10px;text-transform:uppercase">AI Capability</th>
+        <th style="text-align:left;padding:10px 14px;color:#bf00ff;border-bottom:1px solid rgba(191,0,255,.25);letter-spacing:2px;font-size:10px;text-transform:uppercase">DB Security Use Case</th>
+      </tr></thead>
+      <tbody>
+        <tr><td style="padding:9px 14px;color:var(--g);border-bottom:1px solid rgba(0,255,65,.05);font-weight:700">SQLmap + AI tuning</td><td style="padding:9px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">Adaptive payload selection</td><td style="padding:9px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">AI-guided tamper script selection and encoding chain optimisation for WAF bypass</td></tr>
+        <tr><td style="padding:9px 14px;color:var(--g);border-bottom:1px solid rgba(0,255,65,.05);font-weight:700">GPT-4 / Claude</td><td style="padding:9px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">Schema analysis &amp; query crafting</td><td style="padding:9px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">Paste schema dump → AI identifies HVT tables and generates targeted extraction queries</td></tr>
+        <tr><td style="padding:9px 14px;color:var(--g);border-bottom:1px solid rgba(0,255,65,.05);font-weight:700">Imperva SecureSphere</td><td style="padding:9px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">ML query anomaly detection</td><td style="padding:9px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">Real-time detection of SQLi, data exfiltration, and privilege abuse at query level</td></tr>
+        <tr><td style="padding:9px 14px;color:var(--g);border-bottom:1px solid rgba(0,255,65,.05);font-weight:700">Microsoft Purview</td><td style="padding:9px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">AI data classification</td><td style="padding:9px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">Automatic PII/financial/credential discovery across all connected database instances</td></tr>
+        <tr><td style="padding:9px 14px;color:var(--g);border-bottom:1px solid rgba(0,255,65,.05);font-weight:700">IBM Guardium</td><td style="padding:9px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">Behavioural database analytics</td><td style="padding:9px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">User and application query pattern baselining with real-time deviation alerting</td></tr>
+        <tr><td style="padding:9px 14px;color:var(--g);font-weight:700">Nuclei + AI templates</td><td style="padding:9px 14px;color:var(--t2)">AI-generated vulnerability templates</td><td style="padding:9px 14px;color:var(--t2)">Rapid custom CVE template creation for newly disclosed database vulnerabilities</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="cb cb-ai rv" data-l="AI-Assisted — Schema Analysis &amp; Attack Planning (Python + GPT)">
+    <code><span class="cmt"># Feed extracted DB schema into AI for targeted attack planning</span>
+<span class="kw">import</span> openai, json
+
+<span class="cmt"># Schema extracted via: SELECT table_name, column_name, data_type
+# FROM information_schema.columns WHERE table_schema = 'targetdb'</span>
+schema = {
+    <span class="str">"users"</span>: [<span class="str">"id"</span>, <span class="str">"username"</span>, <span class="str">"password_hash"</span>, <span class="str">"email"</span>, <span class="str">"role"</span>, <span class="str">"api_key"</span>],
+    <span class="str">"orders"</span>: [<span class="str">"id"</span>, <span class="str">"user_id"</span>, <span class="str">"card_number"</span>, <span class="str">"amount"</span>, <span class="str">"status"</span>],
+    <span class="str">"sessions"</span>: [<span class="str">"session_id"</span>, <span class="str">"user_id"</span>, <span class="str">"token"</span>, <span class="str">"expires_at"</span>],
+    <span class="str">"audit_log"</span>: [<span class="str">"id"</span>, <span class="str">"action"</span>, <span class="str">"user_id"</span>, <span class="str">"timestamp"</span>]
+}
+
+client = openai.<span class="fn">OpenAI</span>()
+response = client.chat.completions.<span class="fn">create</span>(
+    model=<span class="str">"gpt-4o"</span>,
+    messages=[{<span class="str">"role"</span>:<span class="str">"user"</span>, <span class="str">"content"</span>: <span class="str">f"""
+You are a senior database penetration tester on an authorised engagement.
+Analyse this database schema and provide a structured attack plan:
+
+Schema: {json.dumps(schema, indent=2)}
+
+Provide:
+1. HIGH-VALUE TABLES — ranked by data sensitivity and business impact
+2. PRIORITY EXTRACTION QUERIES — specific SQL for each HVT (SELECT statements only)
+3. PRIVILEGE ESCALATION PATHS — any columns that suggest priv-esc opportunities
+4. AUDIT EVASION — how to minimise entries in the audit_log table
+5. LATERAL MOVEMENT — any credentials/tokens that could pivot to other systems
+6. REMEDIATION RECOMMENDATIONS — how to harden each identified weakness
+"""</span>}]
+)
+<span class="fn">print</span>(response.choices[<span class="num">0</span>].message.content)</code>
+  </div>
+
+  <div class="cb cb-ai rv" data-l="AI — Automated DB Pentest Finding Report Generator">
+    <code><span class="cmt"># Generate a professional DB pentest finding from raw evidence</span>
+<span class="kw">import</span> openai, json
+
+finding = {
+    <span class="str">"vulnerability"</span>: <span class="str">"Boolean-Based Blind SQL Injection"</span>,
+    <span class="str">"location"</span>: <span class="str">"POST /api/products/search — 'category' parameter"</span>,
+    <span class="str">"dbms"</span>: <span class="str">"MySQL 8.0.32"</span>,
+    <span class="str">"confirmed"</span>: <span class="str">"SQLmap extracted 'users' table — 4,847 rows including bcrypt hashes and API keys"</span>,
+    <span class="str">"waf_bypassed"</span>: <span class="str">"Yes — using space2comment + between tamper scripts"</span>,
+    <span class="str">"privilege"</span>: <span class="str">"DB user 'app_user' with SELECT, INSERT on all tables"</span>
+}
+
+prompt = <span class="str">f"""
+As a senior penetration tester, write a complete DB security finding:
+{json.dumps(finding, indent=2)}
+
+Include: Title, CVSSv3 score and vector, Severity, Technical Description,
+Business Impact (data breach scope), Steps to Reproduce (command sequence),
+Evidence Summary, Remediation (parameterised queries + WAF config),
+and OWASP Top 10 / MITRE ATT&CK mapping.
+"""</span>
+
+r = openai.OpenAI().chat.completions.<span class="fn">create</span>(
+    model=<span class="str">"gpt-4o"</span>,
+    messages=[{<span class="str">"role"</span>:<span class="str">"user"</span>,<span class="str">"content"</span>:prompt}]
+)
+<span class="fn">print</span>(r.choices[<span class="num">0</span>].message.content)</code>
+  </div>
+</section>
+
+<div class="div"></div>
+
 <!-- ══════ CTA ══════ -->
 <div class="cta rv">
   <div class="cta-t">// Know Your Database. Own Your Security. //</div>
@@ -924,7 +1127,7 @@ const rv=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting)x.target.
 document.querySelectorAll('.rv,.rv-l,.rv-r').forEach(el=>rv.observe(el));
 
 /* ═══ TOC TRACKING ═══ */
-const sIds=['hero','scope','recon','vulns','sqli','exploit','post','mitigate'];
+const sIds=['hero','scope','recon','vulns','sqli','exploit','post','mitigate','ai'];
 const tItems=document.querySelectorAll('.toc-i');
 const so=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)tItems.forEach(t=>t.classList.toggle('active',t.dataset.s===x.target.id))})},{threshold:.25});
 sIds.forEach(id=>{const el=document.getElementById(id);if(el)so.observe(el)});
