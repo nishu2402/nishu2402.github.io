@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Introduction to Networking | Nisarg Chasmawala</title>
+<meta name="description" content="Introduction to Networking — a complete visual guide with diagrams, by Nisarg Chasmawala (Shroff), Offensive Security Engineer.">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --g:#00ff41;--c:#00e5ff;--p:#bf00ff;--r:#ff003c;--o:#ffd700;
+  --bg:#030509;--t1:#d4ffe0;--t2:#7aad82;--t3:#2e4a32;
+  --mono:'Share Tech Mono',monospace;--dsp:'Orbitron',sans-serif;--body:'Rajdhani',sans-serif;
+  --glow:0 0 20px rgba(0,255,65,.4),0 0 60px rgba(0,255,65,.15);
+  --cglow:0 0 20px rgba(0,229,255,.4),0 0 60px rgba(0,229,255,.1);
+  --pglow:0 0 20px rgba(191,0,255,.4),0 0 60px rgba(191,0,255,.1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;overflow-x:hidden}
+body{background:var(--bg);color:var(--t1);font-family:var(--body);font-size:17px;line-height:1.8;overflow-x:hidden;cursor:none}
+#bg-particle{position:fixed;inset:0;z-index:0;pointer-events:none}
+#bg-hex{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.35}
+#bg-scan{position:fixed;inset:0;z-index:9999;pointer-events:none;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,255,65,.009) 2px,rgba(0,255,65,.009) 4px)}
+#bg-vignette{position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse at 50% 50%,transparent 50%,rgba(3,5,9,.85) 100%)}
+#bg-noise{position:fixed;inset:0;z-index:2;pointer-events:none;opacity:.04;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:200px 200px;animation:grain .4s steps(1) infinite}
+@keyframes grain{0%{transform:translate(0,0)}10%{transform:translate(-2%,-2%)}20%{transform:translate(2%,2%)}30%{transform:translate(-1%,1%)}40%{transform:translate(1%,-1%)}50%{transform:translate(-3%,1%)}60%{transform:translate(1%,3%)}70%{transform:translate(-1%,-2%)}80%{transform:translate(2%,1%)}90%{transform:translate(-2%,2%)}}
+#cur{position:fixed;width:10px;height:10px;border-radius:50%;background:var(--g);box-shadow:var(--glow);pointer-events:none;z-index:99999;transform:translate(-50%,-50%);transition:width .1s,height .1s}
+#cur2{position:fixed;width:30px;height:30px;border-radius:50%;border:1px solid rgba(0,255,65,.5);pointer-events:none;z-index:99998;transform:translate(-50%,-50%);transition:left .08s,top .08s}
+#cur3{position:fixed;width:50px;height:50px;border-radius:50%;border:1px solid rgba(0,255,65,.2);pointer-events:none;z-index:99997;transform:translate(-50%,-50%);transition:left .15s,top .15s}
+#prog{position:fixed;top:0;left:0;height:2px;background:linear-gradient(to right,var(--g),var(--c),var(--p));box-shadow:0 0 10px var(--g);z-index:10000;width:0%}
+.topbar{position:fixed;top:0;left:0;right:0;height:58px;background:rgba(3,5,9,.88);border-bottom:1px solid rgba(0,255,65,.12);backdrop-filter:blur(20px) saturate(1.5);z-index:1000;display:flex;align-items:center;justify-content:space-between;padding:0 32px}
+.tb-left{display:flex;flex-direction:column;gap:2px}
+.tb-name{font-family:var(--dsp);font-size:13px;font-weight:900;color:var(--t1);letter-spacing:3px}
+.tb-roles{font-family:var(--mono);font-size:9px;letter-spacing:1.5px;overflow:hidden;white-space:nowrap}
+.tb-inner{display:inline-block;color:var(--c);animation:ticker 18s linear infinite}
+@keyframes ticker{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
+.tb-status{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;color:var(--g)}
+.tb-dot{width:7px;height:7px;border-radius:50%;background:var(--g);box-shadow:0 0 10px var(--g);animation:tdot 1.2s ease-in-out infinite}
+@keyframes tdot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.7)}}
+.toc{position:fixed;right:20px;top:50%;transform:translateY(-50%);z-index:200;display:flex;flex-direction:column;gap:9px}
+.toc-i{display:flex;align-items:center;gap:8px;cursor:pointer}
+.toc-d{width:6px;height:6px;border-radius:50%;border:1px solid var(--t3);transition:all .25s;flex-shrink:0}
+.toc-i.active .toc-d,.toc-i:hover .toc-d{background:var(--g);border-color:var(--g);box-shadow:0 0 10px var(--g)}
+.toc-l{font-family:var(--mono);font-size:10px;color:var(--t3);opacity:0;transform:translateX(6px);transition:all .2s;white-space:nowrap}
+.toc-i:hover .toc-l,.toc-i.active .toc-l{opacity:1;transform:none;color:var(--g)}
+@media(max-width:1000px){.toc{display:none}}
+.wrap{position:relative;z-index:10;max-width:980px;margin:0 auto;padding:0 28px}
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:100px 0 60px;position:relative}
+.hero-canvas-wrap{position:absolute;right:-80px;top:50%;transform:translateY(-52%);width:500px;height:500px;pointer-events:none}
+#hero-geo{width:100%;height:100%}
+.hero-tag{font-family:var(--mono);font-size:11px;letter-spacing:4px;color:var(--c);text-transform:uppercase;margin-bottom:18px;opacity:0;animation:fup .6s ease forwards .3s;display:flex;align-items:center;gap:12px}
+.hero-tag::before{content:'';width:40px;height:1px;background:linear-gradient(to right,transparent,var(--c))}
+.hero-tag::after{content:'';flex:1;max-width:100px;height:1px;background:linear-gradient(to right,var(--c),transparent)}
+.hero-title{font-family:var(--dsp);font-size:clamp(22px,4vw,50px);font-weight:900;line-height:1.0;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;opacity:0;animation:fup .7s ease forwards .5s}
+.ht-line1{display:block;color:var(--g);text-shadow:0 0 40px rgba(0,255,65,.6),0 0 100px rgba(0,255,65,.25)}
+.ht-sub{display:block;font-size:.43em;letter-spacing:5px;color:rgba(200,255,220,.5);font-weight:400;margin-top:10px}
+.gw{position:relative;display:inline-block}
+.gw::before,.gw::after{content:attr(data-t);position:absolute;top:0;left:0;width:100%;font-family:var(--dsp);font-weight:900;font-size:inherit;letter-spacing:inherit;text-transform:uppercase}
+.gw::before{color:var(--c);animation:ga 5s infinite;clip-path:polygon(0 0,100% 0,100% 33%,0 33%)}
+.gw::after{color:var(--r);animation:gb 5s infinite;clip-path:polygon(0 66%,100% 66%,100% 100%,0 100%)}
+@keyframes ga{0%,85%,100%{transform:none;opacity:0}87%{transform:translate(-5px,2px);opacity:.9}93%{transform:none;opacity:0}}
+@keyframes gb{0%,87%,100%{transform:none;opacity:0}89%{transform:translate(5px,3px);opacity:.8}95%{transform:none;opacity:0}}
+.hero-desc{font-size:17px;font-weight:300;color:var(--t2);max-width:560px;line-height:1.75;margin-bottom:36px;opacity:0;animation:fup .8s ease forwards .8s;margin-top:20px}
+.hero-meta{display:flex;gap:24px;flex-wrap:wrap;opacity:0;animation:fup .8s ease forwards 1s}
+.m-item{display:flex;flex-direction:column;gap:3px}
+.m-lbl{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--t3);text-transform:uppercase}
+.m-val{font-family:var(--mono);font-size:12px;color:var(--c)}
+.hero-scroll-hint{position:absolute;bottom:24px;left:0;display:flex;align-items:center;gap:12px;opacity:0;animation:fin 1s ease forwards 1.8s}
+.hs-line{width:60px;height:1px;background:linear-gradient(to right,var(--g),transparent)}
+.hs-txt{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--t3)}
+.hs-pulse{width:6px;height:6px;border-radius:50%;background:var(--g);box-shadow:0 0 8px var(--g);animation:tdot 1.5s ease-in-out infinite}
+.sec{margin-bottom:100px}
+.sec-hd{display:flex;align-items:center;gap:14px;margin-bottom:40px}
+.sec-n{font-family:var(--mono);font-size:10px;color:var(--p);letter-spacing:2px;min-width:44px}
+.sec-ln{flex:1;height:1px;background:linear-gradient(to right,rgba(0,229,255,.35),transparent)}
+.sec-t{font-family:var(--dsp);font-size:clamp(14px,2.4vw,21px);font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--c);text-shadow:var(--cglow)}
+.tw-cursor{display:inline-block;width:2px;height:1em;background:var(--c);margin-left:4px;animation:blink 1s step-end infinite;vertical-align:middle}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.sec-ai .sec-t{color:#bf00ff;text-shadow:var(--pglow)}
+.sec-ai .sec-n{color:var(--c)}
+.sec-ai .sec-ln{background:linear-gradient(to right,rgba(191,0,255,.35),transparent)}
+.sec-ai .tw-cursor{background:#bf00ff}
+.panel{background:rgba(0,255,65,.025);border:1px solid rgba(0,255,65,.12);border-radius:4px;padding:32px;margin-bottom:22px;position:relative;overflow:hidden;transition:border-color .3s,box-shadow .3s,transform .3s}
+.panel::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:linear-gradient(to bottom,var(--g),transparent);opacity:0;transition:opacity .3s}
+.panel::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.015) 0%,transparent 60%);pointer-events:none}
+.panel:hover{border-color:rgba(0,229,255,.4);box-shadow:0 0 50px rgba(0,229,255,.07),0 20px 60px rgba(0,0,0,.3);transform:translateY(-3px)}
+.panel:hover::before{opacity:1}
+.panel p{color:var(--t2);margin-bottom:12px}
+.panel p:last-child{margin-bottom:0}
+.panel-t{font-family:var(--dsp);font-size:12px;font-weight:700;letter-spacing:3px;color:var(--g);text-transform:uppercase;margin-bottom:18px;display:flex;align-items:center;gap:12px}
+.panel-t::after{content:'';flex:1;height:1px;background:linear-gradient(to right,rgba(0,255,65,.2),transparent)}
+.panel-ai{background:rgba(191,0,255,.03);border-color:rgba(191,0,255,.18)}
+.panel-ai:hover{border-color:rgba(191,0,255,.45)}
+.panel-ai .panel-t{color:#bf00ff}
+.panel-ai .panel-t::after{background:linear-gradient(to right,rgba(191,0,255,.2),transparent)}
+.panel-ai::before{background:linear-gradient(to bottom,#bf00ff,transparent)}
+/* DIAGRAM CONTAINERS */
+.diag{background:rgba(0,0,0,.4);border:1px solid rgba(0,255,65,.1);border-radius:4px;padding:24px;margin:20px 0;overflow-x:auto}
+.diag-title{font-family:var(--mono);font-size:10px;letter-spacing:3px;color:var(--c);text-transform:uppercase;margin-bottom:16px;text-align:center}
+/* OSI MODEL */
+.osi-stack{display:flex;flex-direction:column;gap:3px;max-width:680px;margin:0 auto}
+.osi-row{display:grid;grid-template-columns:60px 1fr 1fr 1fr;gap:3px;align-items:stretch}
+.osi-num{font-family:var(--mono);font-size:11px;display:flex;align-items:center;justify-content:center;color:var(--t3);font-weight:700}
+.osi-layer{border-radius:3px;padding:10px 14px;font-size:13px;font-weight:600;letter-spacing:1px}
+.osi-name{color:var(--t1)}
+.osi-pdu{font-family:var(--mono);font-size:11px;color:var(--o)}
+.osi-proto{font-family:var(--mono);font-size:10px;color:var(--t3)}
+.osi-l7{background:rgba(0,229,255,.12);border:1px solid rgba(0,229,255,.3)}.osi-l7 .osi-name{color:var(--c)}
+.osi-l6{background:rgba(0,229,255,.08);border:1px solid rgba(0,229,255,.2)}.osi-l6 .osi-name{color:var(--c)}
+.osi-l5{background:rgba(0,229,255,.05);border:1px solid rgba(0,229,255,.15)}.osi-l5 .osi-name{color:var(--c)}
+.osi-l4{background:rgba(0,255,65,.08);border:1px solid rgba(0,255,65,.2)}.osi-l4 .osi-name{color:var(--g)}
+.osi-l3{background:rgba(191,0,255,.06);border:1px solid rgba(191,0,255,.2)}.osi-l3 .osi-name{color:var(--p)}
+.osi-l2{background:rgba(255,215,0,.05);border:1px solid rgba(255,215,0,.18)}.osi-l2 .osi-name{color:var(--o)}
+.osi-l1{background:rgba(255,0,60,.05);border:1px solid rgba(255,0,60,.18)}.osi-l1 .osi-name{color:var(--r)}
+.osi-bracket{display:flex;align-items:center;justify-content:center;writing-mode:vertical-rl;font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;padding:0 8px;border-radius:3px}
+.osi-br-app{background:rgba(0,229,255,.06);color:var(--c);border:1px solid rgba(0,229,255,.15)}
+.osi-br-net{background:rgba(191,0,255,.06);color:var(--p);border:1px solid rgba(191,0,255,.15)}
+/* TOPOLOGY DIAGRAMS */
+.topo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;margin:16px 0}
+.topo-card{background:rgba(0,0,0,.35);border:1px solid rgba(0,255,65,.1);border-radius:4px;padding:16px;text-align:center;transition:all .25s}
+.topo-card:hover{border-color:rgba(0,229,255,.4);transform:translateY(-3px)}
+.topo-name{font-family:var(--dsp);font-size:10px;font-weight:700;letter-spacing:2px;color:var(--c);text-transform:uppercase;margin-bottom:8px}
+.topo-svg{display:block;margin:0 auto 10px}
+.topo-desc{font-size:12px;color:var(--t3);line-height:1.5}
+/* TCP HANDSHAKE */
+.tcp-diag{display:grid;grid-template-columns:1fr 80px 1fr;gap:0;align-items:start;max-width:600px;margin:0 auto}
+.tcp-host{text-align:center}
+.tcp-label{font-family:var(--dsp);font-size:11px;font-weight:700;letter-spacing:2px;color:var(--g);text-transform:uppercase;padding:10px;border:1px solid rgba(0,255,65,.3);border-radius:4px;background:rgba(0,255,65,.05);margin-bottom:0}
+.tcp-line{height:100%;width:1px;background:rgba(0,255,65,.15);margin:0 auto}
+.tcp-arrow{display:flex;align-items:center;gap:8px;margin:8px 0;position:relative}
+.tcp-arrow-line{flex:1;height:2px;position:relative}
+.tcp-arrow-line::after{content:'';position:absolute;top:-4px;width:0;height:0;border-top:5px solid transparent;border-bottom:5px solid transparent}
+.tcp-r{background:linear-gradient(to right,var(--c),transparent)}
+.tcp-r::after{right:0;border-left:8px solid var(--c)}
+.tcp-l{background:linear-gradient(to left,var(--g),transparent)}
+.tcp-l::after{left:0;border-right:8px solid var(--g)}
+.tcp-flag{font-family:var(--mono);font-size:10px;letter-spacing:1px;text-align:center;padding:3px 0}
+/* DEVICE COMPARISON */
+.dev-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:20px 0}
+.dev-card{border-radius:4px;padding:20px;text-align:center;transition:all .25s}
+.dev-card:hover{transform:translateY(-3px)}
+.dc-hub{background:rgba(255,148,0,.04);border:1px solid rgba(255,148,0,.2)}
+.dc-sw{background:rgba(0,229,255,.04);border:1px solid rgba(0,229,255,.2)}
+.dc-rt{background:rgba(0,255,65,.04);border:1px solid rgba(0,255,65,.2)}
+.dev-icon{font-size:28px;margin-bottom:10px}
+.dev-name{font-family:var(--dsp);font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px}
+.dc-hub .dev-name{color:#ff9400}.dc-sw .dev-name{color:var(--c)}.dc-rt .dev-name{color:var(--g)}
+.dev-desc{font-size:13px;color:var(--t2);line-height:1.55}
+@media(max-width:600px){.dev-grid{grid-template-columns:1fr}}
+/* IP ADDRESS DIAGRAM */
+.ip-diag{font-family:var(--mono);font-size:13px;background:rgba(0,0,0,.5);border:1px solid rgba(0,255,65,.12);border-radius:4px;padding:20px;margin:16px 0;overflow-x:auto}
+.ip-row{display:flex;align-items:stretch;margin-bottom:8px;gap:4px}
+.ip-cell{border:1px solid rgba(0,255,65,.2);border-radius:2px;padding:8px 12px;text-align:center;flex:1;min-width:60px}
+.ip-net{background:rgba(191,0,255,.1);color:var(--p)}
+.ip-host{background:rgba(0,229,255,.08);color:var(--c)}
+.ip-lab{background:rgba(0,0,0,.3);color:var(--t3);font-size:10px}
+.cidr-row{display:flex;align-items:center;gap:8px;margin:8px 0;flex-wrap:wrap}
+.cidr-chip{font-family:var(--mono);font-size:11px;padding:4px 10px;border-radius:2px;background:rgba(0,255,65,.07);border:1px solid rgba(0,255,65,.2);color:var(--g)}
+.cidr-info{font-size:13px;color:var(--t2)}
+/* AI CARDS */
+.ai-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px;margin:20px 0}
+.ai-card{background:rgba(191,0,255,.04);border:1px solid rgba(191,0,255,.18);border-radius:4px;padding:22px;position:relative;overflow:hidden;transition:all .3s}
+.ai-card::after{content:'';position:absolute;top:0;right:0;width:0;height:0;border-top:26px solid rgba(191,0,255,.25);border-left:26px solid transparent}
+.ai-card:hover{border-color:rgba(191,0,255,.5);box-shadow:var(--pglow),0 16px 40px rgba(0,0,0,.25);transform:translateY(-3px)}
+.ai-ico{font-size:24px;margin-bottom:10px;display:block}
+.ai-name{font-family:var(--dsp);font-size:11px;font-weight:700;letter-spacing:2px;color:#bf00ff;text-transform:uppercase;margin-bottom:10px}
+.ai-desc{font-size:14px;color:var(--t2);line-height:1.65;font-weight:300}
+/* ALERTS */
+.alert{border-radius:4px;padding:16px 20px;margin:20px 0;display:flex;gap:14px;align-items:flex-start}
+.al-i{background:rgba(0,229,255,.04);border:1px solid rgba(0,229,255,.14);border-left:3px solid var(--c)}
+.al-p{background:rgba(191,0,255,.04);border:1px solid rgba(191,0,255,.18);border-left:3px solid #bf00ff}
+.al-g{background:rgba(0,255,65,.03);border:1px solid rgba(0,255,65,.14);border-left:3px solid var(--g)}
+.al-ic{font-family:var(--mono);font-size:13px;flex-shrink:0;margin-top:2px}
+.al-i .al-ic{color:var(--c)}.al-p .al-ic{color:#bf00ff}.al-g .al-ic{color:var(--g)}
+.al-tx{font-size:14px;color:var(--t2);line-height:1.6}
+/* TOOL GRID */
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin:16px 0}
+.tc{background:rgba(0,229,255,.03);border:1px solid rgba(0,229,255,.1);border-radius:4px;padding:16px;transition:all .25s}
+.tc:hover{border-color:rgba(0,229,255,.4);background:rgba(0,229,255,.06);transform:translateY(-2px)}
+.tcname{font-family:var(--mono);font-size:12px;color:var(--c);margin-bottom:4px}
+.tctag{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--o);text-transform:uppercase;margin-bottom:6px;display:block}
+.tcdesc{font-size:12px;color:var(--t3);line-height:1.4}
+/* TABLE */
+.ptbl{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12px;margin:16px 0}
+.ptbl th{text-align:left;padding:10px 14px;color:var(--c);border-bottom:1px solid rgba(0,229,255,.3);letter-spacing:2px;font-size:10px;text-transform:uppercase}
+.ptbl td{padding:9px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)}
+.ptbl tr:hover td{background:rgba(0,255,65,.02)}
+.ptbl td:first-child{color:var(--g);font-weight:700}
+/* CODE */
+.cb{background:rgba(0,0,0,.7);border:1px solid rgba(0,255,65,.1);border-left:3px solid var(--g);border-radius:0 4px 4px 0;padding:20px 24px;margin:16px 0;position:relative;overflow-x:auto;cursor:pointer;transition:all .3s}
+.cb::before{content:attr(data-l);position:absolute;top:0;right:0;font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--g);background:rgba(0,255,65,.07);padding:3px 12px;border-bottom-left-radius:4px;text-transform:uppercase}
+.cb:hover{border-color:rgba(0,255,65,.35)}
+.cb.cb-ai{border-left-color:#bf00ff}
+.cb.cb-ai::before{color:#bf00ff;background:rgba(191,0,255,.07)}
+.cb code{font-family:var(--mono);font-size:13px;color:var(--g);white-space:pre;display:block;line-height:1.9}
+.cmd{color:var(--c)}.flag{color:var(--o)}.cmt{color:var(--t3)}.str{color:#ff79c6}.prm{color:#bd93f9}.kw{color:var(--r)}
+/* MGRID */
+.mgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:16px;margin:20px 0}
+.mcard{background:rgba(0,229,255,.03);border:1px solid rgba(0,229,255,.12);border-radius:4px;padding:22px;transition:all .25s;position:relative;overflow:hidden}
+.mcard::after{content:'';position:absolute;top:0;right:0;width:0;height:0;border-top:26px solid rgba(0,229,255,.2);border-left:26px solid transparent}
+.mcard:hover{border-color:rgba(0,229,255,.4);box-shadow:var(--cglow),0 16px 40px rgba(0,0,0,.2);transform:translateY(-3px)}
+.mcard-name{font-family:var(--dsp);font-size:11px;font-weight:700;letter-spacing:2px;color:var(--c);text-transform:uppercase;margin-bottom:10px}
+.mcard-desc{font-size:14px;color:var(--t2);line-height:1.65;font-weight:300}
+/* CTA */
+.cta{background:linear-gradient(135deg,rgba(0,255,65,.04),rgba(191,0,255,.04));border:1px solid rgba(0,229,255,.3);border-radius:4px;padding:60px 50px;text-align:center;position:relative;overflow:hidden;margin-top:80px}
+.cta::before{content:'NET';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:var(--dsp);font-size:200px;font-weight:900;color:rgba(0,255,65,.018);pointer-events:none;letter-spacing:30px}
+.cta-t{font-family:var(--dsp);font-size:20px;font-weight:700;letter-spacing:4px;color:var(--g);text-transform:uppercase;margin-bottom:16px;text-shadow:var(--glow)}
+.cta-p{color:var(--t2);font-size:16px;max-width:540px;margin:0 auto 32px;line-height:1.75}
+.cta-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+.btn{font-family:var(--mono);font-size:11px;letter-spacing:3px;text-transform:uppercase;padding:13px 30px;border-radius:2px;text-decoration:none;display:inline-block;transition:all .25s}
+.btn-p{border:1px solid var(--g);color:var(--g);background:rgba(0,255,65,.06)}
+.btn-p:hover{background:var(--g);color:var(--bg);box-shadow:var(--glow)}
+.btn-s{border:1px solid var(--c);color:var(--c);background:rgba(0,229,255,.05)}
+.btn-s:hover{background:var(--c);color:var(--bg);box-shadow:var(--cglow)}
+.footer{border-top:1px solid rgba(0,255,65,.1);padding:32px 0;margin-top:60px;display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:20px}
+.f-l{font-family:var(--mono);font-size:11px;color:var(--t3);letter-spacing:1.5px;line-height:2}
+.f-alias{color:var(--g);font-size:10px;letter-spacing:3px;text-shadow:0 0 8px var(--g)}
+.f-r{font-family:var(--mono);font-size:11px;color:var(--t3);text-align:right;line-height:2}
+.f-r a{color:var(--g);text-decoration:none}
+.f-r a:hover{text-shadow:var(--glow)}
+.div{height:1px;background:linear-gradient(to right,transparent,rgba(0,255,65,.15),transparent);margin:60px 0;position:relative}
+.div::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:6px;height:6px;border-radius:50%;background:var(--g);box-shadow:0 0 12px var(--g)}
+.div-ai{background:linear-gradient(to right,transparent,rgba(191,0,255,.22),transparent)}
+.div-ai::after{background:#bf00ff;box-shadow:0 0 12px #bf00ff}
+@keyframes fup{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+@keyframes fin{from{opacity:0}to{opacity:1}}
+.rv{opacity:0;transform:translateY(30px);transition:opacity .8s,transform .8s}
+.rv-l{opacity:0;transform:translateX(-30px);transition:opacity .8s,transform .8s}
+.rv.on,.rv-l.on{opacity:1;transform:none}
+@media(max-width:700px){.topo-grid,.mgrid,.ai-grid,.dev-grid,.tgrid{grid-template-columns:1fr}.hero-canvas-wrap{display:none}.cta{padding:36px 20px}.cta::before{font-size:80px}}
+</style>
+</head>
+<body>
+<canvas id="bg-particle"></canvas>
+<canvas id="bg-hex"></canvas>
+<div id="bg-vignette"></div>
+<div id="bg-noise"></div>
+<div id="bg-scan"></div>
+<div id="cur"></div><div id="cur2"></div><div id="cur3"></div>
+<div id="prog"></div>
+
+<nav class="topbar">
+  <div class="tb-left">
+    <span class="tb-name">NISARG CHASMAWALA (SHROFF)</span>
+    <div class="tb-roles"><span class="tb-inner">Penetration Tester &nbsp;|&nbsp; Vulnerability Assessment &nbsp;|&nbsp; Cybersecurity Researcher &nbsp;|&nbsp; Offensive Security Engineer &nbsp;|&nbsp; Digital Forensics &nbsp;|&nbsp; Penetration Tester &nbsp;|&nbsp; Vulnerability Assessment &nbsp;|&nbsp; Cybersecurity Researcher &nbsp;|&nbsp; Offensive Security Engineer &nbsp;|&nbsp; Digital Forensics</span></div>
+  </div>
+  <div class="tb-status"><span class="tb-dot"></span>SYS ONLINE</div>
+</nav>
+
+<nav class="toc" id="toc">
+  <div class="toc-i active" onclick="goTo('#hero')" data-s="hero"><div class="toc-d"></div><span class="toc-l">INTRO</span></div>
+  <div class="toc-i" onclick="goTo('#basics')" data-s="basics"><div class="toc-d"></div><span class="toc-l">NETWORK BASICS</span></div>
+  <div class="toc-i" onclick="goTo('#osi')" data-s="osi"><div class="toc-d"></div><span class="toc-l">OSI MODEL</span></div>
+  <div class="toc-i" onclick="goTo('#devices')" data-s="devices"><div class="toc-d"></div><span class="toc-l">NETWORK DEVICES</span></div>
+  <div class="toc-i" onclick="goTo('#topologies')" data-s="topologies"><div class="toc-d"></div><span class="toc-l">TOPOLOGIES</span></div>
+  <div class="toc-i" onclick="goTo('#addressing')" data-s="addressing"><div class="toc-d"></div><span class="toc-l">IP ADDRESSING</span></div>
+  <div class="toc-i" onclick="goTo('#protocols')" data-s="protocols"><div class="toc-d"></div><span class="toc-l">PROTOCOLS</span></div>
+  <div class="toc-i" onclick="goTo('#wireless')" data-s="wireless"><div class="toc-d"></div><span class="toc-l">WIRELESS</span></div>
+  <div class="toc-i" onclick="goTo('#security')" data-s="security"><div class="toc-d"></div><span class="toc-l">SECURITY</span></div>
+  <div class="toc-i" onclick="goTo('#ai')" data-s="ai"><div class="toc-d"></div><span class="toc-l">AI INTEGRATION</span></div>
+</nav>
+
+<div class="wrap">
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-canvas-wrap"><canvas id="hero-geo"></canvas></div>
+  <div class="hero-tag">NISARG CHASMAWALA &nbsp;//&nbsp; ALIAS: HEAVEN</div>
+  <h1 class="hero-title">
+    <div class="gw" data-t="NETWORKING">
+      <span class="ht-line1">NETWORKING</span>
+    </div>
+    <span class="ht-sub">FUNDAMENTALS + VISUAL GUIDE + AI INTEGRATION</span>
+  </h1>
+  <p class="hero-desc">A complete visual guide to networking fundamentals — covering the OSI model, network devices, topologies, IP addressing, CIDR subnetting, TCP/IP protocols, wireless standards, VLANs, VPNs, NAT, cloud networking, and how Artificial Intelligence is transforming network design, monitoring, and security. Built for security practitioners who need networking fluency.</p>
+  <div class="hero-meta">
+    <div class="m-item"><span class="m-lbl">Author</span><span class="m-val">Nisarg Chasmawala (Shroff)</span></div>
+    <div class="m-item"><span class="m-lbl">Alias</span><span class="m-val">HEAVEN</span></div>
+    <div class="m-item"><span class="m-lbl">Level</span><span class="m-val">Fundamentals → Intermediate</span></div>
+    <div class="m-item"><span class="m-lbl">Includes</span><span class="m-val">Diagrams · Commands · AI</span></div>
+  </div>
+  <div class="hero-scroll-hint"><div class="hs-line"></div><span class="hs-txt">SCROLL TO BEGIN</span><div class="hs-pulse"></div></div>
+</section>
+
+<div class="div"></div>
+
+<!-- 01 NETWORK BASICS -->
+<section class="sec rv" id="basics">
+  <div class="sec-hd"><span class="sec-n">01 //</span><h2 class="sec-t">Network Basics &amp; Types<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+
+  <div class="panel rv-l">
+    <p>A <strong style="color:var(--t1)">network</strong> is two or more devices connected together to share resources and communicate using a defined set of rules (protocols). The internet is the ultimate example — a "network of networks" where millions of private networks interconnect through standardised protocols to create global connectivity. Every device on a network has a unique identifier (MAC address at Layer 2, IP address at Layer 3) that enables data to reach its intended destination.</p>
+  </div>
+
+  <!-- Network Types Visual -->
+  <div class="diag rv">
+    <div class="diag-title">Network Types — Scale Comparison</div>
+    <svg viewBox="0 0 860 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:860px;display:block;margin:0 auto">
+      <defs>
+        <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#00e5ff"/></marker>
+      </defs>
+      <!-- Scale line -->
+      <line x1="40" y1="80" x2="820" y2="80" stroke="#2e4a32" stroke-width="2"/>
+      <line x1="820" y1="80" x2="820" y2="80" stroke="#00e5ff" stroke-width="2" marker-end="url(#arr)"/>
+      <!-- PAN -->
+      <rect x="40" y="50" width="80" height="60" rx="4" fill="rgba(191,0,255,.1)" stroke="rgba(191,0,255,.3)" stroke-width="1.5"/>
+      <text x="80" y="73" font-family="Share Tech Mono" font-size="11" fill="#bf00ff" text-anchor="middle">PAN</text>
+      <text x="80" y="90" font-family="Share Tech Mono" font-size="9" fill="#7aad82" text-anchor="middle">~10m</text>
+      <text x="80" y="105" font-family="Share Tech Mono" font-size="8" fill="#2e4a32" text-anchor="middle">Bluetooth</text>
+      <!-- LAN -->
+      <rect x="140" y="40" width="100" height="70" rx="4" fill="rgba(0,255,65,.08)" stroke="rgba(0,255,65,.3)" stroke-width="1.5"/>
+      <text x="190" y="68" font-family="Share Tech Mono" font-size="12" fill="#00ff41" text-anchor="middle" font-weight="bold">LAN</text>
+      <text x="190" y="86" font-family="Share Tech Mono" font-size="9" fill="#7aad82" text-anchor="middle">~100m</text>
+      <text x="190" y="101" font-family="Share Tech Mono" font-size="8" fill="#2e4a32" text-anchor="middle">Office/Home</text>
+      <!-- CAN -->
+      <rect x="260" y="32" width="110" height="78" rx="4" fill="rgba(0,229,255,.06)" stroke="rgba(0,229,255,.2)" stroke-width="1.5"/>
+      <text x="315" y="63" font-family="Share Tech Mono" font-size="12" fill="#00e5ff" text-anchor="middle" font-weight="bold">CAN</text>
+      <text x="315" y="81" font-family="Share Tech Mono" font-size="9" fill="#7aad82" text-anchor="middle">~1km</text>
+      <text x="315" y="97" font-family="Share Tech Mono" font-size="8" fill="#2e4a32" text-anchor="middle">University</text>
+      <!-- MAN -->
+      <rect x="390" y="24" width="120" height="86" rx="4" fill="rgba(255,215,0,.05)" stroke="rgba(255,215,0,.2)" stroke-width="1.5"/>
+      <text x="450" y="58" font-family="Share Tech Mono" font-size="12" fill="#ffd700" text-anchor="middle" font-weight="bold">MAN</text>
+      <text x="450" y="76" font-family="Share Tech Mono" font-size="9" fill="#7aad82" text-anchor="middle">~50km</text>
+      <text x="450" y="93" font-family="Share Tech Mono" font-size="8" fill="#2e4a32" text-anchor="middle">City/Metro</text>
+      <!-- WAN -->
+      <rect x="530" y="14" width="280" height="96" rx="4" fill="rgba(255,0,60,.05)" stroke="rgba(255,0,60,.2)" stroke-width="1.5"/>
+      <text x="670" y="52" font-family="Share Tech Mono" font-size="13" fill="#ff003c" text-anchor="middle" font-weight="bold">WAN</text>
+      <text x="670" y="72" font-family="Share Tech Mono" font-size="9" fill="#7aad82" text-anchor="middle">Unlimited</text>
+      <text x="670" y="89" font-family="Share Tech Mono" font-size="8" fill="#2e4a32" text-anchor="middle">Countries / Internet</text>
+      <!-- Scale label -->
+      <text x="820" y="100" font-family="Share Tech Mono" font-size="10" fill="#2e4a32" text-anchor="end">SCALE →</text>
+    </svg>
+  </div>
+
+  <div class="panel rv">
+    <div class="panel-t">Network Operating Strategies</div>
+    <table class="ptbl">
+      <thead><tr><th>Strategy</th><th>Architecture</th><th>Pros</th><th>Cons</th><th>Example</th></tr></thead>
+      <tbody>
+        <tr><td>Peer-to-Peer</td><td>All devices equal — no central server</td><td>Simple, cheap, no single point of failure</td><td>Poor scalability, hard to manage, low security</td><td>Small home network, Bluetooth sharing</td></tr>
+        <tr><td>Client/Server</td><td>Centralised server controls resources</td><td>Centralised management, strong security, scalable</td><td>Server = single point of failure, costly</td><td>Corporate network with AD Domain Controller</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- 02 OSI MODEL -->
+<section class="sec rv" id="osi">
+  <div class="sec-hd"><span class="sec-n">02 //</span><h2 class="sec-t">The OSI Model — 7 Layers<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+
+  <div class="panel rv-l">
+    <p>The <strong style="color:var(--t1)">OSI (Open Systems Interconnection) model</strong> is the universal reference framework for how network communication works, divided into seven distinct layers. Each layer has a specific function and communicates only with the layers directly above and below it. The OSI model is the language every network engineer, security analyst, and penetration tester uses to describe, troubleshoot, and categorise network behaviour. Understanding which layer a vulnerability exists at immediately tells you the appropriate mitigation.</p>
+    <p>Mnemonic — <strong style="color:var(--c)">All People Seem To Need Data Processing</strong> (Application → Physical, top-down) or <strong style="color:var(--g)">Please Do Not Throw Sausage Pizza Away</strong> (Physical → Application, bottom-up).</p>
+  </div>
+
+  <div class="diag rv">
+    <div class="diag-title">OSI Model — 7 Layers with Protocols, PDUs &amp; Security Relevance</div>
+    <div class="osi-stack">
+      <div class="osi-row">
+        <div class="osi-num">7</div>
+        <div class="osi-layer osi-l7"><div class="osi-name">Application</div></div>
+        <div class="osi-layer osi-l7"><div class="osi-pdu">Data</div></div>
+        <div class="osi-layer osi-l7"><div class="osi-proto">HTTP · HTTPS · FTP · SMTP · DNS · SSH · SNMP</div></div>
+      </div>
+      <div class="osi-row">
+        <div class="osi-num">6</div>
+        <div class="osi-layer osi-l6"><div class="osi-name">Presentation</div></div>
+        <div class="osi-layer osi-l6"><div class="osi-pdu">Data</div></div>
+        <div class="osi-layer osi-l6"><div class="osi-proto">TLS/SSL · JPEG · MPEG · ASCII · Encryption</div></div>
+      </div>
+      <div class="osi-row">
+        <div class="osi-num">5</div>
+        <div class="osi-layer osi-l5"><div class="osi-name">Session</div></div>
+        <div class="osi-layer osi-l5"><div class="osi-pdu">Data</div></div>
+        <div class="osi-layer osi-l5"><div class="osi-proto">NetBIOS · RPC · PPTP · SIP</div></div>
+      </div>
+      <div class="osi-row">
+        <div class="osi-num">4</div>
+        <div class="osi-layer osi-l4"><div class="osi-name">Transport</div></div>
+        <div class="osi-layer osi-l4"><div class="osi-pdu">Segment</div></div>
+        <div class="osi-layer osi-l4"><div class="osi-proto">TCP · UDP · SCTP — Ports 0-65535</div></div>
+      </div>
+      <div class="osi-row">
+        <div class="osi-num">3</div>
+        <div class="osi-layer osi-l3"><div class="osi-name">Network</div></div>
+        <div class="osi-layer osi-l3"><div class="osi-pdu">Packet</div></div>
+        <div class="osi-layer osi-l3"><div class="osi-proto">IP · ICMP · OSPF · BGP · RIP · ARP</div></div>
+      </div>
+      <div class="osi-row">
+        <div class="osi-num">2</div>
+        <div class="osi-layer osi-l2"><div class="osi-name">Data Link</div></div>
+        <div class="osi-layer osi-l2"><div class="osi-pdu">Frame</div></div>
+        <div class="osi-layer osi-l2"><div class="osi-proto">Ethernet · 802.11 Wi-Fi · MAC · VLANs · PPP</div></div>
+      </div>
+      <div class="osi-row">
+        <div class="osi-num">1</div>
+        <div class="osi-layer osi-l1"><div class="osi-name">Physical</div></div>
+        <div class="osi-layer osi-l1"><div class="osi-pdu">Bits</div></div>
+        <div class="osi-layer osi-l1"><div class="osi-proto">Cat5e/6 · Fibre Optic · Wi-Fi RF · USB · RS-232</div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:60px 1fr;gap:3px;margin-top:6px">
+        <div></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:3px">
+          <div style="font-family:var(--mono);font-size:10px;color:var(--t3);text-align:center;padding:4px">LAYER NAME</div>
+          <div style="font-family:var(--mono);font-size:10px;color:var(--t3);text-align:center;padding:4px">PDU (DATA UNIT)</div>
+          <div style="font-family:var(--mono);font-size:10px;color:var(--t3);text-align:center;padding:4px">KEY PROTOCOLS</div>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;gap:16px;margin-top:16px;flex-wrap:wrap">
+      <span style="font-family:var(--mono);font-size:10px;padding:4px 10px;background:rgba(0,229,255,.07);border:1px solid rgba(0,229,255,.2);border-radius:2px;color:var(--c)">L7-L5: Upper / Application Layers</span>
+      <span style="font-family:var(--mono);font-size:10px;padding:4px 10px;background:rgba(0,255,65,.07);border:1px solid rgba(0,255,65,.2);border-radius:2px;color:var(--g)">L4: Transport Layer</span>
+      <span style="font-family:var(--mono);font-size:10px;padding:4px 10px;background:rgba(191,0,255,.07);border:1px solid rgba(191,0,255,.2);border-radius:2px;color:var(--p)">L3: Network Layer</span>
+      <span style="font-family:var(--mono);font-size:10px;padding:4px 10px;background:rgba(255,215,0,.06);border:1px solid rgba(255,215,0,.18);border-radius:2px;color:var(--o)">L2-L1: Lower / Physical Layers</span>
+    </div>
+  </div>
+
+  <div class="alert al-i rv">
+    <span class="al-ic">[ i ]</span>
+    <p class="al-tx"><strong>Security Relevance:</strong> Most web vulnerabilities (SQLi, XSS, SSRF) occur at Layer 7. Firewall rules filter at Layer 3/4 (IP/port). VLAN hopping attacks target Layer 2. Physical intrusion bypasses all upper layers. Understanding the OSI layer of an attack immediately tells you which control can mitigate it.</p>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- 03 NETWORK DEVICES -->
+<section class="sec rv" id="devices">
+  <div class="sec-hd"><span class="sec-n">03 //</span><h2 class="sec-t">Network Devices &amp; Media<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+
+  <div class="dev-grid rv">
+    <div class="dev-card dc-hub">
+      <div class="dev-icon">📡</div>
+      <div class="dev-name">Hub (Layer 1)</div>
+      <div class="dev-desc">Broadcasts all traffic to every connected port — a "dumb" repeater. Every device sees every packet regardless of intended recipient. Creates a collision domain. Largely obsolete — replaced by switches. Still useful for passive traffic capture in lab environments.</div>
+    </div>
+    <div class="dev-card dc-sw">
+      <div class="dev-icon">🔄</div>
+      <div class="dev-name">Switch (Layer 2)</div>
+      <div class="dev-desc">Learns MAC addresses on each port and builds a CAM table — forwards frames only to the correct destination port. Reduces collisions, improves performance. Managed switches support VLANs, port mirroring (SPAN), 802.1X NAC, and QoS. Unmanaged switches require zero configuration.</div>
+    </div>
+    <div class="dev-card dc-rt">
+      <div class="dev-icon">🌐</div>
+      <div class="dev-name">Router (Layer 3)</div>
+      <div class="dev-desc">Routes packets between different networks using IP addresses and a routing table. Connects LAN to WAN, performs NAT (hiding internal IPs behind one public IP), provides basic firewall/ACL filtering, and handles dynamic routing protocols (OSPF, BGP). The boundary between networks.</div>
+    </div>
+  </div>
+
+  <!-- Cable Types -->
+  <div class="panel rv">
+    <div class="panel-t">Cable Categories &amp; Specifications</div>
+    <table class="ptbl">
+      <thead><tr><th>Category</th><th>Max Speed</th><th>Max Distance</th><th>Use Case</th></tr></thead>
+      <tbody>
+        <tr><td>Cat 6A</td><td>10 Gbps</td><td>100m</td><td>Data centre, server rooms — 10GbE standard</td></tr>
+        <tr><td>Cat 6</td><td>1 Gbps (10G to 55m)</td><td>100m</td><td>Modern office networks — current standard</td></tr>
+        <tr><td>Cat 5e</td><td>1 Gbps</td><td>100m</td><td>Gigabit Ethernet — most existing deployments</td></tr>
+        <tr><td>Cat 5</td><td>100 Mbps</td><td>100m</td><td>Legacy Fast Ethernet — being replaced</td></tr>
+        <tr><td>Multimode Fibre</td><td>100 Gbps+</td><td>2km</td><td>Building-to-building, data centre interconnect</td></tr>
+        <tr><td>Single Mode Fibre</td><td>100 Gbps+</td><td>80km+</td><td>Long-haul WAN links, ISP backbone</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- 04 TOPOLOGIES -->
+<section class="sec rv" id="topologies">
+  <div class="sec-hd"><span class="sec-n">04 //</span><h2 class="sec-t">Network Topologies<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+
+  <div class="panel rv-l">
+    <p>Network topology describes the physical or logical arrangement of nodes and connections. Physical topology is how cables and devices are laid out in the real world. Logical topology is how data flows through the network — which can differ from the physical layout. For example, a physical star topology can operate as a logical bus. Understanding topology is essential for both network design and for mapping attack paths during security assessments.</p>
+  </div>
+
+  <div class="topo-grid rv">
+    <!-- BUS -->
+    <div class="topo-card">
+      <div class="topo-name">Bus</div>
+      <svg class="topo-svg" viewBox="0 0 180 90" width="180" height="90">
+        <line x1="10" y1="45" x2="170" y2="45" stroke="#00ff41" stroke-width="2.5"/>
+        <circle cx="40" cy="45" r="8" fill="rgba(0,255,65,.15)" stroke="#00ff41" stroke-width="1.5"/>
+        <circle cx="80" cy="45" r="8" fill="rgba(0,255,65,.15)" stroke="#00ff41" stroke-width="1.5"/>
+        <circle cx="120" cy="45" r="8" fill="rgba(0,255,65,.15)" stroke="#00ff41" stroke-width="1.5"/>
+        <circle cx="160" cy="45" r="8" fill="rgba(0,255,65,.15)" stroke="#00ff41" stroke-width="1.5"/>
+        <text x="90" y="80" font-family="Share Tech Mono" font-size="9" fill="#2e4a32" text-anchor="middle">Single backbone cable</text>
+      </svg>
+      <div class="topo-desc">All nodes on one cable. Simple but a single break disrupts the entire network. Legacy Ethernet (10BASE2).</div>
+    </div>
+    <!-- STAR -->
+    <div class="topo-card">
+      <div class="topo-name">Star</div>
+      <svg class="topo-svg" viewBox="0 0 180 110" width="180" height="110">
+        <circle cx="90" cy="55" r="14" fill="rgba(0,229,255,.15)" stroke="#00e5ff" stroke-width="2"/>
+        <text x="90" y="59" font-family="Share Tech Mono" font-size="8" fill="#00e5ff" text-anchor="middle">SW</text>
+        <circle cx="30" cy="20" r="8" fill="rgba(0,255,65,.15)" stroke="#00ff41" stroke-width="1.5"/><line x1="38" y1="26" x2="77" y2="47" stroke="#2e4a32" stroke-width="1.5"/>
+        <circle cx="90" cy="10" r="8" fill="rgba(0,255,65,.15)" stroke="#00ff41" stroke-width="1.5"/><line x1="90" y1="18" x2="90" y2="41" stroke="#2e4a32" stroke-width="1.5"/>
+        <circle cx="150" cy="20" r="8" fill="rgba(0,255,65,.15)" stroke="#00ff41" stroke-width="1.5"/><line x1="142" y1="26" x2="103" y2="47" stroke="#2e4a32" stroke-width="1.5"/>
+        <circle cx="30" cy="90" r="8" fill="rgba(0,255,65,.15)" stroke="#00ff41" stroke-width="1.5"/><line x1="38" y1="84" x2="77" y2="63" stroke="#2e4a32" stroke-width="1.5"/>
+        <circle cx="150" cy="90" r="8" fill="rgba(0,255,65,.15)" stroke="#00ff41" stroke-width="1.5"/><line x1="142" y1="84" x2="103" y2="63" stroke="#2e4a32" stroke-width="1.5"/>
+      </svg>
+      <div class="topo-desc">All nodes connect to a central switch. Most common modern topology. One node failure doesn't affect others.</div>
+    </div>
+    <!-- RING -->
+    <div class="topo-card">
+      <div class="topo-name">Ring</div>
+      <svg class="topo-svg" viewBox="0 0 180 100" width="180" height="100">
+        <circle cx="90" cy="50" r="32" fill="none" stroke="#2e4a32" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <circle cx="90" cy="18" r="8" fill="rgba(191,0,255,.15)" stroke="#bf00ff" stroke-width="1.5"/>
+        <circle cx="122" cy="50" r="8" fill="rgba(191,0,255,.15)" stroke="#bf00ff" stroke-width="1.5"/>
+        <circle cx="90" cy="82" r="8" fill="rgba(191,0,255,.15)" stroke="#bf00ff" stroke-width="1.5"/>
+        <circle cx="58" cy="50" r="8" fill="rgba(191,0,255,.15)" stroke="#bf00ff" stroke-width="1.5"/>
+        <path d="M97,23 A32,32 0 0,1 117,44" fill="none" stroke="#bf00ff" stroke-width="1.5" marker-end="url(#arrp)"/>
+      </svg>
+      <div class="topo-desc">Data travels in one direction around the ring. Token Ring is the classic example. A break disrupts the whole loop.</div>
+    </div>
+    <!-- MESH -->
+    <div class="topo-card">
+      <div class="topo-name">Mesh</div>
+      <svg class="topo-svg" viewBox="0 0 180 100" width="180" height="100">
+        <circle cx="50" cy="25" r="8" fill="rgba(255,0,60,.12)" stroke="#ff003c" stroke-width="1.5"/>
+        <circle cx="130" cy="25" r="8" fill="rgba(255,0,60,.12)" stroke="#ff003c" stroke-width="1.5"/>
+        <circle cx="50" cy="75" r="8" fill="rgba(255,0,60,.12)" stroke="#ff003c" stroke-width="1.5"/>
+        <circle cx="130" cy="75" r="8" fill="rgba(255,0,60,.12)" stroke="#ff003c" stroke-width="1.5"/>
+        <circle cx="90" cy="50" r="8" fill="rgba(255,0,60,.12)" stroke="#ff003c" stroke-width="1.5"/>
+        <line x1="58" y1="25" x2="122" y2="25" stroke="#ff003c" stroke-width="1" opacity=".5"/>
+        <line x1="50" y1="33" x2="50" y2="67" stroke="#ff003c" stroke-width="1" opacity=".5"/>
+        <line x1="130" y1="33" x2="130" y2="67" stroke="#ff003c" stroke-width="1" opacity=".5"/>
+        <line x1="58" y1="75" x2="122" y2="75" stroke="#ff003c" stroke-width="1" opacity=".5"/>
+        <line x1="55" y1="29" x2="85" y2="46" stroke="#ff003c" stroke-width="1" opacity=".5"/>
+        <line x1="125" y1="29" x2="95" y2="46" stroke="#ff003c" stroke-width="1" opacity=".5"/>
+        <line x1="55" y1="71" x2="85" y2="54" stroke="#ff003c" stroke-width="1" opacity=".5"/>
+        <line x1="125" y1="71" x2="95" y2="54" stroke="#ff003c" stroke-width="1" opacity=".5"/>
+      </svg>
+      <div class="topo-desc">Every node connects to every other node. Maximum redundancy. Used in internet backbone and critical infrastructure.</div>
+    </div>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- 05 IP ADDRESSING -->
+<section class="sec rv" id="addressing">
+  <div class="sec-hd"><span class="sec-n">05 //</span><h2 class="sec-t">IP Addressing, CIDR &amp; Subnetting<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+
+  <div class="panel rv-l">
+    <p>Every device on a network needs a unique address — just like a postal address — to send and receive data. IPv4 addresses are 32-bit numbers written in dotted-decimal notation (e.g., 192.168.1.10). An IPv4 address has two parts: the <strong style="color:var(--p)">Network ID</strong> (identifying which network) and the <strong style="color:var(--c)">Host ID</strong> (identifying the device within that network). The subnet mask determines the boundary between these two parts.</p>
+  </div>
+
+  <!-- IPv4 Address Diagram -->
+  <div class="diag rv">
+    <div class="diag-title">IPv4 Address Structure — 192.168.1.10 / 24</div>
+    <div class="ip-diag">
+      <div style="font-family:var(--mono);font-size:10px;color:var(--t3);margin-bottom:8px">32-BIT ADDRESS — FOUR OCTETS (0–255 EACH)</div>
+      <div class="ip-row">
+        <div class="ip-cell ip-net">192</div>
+        <div class="ip-cell ip-net">168</div>
+        <div class="ip-cell ip-net">1</div>
+        <div class="ip-cell ip-host">10</div>
+      </div>
+      <div class="ip-row">
+        <div class="ip-cell ip-lab">11000000</div>
+        <div class="ip-cell ip-lab">10101000</div>
+        <div class="ip-cell ip-lab">00000001</div>
+        <div class="ip-cell ip-lab">00001010</div>
+      </div>
+      <div class="ip-row" style="margin-top:4px">
+        <div class="ip-cell" style="grid-column:span 3;background:rgba(191,0,255,.08);color:var(--p);border-color:rgba(191,0,255,.2)">NETWORK ID (24 bits = /24)</div>
+        <div class="ip-cell" style="background:rgba(0,229,255,.08);color:var(--c);border-color:rgba(0,229,255,.2)">HOST ID (8 bits)</div>
+      </div>
+      <div style="margin-top:12px;font-family:var(--mono);font-size:11px;color:var(--t2)">
+        Subnet Mask: <span style="color:var(--g)">255.255.255.0</span> &nbsp;|&nbsp; 
+        Network Address: <span style="color:var(--p)">192.168.1.0</span> &nbsp;|&nbsp; 
+        Broadcast: <span style="color:var(--r)">192.168.1.255</span> &nbsp;|&nbsp; 
+        Usable Hosts: <span style="color:var(--c)">192.168.1.1 — 192.168.1.254 (254 hosts)</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CIDR Cheat Sheet -->
+  <div class="diag rv">
+    <div class="diag-title">CIDR Subnetting Quick Reference</div>
+    <div class="ip-diag">
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px">
+        <div class="cidr-row"><span class="cidr-chip">/8</span> <span class="cidr-info">255.0.0.0 → 16,777,214 hosts — Class A / Large enterprise</span></div>
+        <div class="cidr-row"><span class="cidr-chip">/16</span><span class="cidr-info">255.255.0.0 → 65,534 hosts — Class B / Mid enterprise</span></div>
+        <div class="cidr-row"><span class="cidr-chip">/24</span><span class="cidr-info">255.255.255.0 → 254 hosts — Class C / Office subnet</span></div>
+        <div class="cidr-row"><span class="cidr-chip">/25</span><span class="cidr-info">255.255.255.128 → 126 hosts — Split /24 in half</span></div>
+        <div class="cidr-row"><span class="cidr-chip">/26</span><span class="cidr-info">255.255.255.192 → 62 hosts — Small department</span></div>
+        <div class="cidr-row"><span class="cidr-chip">/27</span><span class="cidr-info">255.255.255.224 → 30 hosts — Small team VLAN</span></div>
+        <div class="cidr-row"><span class="cidr-chip">/28</span><span class="cidr-info">255.255.255.240 → 14 hosts — Server subnet</span></div>
+        <div class="cidr-row"><span class="cidr-chip">/30</span><span class="cidr-info">255.255.255.252 → 2 hosts — Point-to-point WAN link</span></div>
+        <div class="cidr-row"><span class="cidr-chip">/32</span><span class="cidr-info">255.255.255.255 → 1 host — Single host route / loopback</span></div>
+      </div>
+      <div style="margin-top:12px;font-family:var(--mono);font-size:11px;color:var(--t3)">Formula: Usable hosts = 2^(32-prefix) − 2 &nbsp;|&nbsp; Subtract 2 for Network Address and Broadcast Address</div>
+    </div>
+  </div>
+
+  <!-- IPv6 -->
+  <div class="panel rv">
+    <div class="panel-t">IPv6 — 128-Bit Addressing</div>
+    <p>IPv4 ran out of addresses in 2011. IPv6 uses 128-bit addresses written as eight groups of four hexadecimal digits separated by colons: <code style="color:var(--c);font-family:var(--mono)">2001:0db8:85a3:0000:0000:8a2e:0370:7334</code>. Consecutive groups of all zeros can be compressed to <code style="color:var(--c);font-family:var(--mono)">::</code> once per address. IPv6 provides 340 undecillion (3.4 × 10³⁸) addresses — enough for every atom on Earth to have a unique address.</p>
+    <table class="ptbl" style="margin-top:14px">
+      <thead><tr><th>IPv6 Address Type</th><th>Prefix</th><th>IPv4 Equivalent</th></tr></thead>
+      <tbody>
+        <tr><td>Global Unicast</td><td>2000::/3</td><td>Public IPv4 address — routable on internet</td></tr>
+        <tr><td>Link-Local</td><td>FE80::/10</td><td>169.254.x.x — auto-configured, not routable</td></tr>
+        <tr><td>Unique Local</td><td>FC00::/7</td><td>10.x.x.x / 192.168.x.x — private ranges</td></tr>
+        <tr><td>Loopback</td><td>::1/128</td><td>127.0.0.1 — localhost</td></tr>
+        <tr><td>Multicast</td><td>FF00::/8</td><td>224.x.x.x — multicast groups</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- 06 PROTOCOLS -->
+<section class="sec rv" id="protocols">
+  <div class="sec-hd"><span class="sec-n">06 //</span><h2 class="sec-t">Core Protocols &amp; the TCP Handshake<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+
+  <div class="panel rv-l">
+    <p>Protocols are the rules governing how data is formatted, transmitted, and received between network devices. Understanding protocols at a packet level — not just their names — is what separates a network administrator from a network security engineer. Knowing exactly how TCP establishes connections, how DNS resolves names, and how DHCP assigns addresses is prerequisite knowledge for understanding how each of these protocols can be attacked.</p>
+  </div>
+
+  <!-- TCP 3-Way Handshake -->
+  <div class="diag rv">
+    <div class="diag-title">TCP 3-Way Handshake — Connection Establishment</div>
+    <div style="max-width:580px;margin:0 auto">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-bottom:8px">
+        <div style="font-family:var(--dsp);font-size:10px;letter-spacing:2px;color:var(--g);text-transform:uppercase;text-align:center;padding:10px;border:1px solid rgba(0,255,65,.3);background:rgba(0,255,65,.05);border-radius:4px">CLIENT</div>
+        <div style="font-family:var(--dsp);font-size:10px;letter-spacing:2px;color:var(--c);text-transform:uppercase;text-align:center;padding:10px;border:1px solid rgba(0,229,255,.3);background:rgba(0,229,255,.05);border-radius:4px">SERVER</div>
+      </div>
+      <!-- SYN -->
+      <div style="position:relative;margin:12px 0">
+        <div style="height:2px;background:linear-gradient(to right,#00ff41,#00e5ff);border-radius:1px"></div>
+        <div style="position:absolute;right:-4px;top:-4px;width:0;height:0;border-top:5px solid transparent;border-bottom:5px solid transparent;border-left:8px solid #00e5ff"></div>
+        <div style="font-family:var(--mono);font-size:11px;color:var(--g);text-align:center;margin-top:4px">① SYN — seq=0 — "I want to connect"</div>
+      </div>
+      <!-- SYN-ACK -->
+      <div style="position:relative;margin:12px 0">
+        <div style="height:2px;background:linear-gradient(to left,#00ff41,#00e5ff);border-radius:1px"></div>
+        <div style="position:absolute;left:-4px;top:-4px;width:0;height:0;border-top:5px solid transparent;border-bottom:5px solid transparent;border-right:8px solid #00ff41"></div>
+        <div style="font-family:var(--mono);font-size:11px;color:var(--c);text-align:center;margin-top:4px">② SYN-ACK — seq=0, ack=1 — "Acknowledged, I'm listening"</div>
+      </div>
+      <!-- ACK -->
+      <div style="position:relative;margin:12px 0">
+        <div style="height:2px;background:linear-gradient(to right,#00ff41,#00e5ff);border-radius:1px"></div>
+        <div style="position:absolute;right:-4px;top:-4px;width:0;height:0;border-top:5px solid transparent;border-bottom:5px solid transparent;border-left:8px solid #00e5ff"></div>
+        <div style="font-family:var(--mono);font-size:11px;color:var(--g);text-align:center;margin-top:4px">③ ACK — ack=1 — "Connection established"</div>
+      </div>
+      <!-- Data -->
+      <div style="text-align:center;margin-top:16px;font-family:var(--mono);font-size:11px;color:var(--t3)">↕ DATA EXCHANGE (HTTP, SSH, FTP...) ↕</div>
+      <!-- FIN -->
+      <div style="position:relative;margin:12px 0">
+        <div style="height:2px;background:linear-gradient(to right,rgba(255,0,60,.7),transparent);border-radius:1px"></div>
+        <div style="font-family:var(--mono);font-size:11px;color:var(--r);text-align:center;margin-top:4px">FIN / FIN-ACK — Connection teardown (4-way)</div>
+      </div>
+    </div>
+    <div class="alert al-i" style="margin-top:16px">
+      <span class="al-ic">[ i ]</span>
+      <p class="al-tx"><strong>Security Note:</strong> SYN flood attacks send millions of SYN packets without completing the handshake, exhausting the server's connection table. Nmap's SYN scan (<code style="color:var(--c);font-family:var(--mono)">-sS</code>) sends SYN, receives SYN-ACK (confirming port open), then sends RST instead of ACK — never completing the handshake and leaving less forensic evidence.</p>
+    </div>
+  </div>
+
+  <div class="panel rv">
+    <div class="panel-t">Key Protocol Reference — Common Ports</div>
+    <table class="ptbl">
+      <thead><tr><th>Protocol</th><th>Port</th><th>Transport</th><th>Function</th><th>Security Note</th></tr></thead>
+      <tbody>
+        <tr><td>HTTP</td><td>80</td><td>TCP</td><td>Web traffic (unencrypted)</td><td>Cleartext — intercept credentials with MitM</td></tr>
+        <tr><td>HTTPS</td><td>443</td><td>TCP</td><td>Web traffic (TLS encrypted)</td><td>Check for certificate validity, TLS version</td></tr>
+        <tr><td>SSH</td><td>22</td><td>TCP</td><td>Encrypted remote shell</td><td>Brute-force target; check for weak ciphers</td></tr>
+        <tr><td>FTP</td><td>21</td><td>TCP</td><td>File transfer (unencrypted)</td><td>Credentials in cleartext; anonymous login</td></tr>
+        <tr><td>DNS</td><td>53</td><td>UDP/TCP</td><td>Name resolution</td><td>DNS poisoning, zone transfer (AXFR) enum</td></tr>
+        <tr><td>DHCP</td><td>67/68</td><td>UDP</td><td>Dynamic IP assignment</td><td>Rogue DHCP server for MitM positioning</td></tr>
+        <tr><td>SMB</td><td>445</td><td>TCP</td><td>Windows file sharing</td><td>EternalBlue (MS17-010), relay attacks</td></tr>
+        <tr><td>RDP</td><td>3389</td><td>TCP</td><td>Windows remote desktop</td><td>Brute-force, BlueKeep (CVE-2019-0708)</td></tr>
+        <tr><td>SNMP</td><td>161</td><td>UDP</td><td>Network device management</td><td>Default community strings (public/private)</td></tr>
+        <tr><td>LDAP</td><td>389</td><td>TCP</td><td>Directory services</td><td>LDAP injection, anonymous bind</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- 07 WIRELESS -->
+<section class="sec rv" id="wireless">
+  <div class="sec-hd"><span class="sec-n">07 //</span><h2 class="sec-t">Wireless Networking, VLANs &amp; VPNs<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+
+  <div class="panel rv-l">
+    <p>Three modern networking fundamentals that were absent from legacy curricula but are now essential: wireless networking (Wi-Fi) which is how most devices connect today, VLANs which logically segment physical networks for security and performance, and VPNs which securely extend private networks over public infrastructure. Every security practitioner needs to understand all three — both how they work correctly and how they are commonly misconfigured.</p>
+  </div>
+
+  <!-- 802.11 Standards -->
+  <div class="diag rv">
+    <div class="diag-title">802.11 Wi-Fi Standards</div>
+    <table class="ptbl" style="margin:0">
+      <thead><tr><th>Standard</th><th>Name</th><th>Frequency</th><th>Max Speed</th><th>Range</th></tr></thead>
+      <tbody>
+        <tr><td>802.11b</td><td>Wi-Fi 1</td><td>2.4 GHz</td><td>11 Mbps</td><td>~35m indoor — legacy, obsolete</td></tr>
+        <tr><td>802.11g</td><td>Wi-Fi 3</td><td>2.4 GHz</td><td>54 Mbps</td><td>~38m indoor — legacy</td></tr>
+        <tr><td>802.11n</td><td>Wi-Fi 4</td><td>2.4 / 5 GHz</td><td>600 Mbps</td><td>~70m indoor — widespread</td></tr>
+        <tr><td>802.11ac</td><td>Wi-Fi 5</td><td>5 GHz</td><td>3.5 Gbps</td><td>~35m indoor — current standard</td></tr>
+        <tr><td>802.11ax</td><td>Wi-Fi 6/6E</td><td>2.4/5/6 GHz</td><td>9.6 Gbps</td><td>~30m indoor — modern deployments</td></tr>
+      </tbody>
+    </table>
+    <div style="margin-top:12px;display:flex;gap:16px;flex-wrap:wrap">
+      <span style="font-family:var(--mono);font-size:10px;padding:4px 10px;background:rgba(0,255,65,.07);border:1px solid rgba(0,255,65,.2);border-radius:2px;color:var(--g)">WPA3 — Current Standard (SAE auth, 192-bit encryption)</span>
+      <span style="font-family:var(--mono);font-size:10px;padding:4px 10px;background:rgba(255,215,0,.07);border:1px solid rgba(255,215,0,.2);border-radius:2px;color:var(--o)">WPA2 — Still common (AES/CCMP encryption)</span>
+      <span style="font-family:var(--mono);font-size:10px;padding:4px 10px;background:rgba(255,0,60,.07);border:1px solid rgba(255,0,60,.2);border-radius:2px;color:var(--r)">WPA/WEP — Broken — do not use</span>
+    </div>
+  </div>
+
+  <!-- VLANs -->
+  <div class="diag rv">
+    <div class="diag-title">VLANs — Logical Network Segmentation on One Physical Switch</div>
+    <svg viewBox="0 0 820 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:820px;display:block;margin:0 auto">
+      <!-- Switch -->
+      <rect x="330" y="80" width="160" height="50" rx="6" fill="rgba(0,229,255,.1)" stroke="#00e5ff" stroke-width="2"/>
+      <text x="410" y="108" font-family="Share Tech Mono" font-size="12" fill="#00e5ff" text-anchor="middle" font-weight="bold">MANAGED SWITCH</text>
+      <text x="410" y="122" font-family="Share Tech Mono" font-size="9" fill="#7aad82" text-anchor="middle">VLANs: 10 · 20 · 30</text>
+      <!-- VLAN 10 - Finance -->
+      <rect x="30" y="20" width="130" height="42" rx="4" fill="rgba(0,255,65,.08)" stroke="rgba(0,255,65,.3)" stroke-width="1.5"/>
+      <text x="95" y="37" font-family="Share Tech Mono" font-size="10" fill="#00ff41" text-anchor="middle" font-weight="bold">VLAN 10</text>
+      <text x="95" y="52" font-family="Share Tech Mono" font-size="9" fill="#7aad82" text-anchor="middle">Finance</text>
+      <line x1="160" y1="41" x2="330" y2="100" stroke="#00ff41" stroke-width="1.5" stroke-dasharray="6,3"/>
+      <!-- VLAN 10 port 2 -->
+      <rect x="30" y="80" width="130" height="42" rx="4" fill="rgba(0,255,65,.05)" stroke="rgba(0,255,65,.2)" stroke-width="1.5"/>
+      <text x="95" y="97" font-family="Share Tech Mono" font-size="10" fill="#00ff41" text-anchor="middle">VLAN 10</text>
+      <text x="95" y="112" font-family="Share Tech Mono" font-size="9" fill="#7aad82" text-anchor="middle">Finance PC2</text>
+      <line x1="160" y1="101" x2="330" y2="110" stroke="#00ff41" stroke-width="1.5" stroke-dasharray="6,3"/>
+      <!-- VLAN 20 - HR -->
+      <rect x="30" y="140" width="130" height="42" rx="4" fill="rgba(191,0,255,.08)" stroke="rgba(191,0,255,.28)" stroke-width="1.5"/>
+      <text x="95" y="157" font-family="Share Tech Mono" font-size="10" fill="#bf00ff" text-anchor="middle" font-weight="bold">VLAN 20</text>
+      <text x="95" y="172" font-family="Share Tech Mono" font-size="9" fill="#7aad82" text-anchor="middle">HR Dept</text>
+      <line x1="160" y1="161" x2="330" y2="120" stroke="#bf00ff" stroke-width="1.5" stroke-dasharray="6,3"/>
+      <!-- VLAN 30 - IT -->
+      <rect x="660" y="20" width="130" height="42" rx="4" fill="rgba(255,215,0,.07)" stroke="rgba(255,215,0,.25)" stroke-width="1.5"/>
+      <text x="725" y="37" font-family="Share Tech Mono" font-size="10" fill="#ffd700" text-anchor="middle" font-weight="bold">VLAN 30</text>
+      <text x="725" y="52" font-family="Share Tech Mono" font-size="9" fill="#7aad82" text-anchor="middle">IT / Servers</text>
+      <line x1="660" y1="41" x2="490" y2="100" stroke="#ffd700" stroke-width="1.5" stroke-dasharray="6,3"/>
+      <!-- VLAN 30 port 2 -->
+      <rect x="660" y="140" width="130" height="42" rx="4" fill="rgba(255,0,60,.07)" stroke="rgba(255,0,60,.22)" stroke-width="1.5"/>
+      <text x="725" y="157" font-family="Share Tech Mono" font-size="10" fill="#ff003c" text-anchor="middle" font-weight="bold">DMZ</text>
+      <text x="725" y="172" font-family="Share Tech Mono" font-size="9" fill="#7aad82" text-anchor="middle">VLAN 99</text>
+      <line x1="660" y1="161" x2="490" y2="120" stroke="#ff003c" stroke-width="1.5" stroke-dasharray="6,3"/>
+      <!-- NO cross traffic label -->
+      <text x="410" y="178" font-family="Share Tech Mono" font-size="9" fill="#2e4a32" text-anchor="middle">Finance cannot reach HR/IT without router (inter-VLAN routing)</text>
+    </svg>
+  </div>
+
+  <!-- VPNs & NAT -->
+  <div class="mgrid rv">
+    <div class="mcard"><div class="mcard-name">VPN Types</div><div class="mcard-desc">A Virtual Private Network encrypts traffic between two points over an untrusted public network. <strong style="color:var(--t1)">Site-to-Site VPN:</strong> connects two entire networks (HQ ↔ Branch office). <strong style="color:var(--t1)">Remote Access VPN:</strong> connects an individual device to a corporate network (employee laptop → corporate LAN). <strong style="color:var(--t1)">Protocols:</strong> OpenVPN, IPSec/IKEv2, WireGuard (modern, fast), SSTP, L2TP. WireGuard is now the recommended standard for new deployments.</div></div>
+    <div class="mcard"><div class="mcard-name">NAT — Network Address Translation</div><div class="mcard-desc">NAT allows an entire private network to share one public IP address. The router maintains a translation table: when Device 192.168.1.10 sends a packet to the internet, the router rewrites the source IP to its public IP and records the mapping. When the response arrives, it rewrites the destination back to 192.168.1.10. <strong style="color:var(--t1)">SNAT</strong> (Source NAT) for outbound. <strong style="color:var(--t1)">DNAT</strong> (Destination NAT / Port Forwarding) for inbound — routes external traffic to a specific internal host.</div></div>
+    <div class="mcard"><div class="mcard-name">Dynamic Routing Protocols</div><div class="mcard-desc">Routers use dynamic routing protocols to automatically share network maps. <strong style="color:var(--t1)">OSPF</strong> (Open Shortest Path First) is the standard interior gateway protocol — used within an organisation. <strong style="color:var(--t1)">BGP</strong> (Border Gateway Protocol) is the internet's routing protocol — used between autonomous systems (ISPs, large organisations). BGP route injection is a known attack vector — a misconfigured BGP router can redirect global internet traffic.</div></div>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- 08 SECURITY -->
+<section class="sec rv" id="security">
+  <div class="sec-hd"><span class="sec-n">08 //</span><h2 class="sec-t">Network Security Fundamentals<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+
+  <div class="panel rv-l">
+    <p>Network security is built on layered defences — no single control protects against all threats. Understanding firewalls, packet filtering, NAC, and basic troubleshooting tools provides both the defensive foundation and the prerequisite knowledge for understanding how each control can be bypassed during a penetration test.</p>
+  </div>
+
+  <!-- Troubleshooting Tools -->
+  <div class="tgrid rv">
+    <div class="tc"><div class="tcname">ipconfig / ifconfig</div><span class="tctag">Windows / Linux</span><div class="tcdesc">Display IP configuration, subnet mask, default gateway, DNS. Pen test: confirm network position and reachable subnets</div></div>
+    <div class="tc"><div class="tcname">ping</div><span class="tctag">ICMP · Connectivity</span><div class="tcdesc">Test host reachability via ICMP echo request/reply. Pen test: host discovery in subnets. Can be blocked by firewall</div></div>
+    <div class="tc"><div class="tcname">tracert / traceroute</div><span class="tctag">Path Tracing</span><div class="tcdesc">Show each hop between source and destination with latency. Pen test: map network topology from a foothold</div></div>
+    <div class="tc"><div class="tcname">nmap</div><span class="tctag">Port Scanner</span><div class="tcdesc">Discover hosts, open ports, services, OS. The primary network reconnaissance tool for every penetration test</div></div>
+    <div class="tc"><div class="tcname">arp -a / ip neigh</div><span class="tctag">ARP Table</span><div class="tcdesc">Show IP-to-MAC address mappings. Pen test: discover local network hosts without active scanning</div></div>
+    <div class="tc"><div class="tcname">netstat / ss</div><span class="tctag">Connections</span><div class="tcdesc">Show active connections, listening ports, routing table. Essential for post-exploitation situational awareness</div></div>
+    <div class="tc"><div class="tcname">Wireshark</div><span class="tctag">Packet Capture</span><div class="tcdesc">Capture and analyse packets. Decode TCP handshakes, read cleartext protocols, identify network anomalies</div></div>
+    <div class="tc"><div class="tcname">dig / nslookup</div><span class="tctag">DNS</span><div class="tcdesc">Query DNS records. Pen test: DNS enumeration, zone transfer (AXFR), subdomain discovery</div></div>
+  </div>
+
+  <div class="cb rv" data-l="Essential Network Recon Commands">
+    <code><span class="cmt"># Host discovery — find live hosts on a subnet</span>
+<span class="cmd">nmap</span> <span class="flag">-sn</span> 192.168.1.0/24           <span class="cmt"># Ping sweep — no port scan</span>
+<span class="cmd">nmap</span> <span class="flag">-sV -sC -p-</span> 192.168.1.0/24  <span class="cmt"># Full port + version + default scripts</span>
+
+<span class="cmt"># Network interfaces and routing</span>
+<span class="cmd">ip addr show</span>                       <span class="cmt"># Linux: show all interfaces and IPs</span>
+<span class="cmd">ip route show</span>                      <span class="cmt"># Linux: routing table — find internal subnets</span>
+<span class="cmd">arp -a</span>                             <span class="cmt"># ARP table — IP-to-MAC mappings</span>
+
+<span class="cmt"># DNS enumeration</span>
+<span class="cmd">dig</span> target.com ANY                 <span class="cmt"># All DNS records</span>
+<span class="cmd">dig</span> <span class="flag">AXFR</span> target.com @ns1.target.com <span class="cmt"># Zone transfer attempt</span>
+
+<span class="cmt"># Packet capture — see what's on the wire</span>
+<span class="cmd">tcpdump</span> <span class="flag">-i</span> eth0 <span class="flag">-w</span> capture.pcap  <span class="cmt"># Capture all traffic to file</span>
+<span class="cmd">tcpdump</span> <span class="flag">-i</span> eth0 <span class="flag">-A</span> port 80       <span class="cmt"># Display HTTP traffic (cleartext)</span>
+
+<span class="cmt"># Active connections — post-exploitation situational awareness</span>
+<span class="cmd">ss</span> <span class="flag">-tulnp</span>                         <span class="cmt"># All listening ports with process names</span>
+<span class="cmd">netstat</span> <span class="flag">-ano</span>                       <span class="cmt"># Windows: active connections with PIDs</span></code>
+  </div>
+</section>
+
+<div class="div div-ai"></div>
+
+<!-- 09 AI INTEGRATION -->
+<section class="sec rv sec-ai" id="ai">
+  <div class="sec-hd"><span class="sec-n">09 //</span><h2 class="sec-t">AI Integration in Networking<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+
+  <div class="panel panel-ai rv-l">
+    <p>Artificial Intelligence is transforming networking across every domain — from how networks are designed and operated to how they are attacked and defended. Traditional networking relied on manual configuration, static rules, and human analysis of logs. AI introduces dynamic adaptation: networks that reconfigure themselves in response to traffic patterns, security systems that detect anomalies no rule could describe, and automated operations that manage network complexity at a scale no human team could maintain.</p>
+    <p>For security practitioners, AI networking tools are now essential on both sides of every engagement — AI-assisted network discovery and attack path analysis on the offensive side, and AI-powered anomaly detection and automated response on the defensive side.</p>
+  </div>
+
+  <div class="alert al-p rv">
+    <span class="al-ic">[ AI ]</span>
+    <p class="al-tx">AI-powered network anomaly detection systems can identify novel attack patterns — new malware C2 protocols, lateral movement sequences, data exfiltration behaviours — that have never been seen before and have no signature, purely by detecting statistical deviation from the learned baseline of normal network behaviour. This capability is now the primary detection layer in enterprise SOCs against advanced persistent threats.</p>
+  </div>
+
+  <div class="ai-grid rv">
+    <div class="ai-card"><span class="ai-ico">🧠</span><div class="ai-name">AI Network Anomaly Detection</div><div class="ai-desc">ML models baseline every device's normal communication patterns — connection destinations, protocols used, data volumes, timing — and flag deviations in real time. Detects novel attacks with no known signature: new C2 protocols, unusual east-west lateral movement, DNS tunnelling, and data exfiltration patterns that rule-based IDS systems completely miss.</div></div>
+    <div class="ai-card"><span class="ai-ico">🗺</span><div class="ai-name">AI Network Topology Mapping</div><div class="ai-desc">AI tools like Darktrace and Armis passively learn the complete network topology — every device, every connection, every protocol — without requiring network diagrams or manual inventory. Produces a live, continuously-updated network map that reflects the actual state of the environment, not what the asset register claims should be there.</div></div>
+    <div class="ai-card"><span class="ai-ico">⚡</span><div class="ai-name">AI-Driven Network Operations (AIOps)</div><div class="ai-desc">AI network management platforms predict and prevent network failures before they occur — analysing traffic patterns to predict congestion, automatically optimising routing to maintain QoS, detecting hardware degradation from performance metrics, and provisioning capacity in advance. Reduces mean-time-to-detect and mean-time-to-resolve network incidents by orders of magnitude.</div></div>
+    <div class="ai-card"><span class="ai-ico">🔍</span><div class="ai-name">Automated Pen Test Network Recon</div><div class="ai-desc">AI tools correlate Nmap scan output, ARP tables, routing data, and OSINT to automatically build a comprehensive internal network model — identifying subnets, device roles, trust relationships, and attack paths. Compresses hours of manual network mapping into minutes, and identifies non-obvious lateral movement paths that human analysis misses in complex multi-segment environments.</div></div>
+    <div class="ai-card"><span class="ai-ico">🛡</span><div class="ai-name">AI-Powered NDR</div><div class="ai-desc">Network Detection and Response (NDR) platforms (Darktrace, Vectra AI, ExtraHop) use unsupervised ML to learn what is normal for every device and alert on deviations. Unlike SIEM rules, they require no prior knowledge of attack techniques — detecting completely novel attack methods from first principles by recognising behaviour that deviates from the learned baseline.</div></div>
+    <div class="ai-card"><span class="ai-ico">☁️</span><div class="ai-name">AI Cloud Network Security</div><div class="ai-desc">AWS GuardDuty, Azure Defender for Cloud, and GCP Security Command Center use ML to analyse VPC flow logs, DNS query logs, and API calls for threat indicators — detecting compromised EC2 instances, unusual data exfiltration, cryptocurrency mining, and lateral movement through cloud IAM permissions that traditional network monitoring cannot detect.</div></div>
+    <div class="ai-card"><span class="ai-ico">🤖</span><div class="ai-name">AI Network Configuration Management</div><div class="ai-desc">AI tools continuously audit network device configurations against security baselines — detecting drift from expected configurations, identifying new routes that shouldn't exist, flagging firewall rule changes that create unintended access, and automatically remediating misconfiguration. Prevents the slow erosion of network security posture that manual change management cannot keep pace with at enterprise scale.</div></div>
+    <div class="ai-card"><span class="ai-ico">📡</span><div class="ai-name">AI for Wireless Security</div><div class="ai-desc">ML models analyse Wi-Fi traffic patterns to detect rogue access points (same SSID, different BSSID), evil-twin attacks, deauthentication flood attacks, and unusual client association patterns. AI systems can distinguish between legitimate AP signal variation and active wireless jamming or spoofing attacks that passive monitoring systems cannot identify.</div></div>
+    <div class="ai-card"><span class="ai-ico">🔮</span><div class="ai-name">Predictive Network Security</div><div class="ai-desc">AI correlates vulnerability data, threat intelligence, and network topology to predict which network paths are most likely to be exploited in the next attack — enabling proactive firewall rule tightening, segmentation improvements, and patch prioritisation before an attacker discovers the same paths through reconnaissance. Converts reactive security operations into proactive risk management.</div></div>
+  </div>
+
+  <div class="cb cb-ai rv" data-l="AI-Assisted — Network Analysis with GPT (Python)">
+    <code><span class="cmt"># Use AI to analyse Nmap scan output and build an attack-aware network model</span>
+<span class="kw">import</span> openai, subprocess, json
+
+<span class="cmt"># Run Nmap against discovered internal subnets</span>
+nmap_result = subprocess.<span class="fn">run</span>(
+    [<span class="str">'nmap'</span>, <span class="str">'-sV'</span>, <span class="str">'-T4'</span>, <span class="str">'--open'</span>, <span class="str">'-oJ'</span>, <span class="str">'-'</span>, <span class="str">'192.168.1.0/24'</span>],
+    capture_output=<span class="kw">True</span>, text=<span class="kw">True</span>
+).stdout
+
+client = openai.<span class="fn">OpenAI</span>()
+response = client.chat.completions.<span class="fn">create</span>(
+    model=<span class="str">"gpt-4o"</span>,
+    messages=[{<span class="str">"role"</span>:<span class="str">"user"</span>, <span class="str">"content"</span>: <span class="str">f"""
+You are a senior network penetration tester on an authorised engagement.
+Analyse this Nmap scan of an internal subnet and provide:
+
+{nmap_result[:4000]}
+
+1. NETWORK TOPOLOGY — infer the network architecture from discovered hosts
+2. DEVICE ROLES — what is each host likely doing (DC, web server, workstation)?
+3. ATTACK SURFACE — which open services have known vulnerabilities?
+4. ATTACK PATHS — highest-priority targets and recommended exploitation sequence
+5. LATERAL MOVEMENT — which hosts could pivot to other network segments?
+6. DETECTION RISK — which scans/exploits are most likely to trigger IDS alerts?
+"""</span>}]
+)
+<span class="fn">print</span>(response.choices[<span class="num">0</span>].message.content)</code>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta rv">
+  <div class="cta-t">// Know the Network. Own the Assessment. //</div>
+  <p class="cta-p">Networking fundamentals are not optional knowledge for a security practitioner — they are the substrate that every attack and defence operates on. Understanding the OSI model, IP addressing, routing, and protocols at packet level is what separates a scanner operator from a true security engineer. Master the foundations, then layer AI tools on top to operate at enterprise scale.</p>
+  <div class="cta-btns">
+    <a href="https://github.com/nishu2402" class="btn btn-p" target="_blank" rel="noopener">GitHub — nishu2402</a>
+    <a href="https://nishu2402.github.io" class="btn btn-s" target="_blank" rel="noopener">View Portfolio</a>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="f-l">Nisarg Chasmawala (Shroff)<br><span class="f-alias">// HEAVEN</span></div>
+  <div class="f-r">Offensive Security Engineer · MSc Cyber Security, BCU<br>CEH Master · CPENT · CHFI · ISO 27001 Lead Auditor<br><a href="https://github.com/nishu2402" target="_blank" rel="noopener">github.com/nishu2402</a></div>
+</footer>
+
+</div>
+
+<script>
+const cur=document.getElementById('cur'),cur2=document.getElementById('cur2'),cur3=document.getElementById('cur3');
+let mx=0,my=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px'});
+(function loop(){cur2.style.left=mx+'px';cur2.style.top=my+'px';cur3.style.left=mx+'px';cur3.style.top=my+'px';requestAnimationFrame(loop)})();
+document.querySelectorAll('a,.btn,.mcard,.ai-card,.panel,.cb,.tc,.dev-card,.topo-card').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cur.style.width='18px';cur.style.height='18px';cur.style.background='rgba(0,255,65,.25)'});
+  el.addEventListener('mouseleave',()=>{cur.style.width='10px';cur.style.height='10px';cur.style.background='var(--g)'});
+});
+window.addEventListener('scroll',()=>{document.getElementById('prog').style.width=((window.scrollY/(document.body.scrollHeight-window.innerHeight))*100)+'%'});
+
+/* PARTICLE NETWORK */
+(function(){
+  const c=document.getElementById('bg-particle'),ctx=c.getContext('2d');
+  let W,H,mouseX=innerWidth/2,mouseY=innerHeight/2;
+  const N=200,MAX=140;let P=[];
+  class Particle{
+    constructor(){this.reset(true)}
+    reset(i){this.x=Math.random()*W;this.y=i?Math.random()*H:H+10;this.z=Math.random()*3+.5;this.vx=(Math.random()-.5)*.4;this.vy=(Math.random()-.5)*.4-.1;this.life=Math.random()*300+200;this.maxLife=this.life;this.r=Math.random()*1.5+.5;const r=Math.random();this.color=r<.7?'0,255,65':r<.9?'0,229,255':'191,0,255'}
+    update(){const dx=this.x-mouseX,dy=this.y-mouseY,d=Math.sqrt(dx*dx+dy*dy);if(d<120){const f=(120-d)/120;this.vx+=dx/d*f*.6;this.vy+=dy/d*f*.6}this.vx*=.98;this.vy*=.98;this.x+=this.vx;this.y+=this.vy;this.life--;if(this.life<=0||this.x<-50||this.x>W+50||this.y<-50||this.y>H+50)this.reset(false)}
+    draw(){const a=(this.life/this.maxLife)*.7*this.z;ctx.beginPath();ctx.arc(this.x,this.y,this.r*this.z,0,Math.PI*2);ctx.fillStyle=`rgba(${this.color},${a})`;ctx.fill()}
+  }
+  function resize(){W=c.width=innerWidth;H=c.height=innerHeight}
+  function drawLines(){for(let i=0;i<P.length;i++)for(let j=i+1;j<P.length;j++){const a=P[i],b=P[j],dx=a.x-b.x,dy=a.y-b.y,d=Math.sqrt(dx*dx+dy*dy);if(d<MAX){const al=(1-d/MAX)*.18,g=ctx.createLinearGradient(a.x,a.y,b.x,b.y);g.addColorStop(0,`rgba(${a.color},${al})`);g.addColorStop(1,`rgba(${b.color},${al})`);ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.strokeStyle=g;ctx.lineWidth=(a.z+b.z)/2*.5;ctx.stroke()}}}
+  function drawRing(){const g=ctx.createRadialGradient(mouseX,mouseY,0,mouseX,mouseY,80);g.addColorStop(0,'rgba(0,255,65,0)');g.addColorStop(.7,'rgba(0,255,65,0.04)');g.addColorStop(1,'rgba(0,255,65,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(mouseX,mouseY,80,0,Math.PI*2);ctx.fill()}
+  function animate(){ctx.clearRect(0,0,W,H);drawRing();drawLines();P.forEach(p=>{p.update();p.draw()});requestAnimationFrame(animate)}
+  resize();window.addEventListener('resize',resize);document.addEventListener('mousemove',e=>{mouseX=e.clientX;mouseY=e.clientY});
+  P=Array.from({length:N},()=>new Particle());animate();
+})();
+
+/* HEX GRID */
+(function(){
+  const c=document.getElementById('bg-hex'),ctx=c.getContext('2d');
+  let W,H,t=0;const S=40;
+  function resize(){W=c.width=innerWidth;H=c.height=innerHeight}
+  function hexPath(cx,cy,s){ctx.beginPath();for(let i=0;i<6;i++){const a=Math.PI/180*(60*i-30);i===0?ctx.moveTo(cx+s*Math.cos(a),cy+s*Math.sin(a)):ctx.lineTo(cx+s*Math.cos(a),cy+s*Math.sin(a))}ctx.closePath()}
+  function draw(){ctx.clearRect(0,0,W,H);t+=.008;const sy=window.scrollY,cols=Math.ceil(W/(S*1.732))+2,rows=Math.ceil(H/(S*1.5))+2;for(let r=-1;r<rows;r++)for(let col=-1;col<cols;col++){const cx=col*S*1.732+(r%2)*S*.866,cy=r*S*1.5-(sy*.03)%((S*1.5));const w=Math.sin(t+col*.3+r*.2)*.5+.5;hexPath(cx,cy,S-2);ctx.strokeStyle=`rgba(0,255,65,${.02+w*.07})`;ctx.lineWidth=.6;ctx.stroke();if(w>.92){hexPath(cx,cy,S-2);ctx.fillStyle=`rgba(0,255,65,${.02+w*.03})`;ctx.fill()}}requestAnimationFrame(draw)}
+  resize();window.addEventListener('resize',resize);draw();
+})();
+
+/* HERO 3D — NETWORK NODE GRAPH with device types */
+(function(){
+  const c=document.getElementById('hero-geo');if(!c)return;
+  const ctx=c.getContext('2d'),S=500;c.width=S;c.height=S;
+
+  // Network topology: Router (centre) → Switch → Multiple endpoints
+  const nodes=[
+    {x:0,   y:0,   z:0,   r:20, col:'0,229,255', type:'RTR', label:'Router'},
+    {x:-120,y:-60, z:30,  r:14, col:'0,255,65',   type:'SW',  label:'Switch A'},
+    {x:120, y:-60, z:-30, r:14, col:'0,255,65',   type:'SW',  label:'Switch B'},
+    {x:-180,y:-130,z:60,  r:9,  col:'191,0,255',  type:'PC',  label:'PC'},
+    {x:-60, y:-150,z:40,  r:9,  col:'191,0,255',  type:'PC',  label:'PC'},
+    {x:60,  y:-140,z:-20, r:9,  col:'191,0,255',  type:'PC',  label:'PC'},
+    {x:180, y:-120,z:-50, r:9,  col:'191,0,255',  type:'PC',  label:'PC'},
+    {x:-140,y:80,  z:20,  r:11, col:'255,215,0',  type:'SRV', label:'Server'},
+    {x:140, y:80,  z:-40, r:11, col:'255,0,60',   type:'FW',  label:'Firewall'},
+    {x:0,   y:150, z:0,   r:14, col:'255,0,60',   type:'INT', label:'Internet'},
+  ];
+  const edges=[
+    [0,1],[0,2],[0,7],[0,8],[8,9],
+    [1,3],[1,4],[2,5],[2,6]
+  ];
+
+  let rx=0,ry=0,mrx=0,mry=0,t=0;
+  document.addEventListener('mousemove',e=>{mrx=(e.clientY/innerHeight-.5)*.3;mry=(e.clientX/innerWidth-.5)*.4});
+
+  function rot([x,y,z],rx,ry){
+    let y1=y*Math.cos(rx)-z*Math.sin(rx),z1=y*Math.sin(rx)+z*Math.cos(rx);
+    let x2=x*Math.cos(ry)+z1*Math.sin(ry),z2=-x*Math.sin(ry)+z1*Math.cos(ry);
+    return[x2,y1,z2];
+  }
+  function proj([x,y,z]){const f=430,d=f/(f+z+200);return[x*d+S/2,y*d+S/2,z]}
+
+  function draw(){
+    ctx.clearRect(0,0,S,S);
+    rx+=.003+mrx*.008;ry+=.006+mry*.01;t+=0.016;
+
+    const pv=nodes.map(n=>proj(rot([n.x,n.y,n.z],rx,ry)));
+
+    // Draw edges with animated packets
+    edges.forEach(([a,b],ei)=>{
+      const pa=pv[a],pb=pv[b],na=nodes[a],nb=nodes[b];
+      const dep=((pa[2]+pb[2])/(2*200)+1)/2;
+      const g=ctx.createLinearGradient(pa[0],pa[1],pb[0],pb[1]);
+      g.addColorStop(0,`rgba(${na.col},${0.08+dep*.3})`);
+      g.addColorStop(1,`rgba(${nb.col},${0.08+dep*.3})`);
+      ctx.beginPath();ctx.moveTo(pa[0],pa[1]);ctx.lineTo(pb[0],pb[1]);
+      ctx.strokeStyle=g;ctx.lineWidth=0.7+dep*0.8;ctx.stroke();
+      // Packet
+      const prog=(t*0.35+ei*0.15)%1;
+      const px=pa[0]+(pb[0]-pa[0])*prog,py=pa[1]+(pb[1]-pa[1])*prog;
+      const pd=((pa[2]+(pb[2]-pa[2])*prog)+200)/400;
+      ctx.beginPath();ctx.arc(px,py,3*pd,0,Math.PI*2);
+      ctx.fillStyle=`rgba(${na.col},${pd*0.9})`;ctx.fill();
+      const tg=ctx.createRadialGradient(px,py,0,px,py,10*pd);
+      tg.addColorStop(0,`rgba(${na.col},${0.3*pd})`);tg.addColorStop(1,`rgba(${na.col},0)`);
+      ctx.fillStyle=tg;ctx.beginPath();ctx.arc(px,py,10*pd,0,Math.PI*2);ctx.fill();
+    });
+
+    // Draw nodes
+    pv.forEach(([px,py,pz],i)=>{
+      const n=nodes[i];
+      const dep=(pz+200)/400;if(dep<0.2)return;
+      const r=n.r*dep;
+      const ng=ctx.createRadialGradient(px,py,0,px,py,r*3.5);
+      ng.addColorStop(0,`rgba(${n.col},${dep*0.22})`);ng.addColorStop(1,`rgba(${n.col},0)`);
+      ctx.fillStyle=ng;ctx.beginPath();ctx.arc(px,py,r*3.5,0,Math.PI*2);ctx.fill();
+      ctx.beginPath();ctx.arc(px,py,r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(${n.col},${dep*0.85})`;ctx.fill();
+      ctx.strokeStyle=`rgba(255,255,255,${dep*0.25})`;ctx.lineWidth=0.8;ctx.stroke();
+      // Label for larger nodes
+      if(n.r>=14&&dep>0.35){
+        ctx.font=`${Math.floor(7*dep+4)}px 'Share Tech Mono'`;
+        ctx.fillStyle=`rgba(${n.col},${dep*0.7})`;
+        ctx.textAlign='center';
+        ctx.fillText(n.type,px,py+r+10*dep);
+      }
+      // Router pulsing rings
+      if(i===0){
+        [2,3].forEach((rm,ri)=>{
+          const pulse=Math.sin(t*1.8-ri*0.8)*.5+.5;
+          ctx.beginPath();ctx.arc(px,py,r*rm,0,Math.PI*2);
+          ctx.strokeStyle=`rgba(0,229,255,${dep*0.2*pulse})`;ctx.lineWidth=1;ctx.stroke();
+        });
+      }
+    });
+
+    const cg=ctx.createRadialGradient(S/2,S/2,0,S/2,S/2,55);
+    cg.addColorStop(0,'rgba(0,229,255,0.06)');cg.addColorStop(1,'rgba(0,229,255,0)');
+    ctx.fillStyle=cg;ctx.beginPath();ctx.arc(S/2,S/2,55,0,Math.PI*2);ctx.fill();
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* SCROLL REVEAL */
+const rv=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('on')}),{threshold:.08});
+document.querySelectorAll('.rv,.rv-l').forEach(el=>rv.observe(el));
+
+/* TOC TRACKING */
+const sIds=['hero','basics','osi','devices','topologies','addressing','protocols','wireless','security','ai'];
+const tItems=document.querySelectorAll('.toc-i');
+const so=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)tItems.forEach(t=>t.classList.toggle('active',t.dataset.s===x.target.id))})},{threshold:.25});
+sIds.forEach(id=>{const el=document.getElementById(id);if(el)so.observe(el)});
+function goTo(h){document.querySelector(h)?.scrollIntoView({behavior:'smooth'})}
+
+/* CODE COPY */
+document.querySelectorAll('.cb').forEach(b=>{
+  b.title='Click to copy';
+  b.addEventListener('click',()=>{
+    navigator.clipboard.writeText(b.querySelector('code').innerText).catch(()=>{});
+    const o=b.getAttribute('data-l');b.setAttribute('data-l',o+' ✓ COPIED');
+    setTimeout(()=>b.setAttribute('data-l',o),2000);
+  });
+});
+</script>
+</body>
+</html>

