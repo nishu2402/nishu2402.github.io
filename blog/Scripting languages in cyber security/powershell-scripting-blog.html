@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PowerShell Scripting in Cybersecurity | Nisarg Chasmawala</title>
+<meta name="description" content="PowerShell Scripting in Cybersecurity - a complete field guide by Nisarg Chasmawala (Shroff), Offensive Security Engineer.">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--g:#00ff41;--c:#00e5ff;--p:#bf00ff;--r:#ff003c;--o:#ffd700;--ps:#0078d4;--bg:#030509;--t1:#d4ffe0;--t2:#7aad82;--t3:#2e4a32;--mono:'Share Tech Mono',monospace;--dsp:'Orbitron',sans-serif;--body:'Rajdhani',sans-serif;--glow:0 0 20px rgba(0,255,65,.4),0 0 60px rgba(0,255,65,.15);--cglow:0 0 20px rgba(0,229,255,.4),0 0 60px rgba(0,229,255,.1);--pglow:0 0 20px rgba(191,0,255,.4),0 0 60px rgba(191,0,255,.1)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;overflow-x:hidden}
+body{background:var(--bg);color:var(--t1);font-family:var(--body);font-size:17px;line-height:1.8;overflow-x:hidden;cursor:none}
+#bg-particle{position:fixed;inset:0;z-index:0;pointer-events:none}
+#bg-hex{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.35}
+#bg-scan{position:fixed;inset:0;z-index:9999;pointer-events:none;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,255,65,.009) 2px,rgba(0,255,65,.009) 4px)}
+#bg-vignette{position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse at 50% 50%,transparent 50%,rgba(3,5,9,.85) 100%)}
+#bg-noise{position:fixed;inset:0;z-index:2;pointer-events:none;opacity:.04;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:200px 200px;animation:grain .4s steps(1) infinite}
+@keyframes grain{0%{transform:translate(0,0)}10%{transform:translate(-2%,-2%)}20%{transform:translate(2%,2%)}30%{transform:translate(-1%,1%)}40%{transform:translate(1%,-1%)}50%{transform:translate(-3%,1%)}60%{transform:translate(1%,3%)}70%{transform:translate(-1%,-2%)}80%{transform:translate(2%,1%)}90%{transform:translate(-2%,2%)}}
+#cur{position:fixed;width:10px;height:10px;border-radius:50%;background:var(--g);box-shadow:var(--glow);pointer-events:none;z-index:99999;transform:translate(-50%,-50%);transition:width .1s,height .1s}
+#cur2{position:fixed;width:30px;height:30px;border-radius:50%;border:1px solid rgba(0,255,65,.5);pointer-events:none;z-index:99998;transform:translate(-50%,-50%);transition:left .08s,top .08s}
+#cur3{position:fixed;width:50px;height:50px;border-radius:50%;border:1px solid rgba(0,255,65,.2);pointer-events:none;z-index:99997;transform:translate(-50%,-50%);transition:left .15s,top .15s}
+#prog{position:fixed;top:0;left:0;height:2px;background:linear-gradient(to right,var(--g),var(--c),var(--p));box-shadow:0 0 10px var(--g);z-index:10000;width:0%}
+.topbar{position:fixed;top:0;left:0;right:0;height:58px;background:rgba(3,5,9,.88);border-bottom:1px solid rgba(0,255,65,.12);backdrop-filter:blur(20px) saturate(1.5);z-index:1000;display:flex;align-items:center;justify-content:space-between;padding:0 32px}
+.tb-left{display:flex;flex-direction:column;gap:2px}
+.tb-name{font-family:var(--dsp);font-size:13px;font-weight:900;color:var(--t1);letter-spacing:3px}
+.tb-roles{font-family:var(--mono);font-size:9px;letter-spacing:1.5px;overflow:hidden;white-space:nowrap}
+.tb-inner{display:inline-block;color:var(--c);animation:ticker 18s linear infinite}
+@keyframes ticker{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
+.tb-status{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;color:var(--g)}
+.tb-dot{width:7px;height:7px;border-radius:50%;background:var(--g);box-shadow:0 0 10px var(--g);animation:tdot 1.2s ease-in-out infinite}
+@keyframes tdot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.7)}}
+.toc{position:fixed;right:20px;top:50%;transform:translateY(-50%);z-index:200;display:flex;flex-direction:column;gap:9px}
+.toc-i{display:flex;align-items:center;gap:8px;cursor:pointer}
+.toc-d{width:6px;height:6px;border-radius:50%;border:1px solid var(--t3);transition:all .25s;flex-shrink:0}
+.toc-i.active .toc-d,.toc-i:hover .toc-d{background:var(--g);border-color:var(--g);box-shadow:0 0 10px var(--g)}
+.toc-l{font-family:var(--mono);font-size:10px;color:var(--t3);opacity:0;transform:translateX(6px);transition:all .2s;white-space:nowrap}
+.toc-i:hover .toc-l,.toc-i.active .toc-l{opacity:1;transform:none;color:var(--g)}
+@media(max-width:1000px){.toc{display:none}}
+.wrap{position:relative;z-index:10;max-width:980px;margin:0 auto;padding:0 28px}
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:100px 0 60px;position:relative}
+.hero-canvas-wrap{position:absolute;right:-80px;top:50%;transform:translateY(-52%);width:500px;height:500px;pointer-events:none}
+#hero-geo{width:100%;height:100%}
+.hero-tag{font-family:var(--mono);font-size:11px;letter-spacing:4px;color:var(--c);text-transform:uppercase;margin-bottom:18px;opacity:0;animation:fup .6s ease forwards .3s;display:flex;align-items:center;gap:12px}
+.hero-tag::before{content:'';width:40px;height:1px;background:linear-gradient(to right,transparent,var(--c))}
+.hero-tag::after{content:'';flex:1;max-width:100px;height:1px;background:linear-gradient(to right,var(--c),transparent)}
+.hero-title{font-family:var(--dsp);font-size:clamp(18px,3.5vw,42px);font-weight:900;line-height:1.0;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;opacity:0;animation:fup .7s ease forwards .5s}
+.ht-line1{display:block;color:var(--g);text-shadow:0 0 40px rgba(0,255,65,.6),0 0 100px rgba(0,255,65,.25)}
+.ht-sub{display:block;font-size:.43em;letter-spacing:5px;color:rgba(200,255,220,.5);font-weight:400;margin-top:10px}
+.gw{position:relative;display:inline-block}
+.gw::before,.gw::after{content:attr(data-t);position:absolute;top:0;left:0;width:100%;font-family:var(--dsp);font-weight:900;font-size:inherit;letter-spacing:inherit;text-transform:uppercase}
+.gw::before{color:var(--c);animation:ga 5s infinite;clip-path:polygon(0 0,100% 0,100% 33%,0 33%)}
+.gw::after{color:var(--r);animation:gb 5s infinite;clip-path:polygon(0 66%,100% 66%,100% 100%,0 100%)}
+@keyframes ga{0%,85%,100%{transform:none;opacity:0}87%{transform:translate(-5px,2px);opacity:.9}93%{transform:none;opacity:0}}
+@keyframes gb{0%,87%,100%{transform:none;opacity:0}89%{transform:translate(5px,3px);opacity:.8}95%{transform:none;opacity:0}}
+.hero-desc{font-size:17px;font-weight:300;color:var(--t2);max-width:560px;line-height:1.75;margin-bottom:36px;opacity:0;animation:fup .8s ease forwards .8s;margin-top:20px}
+.hero-meta{display:flex;gap:24px;flex-wrap:wrap;opacity:0;animation:fup .8s ease forwards 1s}
+.m-item{display:flex;flex-direction:column;gap:3px}
+.m-lbl{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--t3);text-transform:uppercase}
+.m-val{font-family:var(--mono);font-size:12px;color:var(--c)}
+.hero-scroll-hint{position:absolute;bottom:24px;left:0;display:flex;align-items:center;gap:12px;opacity:0;animation:fin 1s ease forwards 1.8s}
+.hs-line{width:60px;height:1px;background:linear-gradient(to right,var(--g),transparent)}
+.hs-txt{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--t3)}
+.hs-pulse{width:6px;height:6px;border-radius:50%;background:var(--g);box-shadow:0 0 8px var(--g);animation:tdot 1.5s ease-in-out infinite}
+.sec{margin-bottom:100px}
+.sec-hd{display:flex;align-items:center;gap:14px;margin-bottom:40px}
+.sec-n{font-family:var(--mono);font-size:10px;color:var(--p);letter-spacing:2px;min-width:44px}
+.sec-ln{flex:1;height:1px;background:linear-gradient(to right,rgba(0,229,255,.35),transparent)}
+.sec-t{font-family:var(--dsp);font-size:clamp(14px,2.4vw,21px);font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--c);text-shadow:var(--cglow)}
+.tw-cursor{display:inline-block;width:2px;height:1em;background:var(--c);margin-left:4px;animation:blink 1s step-end infinite;vertical-align:middle}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.sec-ai .sec-t{color:#bf00ff;text-shadow:var(--pglow)}
+.sec-ai .sec-n{color:var(--c)}
+.sec-ai .sec-ln{background:linear-gradient(to right,rgba(191,0,255,.35),transparent)}
+.sec-ai .tw-cursor{background:#bf00ff}
+.panel{background:rgba(0,255,65,.025);border:1px solid rgba(0,255,65,.12);border-radius:4px;padding:32px;margin-bottom:22px;position:relative;overflow:hidden;transition:border-color .3s,box-shadow .3s,transform .3s}
+.panel::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:linear-gradient(to bottom,var(--g),transparent);opacity:0;transition:opacity .3s}
+.panel::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.015) 0%,transparent 60%);pointer-events:none}
+.panel:hover{border-color:rgba(0,229,255,.4);box-shadow:0 0 50px rgba(0,229,255,.07),0 20px 60px rgba(0,0,0,.3);transform:translateY(-3px)}
+.panel:hover::before{opacity:1}
+.panel p{color:var(--t2);margin-bottom:12px}
+.panel p:last-child{margin-bottom:0}
+.panel-t{font-family:var(--dsp);font-size:12px;font-weight:700;letter-spacing:3px;color:var(--g);text-transform:uppercase;margin-bottom:18px;display:flex;align-items:center;gap:12px}
+.panel-t::after{content:'';flex:1;height:1px;background:linear-gradient(to right,rgba(0,255,65,.2),transparent)}
+.panel-ai{background:rgba(191,0,255,.03);border-color:rgba(191,0,255,.18)}
+.panel-ai:hover{border-color:rgba(191,0,255,.45)}
+.panel-ai .panel-t{color:#bf00ff}
+.panel-ai .panel-t::after{background:linear-gradient(to right,rgba(191,0,255,.2),transparent)}
+.panel-ai::before{background:linear-gradient(to bottom,#bf00ff,transparent)}
+.ai-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px;margin:20px 0}
+.ai-card{background:rgba(191,0,255,.04);border:1px solid rgba(191,0,255,.18);border-radius:4px;padding:22px;position:relative;overflow:hidden;transition:all .3s}
+.ai-card::after{content:'';position:absolute;top:0;right:0;width:0;height:0;border-top:26px solid rgba(191,0,255,.25);border-left:26px solid transparent}
+.ai-card:hover{border-color:rgba(191,0,255,.5);box-shadow:var(--pglow),0 16px 40px rgba(0,0,0,.25);transform:translateY(-3px)}
+.ai-ico{font-size:24px;margin-bottom:10px;display:block}
+.ai-name{font-family:var(--dsp);font-size:11px;font-weight:700;letter-spacing:2px;color:#bf00ff;text-transform:uppercase;margin-bottom:10px}
+.ai-desc{font-size:14px;color:var(--t2);line-height:1.65;font-weight:300}
+.alert{border-radius:4px;padding:16px 20px;margin:20px 0;display:flex;gap:14px;align-items:flex-start}
+.al-w{background:rgba(255,215,0,.04);border:1px solid rgba(255,215,0,.18);border-left:3px solid var(--o)}
+.al-p{background:rgba(191,0,255,.04);border:1px solid rgba(191,0,255,.18);border-left:3px solid #bf00ff}
+.al-i{background:rgba(0,229,255,.04);border:1px solid rgba(0,229,255,.14);border-left:3px solid var(--c)}
+.al-r{background:rgba(255,0,60,.04);border:1px solid rgba(255,0,60,.18);border-left:3px solid var(--r)}
+.al-ic{font-family:var(--mono);font-size:13px;flex-shrink:0;margin-top:2px}
+.al-w .al-ic{color:var(--o)}.al-p .al-ic{color:#bf00ff}.al-i .al-ic{color:var(--c)}.al-r .al-ic{color:var(--r)}
+.al-tx{font-size:14px;color:var(--t2);line-height:1.6}
+.ptbl{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12px;margin:16px 0}
+.ptbl th{text-align:left;padding:11px 14px;color:var(--c);border-bottom:1px solid rgba(0,229,255,.3);letter-spacing:2px;font-size:10px;text-transform:uppercase}
+.ptbl td{padding:10px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05);vertical-align:top}
+.ptbl tr:hover td{background:rgba(0,255,65,.02)}
+.ptbl td:first-child{color:var(--g);font-weight:700}
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;margin:20px 0}
+.tc{background:rgba(0,229,255,.03);border:1px solid rgba(0,229,255,.1);border-radius:4px;padding:18px;transition:all .25s;position:relative;overflow:hidden}
+.tc::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(to right,var(--c),transparent);transform:scaleX(0);transform-origin:left;transition:transform .3s}
+.tc:hover{border-color:rgba(0,229,255,.4);background:rgba(0,229,255,.06);box-shadow:var(--cglow),0 12px 40px rgba(0,0,0,.2);transform:translateY(-3px)}
+.tc:hover::after{transform:scaleX(1)}
+.tcname{font-family:var(--mono);font-size:12px;color:var(--c);margin-bottom:4px}
+.tctag{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--o);text-transform:uppercase;margin-bottom:6px;display:block}
+.tcdesc{font-size:12px;color:var(--t3);line-height:1.45}
+.vgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px;margin-bottom:28px}
+.vc{background:rgba(0,255,65,.03);border:1px solid rgba(0,255,65,.14);border-radius:4px;padding:24px;position:relative;overflow:hidden;cursor:default;transition:all .25s}
+.vc::after{content:'';position:absolute;top:0;right:0;width:0;height:0;border-top:32px solid rgba(0,255,65,.2);border-left:32px solid transparent}
+.vcn{font-family:var(--mono);font-size:44px;color:rgba(0,255,65,.08);position:absolute;top:6px;right:12px;line-height:1}
+.vcname{font-family:var(--dsp);font-size:11px;font-weight:700;letter-spacing:2px;color:var(--g);text-transform:uppercase;margin-bottom:10px}
+.vcdesc{font-size:14px;color:var(--t2);line-height:1.65;font-weight:300}
+.cb{background:rgba(0,0,0,.7);border:1px solid rgba(0,255,65,.1);border-left:3px solid var(--g);border-radius:0 4px 4px 0;padding:22px 26px;margin:16px 0;position:relative;overflow-x:auto;cursor:pointer;transition:all .3s}
+.cb::before{content:attr(data-l);position:absolute;top:0;right:0;font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--g);background:rgba(0,255,65,.07);padding:3px 12px;border-bottom-left-radius:4px;text-transform:uppercase}
+.cb:hover{border-color:rgba(0,255,65,.35)}
+.cb.cb-ai{border-left-color:#bf00ff}.cb.cb-ai::before{color:#bf00ff;background:rgba(191,0,255,.07)}
+.cb code{font-family:var(--mono);font-size:13px;color:var(--g);white-space:pre;display:block;line-height:1.9}
+.cta{background:linear-gradient(135deg,rgba(0,255,65,.04),rgba(191,0,255,.04));border:1px solid rgba(0,229,255,.3);border-radius:4px;padding:60px 50px;text-align:center;position:relative;overflow:hidden;margin-top:80px}
+.cta::before{content:'PS';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:var(--dsp);font-size:260px;font-weight:900;color:rgba(0,120,212,.03);pointer-events:none;letter-spacing:30px}
+.cta-t{font-family:var(--dsp);font-size:20px;font-weight:700;letter-spacing:4px;color:var(--g);text-transform:uppercase;margin-bottom:16px;text-shadow:var(--glow)}
+.cta-p{color:var(--t2);font-size:16px;max-width:540px;margin:0 auto 32px;line-height:1.75}
+.cta-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+.btn{font-family:var(--mono);font-size:11px;letter-spacing:3px;text-transform:uppercase;padding:13px 30px;border-radius:2px;text-decoration:none;display:inline-block;transition:all .25s}
+.btn-p{border:1px solid var(--g);color:var(--g);background:rgba(0,255,65,.06)}
+.btn-p:hover{background:var(--g);color:var(--bg);box-shadow:var(--glow)}
+.btn-s{border:1px solid var(--c);color:var(--c);background:rgba(0,229,255,.05)}
+.btn-s:hover{background:var(--c);color:var(--bg);box-shadow:var(--cglow)}
+.footer{border-top:1px solid rgba(0,255,65,.1);padding:32px 0;margin-top:60px;display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:20px}
+.f-l{font-family:var(--mono);font-size:11px;color:var(--t3);letter-spacing:1.5px;line-height:2}
+.f-alias{color:var(--g);font-size:10px;letter-spacing:3px;text-shadow:0 0 8px var(--g)}
+.f-r{font-family:var(--mono);font-size:11px;color:var(--t3);text-align:right;line-height:2}
+.f-r a{color:var(--g);text-decoration:none}
+.f-r a:hover{text-shadow:var(--glow)}
+.div{height:1px;background:linear-gradient(to right,transparent,rgba(0,255,65,.15),transparent);margin:60px 0;position:relative}
+.div::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:6px;height:6px;border-radius:50%;background:var(--g);box-shadow:0 0 12px var(--g)}
+.div-ai{background:linear-gradient(to right,transparent,rgba(191,0,255,.22),transparent)}
+.div-ai::after{background:#bf00ff;box-shadow:0 0 12px #bf00ff}
+@keyframes fup{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+@keyframes fin{from{opacity:0}to{opacity:1}}
+.rv{opacity:0;transform:translateY(30px);transition:opacity .8s,transform .8s}
+.rv-l{opacity:0;transform:translateX(-30px);transition:opacity .8s,transform .8s}
+.rv.on,.rv-l.on{opacity:1;transform:none}
+@media(max-width:700px){.ai-grid,.tgrid,.vgrid{grid-template-columns:1fr}.hero-canvas-wrap{display:none}.cta{padding:36px 20px}}
+</style>
+</head>
+<body>
+<canvas id="bg-particle"></canvas>
+<canvas id="bg-hex"></canvas>
+<div id="bg-vignette"></div>
+<div id="bg-noise"></div>
+<div id="bg-scan"></div>
+<div id="cur"></div><div id="cur2"></div><div id="cur3"></div>
+<div id="prog"></div>
+<nav class="topbar">
+  <div class="tb-left">
+    <span class="tb-name">NISARG CHASMAWALA (SHROFF)</span>
+    <div class="tb-roles"><span class="tb-inner">Penetration Tester &nbsp;|&nbsp; Vulnerability Assessment &nbsp;|&nbsp; Cybersecurity Researcher &nbsp;|&nbsp; Offensive Security Engineer &nbsp;|&nbsp; Digital Forensics &nbsp;|&nbsp; Penetration Tester &nbsp;|&nbsp; Vulnerability Assessment &nbsp;|&nbsp; Cybersecurity Researcher &nbsp;|&nbsp; Offensive Security Engineer &nbsp;|&nbsp; Digital Forensics</span></div>
+  </div>
+  <div class="tb-status"><span class="tb-dot"></span>SYS ONLINE</div>
+</nav>
+<nav class="toc" id="toc">
+  <div class="toc-i active" onclick="goTo('#hero')" data-s="hero"><div class="toc-d"></div><span class="toc-l">INTRO</span></div>
+  <div class="toc-i" onclick="goTo('#env')" data-s="env"><div class="toc-d"></div><span class="toc-l">PS ENVIRONMENT</span></div>
+  <div class="toc-i" onclick="goTo('#automate')" data-s="automate"><div class="toc-d"></div><span class="toc-l">AUTOMATION</span></div>
+  <div class="toc-i" onclick="goTo('#ir')" data-s="ir"><div class="toc-d"></div><span class="toc-l">INCIDENT RESPONSE</span></div>
+  <div class="toc-i" onclick="goTo('#pentest')" data-s="pentest"><div class="toc-d"></div><span class="toc-l">PENETRATION TESTING</span></div>
+  <div class="toc-i" onclick="goTo('#forensics')" data-s="forensics"><div class="toc-d"></div><span class="toc-l">FORENSICS</span></div>
+  <div class="toc-i" onclick="goTo('#defence')" data-s="defence"><div class="toc-d"></div><span class="toc-l">DEFENCE</span></div>
+  <div class="toc-i" onclick="goTo('#ai')" data-s="ai"><div class="toc-d"></div><span class="toc-l">AI INTEGRATION</span></div>
+</nav>
+
+<div class="wrap">
+<section class="hero" id="hero">
+  <div class="hero-canvas-wrap"><canvas id="hero-geo"></canvas></div>
+  <div class="hero-tag">NISARG CHASMAWALA &nbsp;//&nbsp; ALIAS: HEAVEN</div>
+  <h1 class="hero-title">
+    <div class="gw" data-t="POWERSHELL"><span class="ht-line1">POWERSHELL</span></div>
+    <span class="ht-sub">CYBERSECURITY SCRIPTING + AUTOMATION + AI INTEGRATION</span>
+  </h1>
+  <p class="hero-desc">A complete PowerShell field guide for cybersecurity professionals covering the PowerShell environment and pipeline architecture, security automation, incident response and threat hunting, penetration testing techniques, digital forensics, security hardening, and full AI integration. PowerShell's deep Windows API access and cross-platform reach make it the most powerful automation layer available to both defenders and adversaries.</p>
+  <div class="hero-meta">
+    <div class="m-item"><span class="m-lbl">Author</span><span class="m-val">Nisarg Chasmawala (Shroff)</span></div>
+    <div class="m-item"><span class="m-lbl">Alias</span><span class="m-val">HEAVEN</span></div>
+    <div class="m-item"><span class="m-lbl">Platform</span><span class="m-val">Windows · PowerShell Core · Linux · macOS</span></div>
+    <div class="m-item"><span class="m-lbl">Category</span><span class="m-val">Scripting · Red &amp; Blue Team · AI</span></div>
+  </div>
+  <div class="hero-scroll-hint"><div class="hs-line"></div><span class="hs-txt">SCROLL TO BEGIN</span><div class="hs-pulse"></div></div>
+</section>
+<div class="div"></div>
+
+<!-- 01 ENVIRONMENT -->
+<section class="sec rv" id="env">
+  <div class="sec-hd"><span class="sec-n">01 //</span><h2 class="sec-t">PowerShell Environment &amp; Pipeline Architecture<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel rv-l">
+    <p><strong style="color:var(--t1)">PowerShell</strong> is Microsoft's automation and scripting framework built on .NET, providing administrators and security professionals with direct access to Windows APIs, COM objects, WMI, and the file system through a consistent object-based pipeline. Unlike Bash or cmd.exe, PowerShell passes <strong style="color:var(--c)">.NET objects</strong> through its pipeline rather than text strings -- this means you can access properties and methods on output directly without parsing, making it dramatically more powerful for security automation.</p>
+    <p>PowerShell ships pre-installed on all modern Windows systems from Windows 7 onward, and <strong style="color:var(--c)">PowerShell Core (v7+)</strong> extends this to Linux and macOS, making it a cross-platform security automation layer. Scripts are written in <code style="color:var(--c);font-family:var(--mono)">.ps1</code> files and can be signed, encrypted, or obfuscated -- the same properties that make it powerful for defenders also make it a favourite tool for attackers.</p>
+  </div>
+  <div class="cb rv" data-l="PowerShell Environment -- Setup and Essential Commands">
+    <code><span style="color:var(--t3)"># Check PowerShell version</span>
+<span style="color:var(--c)">$PSVersionTable</span>
+<span style="color:var(--c)">$PSVersionTable.PSVersion</span>
+
+<span style="color:var(--t3)"># Install PowerShell Core 7+ (cross-platform)</span>
+<span style="color:var(--t3)"># Windows (winget):</span>
+<span style="color:var(--c)">winget install</span> <span style="color:var(--o)">--id</span> Microsoft.PowerShell
+<span style="color:var(--t3)"># Linux (Ubuntu/Kali):</span>
+<span style="color:var(--c)">sudo apt install powershell</span>
+<span style="color:var(--t3)"># macOS (brew):</span>
+<span style="color:var(--c)">brew install</span> <span style="color:var(--o)">--cask</span> powershell
+
+<span style="color:var(--t3)"># Core pipeline concepts</span>
+<span style="color:var(--c)">Get-Process</span> | <span style="color:var(--c)">Where-Object</span> { <span style="color:#bd93f9">$_.CPU</span> <span style="color:var(--o)">-gt</span> 100 } | <span style="color:var(--c)">Sort-Object</span> CPU <span style="color:var(--o)">-Descending</span>
+<span style="color:var(--c)">Get-Service</span> | <span style="color:var(--c)">Select-Object</span> Name, Status | <span style="color:var(--c)">Export-Csv</span> services.csv
+
+<span style="color:var(--t3)"># Discover commands (the security analyst's most useful habit)</span>
+<span style="color:var(--c)">Get-Command</span> <span style="color:var(--o)">-Module</span> NetSecurity     <span style="color:var(--t3)"># Firewall cmdlets</span>
+<span style="color:var(--c)">Get-Command</span> <span style="color:#ff79c6">"*Event*"</span>              <span style="color:var(--t3)"># Event log cmdlets</span>
+<span style="color:var(--c)">Get-Command</span> <span style="color:#ff79c6">"*Net*"</span>                <span style="color:var(--t3)"># Network cmdlets</span>
+<span style="color:var(--c)">Get-Help</span> Get-WinEvent <span style="color:var(--o)">-Examples</span>    <span style="color:var(--t3)"># Full help with examples</span>
+
+<span style="color:var(--t3)"># Execution policy management</span>
+<span style="color:var(--c)">Get-ExecutionPolicy</span> <span style="color:var(--o)">-List</span>            <span style="color:var(--t3)"># Show all scope policies</span>
+<span style="color:var(--c)">Set-ExecutionPolicy</span> RemoteSigned <span style="color:var(--o)">-Scope</span> CurrentUser
+<span style="color:var(--t3)"># Bypass for authorised testing (NOT for production):</span>
+<span style="color:var(--c)">powershell.exe</span> <span style="color:var(--o)">-ExecutionPolicy Bypass -File</span> script.ps1
+
+<span style="color:var(--t3)"># PowerShell remoting -- manage systems at scale</span>
+<span style="color:var(--c)">Enable-PSRemoting</span> <span style="color:var(--o)">-Force</span>
+<span style="color:var(--c)">Invoke-Command</span> <span style="color:var(--o)">-ComputerName</span> Server01 <span style="color:var(--o)">-ScriptBlock</span> { <span style="color:var(--c)">Get-Process</span> }
+<span style="color:var(--c)">Enter-PSSession</span> <span style="color:var(--o)">-ComputerName</span> Server01  <span style="color:var(--t3)"># Interactive remote shell</span></code>
+  </div>
+  <div class="panel rv">
+    <div class="panel-t">Key PowerShell Security Modules</div>
+    <table class="ptbl">
+      <thead><tr><th>Module</th><th>Security Use</th><th>Key Cmdlets</th></tr></thead>
+      <tbody>
+        <tr><td>Microsoft.PowerShell.Security</td><td>ACLs, signatures, credentials</td><td>Get-Acl, Set-Acl, Get-AuthenticodeSignature</td></tr>
+        <tr><td>NetSecurity</td><td>Firewall rules management</td><td>Get-NetFirewallRule, New-NetFirewallRule</td></tr>
+        <tr><td>NetTCPIP</td><td>Network configuration and monitoring</td><td>Get-NetTCPConnection, Get-NetRoute</td></tr>
+        <tr><td>Defender</td><td>AV scans and threat management</td><td>Start-MpScan, Get-MpThreatDetection</td></tr>
+        <tr><td>ActiveDirectory</td><td>AD enumeration and management</td><td>Get-ADUser, Get-ADComputer, Get-ADGroup</td></tr>
+        <tr><td>PSReadLine</td><td>Command history and logging</td><td>Get-PSReadLineOption, Set-PSReadLineOption</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- 02 AUTOMATION -->
+<section class="sec rv" id="automate">
+  <div class="sec-hd"><span class="sec-n">02 //</span><h2 class="sec-t">Security Automation with PowerShell<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel rv-l">
+    <p>Security operations at scale require automation -- manual repetition across hundreds of endpoints is not only slow but introduces human error. PowerShell's object pipeline, remoting capabilities, and built-in access to Windows APIs make it the ideal language for automating security monitoring, compliance checking, patch management, and log aggregation across enterprise Windows environments. Scripts that would take a security analyst hours manually can execute across an entire fleet in minutes.</p>
+  </div>
+  <div class="cb rv" data-l="PowerShell Security Automation -- Event Log Monitoring">
+    <code><span style="color:var(--t3)"># ── SECURITY EVENT LOG MONITORING ────────────────────
+# Monitor critical Windows Security Events in real-time</span>
+
+<span style="color:var(--t3)"># Key Event IDs for security monitoring:</span>
+<span style="color:var(--t3)"># 4624 = Successful logon     4625 = Failed logon</span>
+<span style="color:var(--t3)"># 4648 = Logon with explicit credentials (pass-the-hash indicator)</span>
+<span style="color:var(--t3)"># 4720 = User account created  4726 = User account deleted</span>
+<span style="color:var(--t3)"># 4776 = Credential validation  4768 = Kerberos TGT requested</span>
+<span style="color:var(--t3)"># 7045 = New service installed  4104 = PowerShell script block logged</span>
+
+<span style="color:#bd93f9">$threshold</span> = 5      <span style="color:var(--t3)"># Alert if IP fails login more than this many times</span>
+<span style="color:#bd93f9">$lookback</span>  = 60     <span style="color:var(--t3)"># Minutes to look back</span>
+<span style="color:#bd93f9">$startTime</span> = (<span style="color:var(--c)">Get-Date</span>).<span style="color:var(--c)">AddMinutes</span>(-<span style="color:#bd93f9">$lookback</span>)
+
+<span style="color:var(--t3)"># Retrieve failed login events</span>
+<span style="color:#bd93f9">$failedLogins</span> = <span style="color:var(--c)">Get-WinEvent</span> <span style="color:var(--o)">-FilterHashtable</span> @{
+    LogName   = <span style="color:#ff79c6">'Security'</span>
+    Id        = 4625
+    StartTime = <span style="color:#bd93f9">$startTime</span>
+} <span style="color:var(--o)">-ErrorAction</span> SilentlyContinue
+
+<span style="color:var(--t3)"># Group by IP and find brute force sources</span>
+<span style="color:#bd93f9">$attackers</span> = <span style="color:#bd93f9">$failedLogins</span> | <span style="color:var(--c)">ForEach-Object</span> {
+    [xml]<span style="color:#bd93f9">$xml</span> = <span style="color:#bd93f9">$_</span>.ToXml()
+    <span style="color:#bd93f9">$xml</span>.Event.EventData.Data | <span style="color:var(--c)">Where-Object</span> { <span style="color:#bd93f9">$_</span>.Name <span style="color:var(--o)">-eq</span> <span style="color:#ff79c6">'IpAddress'</span> } | <span style="color:var(--c)">Select-Object</span> <span style="color:var(--o)">-ExpandProperty</span> '#text'
+} | <span style="color:var(--c)">Group-Object</span> | <span style="color:var(--c)">Where-Object</span> { <span style="color:#bd93f9">$_</span>.Count <span style="color:var(--o)">-ge</span> <span style="color:#bd93f9">$threshold</span> } | <span style="color:var(--c)">Sort-Object</span> Count <span style="color:var(--o)">-Descending</span>
+
+<span style="color:var(--c)">Write-Host</span> <span style="color:#ff79c6">"`n[BRUTE FORCE REPORT] Last $lookback minutes`n"</span> <span style="color:var(--o)">-ForegroundColor</span> Red
+<span style="color:#bd93f9">$attackers</span> | <span style="color:var(--c)">ForEach-Object</span> {
+    <span style="color:var(--c)">Write-Host</span> <span style="color:#ff79c6">"  [ALERT] $($_.Name) -- $($_.Count) failures"</span> <span style="color:var(--o)">-ForegroundColor</span> Yellow
+}
+
+<span style="color:var(--t3)"># Monitor successful logins after failed attempts (possible compromise)</span>
+<span style="color:#bd93f9">$successLogins</span> = <span style="color:var(--c)">Get-WinEvent</span> <span style="color:var(--o)">-FilterHashtable</span> @{
+    LogName   = <span style="color:#ff79c6">'Security'</span>
+    Id        = 4624
+    StartTime = <span style="color:#bd93f9">$startTime</span>
+} <span style="color:var(--o)">-ErrorAction</span> SilentlyContinue | <span style="color:var(--c)">Select-Object</span> TimeCreated, Message <span style="color:var(--o)">-First</span> 20
+
+<span style="color:var(--c)">Write-Host</span> <span style="color:#ff79c6">"`n[+] Recent successful logins:"</span> <span style="color:var(--o)">-ForegroundColor</span> Green
+<span style="color:#bd93f9">$successLogins</span> | <span style="color:var(--c)">Format-Table</span> <span style="color:var(--o)">-AutoSize</span>
+
+<span style="color:var(--t3)"># Automate Windows Defender scan</span>
+<span style="color:var(--c)">Start-MpScan</span> <span style="color:var(--o)">-ScanType</span> QuickScan
+<span style="color:var(--c)">Get-MpThreatDetection</span> | <span style="color:var(--c)">Select-Object</span> ThreatName, ActionSuccess, DetectionTime</code>
+  </div>
+  <div class="cb rv" data-l="PowerShell Compliance -- System Audit Script">
+    <code><span style="color:var(--t3)"># ── SYSTEM COMPLIANCE AUDIT ───────────────────────────
+# Run against local or remote systems to assess security posture</span>
+
+<span style="color:var(--c)">function</span> <span style="color:#8be9fd">Invoke-SecurityAudit</span> {
+    <span style="color:var(--c)">param</span>([string]<span style="color:#bd93f9">$Computer</span> = <span style="color:#bd93f9">$env:COMPUTERNAME</span>)
+
+    <span style="color:var(--c)">Write-Host</span> <span style="color:#ff79c6">"`n=== SECURITY AUDIT: $Computer ===`n"</span> <span style="color:var(--o)">-ForegroundColor</span> Cyan
+
+    <span style="color:var(--t3)"># OS and patch status</span>
+    <span style="color:#bd93f9">$os</span>      = <span style="color:var(--c)">Get-CimInstance</span> Win32_OperatingSystem
+    <span style="color:#bd93f9">$hotfix</span>  = <span style="color:var(--c)">Get-HotFix</span> | <span style="color:var(--c)">Sort-Object</span> InstalledOn <span style="color:var(--o)">-Descending</span> | <span style="color:var(--c)">Select-Object</span> <span style="color:var(--o)">-First</span> 1
+    <span style="color:var(--c)">Write-Host</span> <span style="color:#ff79c6">"[OS]     $($os.Caption) -- Build $($os.BuildNumber)"</span>
+    <span style="color:var(--c)">Write-Host</span> <span style="color:#ff79c6">"[PATCH]  Last update: $($hotfix.InstalledOn)"</span>
+
+    <span style="color:var(--t3)"># Firewall state across all profiles</span>
+    <span style="color:#bd93f9">$fw</span> = <span style="color:var(--c)">Get-NetFirewallProfile</span> | <span style="color:var(--c)">Select-Object</span> Name, Enabled
+    <span style="color:var(--c)">Write-Host</span> <span style="color:#ff79c6">"`n[FIREWALL] Profile status:"</span>
+    <span style="color:#bd93f9">$fw</span> | <span style="color:var(--c)">Format-Table</span> <span style="color:var(--o)">-AutoSize</span>
+
+    <span style="color:var(--t3)"># Check local administrators</span>
+    <span style="color:#bd93f9">$admins</span> = <span style="color:var(--c)">Get-LocalGroupMember</span> <span style="color:var(--o)">-Group</span> <span style="color:#ff79c6">"Administrators"</span>
+    <span style="color:var(--c)">Write-Host</span> <span style="color:#ff79c6">"[ADMINS] Local administrator accounts:"</span>
+    <span style="color:#bd93f9">$admins</span> | <span style="color:var(--c)">Select-Object</span> Name, PrincipalSource | <span style="color:var(--c)">Format-Table</span> <span style="color:var(--o)">-AutoSize</span>
+
+    <span style="color:var(--t3)"># Services running as SYSTEM or admin accounts (privilege risk)</span>
+    <span style="color:#bd93f9">$riskyServices</span> = <span style="color:var(--c)">Get-CimInstance</span> Win32_Service |
+        <span style="color:var(--c)">Where-Object</span> { <span style="color:#bd93f9">$_</span>.StartName <span style="color:var(--o)">-match</span> <span style="color:#ffa07a">"LocalSystem|Administrator"</span> <span style="color:var(--o)">-and</span> <span style="color:#bd93f9">$_</span>.State <span style="color:var(--o)">-eq</span> <span style="color:#ff79c6">"Running"</span> } |
+        <span style="color:var(--c)">Select-Object</span> Name, StartName, PathName
+    <span style="color:var(--c)">Write-Host</span> <span style="color:#ff79c6">"`n[SERVICES] High-privilege running services:"</span>
+    <span style="color:#bd93f9">$riskyServices</span> | <span style="color:var(--c)">Format-Table</span> <span style="color:var(--o)">-AutoSize</span>
+
+    <span style="color:var(--t3"># Check RDP status</span>
+    <span style="color:#bd93f9">$rdp</span> = <span style="color:var(--c)">Get-ItemProperty</span> <span style="color:#ff79c6">"HKLM:\System\CurrentControlSet\Control\Terminal Server"</span> <span style="color:var(--o)">-Name</span> fDenyTSConnections
+    <span style="color:var(--c)">Write-Host</span> <span style="color:#ff79c6">"`n[RDP]    Status: $(if($rdp.fDenyTSConnections -eq 0){'ENABLED -- check firewall rules'}else{'Disabled'})"</span>
+}
+
+<span style="color:var(--c)">Invoke-SecurityAudit</span></code>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- 03 INCIDENT RESPONSE -->
+<section class="sec rv" id="ir">
+  <div class="sec-hd"><span class="sec-n">03 //</span><h2 class="sec-t">Incident Response &amp; Threat Hunting<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel rv-l">
+    <p>When a security incident occurs, time is critical. PowerShell provides security analysts with immediate, deep access to system state -- running processes, network connections, loaded DLLs, scheduled tasks, registry run keys, and memory -- without requiring third-party tools. This makes it the primary live-response tool on Windows systems. Threat hunting uses the same capabilities proactively, searching for indicators of compromise across endpoints before an alert fires.</p>
+  </div>
+  <div class="cb rv" data-l="PowerShell Incident Response -- Live Triage Toolkit">
+    <code><span style="color:var(--t3)"># ── LIVE INCIDENT RESPONSE TRIAGE ────────────────────
+# Run immediately on suspected compromised system</span>
+
+<span style="color:var(--t3)"># 1. Suspicious processes running from unusual locations</span>
+<span style="color:var(--c)">Get-Process</span> | <span style="color:var(--c)">Where-Object</span> {
+    <span style="color:#bd93f9">$_</span>.Path <span style="color:var(--o)">-match</span> <span style="color:#ffa07a">"AppData|Temp|Downloads|Public"</span>
+} | <span style="color:var(--c)">Select-Object</span> Name, Id, Path, CPU | <span style="color:var(--c)">Format-Table</span> <span style="color:var(--o)">-AutoSize</span>
+
+<span style="color:var(--t3)"># 2. Established outbound connections -- look for C2 traffic</span>
+<span style="color:var(--c)">Get-NetTCPConnection</span> | <span style="color:var(--c)">Where-Object</span> { <span style="color:#bd93f9">$_</span>.State <span style="color:var(--o)">-eq</span> <span style="color:#ff79c6">'Established'</span> } |
+    <span style="color:var(--c)">Select-Object</span> LocalAddress, LocalPort, RemoteAddress, RemotePort,
+        @{N=<span style="color:#ff79c6">'Process'</span>;E={(<span style="color:var(--c)">Get-Process</span> <span style="color:var(--o)">-Id</span> <span style="color:#bd93f9">$_</span>.OwningProcess <span style="color:var(--o)">-ErrorAction</span> SilentlyContinue).Name}} |
+    <span style="color:var(--c)">Sort-Object</span> RemoteAddress | <span style="color:var(--c)">Format-Table</span> <span style="color:var(--o)">-AutoSize</span>
+
+<span style="color:var(--t3)"># 3. Suspicious scheduled tasks (common persistence mechanism)</span>
+<span style="color:var(--c)">Get-ScheduledTask</span> | <span style="color:var(--c)">Where-Object</span> {
+    <span style="color:#bd93f9">$_</span>.TaskPath <span style="color:var(--o)">-notmatch</span> <span style="color:#ffa07a">"^\\Microsoft\\"</span>
+} | <span style="color:var(--c)">Select-Object</span> TaskName, TaskPath, State | <span style="color:var(--c)">Format-Table</span> <span style="color:var(--o)">-AutoSize</span>
+
+<span style="color:var(--t3)"># 4. Registry run keys -- persistence locations</span>
+<span style="color:#bd93f9">$runKeys</span> = @(
+    <span style="color:#ff79c6">'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run'</span>,
+    <span style="color:#ff79c6">'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run'</span>,
+    <span style="color:#ff79c6">'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce'</span>
+)
+<span style="color:var(--c)">foreach</span> (<span style="color:#bd93f9">$key</span> in <span style="color:#bd93f9">$runKeys</span>) {
+    <span style="color:var(--c)">Write-Host</span> <span style="color:#ff79c6">"`n[RUN KEY] $key"</span> <span style="color:var(--o)">-ForegroundColor</span> Yellow
+    <span style="color:var(--c)">Get-ItemProperty</span> <span style="color:#bd93f9">$key</span> <span style="color:var(--o)">-ErrorAction</span> SilentlyContinue |
+        <span style="color:var(--c)">Select-Object</span> <span style="color:var(--o)">-Property</span> * <span style="color:var(--o)">-ExcludeProperty</span> PS*
+}
+
+<span style="color:var(--t3)"># 5. Recently modified files in sensitive locations (last 24h)</span>
+<span style="color:var(--c)">Get-ChildItem</span> <span style="color:var(--o)">-Path</span> <span style="color:#ff79c6">"C:\Windows\System32"</span> <span style="color:var(--o)">-Recurse</span> <span style="color:var(--o)">-Force</span> <span style="color:var(--o)">-ErrorAction</span> SilentlyContinue |
+    <span style="color:var(--c)">Where-Object</span> { <span style="color:#bd93f9">$_</span>.LastWriteTime <span style="color:var(--o)">-gt</span> (<span style="color:var(--c)">Get-Date</span>).<span style="color:var(--c)">AddHours</span>(-24) } |
+    <span style="color:var(--c)">Select-Object</span> FullName, LastWriteTime, Length |
+    <span style="color:var(--c)">Sort-Object</span> LastWriteTime <span style="color:var(--o)">-Descending</span> |
+    <span style="color:var(--c)">Select-Object</span> <span style="color:var(--o)">-First</span> 30
+
+<span style="color:var(--t3)"># 6. PowerShell script block log -- catch malicious PS activity</span>
+<span style="color:var(--c)">Get-WinEvent</span> <span style="color:var(--o)">-FilterHashtable</span> @{LogName=<span style="color:#ff79c6">'Microsoft-Windows-PowerShell/Operational'</span>;Id=4104} |
+    <span style="color:var(--c)">Where-Object</span> { <span style="color:#bd93f9">$_</span>.Message <span style="color:var(--o)">-match</span> <span style="color:#ffa07a">"Invoke-Mimikatz|DownloadString|IEX|EncodedCommand|bypass"</span> } |
+    <span style="color:var(--c)">Select-Object</span> TimeCreated, Message | <span style="color:var(--c)">Format-List</span></code>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- 04 PENTEST -->
+<section class="sec rv" id="pentest">
+  <div class="sec-hd"><span class="sec-n">04 //</span><h2 class="sec-t">Penetration Testing with PowerShell<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel rv-l">
+    <p>PowerShell is a primary tool in the offensive security professional's arsenal -- it provides direct API access to Windows internals without requiring dropped executables, making it difficult to detect and ideal for red team operations. The techniques below are for use in authorised penetration testing engagements only. Understanding how attackers abuse PowerShell is also essential for defenders building detection rules and security controls.</p>
+  </div>
+  <div class="alert al-w rv">
+    <span class="al-ic">[ ! ]</span>
+    <p class="al-tx"><strong>Authorised Engagements Only.</strong> The offensive PowerShell techniques below are for authorised penetration testing, red team operations, and security research. Deploying these against any system without explicit written scope and authorisation is illegal under the Computer Misuse Act and equivalent global legislation.</p>
+  </div>
+  <div class="panel rv">
+    <div class="panel-t">PowerShell Attack Technique Reference</div>
+    <table class="ptbl">
+      <thead><tr><th>Technique</th><th>Category</th><th>Description</th><th>Detection</th></tr></thead>
+      <tbody>
+        <tr><td>Encoded Commands</td><td>Evasion</td><td>Base64-encode commands to bypass logging and string detection</td><td>Event 4104, -EncodedCommand flag</td></tr>
+        <tr><td>AMSI Bypass</td><td>Evasion</td><td>Patch AntiMalware Scan Interface in memory to disable AV scanning</td><td>Memory scanning, ETW monitoring</td></tr>
+        <tr><td>Invoke-Mimikatz</td><td>Credential Theft</td><td>Extract NTLM hashes and Kerberos tickets from LSASS memory</td><td>Event 4656, LSASS access events</td></tr>
+        <tr><td>Pass-the-Hash</td><td>Lateral Movement</td><td>Authenticate using captured NTLM hashes without plaintext password</td><td>Event 4648 logon type 3</td></tr>
+        <tr><td>Scheduled Task Persistence</td><td>Persistence</td><td>Register scheduled tasks to re-execute payload on system events</td><td>Event 7045, new task creation</td></tr>
+        <tr><td>PowerSploit / PowerView</td><td>Recon</td><td>AD enumeration -- users, groups, GPOs, ACLs, trust relationships</td><td>LDAP query volume anomalies</td></tr>
+        <tr><td>Download Cradles</td><td>Initial Access</td><td>IEX(New-Object Net.WebClient).DownloadString to load in memory</td><td>Event 4104, network connections from PS</td></tr>
+        <tr><td>WMI Execution</td><td>Execution</td><td>Invoke-WmiMethod to execute commands without spawning PS child process</td><td>Event 5857, WMI activity logs</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="cb rv" data-l="PowerShell Recon -- Authorised Enumeration Scripts">
+    <code><span style="color:var(--t3)"># ── AUTHORISED RECONNAISSANCE SCRIPTS ────────────────
+# System and environment enumeration for pentest engagements</span>
+
+<span style="color:var(--t3)"># System information gathering</span>
+<span style="color:var(--c)">Get-ComputerInfo</span> | <span style="color:var(--c)">Select-Object</span> WindowsProductName, CsDomain, LogonServer, OsArchitecture
+
+<span style="color:var(--t3)"># Enumerate all local users and their status</span>
+<span style="color:var(--c)">Get-LocalUser</span> | <span style="color:var(--c)">Select-Object</span> Name, Enabled, LastLogon, PasswordRequired, PasswordLastSet
+
+<span style="color:var(--t3)"># Network configuration and interfaces</span>
+<span style="color:var(--c)">Get-NetIPAddress</span> | <span style="color:var(--c)">Where-Object</span> { <span style="color:#bd93f9">$_</span>.AddressFamily <span style="color:var(--o)">-eq</span> <span style="color:#ff79c6">'IPv4'</span> } | <span style="color:var(--c)">Format-Table</span> <span style="color:var(--o)">-AutoSize</span>
+<span style="color:var(--c)">Get-NetNeighbor</span> | <span style="color:var(--c)">Where-Object</span> { <span style="color:#bd93f9">$_</span>.State <span style="color:var(--o)">-eq</span> <span style="color:#ff79c6">'Reachable'</span> }  <span style="color:var(--t3)"># ARP table (live hosts)</span>
+
+<span style="color:var(--t3)"># Check for Wi-Fi credentials stored locally (authorised recovery)</span>
+(netsh wlan show profiles) | <span style="color:var(--c)">Select-String</span> <span style="color:#ff79c6">"All User Profile"</span> |
+    <span style="color:var(--c)">ForEach-Object</span> {
+        <span style="color:#bd93f9">$profile</span> = (<span style="color:#bd93f9">$_</span> <span style="color:var(--o)">-split</span> <span style="color:#ff79c6">":"</span>)[1].Trim()
+        (netsh wlan show profile name=<span style="color:#ff79c6">"$profile"</span> key=clear) | <span style="color:var(--c)">Select-String</span> <span style="color:#ff79c6">"Key Content"</span> |
+            <span style="color:var(--c)">ForEach-Object</span> { <span style="color:var(--c)">Write-Host</span> <span style="color:#ff79c6">"  $profile : $($_)"</span> }
+    }
+
+<span style="color:var(--t3)"># Installed software inventory (useful for finding vulnerable versions)</span>
+<span style="color:var(--c)">Get-CimInstance</span> Win32_Product |
+    <span style="color:var(--c)">Select-Object</span> Name, Version, Vendor |
+    <span style="color:var(--c)">Sort-Object</span> Name | <span style="color:var(--c)">Format-Table</span> <span style="color:var(--o)">-AutoSize</span>
+
+<span style="color:var(--t3)"># Check for unquoted service paths (privilege escalation vector)</span>
+<span style="color:var(--c)">Get-CimInstance</span> Win32_Service |
+    <span style="color:var(--c)">Where-Object</span> {
+        <span style="color:#bd93f9">$_</span>.PathName <span style="color:var(--o)">-match</span> <span style="color:#ffa07a">'\s'</span> <span style="color:var(--o)">-and</span>
+        <span style="color:#bd93f9">$_</span>.PathName <span style="color:var(--o)">-notmatch</span> <span style="color:#ffa07a">'^"'</span> <span style="color:var(--o)">-and</span>
+        <span style="color:#bd93f9">$_</span>.PathName <span style="color:var(--o)">-notmatch</span> <span style="color:#ffa07a">'^[A-Za-z]:\'</span>
+    } | <span style="color:var(--c)">Select-Object</span> Name, PathName, StartName</code>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- 05 FORENSICS -->
+<section class="sec rv" id="forensics">
+  <div class="sec-hd"><span class="sec-n">05 //</span><h2 class="sec-t">Digital Forensics with PowerShell<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel rv-l">
+    <p>PowerShell is an effective live forensics tool -- it can access the Windows Event Log, registry, file system metadata, running processes, and network state without installing additional software. This is critical in environments where forensic tooling is unavailable or where installing tools risks contaminating evidence. The scripts below cover the core forensic triage tasks: timeline reconstruction, persistence mechanism hunting, and artifact extraction.</p>
+  </div>
+  <div class="cb rv" data-l="PowerShell Forensics -- Evidence Collection and Timeline">
+    <code><span style="color:var(--t3)"># ── FORENSIC EVIDENCE COLLECTION ─────────────────────</span>
+
+<span style="color:var(--t3)"># 1. Event log timeline -- recent security events</span>
+<span style="color:var(--c)">Get-WinEvent</span> <span style="color:var(--o)">-LogName</span> Security | <span style="color:var(--c)">Select-Object</span> <span style="color:var(--o)">-First</span> 20 |
+    <span style="color:var(--c)">Select-Object</span> TimeCreated, Id, LevelDisplayName, Message | <span style="color:var(--c)">Format-List</span>
+
+<span style="color:var(--t3)"># 2. Find hidden files in all user directories</span>
+<span style="color:var(--c)">Get-ChildItem</span> <span style="color:var(--o)">-Path</span> <span style="color:#ff79c6">"C:\Users"</span> <span style="color:var(--o)">-Include</span> *.* <span style="color:var(--o)">-Recurse</span> <span style="color:var(--o)">-Force</span> |
+    <span style="color:var(--c)">Where-Object</span> { <span style="color:#bd93f9">$_</span>.Attributes <span style="color:var(--o)">-band</span> [IO.FileAttributes]::Hidden } |
+    <span style="color:var(--c)">Select-Object</span> FullName, LastWriteTime, Length | <span style="color:var(--c)">Format-Table</span> <span style="color:var(--o)">-AutoSize</span>
+
+<span style="color:var(--t3)"># 3. Prefetch analysis -- recently executed programs</span>
+<span style="color:var(--c)">Get-ChildItem</span> <span style="color:#ff79c6">"C:\Windows\Prefetch\*.pf"</span> |
+    <span style="color:var(--c)">Sort-Object</span> LastWriteTime <span style="color:var(--o)">-Descending</span> |
+    <span style="color:var(--c)">Select-Object</span> Name, LastWriteTime, Length | <span style="color:var(--c)">Select-Object</span> <span style="color:var(--o)">-First</span> 30
+
+<span style="color:var(--t3)"># 4. Compute file hashes for IOC matching</span>
+<span style="color:var(--c)">Get-ChildItem</span> <span style="color:var(--o)">-Path</span> <span style="color:#ff79c6">"C:\Users"</span> <span style="color:var(--o)">-Recurse</span> <span style="color:var(--o)">-Include</span> *.exe,*.dll,*.ps1 <span style="color:var(--o)">-Force</span> <span style="color:var(--o)">-ErrorAction</span> SilentlyContinue |
+    <span style="color:var(--c)">ForEach-Object</span> {
+        <span style="color:var(--c)">try</span> {
+            <span style="color:#bd93f9">$hash</span> = (<span style="color:var(--c)">Get-FileHash</span> <span style="color:#bd93f9">$_</span>.FullName <span style="color:var(--o)">-Algorithm</span> SHA256).<span style="color:var(--c)">Hash</span>
+            [PSCustomObject]@{ File = <span style="color:#bd93f9">$_</span>.FullName; SHA256 = <span style="color:#bd93f9">$hash</span>; Modified = <span style="color:#bd93f9">$_</span>.LastWriteTime }
+        } <span style="color:var(--c)">catch</span> {}
+    } | <span style="color:var(--c)">Export-Csv</span> <span style="color:#ff79c6">"C:\forensics_hashes.csv"</span> <span style="color:var(--o)">-NoTypeInformation</span>
+
+<span style="color:var(--t3)"># 5. Check unauthorised registry modifications</span>
+<span style="color:#bd93f9">$suspectKeys</span> = @(
+    <span style="color:#ff79c6">'HKLM:\SYSTEM\CurrentControlSet\Services'</span>,     <span style="color:var(--t3)"># Service manipulation</span>
+    <span style="color:#ff79c6">'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon'</span>, <span style="color:var(--t3)"># Logon persistence</span>
+    <span style="color:#ff79c6">'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\RunMRU'</span> <span style="color:var(--t3)"># User run history</span>
+)
+<span style="color:var(--c)">foreach</span> (<span style="color:#bd93f9">$key</span> in <span style="color:#bd93f9">$suspectKeys</span>) {
+    <span style="color:var(--c)">Write-Host</span> <span style="color:#ff79c6">"`n[REG] $key"</span> <span style="color:var(--o)">-ForegroundColor</span> Yellow
+    <span style="color:var(--c)">Get-ItemProperty</span> <span style="color:#bd93f9">$key</span> <span style="color:var(--o)">-ErrorAction</span> SilentlyContinue | <span style="color:var(--c)">Format-List</span>
+}</code>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- 06 DEFENCE -->
+<section class="sec rv" id="defence">
+  <div class="sec-hd"><span class="sec-n">06 //</span><h2 class="sec-t">Security Hardening &amp; Defence<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel rv-l">
+    <p>Because PowerShell is frequently abused by attackers, hardening its configuration is a priority for any Windows security baseline. The key areas are execution policy restriction, script block and transcription logging, Constrained Language Mode, AMSI integration, and Just Enough Administration (JEA). Properly configured, PowerShell becomes a hardened, fully auditable tool rather than an attacker's favourite evasion channel.</p>
+  </div>
+  <div class="cb rv" data-l="PowerShell Security Hardening -- Baseline Configuration">
+    <code><span style="color:var(--t3)"># ── POWERSHELL SECURITY HARDENING BASELINE ───────────
+# Apply these settings via GPO in enterprise environments</span>
+
+<span style="color:var(--t3)"># 1. Execution Policy -- prevent unsigned scripts</span>
+<span style="color:var(--c)">Set-ExecutionPolicy</span> RemoteSigned <span style="color:var(--o)">-Scope</span> LocalMachine <span style="color:var(--o)">-Force</span>
+<span style="color:var(--t3)"># For maximum restriction on non-admin workstations:</span>
+<span style="color:var(--c)">Set-ItemProperty</span> <span style="color:var(--o)">-Path</span> <span style="color:#ff79c6">"HKLM:\SOFTWARE\Microsoft\PowerShell\1\ShellIds\Microsoft.PowerShell"</span> `
+    <span style="color:var(--o)">-Name</span> ExecutionPolicy <span style="color:var(--o)">-Value</span> Restricted
+
+<span style="color:var(--t3)"># 2. Enable Script Block Logging (Event ID 4104) -- captures ALL PS code</span>
+<span style="color:#bd93f9">$sbLogPath</span> = <span style="color:#ff79c6">"HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging"</span>
+<span style="color:var(--c)">New-Item</span> <span style="color:#bd93f9">$sbLogPath</span> <span style="color:var(--o)">-Force</span> | <span style="color:var(--c)">Out-Null</span>
+<span style="color:var(--c)">Set-ItemProperty</span> <span style="color:#bd93f9">$sbLogPath</span> <span style="color:var(--o)">-Name</span> EnableScriptBlockLogging <span style="color:var(--o)">-Value</span> 1
+<span style="color:var(--c)">Set-ItemProperty</span> <span style="color:#bd93f9">$sbLogPath</span> <span style="color:var(--o)">-Name</span> EnableScriptBlockInvocationLogging <span style="color:var(--o)">-Value</span> 1
+
+<span style="color:var(--t3)"># 3. Enable Transcription Logging -- full session transcript to disk</span>
+<span style="color:#bd93f9">$txPath</span> = <span style="color:#ff79c6">"HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\Transcription"</span>
+<span style="color:var(--c)">New-Item</span> <span style="color:#bd93f9">$txPath</span> <span style="color:var(--o)">-Force</span> | <span style="color:var(--c)">Out-Null</span>
+<span style="color:var(--c)">Set-ItemProperty</span> <span style="color:#bd93f9">$txPath</span> <span style="color:var(--o)">-Name</span> EnableTranscripting <span style="color:var(--o)">-Value</span> 1
+<span style="color:var(--c)">Set-ItemProperty</span> <span style="color:#bd93f9">$txPath</span> <span style="color:var(--o)">-Name</span> OutputDirectory <span style="color:var(--o)">-Value</span> <span style="color:#ff79c6">"C:\PSLogs"</span>
+<span style="color:var(--c)">Set-ItemProperty</span> <span style="color:#bd93f9">$txPath</span> <span style="color:var(--o)">-Name</span> EnableInvocationHeader <span style="color:var(--o)">-Value</span> 1
+
+<span style="color:var(--t3)"># 4. Enable Module Logging (Event ID 4103) -- logs all module activity</span>
+<span style="color:#bd93f9">$modPath</span> = <span style="color:#ff79c6">"HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ModuleLogging"</span>
+<span style="color:var(--c)">New-Item</span> <span style="color:#bd93f9">$modPath</span> <span style="color:var(--o)">-Force</span> | <span style="color:var(--c)">Out-Null</span>
+<span style="color:var(--c)">Set-ItemProperty</span> <span style="color:#bd93f9">$modPath</span> <span style="color:var(--o)">-Name</span> EnableModuleLogging <span style="color:var(--o)">-Value</span> 1
+
+<span style="color:var(--t3)"># 5. Constrained Language Mode -- block dangerous .NET types</span>
+<span style="color:var(--t3)"># Apply via AppLocker policy or Device Guard WDAC rules</span>
+<span style="color:var(--t3)"># Manual test only (resets on session end):</span>
+<span style="color:#bd93f9">$ExecutionContext</span>.SessionState.LanguageMode = <span style="color:#ff79c6">"ConstrainedLanguage"</span>
+<span style="color:#bd93f9">$ExecutionContext</span>.SessionState.LanguageMode  <span style="color:var(--t3)"># Verify mode</span>
+
+<span style="color:var(--t3)"># 6. Disable PowerShell v2 (legacy version lacks modern security controls)</span>
+<span style="color:var(--c)">Disable-WindowsOptionalFeature</span> <span style="color:var(--o)">-Online</span> <span style="color:var(--o)">-FeatureName</span> MicrosoftWindowsPowerShellV2Root
+
+<span style="color:var(--t3)"># 7. Verify current AMSI status</span>
+[Ref].Assembly.<span style="color:var(--c)">GetType</span>(<span style="color:#ff79c6">'System.Management.Automation.AmsiUtils'</span>) |
+    <span style="color:var(--c)">ForEach-Object</span> { <span style="color:var(--c)">Write-Host</span> <span style="color:#ff79c6">"AMSI loaded: $($_ -ne $null)"</span> }</code>
+  </div>
+  <div class="tgrid rv">
+    <div class="tc"><div class="tcname">Script Block Logging</div><span class="tctag">Event 4104</span><div class="tcdesc">Captures the full content of every PowerShell script block executed, including decoded/deobfuscated code</div></div>
+    <div class="tc"><div class="tcname">Module Logging</div><span class="tctag">Event 4103</span><div class="tcdesc">Logs every PowerShell pipeline execution and module command, creating a full activity trail</div></div>
+    <div class="tc"><div class="tcname">Transcription</div><span class="tctag">Disk Log</span><div class="tcdesc">Full session transcript with timestamps saved to disk -- captures input and all output</div></div>
+    <div class="tc"><div class="tcname">AMSI</div><span class="tctag">AV Interface</span><div class="tcdesc">Antimalware Scan Interface passes script content to AV engine before execution for inline scanning</div></div>
+    <div class="tc"><div class="tcname">Constrained Language</div><span class="tctag">CLM</span><div class="tcdesc">Restricts PowerShell to a safe subset -- blocks arbitrary .NET, COM objects, and dangerous type access</div></div>
+    <div class="tc"><div class="tcname">Execution Policy</div><span class="tctag">Policy</span><div class="tcdesc">Controls which scripts can run -- RemoteSigned requires downloaded scripts to be signed by trusted publisher</div></div>
+    <div class="tc"><div class="tcname">Just Enough Admin</div><span class="tctag">JEA</span><div class="tcdesc">Role-based PS remoting -- users get only specific cmdlets needed for their role, not full admin shell</div></div>
+    <div class="tc"><div class="tcname">AppLocker / WDAC</div><span class="tctag">App Control</span><div class="tcdesc">Enforces Constrained Language Mode system-wide -- only signed scripts from approved paths can run in Full mode</div></div>
+  </div>
+</section>
+
+<div class="div div-ai"></div>
+
+<!-- 07 AI INTEGRATION -->
+<section class="sec rv sec-ai" id="ai">
+  <div class="sec-hd"><span class="sec-n">07 //</span><h2 class="sec-t">AI Integration in PowerShell Security Operations<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel panel-ai rv-l">
+    <p>AI is transforming PowerShell-based security operations in two directions simultaneously. For defenders, LLMs can generate complex PowerShell detection and response scripts from plain-English requirements, analyse event log data for anomalous patterns at a speed no analyst can match, and produce threat intelligence narratives from raw telemetry. For offensive security professionals, AI dramatically accelerates the development of custom payloads, evasion techniques, and post-exploitation scripts for authorised engagements. In both directions, the human security professional remains essential for validation, context, and judgement.</p>
+  </div>
+  <div class="alert al-p rv">
+    <span class="al-ic">[ AI ]</span>
+    <p class="al-tx">Security operations centres using AI-assisted PowerShell analysis report mean time to detect (MTTD) reductions of over 60% for PowerShell-based attacks. LLMs trained on security telemetry can identify obfuscated command sequences, unusual pipeline patterns, and encoded payloads that rule-based detection misses entirely, escalating only the highest-confidence alerts to human analysts.</p>
+  </div>
+  <div class="ai-grid rv">
+    <div class="ai-card"><span class="ai-ico">&#9999;&#65039;</span><div class="ai-name">Script Generation</div><div class="ai-desc">LLMs generate complete PowerShell security scripts from plain-English requirements -- "write a PowerShell script that monitors Event ID 4625 and 4648, groups failures by IP, alerts when any IP exceeds 5 failures in 10 minutes, and auto-blocks using Windows Firewall." Produces production-quality scripts with proper error handling, logging, and parameter blocks in seconds.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128269;</span><div class="ai-name">Log Intelligence</div><div class="ai-desc">PowerShell collects and structures Windows Event Log data; GPT analyses it for threat patterns -- correlating Event IDs across time, identifying attack sequences invisible to individual log rules, and producing human-readable incident narratives. Transforms raw Security event XML into structured threat intelligence reports automatically.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128272;</span><div class="ai-name">Obfuscation Analysis</div><div class="ai-desc">LLMs decode and explain obfuscated PowerShell -- base64 encoded commands, character substitution, string concatenation, and nested IEX calls used by malware and red teams to evade detection. Paste obfuscated code and receive a plain-English explanation of what it does, what IOCs it contains, and what detection rules would catch it.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128736;&#65039;</span><div class="ai-name">GPO Policy Generation</div><div class="ai-desc">AI generates complete Group Policy configurations for PowerShell hardening -- script block logging, constrained language mode enforcement via WDAC, JEA role definitions, and module logging -- from a description of your security requirements and existing infrastructure. Produces XML-ready GPO definitions and deployment scripts.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128308;</span><div class="ai-name">Red Team Script Dev</div><div class="ai-desc">For authorised engagements, LLMs accelerate offensive PowerShell development -- generating custom evasion techniques, persistence mechanisms, and post-exploitation scripts tailored to the target environment profile. Also generates detection rules for the techniques it creates, enabling red-blue knowledge transfer for purple team operations.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128202;</span><div class="ai-name">Anomaly Detection</div><div class="ai-desc">AI analyses PowerShell transcription logs and script block logs for behavioural anomalies -- unusual pipeline patterns, unexpected module loads, deviation from baseline command sequences, and characteristic malware signatures. Reduces false positives by understanding context that pure signature rules cannot evaluate.</div></div>
+  </div>
+  <div class="panel panel-ai rv" style="margin-top:28px">
+    <div class="panel-t">AI Tools for PowerShell Security Operations</div>
+    <table class="ptbl">
+      <thead><tr>
+        <th style="color:#bf00ff;border-bottom-color:rgba(191,0,255,.25)">Tool</th>
+        <th style="color:#bf00ff;border-bottom-color:rgba(191,0,255,.25)">Capability</th>
+        <th style="color:#bf00ff;border-bottom-color:rgba(191,0,255,.25)">PowerShell Use Case</th>
+      </tr></thead>
+      <tbody>
+        <tr><td style="color:var(--g)">GPT-4 / Claude</td><td style="color:var(--t2)">Script generation, log analysis, deobfuscation</td><td style="color:var(--t2)">Generate detection scripts; analyse Event Log output; decode obfuscated PS</td></tr>
+        <tr><td style="color:var(--g)">GitHub Copilot</td><td style="color:var(--t2)">Inline code completion</td><td style="color:var(--t2)">Autocomplete cmdlet pipelines, filter expressions, and WinAPI calls in VS Code</td></tr>
+        <tr><td style="color:var(--g)">Microsoft Sentinel AI</td><td style="color:var(--t2)">SIEM-native AI analysis</td><td style="color:var(--t2)">Correlate PS script block logs with network telemetry for automated attack chain detection</td></tr>
+        <tr><td style="color:var(--g)">Defender for Endpoint</td><td style="color:var(--t2)">Behavioural AI detection</td><td style="color:var(--t2)">ML-based PowerShell threat scoring using process tree, network, and file activity signals</td></tr>
+        <tr><td style="color:var(--g)">PowerShell + GPT-4</td><td style="color:var(--t2)">Event log pipeline</td><td style="color:var(--t2)">PS exports structured event data; GPT correlates and narrates the attack timeline</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="cb cb-ai rv" data-l="AI Pipeline -- PowerShell Event Log Collection + GPT Analysis">
+    <code><span style="color:var(--t3)"># ── STAGE 1: PowerShell event collection and export ──
+# Collects security events, structures to JSON, feeds GPT</span>
+
+<span style="color:var(--c)">function</span> <span style="color:#8be9fd">Export-SecurityEventsForAI</span> {
+    <span style="color:var(--c)">param</span>(
+        [int]<span style="color:#bd93f9">$LookbackMinutes</span> = 60,
+        [string]<span style="color:#bd93f9">$OutputPath</span> = <span style="color:#ff79c6">"C:\ai_events.json"</span>
+    )
+    <span style="color:#bd93f9">$cutoff</span>   = (<span style="color:var(--c)">Get-Date</span>).<span style="color:var(--c)">AddMinutes</span>(-<span style="color:#bd93f9">$LookbackMinutes</span>)
+    <span style="color:#bd93f9">$eventIDs</span> = @(4624,4625,4648,4720,4726,4776,7045,4104)
+
+    <span style="color:#bd93f9">$events</span> = <span style="color:var(--c)">Get-WinEvent</span> <span style="color:var(--o)">-FilterHashtable</span> @{
+        LogName   = <span style="color:#ff79c6">'Security'</span>
+        Id        = <span style="color:#bd93f9">$eventIDs</span>
+        StartTime = <span style="color:#bd93f9">$cutoff</span>
+    } <span style="color:var(--o)">-ErrorAction</span> SilentlyContinue |
+    <span style="color:var(--c)">Select-Object</span> @{N=<span style="color:#ff79c6">'time'</span>;E={<span style="color:#bd93f9">$_</span>.TimeCreated.ToString(<span style="color:#ff79c6">'yyyy-MM-ddTHH:mm:ss'</span>)}},
+                  @{N=<span style="color:#ff79c6">'id'</span>;E={<span style="color:#bd93f9">$_</span>.Id}},
+                  @{N=<span style="color:#ff79c6">'level'</span>;E={<span style="color:#bd93f9">$_</span>.LevelDisplayName}},
+                  @{N=<span style="color:#ff79c6">'msg'</span>;E={<span style="color:#bd93f9">$_</span>.Message.<span style="color:var(--c)">Substring</span>(0, [math]::Min(300, <span style="color:#bd93f9">$_</span>.Message.Length))}}
+
+    <span style="color:#bd93f9">$summary</span> = [PSCustomObject]@{
+        computer     = <span style="color:#bd93f9">$env:COMPUTERNAME</span>
+        collected_at = (<span style="color:var(--c)">Get-Date</span>).<span style="color:var(--c)">ToString</span>(<span style="color:#ff79c6">'yyyy-MM-ddTHH:mm:ss'</span>)
+        lookback_min = <span style="color:#bd93f9">$LookbackMinutes</span>
+        event_count  = <span style="color:#bd93f9">$events</span>.Count
+        by_event_id  = <span style="color:#bd93f9">$events</span> | <span style="color:var(--c)">Group-Object</span> id | <span style="color:var(--c)">Select-Object</span> Name, Count
+        events       = <span style="color:#bd93f9">$events</span> | <span style="color:var(--c)">Select-Object</span> <span style="color:var(--o)">-First</span> 50
+    }
+    <span style="color:#bd93f9">$summary</span> | <span style="color:var(--c)">ConvertTo-Json</span> <span style="color:var(--o)">-Depth</span> 5 | <span style="color:var(--c)">Set-Content</span> <span style="color:#bd93f9">$OutputPath</span>
+    <span style="color:var(--c)">Write-Host</span> <span style="color:#ff79c6">"[+] Exported $($events.Count) events to $OutputPath"</span>
+}
+
+<span style="color:var(--c)">Export-SecurityEventsForAI</span> <span style="color:var(--o)">-LookbackMinutes</span> 60</code>
+  </div>
+  <div class="cb cb-ai rv" data-l="AI -- GPT Threat Analysis of PowerShell Event Data (Python)">
+    <code><span style="color:var(--t3)"># analyse_ps_events.py -- reads JSON from PowerShell, sends to GPT</span>
+<span style="color:var(--r)">import</span> json, openai, sys
+<span style="color:var(--r)">from</span> pathlib <span style="color:var(--r)">import</span> Path
+<span style="color:var(--r)">from</span> collections <span style="color:var(--r)">import</span> Counter
+
+<span style="color:var(--t3)"># Load JSON from PowerShell export</span>
+data = json.<span style="color:#8be9fd">loads</span>(Path(<span style="color:#ff79c6">'C:/ai_events.json'</span>).<span style="color:#8be9fd">read_text</span>())
+
+<span style="color:var(--t3)"># Build structured summary for GPT</span>
+by_id = {x[<span style="color:#ff79c6">'Name'</span>]: x[<span style="color:#ff79c6">'Count'</span>] <span style="color:var(--r)">for</span> x <span style="color:var(--r)">in</span> data.get(<span style="color:#ff79c6">'by_event_id'</span>, [])}
+EVENT_NAMES = {
+    <span style="color:#ff79c6">'4624'</span>: <span style="color:#ff79c6">'Successful Logon'</span>, <span style="color:#ff79c6">'4625'</span>: <span style="color:#ff79c6">'Failed Logon'</span>,
+    <span style="color:#ff79c6">'4648'</span>: <span style="color:#ff79c6">'Explicit Credential Logon'</span>, <span style="color:#ff79c6">'4720'</span>: <span style="color:#ff79c6">'Account Created'</span>,
+    <span style="color:#ff79c6">'4726'</span>: <span style="color:#ff79c6">'Account Deleted'</span>, <span style="color:#ff79c6">'7045'</span>: <span style="color:#ff79c6">'Service Installed'</span>,
+    <span style="color:#ff79c6">'4104'</span>: <span style="color:#ff79c6">'PS Script Block Logged'</span>, <span style="color:#ff79c6">'4776'</span>: <span style="color:#ff79c6">'Credential Validation'</span>,
+}
+event_summary = {EVENT_NAMES.get(k, k): v <span style="color:var(--r)">for</span> k, v <span style="color:var(--r)">in</span> by_id.items()}
+
+prompt = (
+    "You are a senior Windows security analyst. Analyse these "
+    "Windows Security Event Log statistics collected by PowerShell "
+    "from host: " + data.get(<span style="color:#ff79c6">'computer'</span>, <span style="color:#ff79c6">'UNKNOWN'</span>) + "
+
+"
+    "Event counts in the last " + str(data.get(<span style="color:#ff79c6">'lookback_min'</span>, 60)) + " minutes:
+"
+    + json.dumps(event_summary, indent=2) + "
+
+"
+    "Sample events (first 10):
+"
+    + json.dumps(data.get(<span style="color:#ff79c6">'events'</span>, [])[:10], indent=2) + "
+
+"
+    "Provide:
+"
+    "1. THREAT ASSESSMENT - what attack patterns are visible?
+"
+    "2. HIGH-RISK EVENTS - which specific events warrant investigation?
+"
+    "3. ATTACK CHAIN - reconstruct likely attacker actions from event sequence
+"
+    "4. IMMEDIATE RESPONSE - top 5 actions to take now
+"
+    "5. POWERSHELL DETECTION RULES - specific event filters to catch this behaviour"
+)
+
+r = openai.OpenAI().chat.completions.<span style="color:#8be9fd">create</span>(
+    model=<span style="color:#ff79c6">"gpt-4o"</span>,
+    messages=[{<span style="color:#ff79c6">"role"</span>: <span style="color:#ff79c6">"user"</span>, <span style="color:#ff79c6">"content"</span>: prompt}]
+)
+<span style="color:#8be9fd">print</span>(r.choices[0].message.content)</code>
+  </div>
+</section>
+
+<div class="cta rv">
+  <div class="cta-t">// PS&gt; Invoke-Security -Mode Both //</div>
+  <p class="cta-p">PowerShell operates in two modes simultaneously -- a precision tool for defenders automating detection, response, and hardening at scale, and a living-off-the-land weapon for attackers who know its capabilities. Understanding both sides of that equation, and integrating AI to accelerate analysis and automation, is the mark of a complete security professional.</p>
+  <div class="cta-btns">
+    <a href="https://github.com/nishu2402" class="btn btn-p" target="_blank" rel="noopener">GitHub -- nishu2402</a>
+    <a href="https://nishu2402.github.io" class="btn btn-s" target="_blank" rel="noopener">View Portfolio</a>
+  </div>
+</div>
+<footer class="footer">
+  <div class="f-l">Nisarg Chasmawala (Shroff)<br><span class="f-alias">// HEAVEN</span></div>
+  <div class="f-r">Offensive Security Engineer &middot; MSc Cyber Security, BCU<br>CEH Master &middot; CPENT &middot; CHFI &middot; ISO 27001 Lead Auditor<br><a href="https://github.com/nishu2402" target="_blank" rel="noopener">github.com/nishu2402</a></div>
+</footer>
+</div>
+
+<script>
+// CURSOR
+var cur=document.getElementById('cur'),
+    cur2=document.getElementById('cur2'),
+    cur3=document.getElementById('cur3');
+var mx=0,my=0;
+document.addEventListener('mousemove',function(e){
+  mx=e.clientX;my=e.clientY;
+  cur.style.left=mx+'px';cur.style.top=my+'px';
+});
+(function loop(){
+  cur2.style.left=mx+'px';cur2.style.top=my+'px';
+  cur3.style.left=mx+'px';cur3.style.top=my+'px';
+  requestAnimationFrame(loop);
+})();
+document.querySelectorAll('a,.btn,.ai-card,.panel,.cb,.tc').forEach(function(el){
+  el.addEventListener('mouseenter',function(){
+    cur.style.width='18px';cur.style.height='18px';
+    cur.style.background='rgba(0,255,65,.25)';
+  });
+  el.addEventListener('mouseleave',function(){
+    cur.style.width='10px';cur.style.height='10px';
+    cur.style.background='var(--g)';
+  });
+});
+
+// PROGRESS BAR
+window.addEventListener('scroll',function(){
+  var pct=(window.scrollY/(document.body.scrollHeight-window.innerHeight))*100;
+  document.getElementById('prog').style.width=pct+'%';
+});
+
+// PARTICLE NETWORK
+(function(){
+  var c=document.getElementById('bg-particle'),ctx=c.getContext('2d');
+  var W,H,mX=innerWidth/2,mY=innerHeight/2;
+  var N=200,MAX=140,P=[];
+  function Particle(){this.reset(true);}
+  Particle.prototype.reset=function(init){
+    this.x=Math.random()*W;
+    this.y=init?Math.random()*H:H+10;
+    this.z=Math.random()*3+.5;
+    this.vx=(Math.random()-.5)*.4;
+    this.vy=(Math.random()-.5)*.4-.1;
+    this.life=Math.random()*300+200;
+    this.maxLife=this.life;
+    this.r=Math.random()*1.5+.5;
+    var r=Math.random();
+    this.color=r<.7?'0,255,65':r<.9?'0,229,255':'191,0,255';
+  };
+  Particle.prototype.update=function(){
+    var dx=this.x-mX,dy=this.y-mY,d=Math.sqrt(dx*dx+dy*dy);
+    if(d<120){var f=(120-d)/120;this.vx+=dx/d*f*.6;this.vy+=dy/d*f*.6;}
+    this.vx*=.98;this.vy*=.98;
+    this.x+=this.vx;this.y+=this.vy;this.life--;
+    if(this.life<=0||this.x<-50||this.x>W+50||this.y<-50||this.y>H+50)this.reset(false);
+  };
+  Particle.prototype.draw=function(){
+    var a=(this.life/this.maxLife)*.7*this.z;
+    ctx.beginPath();ctx.arc(this.x,this.y,this.r*this.z,0,Math.PI*2);
+    ctx.fillStyle='rgba('+this.color+','+a+')';ctx.fill();
+  };
+  function resize(){W=c.width=innerWidth;H=c.height=innerHeight;}
+  function drawLines(){
+    for(var i=0;i<P.length;i++){
+      for(var j=i+1;j<P.length;j++){
+        var a=P[i],b=P[j],dx=a.x-b.x,dy=a.y-b.y,d=Math.sqrt(dx*dx+dy*dy);
+        if(d<MAX){
+          var al=(1-d/MAX)*.18;
+          var g=ctx.createLinearGradient(a.x,a.y,b.x,b.y);
+          g.addColorStop(0,'rgba('+a.color+','+al+')');
+          g.addColorStop(1,'rgba('+b.color+','+al+')');
+          ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);
+          ctx.strokeStyle=g;ctx.lineWidth=(a.z+b.z)/2*.5;ctx.stroke();
+        }
+      }
+    }
+  }
+  function animate(){
+    ctx.clearRect(0,0,W,H);
+    var g=ctx.createRadialGradient(mX,mY,0,mX,mY,80);
+    g.addColorStop(0,'rgba(0,255,65,0)');
+    g.addColorStop(.7,'rgba(0,255,65,0.04)');
+    g.addColorStop(1,'rgba(0,255,65,0)');
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(mX,mY,80,0,Math.PI*2);ctx.fill();
+    drawLines();
+    P.forEach(function(p){p.update();p.draw();});
+    requestAnimationFrame(animate);
+  }
+  resize();
+  window.addEventListener('resize',resize);
+  document.addEventListener('mousemove',function(e){mX=e.clientX;mY=e.clientY;});
+  for(var i=0;i<N;i++){P.push(new Particle());}
+  animate();
+})();
+
+// HEX GRID
+(function(){
+  var c=document.getElementById('bg-hex'),ctx=c.getContext('2d');
+  var W,H,t=0,S=40;
+  function resize(){W=c.width=innerWidth;H=c.height=innerHeight;}
+  function hexPath(cx,cy,s){
+    ctx.beginPath();
+    for(var i=0;i<6;i++){
+      var a=Math.PI/180*(60*i-30);
+      if(i===0)ctx.moveTo(cx+s*Math.cos(a),cy+s*Math.sin(a));
+      else ctx.lineTo(cx+s*Math.cos(a),cy+s*Math.sin(a));
+    }
+    ctx.closePath();
+  }
+  function draw(){
+    ctx.clearRect(0,0,W,H);t+=.008;
+    var sy=window.scrollY;
+    var cols=Math.ceil(W/(S*1.732))+2,rows=Math.ceil(H/(S*1.5))+2;
+    for(var r=-1;r<rows;r++){
+      for(var col=-1;col<cols;col++){
+        var cx=col*S*1.732+(r%2)*S*.866;
+        var cy=r*S*1.5-(sy*.03)%(S*1.5);
+        var w=Math.sin(t+col*.3+r*.2)*.5+.5;
+        hexPath(cx,cy,S-2);
+        ctx.strokeStyle='rgba(0,255,65,'+(0.02+w*0.07)+')';
+        ctx.lineWidth=.6;ctx.stroke();
+        if(w>.92){
+          hexPath(cx,cy,S-2);
+          ctx.fillStyle='rgba(0,255,65,'+(0.02+w*0.03)+')';
+          ctx.fill();
+        }
+      }
+    }
+    requestAnimationFrame(draw);
+  }
+  resize();window.addEventListener('resize',resize);draw();
+})();
+
+// HERO 3D: POWERSHELL PIPELINE COMMAND LATTICE
+(function(){
+  var c=document.getElementById('hero-geo');
+  if(!c)return;
+  var ctx=c.getContext('2d'),SZ=500;
+  c.width=SZ;c.height=SZ;
+
+  // Cmdlet nodes arranged in pipeline rows
+  var cmds=[
+    ['Get-Process','Get-Service','Get-WinEvent'],
+    ['Where-Object','Select-Object','Sort-Object'],
+    ['ForEach-Object','Group-Object','Measure-Object'],
+    ['Invoke-Command','Set-Policy','Export-Csv'],
+    ['Get-NetTCP','Start-MpScan','Get-FileHash']
+  ];
+
+  var nodes=[];
+  var W3=160,H3=82;
+  for(var r=0;r<cmds.length;r++){
+    for(var col=0;col<3;col++){
+      var colStr=r===0?'0,229,255':r===cmds.length-1?'191,0,255':'0,255,65';
+      nodes.push({
+        x:(col-1)*W3,
+        y:(r-(cmds.length-1)/2)*H3,
+        z:(Math.random()-.5)*60,
+        label:cmds[r][col],
+        color:colStr,
+        pulse:Math.random()*Math.PI*2,
+        row:r,col:col
+      });
+    }
+  }
+
+  // Pipe connections
+  var pipes=[];
+  for(var r=0;r<cmds.length;r++){
+    // horizontal within row
+    pipes.push({a:r*3+0,b:r*3+1});
+    pipes.push({a:r*3+1,b:r*3+2});
+    // vertical between rows
+    if(r<cmds.length-1){
+      for(var col=0;col<3;col++){
+        pipes.push({a:r*3+col,b:(r+1)*3+col});
+      }
+    }
+  }
+
+  var rx=0,ry=0,mrx=0,mry=0,t=0;
+  document.addEventListener('mousemove',function(e){
+    mrx=(e.clientY/innerHeight-.5)*.3;
+    mry=(e.clientX/innerWidth-.5)*.4;
+  });
+
+  function rotPt(x,y,z){
+    var y1=y*Math.cos(rx)-z*Math.sin(rx);
+    var z1=y*Math.sin(rx)+z*Math.cos(rx);
+    var x2=x*Math.cos(ry)+z1*Math.sin(ry);
+    var z2=-x*Math.sin(ry)+z1*Math.cos(ry);
+    return[x2,y1,z2];
+  }
+  function proj(x,y,z){
+    var f=420,d=f/(f+z+250);
+    return[x*d+SZ/2,y*d+SZ/2,z];
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,SZ,SZ);
+    rx+=.003+mrx*.008;ry+=.006+mry*.010;t+=.022;
+
+    // Project all nodes
+    var pnodes=nodes.map(function(n){
+      var rr=rotPt(n.x,n.y,n.z);
+      var pp=proj(rr[0],rr[1],rr[2]);
+      return{px:pp[0],py:pp[1],pz:pp[2],color:n.color,label:n.label,pulse:n.pulse};
+    });
+
+    // Draw pipe connections
+    pipes.forEach(function(pipe){
+      var na=pnodes[pipe.a],nb=pnodes[pipe.b];
+      var dep=((na.pz+nb.pz)/2+250)/500;
+      if(dep<0.05)return;
+      var midX=(na.px+nb.px)/2,midY=(na.py+nb.py)/2;
+      var gp=ctx.createLinearGradient(na.px,na.py,nb.px,nb.py);
+      gp.addColorStop(0,'rgba(0,255,65,'+dep*.35+')');
+      gp.addColorStop(.5,'rgba(0,229,255,'+dep*.5+')');
+      gp.addColorStop(1,'rgba(0,255,65,'+dep*.35+')');
+      ctx.beginPath();ctx.moveTo(na.px,na.py);ctx.lineTo(nb.px,nb.py);
+      ctx.strokeStyle=gp;ctx.lineWidth=dep*1.5;ctx.stroke();
+      // Pipe symbol
+      if(dep>.3){
+        var pulse=Math.sin(t*3+pipe.a+pipe.b)*.5+.5;
+        ctx.font=Math.floor(9*dep+5)+'px Share Tech Mono';
+        ctx.fillStyle='rgba(0,229,255,'+dep*(.3+pulse*.4)+')';
+        ctx.textAlign='center';
+        ctx.fillText('|',midX,midY+3);
+      }
+    });
+
+    // Sort back-to-front and draw nodes
+    var order=[];
+    for(var i=0;i<pnodes.length;i++)order.push(i);
+    order.sort(function(a,b){return pnodes[a].pz-pnodes[b].pz;});
+    order.forEach(function(i){
+      var n=pnodes[i];
+      var dep=(n.pz+250)/500;
+      if(dep<0.05)return;
+      var pulse=Math.sin(t*2+nodes[i].pulse)*.5+.5;
+      var r=dep*8+2;
+      // Glow
+      var ng=ctx.createRadialGradient(n.px,n.py,0,n.px,n.py,r*4);
+      ng.addColorStop(0,'rgba('+n.color+','+dep*.25*pulse+')');
+      ng.addColorStop(1,'rgba('+n.color+',0)');
+      ctx.fillStyle=ng;ctx.beginPath();ctx.arc(n.px,n.py,r*4,0,Math.PI*2);ctx.fill();
+      // Box background
+      var bw=dep*52+10,bh=dep*14+4;
+      ctx.save();ctx.translate(n.px,n.py);
+      ctx.fillStyle='rgba(3,5,9,'+dep*.9+')';
+      ctx.strokeStyle='rgba('+n.color+','+dep*.7+')';
+      ctx.lineWidth=dep*.8;
+      ctx.beginPath();
+      ctx.rect(-bw/2,-bh/2,bw,bh);
+      ctx.fill();ctx.stroke();
+      // Label
+      ctx.font=Math.floor(dep*7+4.5)+'px Share Tech Mono';
+      ctx.fillStyle='rgba('+n.color+','+dep*(.6+pulse*.3)+')';
+      ctx.textAlign='center';ctx.textBaseline='middle';
+      ctx.fillText(n.label,0,0);
+      ctx.restore();
+    });
+
+    // PS> prompt blink
+    var promptPulse=Math.sin(t*1.5)*.5+.5;
+    ctx.font='14px Share Tech Mono';
+    ctx.fillStyle='rgba(0,255,65,'+(0.3+promptPulse*.5)+')';
+    ctx.textAlign='left';ctx.textBaseline='alphabetic';
+    ctx.fillText('PS> _',18,30);
+
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// SCROLL REVEAL
+var rv=new IntersectionObserver(function(entries){
+  entries.forEach(function(x){if(x.isIntersecting)x.target.classList.add('on');});
+},{threshold:.08});
+document.querySelectorAll('.rv,.rv-l').forEach(function(el){rv.observe(el);});
+
+// TOC TRACKING
+var sIds=['hero','env','automate','ir','pentest','forensics','defence','ai'];
+var tItems=document.querySelectorAll('.toc-i');
+var so=new IntersectionObserver(function(entries){
+  entries.forEach(function(x){
+    if(x.isIntersecting){
+      tItems.forEach(function(t){
+        t.classList.toggle('active',t.dataset.s===x.target.id);
+      });
+    }
+  });
+},{threshold:.25});
+sIds.forEach(function(id){var el=document.getElementById(id);if(el)so.observe(el);});
+function goTo(h){document.querySelector(h).scrollIntoView({behavior:'smooth'});}
+
+// CODE COPY
+document.querySelectorAll('.cb').forEach(function(b){
+  b.title='Click to copy';
+  b.addEventListener('click',function(){
+    navigator.clipboard.writeText(b.querySelector('code').innerText).catch(function(){});
+    var o=b.getAttribute('data-l');
+    b.setAttribute('data-l',o+' \u2713 COPIED');
+    setTimeout(function(){b.setAttribute('data-l',o);},2000);
+  });
+});
+</script>
+</body>
+</html>

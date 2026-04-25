@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Perl Environment &amp; Scripting in Cybersecurity | Nisarg Chasmawala</title>
+<meta name="description" content="Perl Environment and Scripting in Cybersecurity - a complete field guide by Nisarg Chasmawala (Shroff), Offensive Security Engineer.">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--g:#00ff41;--c:#00e5ff;--p:#bf00ff;--r:#ff003c;--o:#ffd700;--bg:#030509;--t1:#d4ffe0;--t2:#7aad82;--t3:#2e4a32;--mono:'Share Tech Mono',monospace;--dsp:'Orbitron',sans-serif;--body:'Rajdhani',sans-serif;--glow:0 0 20px rgba(0,255,65,.4),0 0 60px rgba(0,255,65,.15);--cglow:0 0 20px rgba(0,229,255,.4),0 0 60px rgba(0,229,255,.1);--pglow:0 0 20px rgba(191,0,255,.4),0 0 60px rgba(191,0,255,.1)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;overflow-x:hidden}
+body{background:var(--bg);color:var(--t1);font-family:var(--body);font-size:17px;line-height:1.8;overflow-x:hidden;cursor:none}
+#bg-particle{position:fixed;inset:0;z-index:0;pointer-events:none}
+#bg-hex{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.35}
+#bg-scan{position:fixed;inset:0;z-index:9999;pointer-events:none;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,255,65,.009) 2px,rgba(0,255,65,.009) 4px)}
+#bg-vignette{position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse at 50% 50%,transparent 50%,rgba(3,5,9,.85) 100%)}
+#bg-noise{position:fixed;inset:0;z-index:2;pointer-events:none;opacity:.04;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:200px 200px;animation:grain .4s steps(1) infinite}
+@keyframes grain{0%{transform:translate(0,0)}10%{transform:translate(-2%,-2%)}20%{transform:translate(2%,2%)}30%{transform:translate(-1%,1%)}40%{transform:translate(1%,-1%)}50%{transform:translate(-3%,1%)}60%{transform:translate(1%,3%)}70%{transform:translate(-1%,-2%)}80%{transform:translate(2%,1%)}90%{transform:translate(-2%,2%)}}
+#cur{position:fixed;width:10px;height:10px;border-radius:50%;background:var(--g);box-shadow:var(--glow);pointer-events:none;z-index:99999;transform:translate(-50%,-50%);transition:width .1s,height .1s}
+#cur2{position:fixed;width:30px;height:30px;border-radius:50%;border:1px solid rgba(0,255,65,.5);pointer-events:none;z-index:99998;transform:translate(-50%,-50%);transition:left .08s,top .08s}
+#cur3{position:fixed;width:50px;height:50px;border-radius:50%;border:1px solid rgba(0,255,65,.2);pointer-events:none;z-index:99997;transform:translate(-50%,-50%);transition:left .15s,top .15s}
+#prog{position:fixed;top:0;left:0;height:2px;background:linear-gradient(to right,var(--g),var(--c),var(--p));box-shadow:0 0 10px var(--g);z-index:10000;width:0%}
+.topbar{position:fixed;top:0;left:0;right:0;height:58px;background:rgba(3,5,9,.88);border-bottom:1px solid rgba(0,255,65,.12);backdrop-filter:blur(20px) saturate(1.5);z-index:1000;display:flex;align-items:center;justify-content:space-between;padding:0 32px}
+.tb-left{display:flex;flex-direction:column;gap:2px}
+.tb-name{font-family:var(--dsp);font-size:13px;font-weight:900;color:var(--t1);letter-spacing:3px}
+.tb-roles{font-family:var(--mono);font-size:9px;letter-spacing:1.5px;overflow:hidden;white-space:nowrap}
+.tb-inner{display:inline-block;color:var(--c);animation:ticker 18s linear infinite}
+@keyframes ticker{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
+.tb-status{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;color:var(--g)}
+.tb-dot{width:7px;height:7px;border-radius:50%;background:var(--g);box-shadow:0 0 10px var(--g);animation:tdot 1.2s ease-in-out infinite}
+@keyframes tdot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.7)}}
+.toc{position:fixed;right:20px;top:50%;transform:translateY(-50%);z-index:200;display:flex;flex-direction:column;gap:9px}
+.toc-i{display:flex;align-items:center;gap:8px;cursor:pointer}
+.toc-d{width:6px;height:6px;border-radius:50%;border:1px solid var(--t3);transition:all .25s;flex-shrink:0}
+.toc-i.active .toc-d,.toc-i:hover .toc-d{background:var(--g);border-color:var(--g);box-shadow:0 0 10px var(--g)}
+.toc-l{font-family:var(--mono);font-size:10px;color:var(--t3);opacity:0;transform:translateX(6px);transition:all .2s;white-space:nowrap}
+.toc-i:hover .toc-l,.toc-i.active .toc-l{opacity:1;transform:none;color:var(--g)}
+@media(max-width:1000px){.toc{display:none}}
+.wrap{position:relative;z-index:10;max-width:980px;margin:0 auto;padding:0 28px}
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:100px 0 60px;position:relative}
+.hero-canvas-wrap{position:absolute;right:-80px;top:50%;transform:translateY(-52%);width:500px;height:500px;pointer-events:none}
+#hero-geo{width:100%;height:100%}
+.hero-tag{font-family:var(--mono);font-size:11px;letter-spacing:4px;color:var(--c);text-transform:uppercase;margin-bottom:18px;opacity:0;animation:fup .6s ease forwards .3s;display:flex;align-items:center;gap:12px}
+.hero-tag::before{content:'';width:40px;height:1px;background:linear-gradient(to right,transparent,var(--c))}
+.hero-tag::after{content:'';flex:1;max-width:100px;height:1px;background:linear-gradient(to right,var(--c),transparent)}
+.hero-title{font-family:var(--dsp);font-size:clamp(18px,3.5vw,42px);font-weight:900;line-height:1.0;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;opacity:0;animation:fup .7s ease forwards .5s}
+.ht-line1{display:block;color:var(--g);text-shadow:0 0 40px rgba(0,255,65,.6),0 0 100px rgba(0,255,65,.25)}
+.ht-sub{display:block;font-size:.43em;letter-spacing:5px;color:rgba(200,255,220,.5);font-weight:400;margin-top:10px}
+.gw{position:relative;display:inline-block}
+.gw::before,.gw::after{content:attr(data-t);position:absolute;top:0;left:0;width:100%;font-family:var(--dsp);font-weight:900;font-size:inherit;letter-spacing:inherit;text-transform:uppercase}
+.gw::before{color:var(--c);animation:ga 5s infinite;clip-path:polygon(0 0,100% 0,100% 33%,0 33%)}
+.gw::after{color:var(--r);animation:gb 5s infinite;clip-path:polygon(0 66%,100% 66%,100% 100%,0 100%)}
+@keyframes ga{0%,85%,100%{transform:none;opacity:0}87%{transform:translate(-5px,2px);opacity:.9}93%{transform:none;opacity:0}}
+@keyframes gb{0%,87%,100%{transform:none;opacity:0}89%{transform:translate(5px,3px);opacity:.8}95%{transform:none;opacity:0}}
+.hero-desc{font-size:17px;font-weight:300;color:var(--t2);max-width:560px;line-height:1.75;margin-bottom:36px;opacity:0;animation:fup .8s ease forwards .8s;margin-top:20px}
+.hero-meta{display:flex;gap:24px;flex-wrap:wrap;opacity:0;animation:fup .8s ease forwards 1s}
+.m-item{display:flex;flex-direction:column;gap:3px}
+.m-lbl{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--t3);text-transform:uppercase}
+.m-val{font-family:var(--mono);font-size:12px;color:var(--c)}
+.hero-scroll-hint{position:absolute;bottom:24px;left:0;display:flex;align-items:center;gap:12px;opacity:0;animation:fin 1s ease forwards 1.8s}
+.hs-line{width:60px;height:1px;background:linear-gradient(to right,var(--g),transparent)}
+.hs-txt{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--t3)}
+.hs-pulse{width:6px;height:6px;border-radius:50%;background:var(--g);box-shadow:0 0 8px var(--g);animation:tdot 1.5s ease-in-out infinite}
+.sec{margin-bottom:100px}
+.sec-hd{display:flex;align-items:center;gap:14px;margin-bottom:40px}
+.sec-n{font-family:var(--mono);font-size:10px;color:var(--p);letter-spacing:2px;min-width:44px}
+.sec-ln{flex:1;height:1px;background:linear-gradient(to right,rgba(0,229,255,.35),transparent)}
+.sec-t{font-family:var(--dsp);font-size:clamp(14px,2.4vw,21px);font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--c);text-shadow:var(--cglow)}
+.tw-cursor{display:inline-block;width:2px;height:1em;background:var(--c);margin-left:4px;animation:blink 1s step-end infinite;vertical-align:middle}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.sec-ai .sec-t{color:#bf00ff;text-shadow:var(--pglow)}
+.sec-ai .sec-n{color:var(--c)}
+.sec-ai .sec-ln{background:linear-gradient(to right,rgba(191,0,255,.35),transparent)}
+.sec-ai .tw-cursor{background:#bf00ff}
+.panel{background:rgba(0,255,65,.025);border:1px solid rgba(0,255,65,.12);border-radius:4px;padding:32px;margin-bottom:22px;position:relative;overflow:hidden;transition:border-color .3s,box-shadow .3s,transform .3s}
+.panel::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:linear-gradient(to bottom,var(--g),transparent);opacity:0;transition:opacity .3s}
+.panel::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.015) 0%,transparent 60%);pointer-events:none}
+.panel:hover{border-color:rgba(0,229,255,.4);box-shadow:0 0 50px rgba(0,229,255,.07),0 20px 60px rgba(0,0,0,.3);transform:translateY(-3px)}
+.panel:hover::before{opacity:1}
+.panel p{color:var(--t2);margin-bottom:12px}
+.panel p:last-child{margin-bottom:0}
+.panel-t{font-family:var(--dsp);font-size:12px;font-weight:700;letter-spacing:3px;color:var(--g);text-transform:uppercase;margin-bottom:18px;display:flex;align-items:center;gap:12px}
+.panel-t::after{content:'';flex:1;height:1px;background:linear-gradient(to right,rgba(0,255,65,.2),transparent)}
+.panel-ai{background:rgba(191,0,255,.03);border-color:rgba(191,0,255,.18)}
+.panel-ai:hover{border-color:rgba(191,0,255,.45)}
+.panel-ai .panel-t{color:#bf00ff}
+.panel-ai .panel-t::after{background:linear-gradient(to right,rgba(191,0,255,.2),transparent)}
+.panel-ai::before{background:linear-gradient(to bottom,#bf00ff,transparent)}
+.ai-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px;margin:20px 0}
+.ai-card{background:rgba(191,0,255,.04);border:1px solid rgba(191,0,255,.18);border-radius:4px;padding:22px;position:relative;overflow:hidden;transition:all .3s}
+.ai-card::after{content:'';position:absolute;top:0;right:0;width:0;height:0;border-top:26px solid rgba(191,0,255,.25);border-left:26px solid transparent}
+.ai-card:hover{border-color:rgba(191,0,255,.5);box-shadow:var(--pglow),0 16px 40px rgba(0,0,0,.25);transform:translateY(-3px)}
+.ai-ico{font-size:24px;margin-bottom:10px;display:block}
+.ai-name{font-family:var(--dsp);font-size:11px;font-weight:700;letter-spacing:2px;color:#bf00ff;text-transform:uppercase;margin-bottom:10px}
+.ai-desc{font-size:14px;color:var(--t2);line-height:1.65;font-weight:300}
+.alert{border-radius:4px;padding:16px 20px;margin:20px 0;display:flex;gap:14px;align-items:flex-start}
+.al-w{background:rgba(255,215,0,.04);border:1px solid rgba(255,215,0,.18);border-left:3px solid var(--o)}
+.al-p{background:rgba(191,0,255,.04);border:1px solid rgba(191,0,255,.18);border-left:3px solid #bf00ff}
+.al-i{background:rgba(0,229,255,.04);border:1px solid rgba(0,229,255,.14);border-left:3px solid var(--c)}
+.al-ic{font-family:var(--mono);font-size:13px;flex-shrink:0;margin-top:2px}
+.al-w .al-ic{color:var(--o)}.al-p .al-ic{color:#bf00ff}.al-i .al-ic{color:var(--c)}
+.al-tx{font-size:14px;color:var(--t2);line-height:1.6}
+.ptbl{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12px;margin:16px 0}
+.ptbl th{text-align:left;padding:11px 14px;color:var(--c);border-bottom:1px solid rgba(0,229,255,.3);letter-spacing:2px;font-size:10px;text-transform:uppercase}
+.ptbl td{padding:10px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05);vertical-align:top}
+.ptbl tr:hover td{background:rgba(0,255,65,.02)}
+.ptbl td:first-child{color:var(--g);font-weight:700}
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;margin:20px 0}
+.tc{background:rgba(0,229,255,.03);border:1px solid rgba(0,229,255,.1);border-radius:4px;padding:18px;transition:all .25s;position:relative;overflow:hidden}
+.tc::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(to right,var(--c),transparent);transform:scaleX(0);transform-origin:left;transition:transform .3s}
+.tc:hover{border-color:rgba(0,229,255,.4);background:rgba(0,229,255,.06);box-shadow:var(--cglow),0 12px 40px rgba(0,0,0,.2);transform:translateY(-3px)}
+.tc:hover::after{transform:scaleX(1)}
+.tcname{font-family:var(--mono);font-size:12px;color:var(--c);margin-bottom:4px}
+.tctag{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--o);text-transform:uppercase;margin-bottom:6px;display:block}
+.tcdesc{font-size:12px;color:var(--t3);line-height:1.45}
+.cb{background:rgba(0,0,0,.7);border:1px solid rgba(0,255,65,.1);border-left:3px solid var(--g);border-radius:0 4px 4px 0;padding:22px 26px;margin:16px 0;position:relative;overflow-x:auto;cursor:pointer;transition:all .3s}
+.cb::before{content:attr(data-l);position:absolute;top:0;right:0;font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--g);background:rgba(0,255,65,.07);padding:3px 12px;border-bottom-left-radius:4px;text-transform:uppercase}
+.cb:hover{border-color:rgba(0,255,65,.35)}
+.cb.cb-ai{border-left-color:#bf00ff}.cb.cb-ai::before{color:#bf00ff;background:rgba(191,0,255,.07)}
+.cb code{font-family:var(--mono);font-size:13px;color:var(--g);white-space:pre;display:block;line-height:1.9}
+.cta{background:linear-gradient(135deg,rgba(0,255,65,.04),rgba(191,0,255,.04));border:1px solid rgba(0,229,255,.3);border-radius:4px;padding:60px 50px;text-align:center;position:relative;overflow:hidden;margin-top:80px}
+.cta::before{content:'PERL';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:var(--dsp);font-size:200px;font-weight:900;color:rgba(0,255,65,.018);pointer-events:none;letter-spacing:30px}
+.cta-t{font-family:var(--dsp);font-size:20px;font-weight:700;letter-spacing:4px;color:var(--g);text-transform:uppercase;margin-bottom:16px;text-shadow:var(--glow)}
+.cta-p{color:var(--t2);font-size:16px;max-width:540px;margin:0 auto 32px;line-height:1.75}
+.cta-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+.btn{font-family:var(--mono);font-size:11px;letter-spacing:3px;text-transform:uppercase;padding:13px 30px;border-radius:2px;text-decoration:none;display:inline-block;transition:all .25s}
+.btn-p{border:1px solid var(--g);color:var(--g);background:rgba(0,255,65,.06)}
+.btn-p:hover{background:var(--g);color:var(--bg);box-shadow:var(--glow)}
+.btn-s{border:1px solid var(--c);color:var(--c);background:rgba(0,229,255,.05)}
+.btn-s:hover{background:var(--c);color:var(--bg);box-shadow:var(--cglow)}
+.footer{border-top:1px solid rgba(0,255,65,.1);padding:32px 0;margin-top:60px;display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:20px}
+.f-l{font-family:var(--mono);font-size:11px;color:var(--t3);letter-spacing:1.5px;line-height:2}
+.f-alias{color:var(--g);font-size:10px;letter-spacing:3px;text-shadow:0 0 8px var(--g)}
+.f-r{font-family:var(--mono);font-size:11px;color:var(--t3);text-align:right;line-height:2}
+.f-r a{color:var(--g);text-decoration:none}
+.f-r a:hover{text-shadow:var(--glow)}
+.div{height:1px;background:linear-gradient(to right,transparent,rgba(0,255,65,.15),transparent);margin:60px 0;position:relative}
+.div::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:6px;height:6px;border-radius:50%;background:var(--g);box-shadow:0 0 12px var(--g)}
+.div-ai{background:linear-gradient(to right,transparent,rgba(191,0,255,.22),transparent)}
+.div-ai::after{background:#bf00ff;box-shadow:0 0 12px #bf00ff}
+@keyframes fup{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+@keyframes fin{from{opacity:0}to{opacity:1}}
+.rv{opacity:0;transform:translateY(30px);transition:opacity .8s,transform .8s}
+.rv-l{opacity:0;transform:translateX(-30px);transition:opacity .8s,transform .8s}
+.rv.on,.rv-l.on{opacity:1;transform:none}
+@media(max-width:700px){.ai-grid,.tgrid{grid-template-columns:1fr}.hero-canvas-wrap{display:none}.cta{padding:36px 20px}}
+</style>
+</head>
+<body>
+<canvas id="bg-particle"></canvas>
+<canvas id="bg-hex"></canvas>
+<div id="bg-vignette"></div>
+<div id="bg-noise"></div>
+<div id="bg-scan"></div>
+<div id="cur"></div><div id="cur2"></div><div id="cur3"></div>
+<div id="prog"></div>
+<nav class="topbar">
+  <div class="tb-left">
+    <span class="tb-name">NISARG CHASMAWALA (SHROFF)</span>
+    <div class="tb-roles"><span class="tb-inner">Penetration Tester &nbsp;|&nbsp; Vulnerability Assessment &nbsp;|&nbsp; Cybersecurity Researcher &nbsp;|&nbsp; Offensive Security Engineer &nbsp;|&nbsp; Digital Forensics &nbsp;|&nbsp; Penetration Tester &nbsp;|&nbsp; Vulnerability Assessment &nbsp;|&nbsp; Cybersecurity Researcher</span></div>
+  </div>
+  <div class="tb-status"><span class="tb-dot"></span>SYS ONLINE</div>
+</nav>
+<nav class="toc" id="toc">
+  <div class="toc-i active" onclick="goTo('#hero')" data-s="hero"><div class="toc-d"></div><span class="toc-l">INTRO</span></div>
+  <div class="toc-i" onclick="goTo('#env')" data-s="env"><div class="toc-d"></div><span class="toc-l">PERL ENVIRONMENT</span></div>
+  <div class="toc-i" onclick="goTo('#regex')" data-s="regex"><div class="toc-d"></div><span class="toc-l">REGEX MASTERY</span></div>
+  <div class="toc-i" onclick="goTo('#recon')" data-s="recon"><div class="toc-d"></div><span class="toc-l">RECON SCRIPTS</span></div>
+  <div class="toc-i" onclick="goTo('#logs')" data-s="logs"><div class="toc-d"></div><span class="toc-l">LOG ANALYSIS</span></div>
+  <div class="toc-i" onclick="goTo('#exploit')" data-s="exploit"><div class="toc-d"></div><span class="toc-l">EXPLOIT DEV</span></div>
+  <div class="toc-i" onclick="goTo('#osint')" data-s="osint"><div class="toc-d"></div><span class="toc-l">OSINT / WEB</span></div>
+  <div class="toc-i" onclick="goTo('#forensics')" data-s="forensics"><div class="toc-d"></div><span class="toc-l">FORENSICS</span></div>
+  <div class="toc-i" onclick="goTo('#ai')" data-s="ai"><div class="toc-d"></div><span class="toc-l">AI INTEGRATION</span></div>
+</nav>
+<div class="wrap">
+
+<section class="hero" id="hero">
+  <div class="hero-canvas-wrap"><canvas id="hero-geo"></canvas></div>
+  <div class="hero-tag">NISARG CHASMAWALA &nbsp;//&nbsp; ALIAS: HEAVEN</div>
+  <h1 class="hero-title">
+    <div class="gw" data-t="PERL SCRIPTING"><span class="ht-line1">PERL SCRIPTING</span></div>
+    <span class="ht-sub">CYBERSECURITY AUTOMATION + REGEX + AI INTEGRATION</span>
+  </h1>
+  <p class="hero-desc">A complete Perl scripting field guide for cybersecurity professionals covering the Perl environment and CPAN ecosystem, regex mastery, network scanning, log analysis, exploit development, OSINT web scraping, digital forensics, and full AI integration. Perl's legendary text-processing power makes it uniquely effective for security automation where other languages are verbose or unavailable.</p>
+  <div class="hero-meta">
+    <div class="m-item"><span class="m-lbl">Author</span><span class="m-val">Nisarg Chasmawala (Shroff)</span></div>
+    <div class="m-item"><span class="m-lbl">Alias</span><span class="m-val">HEAVEN</span></div>
+    <div class="m-item"><span class="m-lbl">Platform</span><span class="m-val">Linux · Kali · Parrot · macOS · Windows</span></div>
+    <div class="m-item"><span class="m-lbl">Category</span><span class="m-val">Scripting · Automation · AI</span></div>
+  </div>
+  <div class="hero-scroll-hint"><div class="hs-line"></div><span class="hs-txt">SCROLL TO BEGIN</span><div class="hs-pulse"></div></div>
+</section>
+<div class="div"></div>
+
+<section class="sec rv" id="env">
+  <div class="sec-hd"><span class="sec-n">01 //</span><h2 class="sec-t">The Perl Environment &amp; CPAN Ecosystem<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel rv-l">
+    <p><strong style="color:var(--t1)">Perl (Practical Extraction and Reporting Language)</strong> was created by Larry Wall in 1987 and remains one of the most powerful scripting languages for text processing, network programming, and security automation. While Python has become dominant in modern cybersecurity tooling, Perl's unmatched regex engine, one-liner capability, and deep Unix integration make it irreplaceable for specific tasks. Log parsing, exploit development, and forensic data extraction are areas where Perl's conciseness produces cleaner, faster solutions than any other language.</p>
+    <p>Perl is pre-installed on virtually every Linux distribution and macOS, requiring zero setup time -- a critical advantage on a freshly compromised system or locked-down environment. The <strong style="color:var(--c)">CPAN (Comprehensive Perl Archive Network)</strong> provides over 200,000 modules covering every security use case.</p>
+  </div>
+  <div class="cb rv" data-l="Perl Environment -- Installation and Key CPAN Modules">
+    <code><span style="color:var(--t3)"># Verify Perl installation (pre-installed on most Linux)</span>
+<span style="color:var(--c)">perl</span> <span style="color:var(--o)">-v</span>                           <span style="color:var(--t3)"># Show version</span>
+<span style="color:var(--c)">perl</span> <span style="color:var(--o)">-e</span> <span style="color:#ff79c6">'print "Hello HEAVEN
+"'</span>  <span style="color:var(--t3)"># Quick one-liner test</span>
+<span style="color:var(--c)">which perl</span>                      <span style="color:var(--t3)"># Locate binary</span>
+
+<span style="color:var(--t3)"># Install Perl if missing</span>
+<span style="color:var(--c)">sudo apt install perl</span>           <span style="color:var(--t3)"># Debian / Ubuntu / Kali / Parrot</span>
+<span style="color:var(--c)">sudo yum install perl</span>           <span style="color:var(--t3)"># RHEL / CentOS / Fedora</span>
+<span style="color:var(--t3)"># Windows: Strawberry Perl -- https://strawberryperl.com</span>
+
+<span style="color:var(--t3)"># Install CPAN security modules</span>
+<span style="color:var(--c)">sudo apt install cpanminus</span>      <span style="color:var(--t3)"># Fast CPAN installer</span>
+<span style="color:var(--c)">cpanm</span> IO::Socket::INET          <span style="color:var(--t3)"># Network sockets</span>
+<span style="color:var(--c)">cpanm</span> LWP::UserAgent            <span style="color:var(--t3)"># HTTP client</span>
+<span style="color:var(--c)">cpanm</span> Net::Ping                  <span style="color:var(--t3)"># Host discovery</span>
+<span style="color:var(--c)">cpanm</span> Digest::MD5 Digest::SHA   <span style="color:var(--t3)"># File hashing</span>
+<span style="color:var(--c)">cpanm</span> MIME::Base64               <span style="color:var(--t3)"># Base64 encode/decode</span>
+<span style="color:var(--c)">cpanm</span> JSON DBI                  <span style="color:var(--t3)"># JSON output and DB interface</span>
+
+<span style="color:var(--t3)"># Running a script</span>
+<span style="color:var(--c)">perl</span> script.pl
+<span style="color:var(--c)">chmod +x</span> script.pl &amp;&amp; <span style="color:var(--c)">./script.pl</span></code>
+  </div>
+  <div class="panel rv">
+    <div class="panel-t">Perl vs Python in Cybersecurity</div>
+    <table class="ptbl">
+      <thead><tr><th>Task</th><th>Perl Advantage</th><th>Python Advantage</th></tr></thead>
+      <tbody>
+        <tr><td>Log Parsing</td><td>Regex is native syntax, powerful one-liners</td><td>Better structured data handling</td></tr>
+        <tr><td>Text Manipulation</td><td>Fastest, most concise one-liner transforms</td><td>Complex multi-step pipelines</td></tr>
+        <tr><td>Exploit Dev</td><td>Metasploit-compatible, native pack/unpack</td><td>Pwntools and modern frameworks</td></tr>
+        <tr><td>Availability</td><td>Pre-installed on virtually all Unix/Linux</td><td>May require installation</td></tr>
+        <tr><td>Web Scraping</td><td>LWP::UserAgent with inline regex</td><td>BeautifulSoup, Scrapy</td></tr>
+        <tr><td>One-Liners</td><td>Unmatched -- perl -ne pipelines</td><td>Verbose by comparison</td></tr>
+        <tr><td>Legacy Tools</td><td>Many older IDS/SIEM and Metasploit modules</td><td>Dominant in modern tooling</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<section class="sec rv" id="regex">
+  <div class="sec-hd"><span class="sec-n">02 //</span><h2 class="sec-t">Regex Mastery -- Perl's Superpower<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel rv-l">
+    <p>Perl's regular expression engine is not an add-on -- it is the core of the language. Larry Wall designed Perl's regex syntax, later adopted by Python, PHP, Ruby, and JavaScript. In cybersecurity, regex is the primary tool for parsing unstructured log data, extracting indicators of compromise, validating input, and pattern-matching exploit conditions. Perl's regex is more powerful and concise than any other language's implementation, supporting named captures, lookaheads, lookbehinds, and complex alternation with minimal syntax overhead.</p>
+  </div>
+  <div class="cb rv" data-l="Perl Regex -- Security Pattern Library">
+    <code><span style="color:var(--c);font-weight:700">#!/usr/bin/perl</span>
+<span style="color:var(--r)">use</span> strict; <span style="color:var(--r)">use</span> warnings;
+
+<span style="color:var(--r)">my</span> <span style="color:#bd93f9">$line</span> = <span style="color:#ff79c6">'Failed password for root from 203.0.113.42 port 54321 ssh2'</span>;
+
+<span style="color:var(--t3)"># BASIC MATCH</span>
+<span style="color:var(--r)">if</span> (<span style="color:#bd93f9">$line</span> =~ <span style="color:#ffa07a">/Failed password/</span>) {
+    <span style="color:#8be9fd">print</span> <span style="color:#ff79c6">"[!] Failed login detected
+"</span>;
+}
+
+<span style="color:var(--t3)"># CAPTURE GROUPS -- extract user and IP simultaneously</span>
+<span style="color:var(--r)">if</span> (<span style="color:#bd93f9">$line</span> =~ <span style="color:#ffa07a">/Failed password for (\S+) from ([\d.]+)/</span>) {
+    <span style="color:#8be9fd">printf</span> <span style="color:#ff79c6">"User: %s | Attacker IP: %s
+"</span>, <span style="color:#bd93f9">$1</span>, <span style="color:#bd93f9">$2</span>;
+}
+
+<span style="color:var(--t3)"># NAMED CAPTURES -- self-documenting and readable</span>
+<span style="color:var(--r)">if</span> (<span style="color:#bd93f9">$line</span> =~ <span style="color:#ffa07a">/Failed password for (?&lt;user&gt;\S+) from (?&lt;ip&gt;[\d.]+)/</span>) {
+    <span style="color:#8be9fd">printf</span> <span style="color:#ff79c6">"User: %s | IP: %s
+"</span>, <span style="color:#bd93f9">$+{user}</span>, <span style="color:#bd93f9">$+{ip}</span>;
+}
+
+<span style="color:var(--t3)"># SECURITY-CRITICAL REGEX PATTERN LIBRARY</span>
+<span style="color:var(--r)">my</span> <span style="color:#bd93f9">%patterns</span> = (
+    <span style="color:#ff79c6">'IPv4'</span>           =&gt; <span style="color:#ffa07a">qr/(?:\d{1,3}\.){3}\d{1,3}/</span>,
+    <span style="color:#ff79c6">'CVE ID'</span>         =&gt; <span style="color:#ffa07a">qr/CVE-\d{4}-\d{4,7}/i</span>,
+    <span style="color:#ff79c6">'Email'</span>          =&gt; <span style="color:#ffa07a">qr/[\w.+\-]+\@[\w\-]+\.\w{2,}/</span>,
+    <span style="color:#ff79c6">'Path Traversal'</span> =&gt; <span style="color:#ffa07a">qr/\.\.[\/\]/</span>,
+    <span style="color:#ff79c6">'LFI Attempt'</span>    =&gt; <span style="color:#ffa07a">qr/\/etc\/(passwd|shadow|crontab|hosts)/</span>,
+    <span style="color:#ff79c6">'SQLi Probe'</span>     =&gt; <span style="color:#ffa07a">qr/(['";]|(--)|union\s+select|drop\s+table)/i</span>,
+    <span style="color:#ff79c6">'XSS Probe'</span>      =&gt; <span style="color:#ffa07a">qr/(&lt;script|javascript:|on\w+\s*=)/i</span>,
+    <span style="color:#ff79c6">'Base64 Blob'</span>    =&gt; <span style="color:#ffa07a">qr/[A-Za-z0-9+\/]{40,}={0,2}/</span>,
+    <span style="color:#ff79c6">'MD5 Hash'</span>       =&gt; <span style="color:#ffa07a">qr/[0-9a-f]{32}/i</span>,
+    <span style="color:#ff79c6">'SHA256 Hash'</span>    =&gt; <span style="color:#ffa07a">qr/[0-9a-f]{64}/i</span>,
+);
+
+<span style="color:var(--t3)"># SUBSTITUTION -- sanitise dangerous input</span>
+<span style="color:var(--r)">my</span> <span style="color:#bd93f9">$raw</span> = <span style="color:#ff79c6">"admin'; DROP TABLE users;--"</span>;
+(<span style="color:var(--r)">my</span> <span style="color:#bd93f9">$safe</span> = <span style="color:#bd93f9">$raw</span>) =~ <span style="color:#ffa07a">s/[^a-zA-Z0-9_\-]//g</span>;
+<span style="color:#8be9fd">print</span> <span style="color:#ff79c6">"Sanitised: $safe
+"</span>;
+
+<span style="color:var(--t3)"># ONE-LINER EXAMPLES (run from terminal):
+# Extract all IPs:    perl -ne 'print "$1
+" if /((?:\d{1,3}\.){3}\d{1,3})/' auth.log
+# Top attacker IPs:   perl -ne '$c{$1}++ if /from ([\d.]+)/; END{printf "%4d %s
+",$c{$_},$_ for sort{$c{$b}&lt;=&gt;$c{$a}}keys%c}' auth.log
+# Unique usernames:   perl -ne 'print "$1
+" if /Failed.*for (\S+)/' auth.log | sort -u</span></code>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<section class="sec rv" id="recon">
+  <div class="sec-hd"><span class="sec-n">03 //</span><h2 class="sec-t">Reconnaissance &amp; Network Scanning<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel rv-l">
+    <p>Perl's <code style="color:var(--c);font-family:var(--mono)">IO::Socket::INET</code> and <code style="color:var(--c);font-family:var(--mono)">Net::Ping</code> modules provide lightweight network programming without external tools -- ideal for restricted environments where Nmap is unavailable. Directly using the system's existing Perl installation to perform port scanning, banner grabbing, and host discovery on authorised targets during penetration testing engagements.</p>
+  </div>
+  <div class="cb rv" data-l="Perl Port Scanner -- Banner Grabbing and Service Map">
+    <code><span style="color:var(--c);font-weight:700">#!/usr/bin/perl</span>
+<span style="color:var(--r)">use</span> strict; <span style="color:var(--r)">use</span> warnings;
+<span style="color:var(--r)">use</span> IO::Socket::INET;
+
+<span style="color:var(--t3)"># Usage: ./portscan.pl &lt;target&gt; [start] [end]</span>
+<span style="color:var(--r)">my</span> <span style="color:#bd93f9">$target</span>  = <span style="color:#bd93f9">$ARGV[0]</span> // <span style="color:#8be9fd">die</span> <span style="color:#ff79c6">"Usage: $0 &lt;target&gt;
+"</span>;
+<span style="color:var(--r)">my</span> (<span style="color:#bd93f9">$start</span>, <span style="color:#bd93f9">$end</span>, <span style="color:#bd93f9">$timeout</span>) = (<span style="color:#bd93f9">$ARGV[1]</span>||1, <span style="color:#bd93f9">$ARGV[2]</span>||1024, 2);
+
+<span style="color:var(--r)">my</span> <span style="color:#bd93f9">%services</span> = (
+    21=&gt;<span style="color:#ff79c6">'FTP'</span>, 22=&gt;<span style="color:#ff79c6">'SSH'</span>, 23=&gt;<span style="color:#ff79c6">'Telnet'</span>, 25=&gt;<span style="color:#ff79c6">'SMTP'</span>, 53=&gt;<span style="color:#ff79c6">'DNS'</span>,
+    80=&gt;<span style="color:#ff79c6">'HTTP'</span>, 110=&gt;<span style="color:#ff79c6">'POP3'</span>, 143=&gt;<span style="color:#ff79c6">'IMAP'</span>, 443=&gt;<span style="color:#ff79c6">'HTTPS'</span>,
+    445=&gt;<span style="color:#ff79c6">'SMB'</span>, 3306=&gt;<span style="color:#ff79c6">'MySQL'</span>, 3389=&gt;<span style="color:#ff79c6">'RDP'</span>, 5432=&gt;<span style="color:#ff79c6">'PostgreSQL'</span>,
+);
+
+<span style="color:#8be9fd">printf</span> <span style="color:#ff79c6">"[*] Scanning %s ports %d-%d
+
+"</span>, <span style="color:#bd93f9">$target</span>, <span style="color:#bd93f9">$start</span>, <span style="color:#bd93f9">$end</span>;
+
+<span style="color:var(--r)">for</span> <span style="color:var(--r)">my</span> <span style="color:#bd93f9">$port</span> (<span style="color:#bd93f9">$start</span>..<span style="color:#bd93f9">$end</span>) {
+    <span style="color:var(--r)">my</span> <span style="color:#bd93f9">$sock</span> = IO::Socket::INET-&gt;<span style="color:#8be9fd">new</span>(
+        PeerAddr =&gt; <span style="color:#bd93f9">$target</span>, PeerPort =&gt; <span style="color:#bd93f9">$port</span>,
+        Proto =&gt; <span style="color:#ff79c6">'tcp'</span>, Timeout =&gt; <span style="color:#bd93f9">$timeout</span>,
+    ) or next;
+
+    <span style="color:var(--r)">my</span> (<span style="color:#bd93f9">$svc</span>, <span style="color:#bd93f9">$banner</span>) = (<span style="color:#bd93f9">$services{$port}</span>//<span style="color:#ff79c6">'unknown'</span>, <span style="color:#ff79c6">''</span>);
+    <span style="color:#bd93f9">$sock</span>-&gt;<span style="color:#8be9fd">recv</span>(<span style="color:#bd93f9">$banner</span>, 256);
+    <span style="color:#bd93f9">$banner</span> =~ <span style="color:#ffa07a">s/[
+ -]/ /g</span>;
+    <span style="color:#8be9fd">printf</span> <span style="color:#ff79c6">"  [OPEN] %5d/tcp  %-12s  %s
+"</span>,
+        <span style="color:#bd93f9">$port</span>, <span style="color:#bd93f9">$svc</span>, (<span style="color:#bd93f9">$banner</span> ? <span style="color:#ff79c6">"Banner: $banner"</span> : <span style="color:#ff79c6">''</span>);
+    <span style="color:var(--r)">close</span>(<span style="color:#bd93f9">$sock</span>);
+}
+<span style="color:#8be9fd">print</span> <span style="color:#ff79c6">"
+[*] Scan complete.
+"</span>;</code>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<section class="sec rv" id="logs">
+  <div class="sec-hd"><span class="sec-n">04 //</span><h2 class="sec-t">Log Analysis &amp; Threat Detection<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel rv-l">
+    <p>Log analysis is where Perl's regex-first design delivers the most immediate advantage. A Perl one-liner that would take a Python developer 10 lines of code fits in a single terminal command. The script below covers critical auth log analysis tasks -- brute force detection, successful login monitoring, and sudo command tracking -- all using Perl's regex and hash-based aggregation patterns that process millions of lines per second.</p>
+  </div>
+  <div class="cb rv" data-l="Perl Auth Log Analyser -- Brute Force Detection and Reporting">
+    <code><span style="color:var(--c);font-weight:700">#!/usr/bin/perl</span>
+<span style="color:var(--r)">use</span> strict; <span style="color:var(--r)">use</span> warnings;
+
+<span style="color:var(--r)">my</span> (<span style="color:#bd93f9">$log</span>, <span style="color:#bd93f9">$threshold</span>) = (<span style="color:#ff79c6">'/var/log/auth.log'</span>, 5);
+<span style="color:var(--r)">my</span> (<span style="color:#bd93f9">%fail_count</span>, <span style="color:#bd93f9">%fail_users</span>, <span style="color:#bd93f9">@success</span>, <span style="color:#bd93f9">@sudo_cmds</span>);
+
+<span style="color:var(--r)">open</span>(<span style="color:var(--r)">my</span> <span style="color:#bd93f9">$fh</span>, <span style="color:#ff79c6">'&lt;'</span>, <span style="color:#bd93f9">$log</span>) or <span style="color:#8be9fd">die</span> <span style="color:#ff79c6">"Cannot open: $!
+"</span>;
+<span style="color:var(--r)">while</span> (<span style="color:var(--r)">my</span> <span style="color:#bd93f9">$line</span> = &lt;<span style="color:#bd93f9">$fh</span>&gt;) {
+    <span style="color:#8be9fd">chomp</span> <span style="color:#bd93f9">$line</span>;
+    <span style="color:var(--r)">if</span> (<span style="color:#bd93f9">$line</span> =~ <span style="color:#ffa07a">/Failed password for (?:invalid user )?(\S+) from ([\d.]+)/</span>) {
+        <span style="color:#bd93f9">$fail_count{$2}</span>++;
+        <span style="color:#8be9fd">push</span> @{<span style="color:#bd93f9">$fail_users{$2}</span>}, <span style="color:#bd93f9">$1</span>
+            unless <span style="color:#8be9fd">grep</span> { <span style="color:#bd93f9">$_</span> eq <span style="color:#bd93f9">$1</span> } @{<span style="color:#bd93f9">$fail_users{$2}</span> // []};
+    }
+    <span style="color:var(--r)">elsif</span> (<span style="color:#bd93f9">$line</span> =~ <span style="color:#ffa07a">/Accepted \S+ for (\S+) from ([\d.]+)/</span>) {
+        <span style="color:#8be9fd">push</span> <span style="color:#bd93f9">@success</span>, <span style="color:#ff79c6">"  User: $1 | From: $2"</span>;
+    }
+    <span style="color:var(--r)">elsif</span> (<span style="color:#bd93f9">$line</span> =~ <span style="color:#ffa07a">/sudo:.*COMMAND=(.*)/</span>) {
+        <span style="color:#8be9fd">push</span> <span style="color:#bd93f9">@sudo_cmds</span>, <span style="color:#ff79c6">"  $1"</span>;
+    }
+}
+<span style="color:var(--r)">close</span>(<span style="color:#bd93f9">$fh</span>);
+
+<span style="color:#8be9fd">print</span> <span style="color:#ff79c6">"
+=== BRUTE FORCE REPORT ===
+"</span>;
+<span style="color:var(--r)">for</span> <span style="color:var(--r)">my</span> <span style="color:#bd93f9">$ip</span> (<span style="color:#8be9fd">sort</span> { <span style="color:#bd93f9">$fail_count{$b}</span> &lt;=&gt; <span style="color:#bd93f9">$fail_count{$a}</span> } <span style="color:#8be9fd">keys</span> <span style="color:#bd93f9">%fail_count</span>) {
+    <span style="color:var(--r)">next</span> unless <span style="color:#bd93f9">$fail_count{$ip}</span> &gt;= <span style="color:#bd93f9">$threshold</span>;
+    <span style="color:#8be9fd">printf</span> <span style="color:#ff79c6">"  [ALERT] %-18s %4d failures | Targets: %s
+"</span>,
+        <span style="color:#bd93f9">$ip</span>, <span style="color:#bd93f9">$fail_count{$ip}</span>, <span style="color:#8be9fd">join</span>(<span style="color:#ff79c6">', '</span>, @{<span style="color:#bd93f9">$fail_users{$ip}</span>});
+}
+<span style="color:#8be9fd">print</span> <span style="color:#ff79c6">"
+[+] Successful logins:
+"</span>;
+<span style="color:#8be9fd">print</span> <span style="color:#ff79c6">"$_
+"</span> <span style="color:var(--r)">for</span> <span style="color:#bd93f9">@success</span> ? <span style="color:#bd93f9">@success</span> : (<span style="color:#ff79c6">"  None"</span>);</code>
+  </div>
+  <div class="alert al-i rv">
+    <span class="al-ic">[ * ]</span>
+    <p class="al-tx"><strong>One-Liner Cheat Sheet:</strong> Extract all IPs: <code style="color:var(--c);font-family:var(--mono)">perl -ne 'print "$1
+" if /((?:\d{1,3}\.){3}\d{1,3})/' auth.log | sort | uniq -c | sort -rn</code> &nbsp;|&nbsp; Top attacker IPs: <code style="color:var(--c);font-family:var(--mono)">perl -ne '$c{$1}++ if /from ([\d.]+)/; END{printf "%4d %s
+",$c{$_},$_ for sort{$c{$b}&lt;=&gt;$c{$a}}keys%c}' auth.log</code></p>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<section class="sec rv" id="exploit">
+  <div class="sec-hd"><span class="sec-n">05 //</span><h2 class="sec-t">Exploit Development with Perl<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel rv-l">
+    <p>Perl has a long history in exploit development -- it was the dominant language for exploit writing before Python's rise, and many Metasploit modules are written in Perl. Perl's string manipulation and binary data handling via <code style="color:var(--c);font-family:var(--mono)">pack</code>/<code style="color:var(--c);font-family:var(--mono)">unpack</code> are extremely concise for crafting malformed protocol inputs, fuzzing, and buffer overflow research in authorised lab environments.</p>
+  </div>
+  <div class="alert al-w rv">
+    <span class="al-ic">[ ! ]</span>
+    <p class="al-tx"><strong>Authorised Research Only.</strong> These scripts are for controlled lab environments, CTF challenges, and authorised penetration testing engagements only. Deploying against any system without explicit written authorisation is illegal under the Computer Misuse Act and equivalent legislation globally.</p>
+  </div>
+  <div class="cb rv" data-l="Perl Buffer Overflow Fuzzer -- Incremental Crash Finder">
+    <code><span style="color:var(--c);font-weight:700">#!/usr/bin/perl</span>
+<span style="color:var(--r)">use</span> strict; <span style="color:var(--r)">use</span> warnings;
+<span style="color:var(--r)">use</span> IO::Socket::INET;
+
+<span style="color:var(--t3)"># BUFFER OVERFLOW FUZZER -- finds crash point by incrementing payload
+# Usage: ./fuzzer.pl &lt;host&gt; &lt;port&gt;</span>
+<span style="color:var(--r)">my</span> (<span style="color:#bd93f9">$host</span>, <span style="color:#bd93f9">$port</span>) = (<span style="color:#bd93f9">$ARGV[0]</span>, <span style="color:#bd93f9">$ARGV[1]</span>);
+<span style="color:#8be9fd">die</span> <span style="color:#ff79c6">"Usage: $0 &lt;host&gt; &lt;port&gt;
+"</span> unless <span style="color:#bd93f9">$host</span> &amp;&amp; <span style="color:#bd93f9">$port</span>;
+
+<span style="color:#8be9fd">print</span> <span style="color:#ff79c6">"[*] Fuzzer starting -- $host:$port
+"</span>;
+<span style="color:var(--r)">my</span> <span style="color:#bd93f9">$size</span> = 100;
+
+<span style="color:var(--r)">while</span> (<span style="color:#bd93f9">$size</span> &lt;= 5000) {
+    <span style="color:var(--r)">my</span> <span style="color:#bd93f9">$sock</span> = IO::Socket::INET-&gt;<span style="color:#8be9fd">new</span>(
+        PeerAddr =&gt; <span style="color:#bd93f9">$host</span>, PeerPort =&gt; <span style="color:#bd93f9">$port</span>,
+        Proto =&gt; <span style="color:#ff79c6">'tcp'</span>, Timeout =&gt; 3,
+    ) or do {
+        <span style="color:#8be9fd">printf</span> <span style="color:#ff79c6">"[CRASH] Service unreachable at %d bytes
+"</span>, <span style="color:#bd93f9">$size</span>;
+        <span style="color:#8be9fd">exit</span>;
+    };
+    <span style="color:#8be9fd">print</span> <span style="color:#bd93f9">$sock</span> (<span style="color:#ff79c6">'A'</span> x <span style="color:#bd93f9">$size</span>) . <span style="color:#ff79c6">"
+"</span>;
+    <span style="color:#8be9fd">printf</span> <span style="color:#ff79c6">"  [SENT] %d bytes -- alive
+"</span>, <span style="color:#bd93f9">$size</span>;
+    <span style="color:var(--r)">close</span>(<span style="color:#bd93f9">$sock</span>);
+    <span style="color:#bd93f9">$size</span> += 100; <span style="color:#8be9fd">sleep</span>(1);
+}
+
+<span style="color:var(--t3)"># Simple cyclic pattern generator for EIP offset finding</span>
+<span style="color:var(--r)">sub</span> <span style="color:#8be9fd">cyclic</span> {
+    <span style="color:var(--r)">my</span> <span style="color:#bd93f9">$n</span> = <span style="color:#8be9fd">shift</span>;
+    <span style="color:var(--r)">my</span> <span style="color:#bd93f9">@a</span> = (<span style="color:#ff79c6">'A'</span>..<span style="color:#ff79c6">'Z'</span>, <span style="color:#ff79c6">'a'</span>..<span style="color:#ff79c6">'z'</span>, <span style="color:#ff79c6">'0'</span>..<span style="color:#ff79c6">'9'</span>);
+    <span style="color:#8be9fd">join</span>(<span style="color:#ff79c6">''</span>, <span style="color:#8be9fd">map</span> { <span style="color:#bd93f9">$a[$_ % scalar @a]</span> } 0..<span style="color:#bd93f9">$n</span>-1);
+}
+<span style="color:#8be9fd">printf</span> <span style="color:#ff79c6">"[*] Cyclic pattern (300 chars):
+%s
+"</span>, <span style="color:#8be9fd">cyclic</span>(300);</code>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<section class="sec rv" id="osint">
+  <div class="sec-hd"><span class="sec-n">06 //</span><h2 class="sec-t">OSINT &amp; Web Intelligence Gathering<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel rv-l">
+    <p>Perl's <code style="color:var(--c);font-family:var(--mono)">LWP::UserAgent</code> provides a complete HTTP client for OSINT web scraping -- fetching pages, following redirects, managing cookies, and sending custom headers. Combined with Perl's inline regex, this enables rapid extraction of emails, subdomains, links, and hidden metadata from web content during authorised reconnaissance phases.</p>
+  </div>
+  <div class="cb rv" data-l="Perl Web Intel Script -- Email, Links and Comment Extraction">
+    <code><span style="color:var(--c);font-weight:700">#!/usr/bin/perl</span>
+<span style="color:var(--r)">use</span> strict; <span style="color:var(--r)">use</span> warnings;
+<span style="color:var(--r)">use</span> LWP::UserAgent;
+
+<span style="color:var(--r)">my</span> <span style="color:#bd93f9">$url</span> = <span style="color:#bd93f9">$ARGV[0]</span> // <span style="color:#8be9fd">die</span> <span style="color:#ff79c6">"Usage: $0 &lt;url&gt;
+"</span>;
+<span style="color:var(--r)">my</span> <span style="color:#bd93f9">$ua</span>  = LWP::UserAgent-&gt;<span style="color:#8be9fd">new</span>(
+    timeout =&gt; 15,
+    agent   =&gt; <span style="color:#ff79c6">'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36'</span>,
+    max_redirect =&gt; 5,
+);
+<span style="color:var(--r)">my</span> <span style="color:#bd93f9">$res</span> = <span style="color:#bd93f9">$ua</span>-&gt;<span style="color:#8be9fd">get</span>(<span style="color:#bd93f9">$url</span>);
+<span style="color:#8be9fd">die</span> <span style="color:#ff79c6">"HTTP Error: "</span> . <span style="color:#bd93f9">$res</span>-&gt;<span style="color:#8be9fd">status_line</span> . <span style="color:#ff79c6">"
+"</span> unless <span style="color:#bd93f9">$res</span>-&gt;<span style="color:#8be9fd">is_success</span>;
+<span style="color:var(--r)">my</span> <span style="color:#bd93f9">$html</span> = <span style="color:#bd93f9">$res</span>-&gt;<span style="color:#8be9fd">decoded_content</span>;
+
+<span style="color:var(--t3)"># Server fingerprinting via response headers</span>
+<span style="color:#8be9fd">printf</span> <span style="color:#ff79c6">"
+[+] Server: %s | X-Powered-By: %s
+"</span>,
+    <span style="color:#bd93f9">$res</span>-&gt;<span style="color:#8be9fd">header</span>(<span style="color:#ff79c6">'Server'</span>)//<span style="color:#ff79c6">'hidden'</span>, <span style="color:#bd93f9">$res</span>-&gt;<span style="color:#8be9fd">header</span>(<span style="color:#ff79c6">'X-Powered-By'</span>)//<span style="color:#ff79c6">'hidden'</span>;
+
+<span style="color:var(--t3)"># Extract email addresses</span>
+<span style="color:var(--r)">my</span> <span style="color:#bd93f9">%emails</span>;
+<span style="color:#bd93f9">$emails{$1}</span>++ <span style="color:var(--r)">while</span> <span style="color:#bd93f9">$html</span> =~ <span style="color:#ffa07a">/[\w.+\-]+\@[\w\-]+\.(?:com|org|net|io|gov)/gi</span>;
+<span style="color:#8be9fd">print</span> <span style="color:#ff79c6">"
+[+] Emails:
+"</span>;
+<span style="color:#8be9fd">print</span> <span style="color:#ff79c6">"  $_
+"</span> <span style="color:var(--r)">for</span> <span style="color:#8be9fd">sort</span> <span style="color:#8be9fd">keys</span> <span style="color:#bd93f9">%emails</span>;
+
+<span style="color:var(--t3)"># Extract hyperlinks</span>
+<span style="color:var(--r)">my</span> <span style="color:#bd93f9">%links</span>;
+<span style="color:#bd93f9">$links{$1}</span>++ <span style="color:var(--r)">while</span> <span style="color:#bd93f9">$html</span> =~ <span style="color:#ffa07a">/href=["']([^"'#][^"']*?)["']/gi</span>;
+<span style="color:#8be9fd">printf</span> <span style="color:#ff79c6">"
+[+] %d unique links found.
+"</span>, <span style="color:#8be9fd">scalar</span> <span style="color:#8be9fd">keys</span> <span style="color:#bd93f9">%links</span>;
+
+<span style="color:var(--t3)"># Extract HTML comments (may contain developer notes or credentials)</span>
+<span style="color:var(--r)">my</span> <span style="color:#bd93f9">@comments</span>;
+<span style="color:#8be9fd">push</span> <span style="color:#bd93f9">@comments</span>, <span style="color:#bd93f9">$1</span> <span style="color:var(--r)">while</span> <span style="color:#bd93f9">$html</span> =~ <span style="color:#ffa07a">/&lt;!--(.*?)--&gt;/gs</span>;
+<span style="color:var(--r)">if</span> (<span style="color:#bd93f9">@comments</span>) {
+    <span style="color:#8be9fd">print</span> <span style="color:#ff79c6">"
+[!] HTML comments (check for info disclosure):
+"</span>;
+    <span style="color:#8be9fd">printf</span> <span style="color:#ff79c6">"  %s
+"</span>, <span style="color:#8be9fd">substr</span>(<span style="color:#bd93f9">$_</span>, 0, 100) <span style="color:var(--r)">for</span> <span style="color:#bd93f9">@comments</span>;
+}</code>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<section class="sec rv" id="forensics">
+  <div class="sec-hd"><span class="sec-n">07 //</span><h2 class="sec-t">Digital Forensics Scripts<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel rv-l">
+    <p>Perl's file handling, binary data processing, and cryptographic module support make it well-suited for digital forensics -- computing file hashes, scanning for IOCs across filesystems, and parsing structured forensic artefacts. Particularly useful on compromised systems where specialist forensic tools are not installed but Perl is available, enabling rapid first-pass triage before full toolset deployment.</p>
+  </div>
+  <div class="cb rv" data-l="Perl Forensic Analyser -- File Hashing and IOC Pattern Scan">
+    <code><span style="color:var(--c);font-weight:700">#!/usr/bin/perl</span>
+<span style="color:var(--r)">use</span> strict; <span style="color:var(--r)">use</span> warnings;
+<span style="color:var(--r)">use</span> Digest::MD5 <span style="color:var(--r)">qw</span>(md5_hex);
+<span style="color:var(--r)">use</span> Digest::SHA <span style="color:var(--r)">qw</span>(sha256_hex);
+<span style="color:var(--r)">use</span> File::Find;
+
+<span style="color:var(--r)">my</span> <span style="color:#bd93f9">$dir</span> = <span style="color:#bd93f9">$ARGV[0]</span> // <span style="color:#ff79c6">'.'</span>;
+
+<span style="color:var(--t3)"># Known malware MD5 hashes (replace with real threat intel feed)</span>
+<span style="color:var(--r)">my</span> <span style="color:#bd93f9">%bad_hashes</span> = (
+    <span style="color:#ff79c6">'44d88612fea8a8f36de82e1278abb02f'</span> =&gt; <span style="color:#ff79c6">'EICAR test file'</span>,
+    <span style="color:#ff79c6">'d8e8fca2dc0f896fd7cb4cb0031ba249'</span> =&gt; <span style="color:#ff79c6">'Suspicious binary'</span>,
+);
+
+<span style="color:var(--t3)"># IOC patterns for webshells and persistence mechanisms</span>
+<span style="color:var(--r)">my</span> <span style="color:#bd93f9">@iocs</span> = (
+    <span style="color:#ffa07a">qr/base64_decode\s*\(/i</span>,
+    <span style="color:#ffa07a">qr/eval\s*\(\s*\$_(?:POST|GET)/i</span>,
+    <span style="color:#ffa07a">qr/wget\s+http|curl\s+-[sS]/</span>,
+    <span style="color:#ffa07a">qr/chmod\s+[0-7]*777/</span>,
+    <span style="color:#ffa07a">qr/nohup|disown/</span>,
+);
+
+<span style="color:#8be9fd">printf</span> <span style="color:#ff79c6">"[*] Scanning: %s
+
+"</span>, <span style="color:#bd93f9">$dir</span>;
+<span style="color:#8be9fd">find</span>(<span style="color:var(--r)">sub</span> {
+    <span style="color:var(--r)">return</span> unless -f <span style="color:#bd93f9">$_</span> &amp;&amp; -r <span style="color:#bd93f9">$_</span>;
+    <span style="color:var(--r)">my</span> <span style="color:#bd93f9">$path</span> = <span style="color:#bd93f9">$File::Find::name</span>;
+    <span style="color:var(--r)">open</span>(<span style="color:var(--r)">my</span> <span style="color:#bd93f9">$fh</span>, <span style="color:#ff79c6">'&lt;'</span>, <span style="color:#bd93f9">$_</span>) or <span style="color:var(--r)">return</span>;
+    <span style="color:var(--r)">my</span> <span style="color:#bd93f9">$c</span> = <span style="color:var(--r)">do</span> { <span style="color:var(--r)">local</span> <span style="color:#bd93f9">$/</span>; &lt;<span style="color:#bd93f9">$fh</span>&gt; };
+    <span style="color:var(--r)">close</span>(<span style="color:#bd93f9">$fh</span>); <span style="color:var(--r)">return</span> unless <span style="color:#8be9fd">defined</span> <span style="color:#bd93f9">$c</span>;
+    <span style="color:var(--r)">my</span> <span style="color:#bd93f9">$md5</span> = <span style="color:#8be9fd">md5_hex</span>(<span style="color:#bd93f9">$c</span>);
+    <span style="color:#8be9fd">printf</span> <span style="color:#ff79c6">"[IOC HASH] %s -- %s
+"</span>, <span style="color:#bd93f9">$path</span>, <span style="color:#bd93f9">$bad_hashes{$md5}</span>
+        <span style="color:var(--r)">if</span> <span style="color:#8be9fd">exists</span> <span style="color:#bd93f9">$bad_hashes{$md5}</span>;
+    <span style="color:var(--r)">for</span> <span style="color:var(--r)">my</span> <span style="color:#bd93f9">$p</span> (<span style="color:#bd93f9">@iocs</span>) {
+        <span style="color:var(--r)">if</span> (<span style="color:#bd93f9">$c</span> =~ <span style="color:#bd93f9">$p</span>) {
+            <span style="color:#8be9fd">printf</span> <span style="color:#ff79c6">"[SUSPICIOUS] %s SHA256:%s...
+"</span>,
+                <span style="color:#bd93f9">$path</span>, <span style="color:#8be9fd">substr</span>(<span style="color:#8be9fd">sha256_hex</span>(<span style="color:#bd93f9">$c</span>),0,16);
+            <span style="color:var(--r)">last</span>;
+        }
+    }
+}, <span style="color:#bd93f9">$dir</span>);
+<span style="color:#8be9fd">print</span> <span style="color:#ff79c6">"
+[done] Scan complete.
+"</span>;</code>
+  </div>
+  <div class="tgrid rv">
+    <div class="tc"><div class="tcname">IO::Socket::INET</div><span class="tctag">Network</span><div class="tcdesc">TCP/UDP socket programming for port scanning and banner grabbing</div></div>
+    <div class="tc"><div class="tcname">LWP::UserAgent</div><span class="tctag">HTTP</span><div class="tcdesc">Full HTTP/HTTPS client for web scraping and OSINT intelligence gathering</div></div>
+    <div class="tc"><div class="tcname">Net::Ping</div><span class="tctag">Recon</span><div class="tcdesc">Multi-protocol ping for live host discovery across subnets</div></div>
+    <div class="tc"><div class="tcname">Digest::MD5/SHA</div><span class="tctag">Forensics</span><div class="tcdesc">Cryptographic file hashing for IOC matching and integrity verification</div></div>
+    <div class="tc"><div class="tcname">File::Find</div><span class="tctag">Filesystem</span><div class="tcdesc">Recursive filesystem traversal for forensic IOC scanning</div></div>
+    <div class="tc"><div class="tcname">MIME::Base64</div><span class="tctag">Encoding</span><div class="tcdesc">Base64 encode/decode for payload encoding and obfuscated data extraction</div></div>
+    <div class="tc"><div class="tcname">DBI</div><span class="tctag">Database</span><div class="tcdesc">Universal database interface for DB pen testing and forensic analysis</div></div>
+    <div class="tc"><div class="tcname">JSON</div><span class="tctag">Output</span><div class="tcdesc">Encode extracted log data to JSON for AI pipeline integration</div></div>
+  </div>
+</section>
+
+<div class="div div-ai"></div>
+
+<section class="sec rv sec-ai" id="ai">
+  <div class="sec-hd"><span class="sec-n">08 //</span><h2 class="sec-t">AI Integration in Perl Security Scripting<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel panel-ai rv-l">
+    <p>Artificial Intelligence is transforming how security professionals write, debug, and deploy Perl scripts. While Perl's conciseness is legendary, its terse syntax can be opaque even to experienced engineers. LLMs excel at explaining arcane Perl idioms, generating complex regex from natural-language descriptions, and translating legacy Perl security tools into documented, maintainable code. On the operational side, combining Perl's raw log processing speed with LLM reasoning produces threat intelligence neither could generate alone -- Perl extracts structured data at machine speed while GPT provides contextual threat narrative.</p>
+  </div>
+  <div class="alert al-p rv">
+    <span class="al-ic">[ AI ]</span>
+    <p class="al-tx">Perl security scripts that would take an experienced engineer 30 minutes to write -- including complex regex patterns, multi-format log parsing, and socket handling -- can be generated by LLMs from a plain-English description in under 60 seconds. The bottleneck shifts from script writing to integration, testing, and validation, where human security knowledge remains irreplaceable.</p>
+  </div>
+  <div class="ai-grid rv">
+    <div class="ai-card"><span class="ai-ico">&#129516;</span><div class="ai-name">AI Regex Generation</div><div class="ai-desc">LLMs generate complex Perl regex patterns from plain-English descriptions. Describe what you want to match -- "extract all IPv6 addresses, CVE IDs, and Base64 blobs from a log line using named capture groups" -- and the LLM produces a correct, tested Perl regex. Eliminates hours of crafting complex lookahead, lookbehind, and nested group patterns under time pressure.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#9997;&#65039;</span><div class="ai-name">AI Script Generation</div><div class="ai-desc">LLMs generate complete, strict-mode Perl security scripts from natural language. Describe your requirement in plain English and receive a production-quality script with proper error handling, file I/O, socket code, and Perl best practices including use strict and use warnings. Scripts typically need only minor adaptation for the specific target environment.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128218;</span><div class="ai-name">Legacy Perl Explanation</div><div class="ai-desc">Many security tools -- Metasploit's older modules, Snort rule parsers, and legacy SIEM integrations -- are written in undocumented Perl. LLMs parse and explain complex Perl one-liners, arcane special variables, and dense regex expressions, enabling engineers to understand, maintain, and safely modify legacy security tooling without manual reverse-engineering.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128269;</span><div class="ai-name">AI Log Intelligence</div><div class="ai-desc">Combine Perl's speed processing millions of log lines per second with LLM reasoning. Perl extracts structured fields and outputs JSON; GPT analyses the structured data, correlates events across time windows, and produces narrative threat intelligence: "this sequence indicates credential stuffing transitioning to privilege escalation via the compromised admin account at 03:41 UTC."</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128027;</span><div class="ai-name">Debugging and Code Review</div><div class="ai-desc">LLMs debug complex Perl scripts by explaining why a regex fails, why a hash slice produces unexpected results, or why a socket times out. Also reviews scripts for security vulnerabilities: tainted input reaching system() calls, missing strict/warnings declarations, unsafe temporary file creation patterns, and command injection vectors via unquoted variables in shell calls.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128260;</span><div class="ai-name">Perl to Python Translation</div><div class="ai-desc">LLMs translate between Perl and Python security scripts accurately -- converting legacy Perl network scanners to Python for integration with modern frameworks, or translating Python log parsers to Perl one-liners for deployment on restricted systems where only Perl is available. Enables security teams to operate in whichever language the environment requires.</div></div>
+  </div>
+  <div class="panel panel-ai rv" style="margin-top:28px">
+    <div class="panel-t">AI Tools for Perl Security Scripting</div>
+    <table class="ptbl">
+      <thead><tr>
+        <th style="color:#bf00ff;border-bottom-color:rgba(191,0,255,.25)">Tool</th>
+        <th style="color:#bf00ff;border-bottom-color:rgba(191,0,255,.25)">Capability</th>
+        <th style="color:#bf00ff;border-bottom-color:rgba(191,0,255,.25)">Perl Use Case</th>
+      </tr></thead>
+      <tbody>
+        <tr><td style="color:var(--g)">GPT-4 / Claude</td><td style="color:var(--t2)">Script generation, regex creation, code explanation</td><td style="color:var(--t2)">Generate Perl scripts from plain English; explain legacy one-liners and arcane syntax</td></tr>
+        <tr><td style="color:var(--g)">GitHub Copilot</td><td style="color:var(--t2)">Inline code completion</td><td style="color:var(--t2)">Autocomplete Perl regex patterns, module usage, and control flow directly in the editor</td></tr>
+        <tr><td style="color:var(--g)">GPT-4 + Perl JSON</td><td style="color:var(--t2)">Log intelligence pipeline</td><td style="color:var(--t2)">Perl extracts structured JSON from logs; GPT analyses patterns and produces threat narrative</td></tr>
+        <tr><td style="color:var(--g)">Semgrep</td><td style="color:var(--t2)">SAST pattern analysis</td><td style="color:var(--t2)">Static analysis of Perl scripts for tainted input, injection sinks, and unsafe functions</td></tr>
+        <tr><td style="color:var(--g)">AI Code Reviewer</td><td style="color:var(--t2)">Security-focused review</td><td style="color:var(--t2)">Review Perl for PATH hijacking, command injection, race conditions, and unsafe temp files</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="cb cb-ai rv" data-l="AI Pipeline -- Perl Log Extract piped to GPT Analysis">
+    <code><span style="color:var(--t3)"># Two-stage pipeline: Perl processes logs fast, GPT reasons about results
+# Stage 1 -- extract.pl: Perl fast log parsing to JSON
+# Stage 2 -- analyse.py: GPT threat analysis of structured data
+# Run: perl extract.pl | python3 analyse.py
+
+# === extract.pl ===</span>
+<span style="color:var(--c);font-weight:700">#!/usr/bin/perl</span>
+<span style="color:var(--r)">use</span> strict; <span style="color:var(--r)">use</span> warnings; <span style="color:var(--r)">use</span> JSON;
+
+<span style="color:var(--r)">my</span> <span style="color:#bd93f9">%data</span> = (failures =&gt; [], successes =&gt; [], sudo =&gt; []);
+<span style="color:var(--r)">open</span>(<span style="color:var(--r)">my</span> <span style="color:#bd93f9">$fh</span>, <span style="color:#ff79c6">'&lt;'</span>, <span style="color:#ff79c6">'/var/log/auth.log'</span>) or <span style="color:#8be9fd">die</span> <span style="color:#ff79c6">"$!
+"</span>;
+<span style="color:var(--r)">while</span> (&lt;<span style="color:#bd93f9">$fh</span>&gt;) {
+    <span style="color:#8be9fd">push</span> @{<span style="color:#bd93f9">$data{failures}</span>},  {user=&gt;<span style="color:#bd93f9">$1</span>, ip=&gt;<span style="color:#bd93f9">$2</span>}
+        <span style="color:var(--r)">if</span> <span style="color:#ffa07a">/Failed password for (?:invalid user )?(\S+) from ([\d.]+)/</span>;
+    <span style="color:#8be9fd">push</span> @{<span style="color:#bd93f9">$data{successes}</span>}, {user=&gt;<span style="color:#bd93f9">$1</span>, ip=&gt;<span style="color:#bd93f9">$2</span>}
+        <span style="color:var(--r)">if</span> <span style="color:#ffa07a">/Accepted \S+ for (\S+) from ([\d.]+)/</span>;
+    <span style="color:#8be9fd">push</span> @{<span style="color:#bd93f9">$data{sudo}</span>},     {user=&gt;<span style="color:#bd93f9">$1</span>, cmd=&gt;<span style="color:#bd93f9">$2</span>}
+        <span style="color:var(--r)">if</span> <span style="color:#ffa07a">/sudo:.*USER=(\S+).*COMMAND=(.*)/</span>;
+}
+<span style="color:var(--r)">close</span>(<span style="color:#bd93f9">$fh</span>);
+<span style="color:#8be9fd">print</span> <span style="color:#8be9fd">encode_json</span>(\<span style="color:#bd93f9">%data</span>);   <span style="color:var(--t3)"># Pipe JSON to Python analyser</span></code>
+  </div>
+  <div class="cb cb-ai rv" data-l="AI -- GPT Threat Analysis from Perl JSON Output (Python)">
+    <code><span style="color:var(--t3)"># === analyse.py -- receives JSON from Perl, sends to GPT ===</span>
+<span style="color:var(--r)">import</span> sys, json, openai
+<span style="color:var(--r)">from</span> collections <span style="color:var(--r)">import</span> Counter
+
+data    = json.<span style="color:#8be9fd">loads</span>(sys.stdin.<span style="color:#8be9fd">read</span>())
+top_ips = Counter(f[<span style="color:#ff79c6">"ip"</span>] <span style="color:var(--r)">for</span> f <span style="color:var(--r)">in</span> data[<span style="color:#ff79c6">"failures"</span>]).<span style="color:#8be9fd">most_common</span>(5)
+
+summary = {
+    <span style="color:#ff79c6">"total_failed_logins"</span> : len(data[<span style="color:#ff79c6">"failures"</span>]),
+    <span style="color:#ff79c6">"unique_attacker_ips"</span> : len(<span style="color:#8be9fd">set</span>(f[<span style="color:#ff79c6">"ip"</span>] <span style="color:var(--r)">for</span> f <span style="color:var(--r)">in</span> data[<span style="color:#ff79c6">"failures"</span>])),
+    <span style="color:#ff79c6">"top_attacker_ips"</span>    : top_ips,
+    <span style="color:#ff79c6">"targeted_usernames"</span>  : list(<span style="color:#8be9fd">set</span>(f[<span style="color:#ff79c6">"user"</span>] <span style="color:var(--r)">for</span> f <span style="color:var(--r)">in</span> data[<span style="color:#ff79c6">"failures"</span>])),
+    <span style="color:#ff79c6">"successful_logins"</span>   : data[<span style="color:#ff79c6">"successes"</span>],
+    <span style="color:#ff79c6">"sudo_commands"</span>       : data[<span style="color:#ff79c6">"sudo"</span>][-10:],
+}
+
+prompt = (
+    "You are a senior Linux security analyst. Analyse this auth.log data "
+    "extracted by a Perl script and provide a structured threat assessment.
+
+"
+    "Data:
+" + json.dumps(summary, indent=2) + "
+
+"
+    "Provide:
+"
+    "1. THREAT CLASSIFICATION - type of attack pattern observed
+"
+    "2. ATTACK TIMELINE - infer attacker sequence from the data
+"
+    "3. SUCCESS ASSESSMENT - did any attack succeed? Evidence?
+"
+    "4. IMMEDIATE ACTIONS - what to do in the next 30 minutes
+"
+    "5. BLOCKING RULES - specific UFW/fail2ban commands to run now"
+)
+
+r = openai.OpenAI().chat.completions.<span style="color:#8be9fd">create</span>(
+    model=<span style="color:#ff79c6">"gpt-4o"</span>,
+    messages=[{<span style="color:#ff79c6">"role"</span>: <span style="color:#ff79c6">"user"</span>, <span style="color:#ff79c6">"content"</span>: prompt}]
+)
+<span style="color:#8be9fd">print</span>(r.choices[0].message.content)</code>
+  </div>
+</section>
+
+<div class="cta rv">
+  <div class="cta-t">// There's More Than One Way To Do It. //</div>
+  <p class="cta-p">Perl's TMTOWTDI philosophy is the right mindset for a security professional. Perl's regex engine, pre-installed availability on virtually every Unix/Linux system, and concise one-liner power make it uniquely effective where other languages are verbose or unavailable. Add AI-assisted generation and debugging, and Perl remains a sharp tool in the modern security automation stack.</p>
+  <div class="cta-btns">
+    <a href="https://github.com/nishu2402" class="btn btn-p" target="_blank" rel="noopener">GitHub -- nishu2402</a>
+    <a href="https://nishu2402.github.io" class="btn btn-s" target="_blank" rel="noopener">View Portfolio</a>
+  </div>
+</div>
+<footer class="footer">
+  <div class="f-l">Nisarg Chasmawala (Shroff)<br><span class="f-alias">// HEAVEN</span></div>
+  <div class="f-r">Offensive Security Engineer &middot; MSc Cyber Security, BCU<br>CEH Master &middot; CPENT &middot; CHFI &middot; ISO 27001 Lead Auditor<br><a href="https://github.com/nishu2402" target="_blank" rel="noopener">github.com/nishu2402</a></div>
+</footer>
+</div>
+
+<script>
+// ── CURSOR ──────────────────────────────────────────────────────────────────
+const cur=document.getElementById('cur'),
+      cur2=document.getElementById('cur2'),
+      cur3=document.getElementById('cur3');
+let mx=0,my=0;
+document.addEventListener('mousemove',e=>{
+  mx=e.clientX;my=e.clientY;
+  cur.style.left=mx+'px';cur.style.top=my+'px';
+});
+(function loop(){
+  cur2.style.left=mx+'px';cur2.style.top=my+'px';
+  cur3.style.left=mx+'px';cur3.style.top=my+'px';
+  requestAnimationFrame(loop);
+})();
+document.querySelectorAll('a,.btn,.ai-card,.panel,.cb,.tc').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{
+    cur.style.width='18px';cur.style.height='18px';
+    cur.style.background='rgba(0,255,65,.25)';
+  });
+  el.addEventListener('mouseleave',()=>{
+    cur.style.width='10px';cur.style.height='10px';
+    cur.style.background='var(--g)';
+  });
+});
+
+// ── PROGRESS BAR ────────────────────────────────────────────────────────────
+window.addEventListener('scroll',()=>{
+  var pct=(window.scrollY/(document.body.scrollHeight-window.innerHeight))*100;
+  document.getElementById('prog').style.width=pct+'%';
+});
+
+// ── PARTICLE NETWORK ────────────────────────────────────────────────────────
+(function(){
+  var c=document.getElementById('bg-particle'),ctx=c.getContext('2d');
+  var W,H,mX=innerWidth/2,mY=innerHeight/2;
+  var N=200,MAX=140,P=[];
+  function Particle(){this.reset(true);}
+  Particle.prototype.reset=function(init){
+    this.x=Math.random()*W;
+    this.y=init?Math.random()*H:H+10;
+    this.z=Math.random()*3+.5;
+    this.vx=(Math.random()-.5)*.4;
+    this.vy=(Math.random()-.5)*.4-.1;
+    this.life=Math.random()*300+200;
+    this.maxLife=this.life;
+    this.r=Math.random()*1.5+.5;
+    var r=Math.random();
+    this.color=r<.7?'0,255,65':r<.9?'0,229,255':'191,0,255';
+  };
+  Particle.prototype.update=function(){
+    var dx=this.x-mX,dy=this.y-mY,d=Math.sqrt(dx*dx+dy*dy);
+    if(d<120){var f=(120-d)/120;this.vx+=dx/d*f*.6;this.vy+=dy/d*f*.6;}
+    this.vx*=.98;this.vy*=.98;
+    this.x+=this.vx;this.y+=this.vy;this.life--;
+    if(this.life<=0||this.x<-50||this.x>W+50||this.y<-50||this.y>H+50)this.reset(false);
+  };
+  Particle.prototype.draw=function(){
+    var a=(this.life/this.maxLife)*.7*this.z;
+    ctx.beginPath();ctx.arc(this.x,this.y,this.r*this.z,0,Math.PI*2);
+    ctx.fillStyle='rgba('+this.color+','+a+')';ctx.fill();
+  };
+  function resize(){W=c.width=innerWidth;H=c.height=innerHeight;}
+  function drawLines(){
+    for(var i=0;i<P.length;i++){
+      for(var j=i+1;j<P.length;j++){
+        var a=P[i],b=P[j],dx=a.x-b.x,dy=a.y-b.y,d=Math.sqrt(dx*dx+dy*dy);
+        if(d<MAX){
+          var al=(1-d/MAX)*.18;
+          var g=ctx.createLinearGradient(a.x,a.y,b.x,b.y);
+          g.addColorStop(0,'rgba('+a.color+','+al+')');
+          g.addColorStop(1,'rgba('+b.color+','+al+')');
+          ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);
+          ctx.strokeStyle=g;ctx.lineWidth=(a.z+b.z)/2*.5;ctx.stroke();
+        }
+      }
+    }
+  }
+  function animate(){
+    ctx.clearRect(0,0,W,H);
+    var g=ctx.createRadialGradient(mX,mY,0,mX,mY,80);
+    g.addColorStop(0,'rgba(0,255,65,0)');
+    g.addColorStop(.7,'rgba(0,255,65,0.04)');
+    g.addColorStop(1,'rgba(0,255,65,0)');
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(mX,mY,80,0,Math.PI*2);ctx.fill();
+    drawLines();
+    P.forEach(function(p){p.update();p.draw();});
+    requestAnimationFrame(animate);
+  }
+  resize();
+  window.addEventListener('resize',resize);
+  document.addEventListener('mousemove',function(e){mX=e.clientX;mY=e.clientY;});
+  for(var i=0;i<N;i++){var p=new Particle();P.push(p);}
+  animate();
+})();
+
+// ── HEX GRID ────────────────────────────────────────────────────────────────
+(function(){
+  var c=document.getElementById('bg-hex'),ctx=c.getContext('2d');
+  var W,H,t=0;var S=40;
+  function resize(){W=c.width=innerWidth;H=c.height=innerHeight;}
+  function hexPath(cx,cy,s){
+    ctx.beginPath();
+    for(var i=0;i<6;i++){
+      var a=Math.PI/180*(60*i-30);
+      if(i===0)ctx.moveTo(cx+s*Math.cos(a),cy+s*Math.sin(a));
+      else ctx.lineTo(cx+s*Math.cos(a),cy+s*Math.sin(a));
+    }
+    ctx.closePath();
+  }
+  function draw(){
+    ctx.clearRect(0,0,W,H);t+=.008;
+    var sy=window.scrollY;
+    var cols=Math.ceil(W/(S*1.732))+2,rows=Math.ceil(H/(S*1.5))+2;
+    for(var r=-1;r<rows;r++){
+      for(var col=-1;col<cols;col++){
+        var cx=col*S*1.732+(r%2)*S*.866;
+        var cy=r*S*1.5-(sy*.03)%(S*1.5);
+        var w=Math.sin(t+col*.3+r*.2)*.5+.5;
+        hexPath(cx,cy,S-2);
+        ctx.strokeStyle='rgba(0,255,65,'+(0.02+w*0.07)+')';
+        ctx.lineWidth=.6;ctx.stroke();
+        if(w>.92){hexPath(cx,cy,S-2);ctx.fillStyle='rgba(0,255,65,'+(0.02+w*0.03)+')';ctx.fill();}
+      }
+    }
+    requestAnimationFrame(draw);
+  }
+  resize();window.addEventListener('resize',resize);draw();
+})();
+
+// ── HERO 3D: DNA / REGEX DOUBLE HELIX ───────────────────────────────────────
+(function(){
+  var c=document.getElementById('hero-geo');
+  if(!c)return;
+  var ctx=c.getContext('2d'),SZ=500;
+  c.width=SZ;c.height=SZ;
+  var rChars=['.','*','?','+','^','$','()','[]','\\w','\\d','\\s','|','(?:)','{n}'];
+  var N=18,HR=70,HH=380,TWIST=3.5;
+  var C1='0,255,65',C2='0,229,255',CP='191,0,255',CA='255,215,0';
+  var rx=0,ry=0,mrx=0,mry=0,t=0;
+  document.addEventListener('mousemove',function(e){
+    mrx=(e.clientY/innerHeight-.5)*.2;
+    mry=(e.clientX/innerWidth-.5)*.3;
+  });
+  function rot(x,y,z,rx2,ry2){
+    var y1=y*Math.cos(rx2)-z*Math.sin(rx2);
+    var z1=y*Math.sin(rx2)+z*Math.cos(rx2);
+    var x2=x*Math.cos(ry2)+z1*Math.sin(ry2);
+    var z2=-x*Math.sin(ry2)+z1*Math.cos(ry2);
+    return[x2,y1,z2];
+  }
+  function proj(x,y,z){
+    var f=450,d=f/(f+z+200);
+    return[x*d+SZ/2,y*d+SZ/2,z];
+  }
+  function draw(){
+    ctx.clearRect(0,0,SZ,SZ);
+    rx+=.002+mrx*.006;ry+=.008+mry*.012;t+=.018;
+    var pairs=[];
+    for(var i=0;i<N;i++){
+      var frac=i/(N-1);
+      var angle=frac*Math.PI*2*TWIST+t*.5;
+      var y=(frac-.5)*HH;
+      var r1=rot(Math.cos(angle)*HR,y,Math.sin(angle)*HR,rx,ry);
+      var r2=rot(-Math.cos(angle)*HR,y,-Math.sin(angle)*HR,rx,ry);
+      var p1=proj(r1[0],r1[1],r1[2]);
+      var p2=proj(r2[0],r2[1],r2[2]);
+      pairs.push({p1:p1,p2:p2,i:i});
+    }
+    pairs.sort(function(a,b){return((a.p1[2]+a.p2[2])/2)-((b.p1[2]+b.p2[2])/2);});
+    pairs.forEach(function(item){
+      var p1=item.p1,p2=item.p2,i=item.i;
+      var d1=(p1[2]+200)/400,d2=(p2[2]+200)/400,md=(d1+d2)/2;
+      var midX=(p1[0]+p2[0])/2,midY=(p1[1]+p2[1])/2;
+      // Crossbar
+      var gp=ctx.createLinearGradient(p1[0],p1[1],p2[0],p2[1]);
+      gp.addColorStop(0,'rgba('+CP+','+d1*.55+')');
+      gp.addColorStop(.5,'rgba('+CA+','+md*.7+')');
+      gp.addColorStop(1,'rgba('+CP+','+d2*.55+')');
+      ctx.beginPath();ctx.moveTo(p1[0],p1[1]);ctx.lineTo(p2[0],p2[1]);
+      ctx.strokeStyle=gp;ctx.lineWidth=1.2*md;ctx.stroke();
+      // Regex label
+      if(md>.3){
+        var ch=rChars[i%rChars.length];
+        var pulse=Math.sin(t*2+i*.5)*.5+.5;
+        ctx.font=Math.floor(7*md+5)+'px Share Tech Mono';
+        ctx.fillStyle='rgba('+CA+','+md*(.4+pulse*.3)+')';
+        ctx.textAlign='center';
+        ctx.fillText(ch,midX,midY+3*md);
+      }
+      // Strand 1 node
+      var r=5*d1;
+      var ng1=ctx.createRadialGradient(p1[0],p1[1],0,p1[0],p1[1],r*3);
+      ng1.addColorStop(0,'rgba('+C1+','+d1*.3+')');ng1.addColorStop(1,'rgba('+C1+',0)');
+      ctx.fillStyle=ng1;ctx.beginPath();ctx.arc(p1[0],p1[1],r*3,0,Math.PI*2);ctx.fill();
+      ctx.beginPath();ctx.arc(p1[0],p1[1],r,0,Math.PI*2);
+      ctx.fillStyle='rgba('+C1+','+d1*.9+')';ctx.fill();
+      // Strand 2 node
+      var r2n=5*d2;
+      var ng2=ctx.createRadialGradient(p2[0],p2[1],0,p2[0],p2[1],r2n*3);
+      ng2.addColorStop(0,'rgba('+C2+','+d2*.3+')');ng2.addColorStop(1,'rgba('+C2+',0)');
+      ctx.fillStyle=ng2;ctx.beginPath();ctx.arc(p2[0],p2[1],r2n*3,0,Math.PI*2);ctx.fill();
+      ctx.beginPath();ctx.arc(p2[0],p2[1],r2n,0,Math.PI*2);
+      ctx.fillStyle='rgba('+C2+','+d2*.9+')';ctx.fill();
+    });
+    // Backbone lines
+    for(var s=0;s<2;s++){
+      var col=s===0?C1:C2;
+      for(var i=0;i<pairs.length-1;i++){
+        var pa=s===0?pairs[i].p1:pairs[i].p2;
+        var pb=s===0?pairs[i+1].p1:pairs[i+1].p2;
+        var dA=(pa[2]+200)/400,dB=(pb[2]+200)/400;
+        ctx.beginPath();ctx.moveTo(pa[0],pa[1]);ctx.lineTo(pb[0],pb[1]);
+        var gb=ctx.createLinearGradient(pa[0],pa[1],pb[0],pb[1]);
+        gb.addColorStop(0,'rgba('+col+','+dA*.5+')');
+        gb.addColorStop(1,'rgba('+col+','+dB*.5+')');
+        ctx.strokeStyle=gb;ctx.lineWidth=1.5*((dA+dB)/2);ctx.stroke();
+      }
+    }
+    // Central glow
+    var cg=ctx.createRadialGradient(SZ/2,SZ/2,0,SZ/2,SZ/2,65);
+    cg.addColorStop(0,'rgba(0,255,65,0.05)');cg.addColorStop(1,'rgba(0,255,65,0)');
+    ctx.fillStyle=cg;ctx.beginPath();ctx.arc(SZ/2,SZ/2,65,0,Math.PI*2);ctx.fill();
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ── SCROLL REVEAL ───────────────────────────────────────────────────────────
+var rv=new IntersectionObserver(function(entries){
+  entries.forEach(function(x){if(x.isIntersecting)x.target.classList.add('on');});
+},{threshold:.08});
+document.querySelectorAll('.rv,.rv-l').forEach(function(el){rv.observe(el);});
+
+// ── TOC TRACKING ────────────────────────────────────────────────────────────
+var sIds=['hero','env','regex','recon','logs','exploit','osint','forensics','ai'];
+var tItems=document.querySelectorAll('.toc-i');
+var so=new IntersectionObserver(function(entries){
+  entries.forEach(function(x){
+    if(x.isIntersecting){
+      tItems.forEach(function(t){
+        t.classList.toggle('active',t.dataset.s===x.target.id);
+      });
+    }
+  });
+},{threshold:.25});
+sIds.forEach(function(id){var el=document.getElementById(id);if(el)so.observe(el);});
+function goTo(h){document.querySelector(h).scrollIntoView({behavior:'smooth'});}
+
+// ── CODE COPY ────────────────────────────────────────────────────────────────
+document.querySelectorAll('.cb').forEach(function(b){
+  b.title='Click to copy';
+  b.addEventListener('click',function(){
+    navigator.clipboard.writeText(b.querySelector('code').innerText).catch(function(){});
+    var o=b.getAttribute('data-l');
+    b.setAttribute('data-l',o+' \u2713 COPIED');
+    setTimeout(function(){b.setAttribute('data-l',o);},2000);
+  });
+});
+</script>
+</body>
+</html>

