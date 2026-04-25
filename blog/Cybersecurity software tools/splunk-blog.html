@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mastering Splunk SIEM | Nisarg Chasmawala</title>
+<meta name="description" content="Mastering Splunk SIEM - the definitive guide by Nisarg Chasmawala (Shroff), Offensive Security Engineer.">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--g:#00ff41;--c:#00e5ff;--p:#bf00ff;--r:#ff003c;--o:#ffd700;--bg:#030509;--t1:#d4ffe0;--t2:#7aad82;--t3:#2e4a32;--mono:'Share Tech Mono',monospace;--dsp:'Orbitron',sans-serif;--body:'Rajdhani',sans-serif;--glow:0 0 20px rgba(0,255,65,.4),0 0 60px rgba(0,255,65,.15);--cglow:0 0 20px rgba(0,229,255,.4),0 0 60px rgba(0,229,255,.1);--pglow:0 0 20px rgba(191,0,255,.4),0 0 60px rgba(191,0,255,.1)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;overflow-x:hidden}
+body{background:var(--bg);color:var(--t1);font-family:var(--body);font-size:17px;line-height:1.8;overflow-x:hidden;cursor:none}
+#bg-particle{position:fixed;inset:0;z-index:0;pointer-events:none}
+#bg-hex{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.35}
+#bg-scan{position:fixed;inset:0;z-index:9999;pointer-events:none;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,255,65,.009) 2px,rgba(0,255,65,.009) 4px)}
+#bg-vignette{position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse at 50% 50%,transparent 50%,rgba(3,5,9,.85) 100%)}
+#cur{position:fixed;width:10px;height:10px;border-radius:50%;background:var(--g);box-shadow:var(--glow);pointer-events:none;z-index:99999;transform:translate(-50%,-50%);transition:width .1s,height .1s}
+#cur2{position:fixed;width:30px;height:30px;border-radius:50%;border:1px solid rgba(0,255,65,.5);pointer-events:none;z-index:99998;transform:translate(-50%,-50%)}
+#cur3{position:fixed;width:50px;height:50px;border-radius:50%;border:1px solid rgba(0,255,65,.2);pointer-events:none;z-index:99997;transform:translate(-50%,-50%)}
+#prog{position:fixed;top:0;left:0;height:2px;background:linear-gradient(to right,var(--g),var(--c),var(--p));box-shadow:0 0 10px var(--g);z-index:10000;width:0%}
+.topbar{position:fixed;top:0;left:0;right:0;height:58px;background:rgba(3,5,9,.88);border-bottom:1px solid rgba(0,255,65,.12);backdrop-filter:blur(20px);z-index:1000;display:flex;align-items:center;justify-content:space-between;padding:0 32px}
+.tb-left{display:flex;flex-direction:column;gap:2px}
+.tb-name{font-family:var(--dsp);font-size:13px;font-weight:900;color:var(--t1);letter-spacing:3px}
+.tb-roles{font-family:var(--mono);font-size:9px;overflow:hidden;white-space:nowrap}
+.tb-inner{display:inline-block;color:var(--c);animation:ticker 18s linear infinite}
+@keyframes ticker{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
+.tb-status{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;color:var(--g)}
+.tb-dot{width:7px;height:7px;border-radius:50%;background:var(--g);box-shadow:0 0 10px var(--g);animation:tdot 1.2s ease-in-out infinite}
+@keyframes tdot{0%,100%{opacity:1}50%{opacity:.3}}
+.toc{position:fixed;right:20px;top:50%;transform:translateY(-50%);z-index:200;display:flex;flex-direction:column;gap:9px}
+.toc-i{display:flex;align-items:center;gap:8px;cursor:pointer}
+.toc-d{width:6px;height:6px;border-radius:50%;border:1px solid var(--t3);transition:all .25s;flex-shrink:0}
+.toc-i.active .toc-d,.toc-i:hover .toc-d{background:var(--g);border-color:var(--g);box-shadow:0 0 10px var(--g)}
+.toc-l{font-family:var(--mono);font-size:10px;color:var(--t3);opacity:0;transform:translateX(6px);transition:all .2s;white-space:nowrap}
+.toc-i:hover .toc-l,.toc-i.active .toc-l{opacity:1;transform:none;color:var(--g)}
+@media(max-width:1000px){.toc{display:none}}
+.wrap{position:relative;z-index:10;max-width:980px;margin:0 auto;padding:0 28px}
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:100px 0 60px;position:relative}
+.hero-canvas-wrap{position:absolute;right:-60px;top:50%;transform:translateY(-52%);width:420px;height:420px;pointer-events:none}
+#hero-geo{width:100%;height:100%}
+.hero-content{max-width:520px;position:relative;z-index:2}
+.hero-tag{font-family:var(--mono);font-size:11px;letter-spacing:4px;color:var(--c);text-transform:uppercase;margin-bottom:18px;opacity:0;animation:fup .6s ease forwards .3s;display:flex;align-items:center;gap:12px}
+.hero-tag::before{content:'';width:40px;height:1px;background:linear-gradient(to right,transparent,var(--c))}
+.hero-tag::after{content:'';flex:1;max-width:100px;height:1px;background:linear-gradient(to right,var(--c),transparent)}
+.hero-title{font-family:var(--dsp);font-size:clamp(18px,3.5vw,42px);font-weight:900;line-height:1.0;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;opacity:0;animation:fup .7s ease forwards .5s}
+.ht-line1{display:block;color:var(--g);text-shadow:0 0 40px rgba(0,255,65,.6)}
+.ht-sub{display:block;font-size:.43em;letter-spacing:5px;color:rgba(200,255,220,.5);font-weight:400;margin-top:10px}
+.gw{position:relative;display:inline-block}
+.gw::before,.gw::after{content:attr(data-t);position:absolute;top:0;left:0;width:100%;font-family:var(--dsp);font-weight:900;font-size:inherit;letter-spacing:inherit;text-transform:uppercase}
+.gw::before{color:var(--c);animation:ga 5s infinite;clip-path:polygon(0 0,100% 0,100% 33%,0 33%)}
+.gw::after{color:var(--r);animation:gb 5s infinite;clip-path:polygon(0 66%,100% 66%,100% 100%,0 100%)}
+@keyframes ga{0%,85%,100%{transform:none;opacity:0}87%{transform:translate(-5px,2px);opacity:.9}93%{transform:none;opacity:0}}
+@keyframes gb{0%,87%,100%{transform:none;opacity:0}89%{transform:translate(5px,3px);opacity:.8}95%{transform:none;opacity:0}}
+.hero-desc{font-size:17px;font-weight:300;color:var(--t2);max-width:560px;line-height:1.75;margin-bottom:36px;opacity:0;animation:fup .8s ease forwards .8s;margin-top:20px}
+.hero-meta{display:flex;gap:24px;flex-wrap:wrap;opacity:0;animation:fup .8s ease forwards 1s}
+.m-item{display:flex;flex-direction:column;gap:3px}
+.m-lbl{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--t3);text-transform:uppercase}
+.m-val{font-family:var(--mono);font-size:12px;color:var(--c)}
+.hero-scroll-hint{position:absolute;bottom:24px;left:0;display:flex;align-items:center;gap:12px;opacity:0;animation:fin 1s ease forwards 1.8s}
+.hs-line{width:60px;height:1px;background:linear-gradient(to right,var(--g),transparent)}
+.hs-txt{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--t3)}
+.hs-pulse{width:6px;height:6px;border-radius:50%;background:var(--g);box-shadow:0 0 8px var(--g);animation:tdot 1.5s ease-in-out infinite}
+.sec{margin-bottom:100px}
+.sec-hd{display:flex;align-items:center;gap:14px;margin-bottom:40px}
+.sec-n{font-family:var(--mono);font-size:10px;color:var(--p);letter-spacing:2px;min-width:44px}
+.sec-ln{flex:1;height:1px;background:linear-gradient(to right,rgba(0,229,255,.35),transparent)}
+.sec-t{font-family:var(--dsp);font-size:clamp(14px,2.4vw,21px);font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--c);text-shadow:var(--cglow)}
+.tw-cursor{display:inline-block;width:2px;height:1em;background:var(--c);margin-left:4px;animation:blink 1s step-end infinite;vertical-align:middle}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.sec-ai .sec-t{color:#bf00ff;text-shadow:var(--pglow)}
+.sec-ai .sec-n{color:var(--c)}
+.sec-ai .sec-ln{background:linear-gradient(to right,rgba(191,0,255,.35),transparent)}
+.sec-ai .tw-cursor{background:#bf00ff}
+.panel{background:rgba(0,255,65,.025);border:1px solid rgba(0,255,65,.12);border-radius:4px;padding:32px;margin-bottom:22px;position:relative;overflow:hidden;transition:border-color .3s,box-shadow .3s,transform .3s}
+.panel::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:linear-gradient(to bottom,var(--g),transparent);opacity:0;transition:opacity .3s}
+.panel:hover{border-color:rgba(0,229,255,.4);box-shadow:0 0 50px rgba(0,229,255,.07),0 20px 60px rgba(0,0,0,.3);transform:translateY(-3px)}
+.panel:hover::before{opacity:1}
+.panel p{color:var(--t2);margin-bottom:12px}
+.panel p:last-child{margin-bottom:0}
+.panel-t{font-family:var(--dsp);font-size:12px;font-weight:700;letter-spacing:3px;color:var(--g);text-transform:uppercase;margin-bottom:18px;display:flex;align-items:center;gap:12px}
+.panel-t::after{content:'';flex:1;height:1px;background:linear-gradient(to right,rgba(0,255,65,.2),transparent)}
+.panel-ai{background:rgba(191,0,255,.03);border-color:rgba(191,0,255,.18)}
+.panel-ai:hover{border-color:rgba(191,0,255,.45)}
+.panel-ai .panel-t{color:#bf00ff}
+.panel-ai .panel-t::after{background:linear-gradient(to right,rgba(191,0,255,.2),transparent)}
+.panel-ai::before{background:linear-gradient(to bottom,#bf00ff,transparent)}
+.ai-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px;margin:20px 0}
+.ai-card{background:rgba(191,0,255,.04);border:1px solid rgba(191,0,255,.18);border-radius:4px;padding:22px;position:relative;overflow:hidden;transition:all .3s}
+.ai-card::after{content:'';position:absolute;top:0;right:0;width:0;height:0;border-top:26px solid rgba(191,0,255,.25);border-left:26px solid transparent}
+.ai-card:hover{border-color:rgba(191,0,255,.5);box-shadow:var(--pglow),0 16px 40px rgba(0,0,0,.25);transform:translateY(-3px)}
+.ai-ico{font-size:24px;margin-bottom:10px;display:block}
+.ai-name{font-family:var(--dsp);font-size:11px;font-weight:700;letter-spacing:2px;color:#bf00ff;text-transform:uppercase;margin-bottom:10px}
+.ai-desc{font-size:14px;color:var(--t2);line-height:1.65;font-weight:300}
+.alert{border-radius:4px;padding:16px 20px;margin:20px 0;display:flex;gap:14px;align-items:flex-start}
+.al-w{background:rgba(255,215,0,.04);border:1px solid rgba(255,215,0,.18);border-left:3px solid var(--o)}
+.al-p{background:rgba(191,0,255,.04);border:1px solid rgba(191,0,255,.18);border-left:3px solid #bf00ff}
+.al-i{background:rgba(0,229,255,.04);border:1px solid rgba(0,229,255,.14);border-left:3px solid var(--c)}
+.al-ic{font-family:var(--mono);font-size:13px;flex-shrink:0;margin-top:2px}
+.al-w .al-ic{color:var(--o)}.al-p .al-ic{color:#bf00ff}.al-i .al-ic{color:var(--c)}
+.al-tx{font-size:14px;color:var(--t2);line-height:1.6}
+.ptbl{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12px;margin:16px 0}
+.ptbl th{text-align:left;padding:11px 14px;color:var(--c);border-bottom:1px solid rgba(0,229,255,.3);letter-spacing:2px;font-size:10px;text-transform:uppercase}
+.ptbl td{padding:10px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05);vertical-align:top}
+.ptbl tr:hover td{background:rgba(0,255,65,.02)}
+.ptbl td:first-child{color:var(--g);font-weight:700}
+.cb{background:rgba(0,0,0,.7);border:1px solid rgba(0,255,65,.1);border-left:3px solid var(--g);border-radius:0 4px 4px 0;padding:22px 26px;margin:16px 0;position:relative;overflow-x:auto;cursor:pointer;transition:all .3s}
+.cb::before{content:attr(data-l);position:absolute;top:0;right:0;font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--g);background:rgba(0,255,65,.07);padding:3px 12px;border-bottom-left-radius:4px;text-transform:uppercase}
+.cb:hover{border-color:rgba(0,255,65,.35)}
+.cb.cb-ai{border-left-color:#bf00ff}.cb.cb-ai::before{color:#bf00ff;background:rgba(191,0,255,.07)}
+.cb code{font-family:var(--mono);font-size:13px;color:var(--g);white-space:pre;display:block;line-height:1.9}
+.steps{display:flex;flex-direction:column;gap:14px;margin:20px 0}
+.step{display:flex;gap:16px;align-items:flex-start;background:rgba(0,255,65,.02);border:1px solid rgba(0,255,65,.1);border-radius:4px;padding:18px;transition:all .3s}
+.step:hover{border-color:rgba(0,229,255,.3);background:rgba(0,229,255,.03)}
+.step-num{font-family:var(--dsp);font-size:18px;font-weight:900;color:var(--g);min-width:32px;text-shadow:var(--glow)}
+.step-body{flex:1}
+.step-title{font-family:var(--mono);font-size:12px;color:var(--c);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;font-weight:700}
+.step-desc{font-size:14px;color:var(--t2);line-height:1.6}
+.step-note{font-family:var(--mono);font-size:11px;color:var(--o);margin-top:6px;background:rgba(255,215,0,.04);padding:6px 10px;border-radius:2px;border-left:2px solid var(--o)}
+.gui-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin:20px 0}
+.gui-card{background:rgba(0,255,65,.025);border:1px solid rgba(0,255,65,.12);border-radius:4px;padding:20px;transition:all .3s;position:relative;overflow:hidden}
+.gui-card::after{content:'';position:absolute;top:0;right:0;width:0;height:0;border-top:22px solid rgba(0,229,255,.2);border-left:22px solid transparent}
+.gui-card:hover{border-color:rgba(0,229,255,.4);transform:translateY(-3px);box-shadow:var(--cglow)}
+.gui-card-title{font-family:var(--mono);font-size:12px;color:var(--c);font-weight:700;letter-spacing:1px;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.gui-card-ico{font-size:16px}
+.gui-card-desc{font-size:13px;color:var(--t2);line-height:1.55}
+.spl-card{background:rgba(0,0,0,.5);border:1px solid rgba(0,229,255,.15);border-radius:4px;padding:18px;margin-bottom:14px}
+.spl-label{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--o);text-transform:uppercase;margin-bottom:8px;display:block}
+.spl-query{font-family:var(--mono);font-size:12px;color:var(--g);background:rgba(0,255,65,.05);border:1px solid rgba(0,255,65,.15);border-radius:3px;padding:10px 14px;display:block;margin-bottom:8px;line-height:1.7}
+.spl-desc{font-size:13px;color:var(--t2);line-height:1.55}
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;margin:20px 0}
+.tc{background:rgba(0,229,255,.03);border:1px solid rgba(0,229,255,.1);border-radius:4px;padding:18px;transition:all .25s;position:relative;overflow:hidden}
+.tc::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(to right,var(--c),transparent);transform:scaleX(0);transform-origin:left;transition:transform .3s}
+.tc:hover{border-color:rgba(0,229,255,.4);background:rgba(0,229,255,.06);box-shadow:var(--cglow);transform:translateY(-3px)}
+.tc:hover::after{transform:scaleX(1)}
+.tcname{font-family:var(--mono);font-size:12px;color:var(--c);margin-bottom:4px}
+.tctag{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--o);text-transform:uppercase;margin-bottom:6px;display:block}
+.tcdesc{font-size:12px;color:var(--t3);line-height:1.45}
+.cta{background:linear-gradient(135deg,rgba(0,255,65,.04),rgba(191,0,255,.04));border:1px solid rgba(0,229,255,.3);border-radius:4px;padding:60px 50px;text-align:center;position:relative;overflow:hidden;margin-top:80px}
+.cta::before{content:'SPLUNK';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:var(--dsp);font-size:130px;font-weight:900;color:rgba(0,255,65,.018);pointer-events:none;letter-spacing:6px}
+.cta-t{font-family:var(--dsp);font-size:20px;font-weight:700;letter-spacing:4px;color:var(--g);text-transform:uppercase;margin-bottom:16px;text-shadow:var(--glow)}
+.cta-p{color:var(--t2);font-size:16px;max-width:540px;margin:0 auto 32px;line-height:1.75}
+.cta-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+.btn{font-family:var(--mono);font-size:11px;letter-spacing:3px;text-transform:uppercase;padding:13px 30px;border-radius:2px;text-decoration:none;display:inline-block;transition:all .25s}
+.btn-p{border:1px solid var(--g);color:var(--g);background:rgba(0,255,65,.06)}
+.btn-p:hover{background:var(--g);color:var(--bg);box-shadow:var(--glow)}
+.btn-s{border:1px solid var(--c);color:var(--c);background:rgba(0,229,255,.05)}
+.btn-s:hover{background:var(--c);color:var(--bg);box-shadow:var(--cglow)}
+.footer{border-top:1px solid rgba(0,255,65,.1);padding:32px 0;margin-top:60px;display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:20px}
+.f-l{font-family:var(--mono);font-size:11px;color:var(--t3);letter-spacing:1.5px;line-height:2}
+.f-alias{color:var(--g);font-size:10px;letter-spacing:3px;text-shadow:0 0 8px var(--g)}
+.f-r{font-family:var(--mono);font-size:11px;color:var(--t3);text-align:right;line-height:2}
+.f-r a{color:var(--g);text-decoration:none}
+.f-r a:hover{text-shadow:var(--glow)}
+.div{height:1px;background:linear-gradient(to right,transparent,rgba(0,255,65,.15),transparent);margin:60px 0;position:relative}
+.div::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:6px;height:6px;border-radius:50%;background:var(--g);box-shadow:0 0 12px var(--g)}
+.div-ai{background:linear-gradient(to right,transparent,rgba(191,0,255,.22),transparent)}
+.div-ai::after{background:#bf00ff;box-shadow:0 0 12px #bf00ff}
+@keyframes fup{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+@keyframes fin{from{opacity:0}to{opacity:1}}
+.rv{opacity:0;transform:translateY(30px);transition:opacity .8s,transform .8s}
+.rv-l{opacity:0;transform:translateX(-30px);transition:opacity .8s,transform .8s}
+.rv.on,.rv-l.on{opacity:1;transform:none}
+@media(max-width:700px){.ai-grid,.tgrid,.gui-grid{grid-template-columns:1fr}.hero-canvas-wrap{display:none}.cta{padding:36px 20px}}
+</style>
+</head>
+<body>
+<canvas id="bg-particle"></canvas>
+<canvas id="bg-hex"></canvas>
+<div id="bg-vignette"></div>
+<div id="bg-scan"></div>
+<div id="cur"></div><div id="cur2"></div><div id="cur3"></div>
+<div id="prog"></div>
+<nav class="topbar">
+  <div class="tb-left">
+    <span class="tb-name">NISARG CHASMAWALA (SHROFF)</span>
+    <div class="tb-roles"><span class="tb-inner">Penetration Tester &nbsp;|&nbsp; Vulnerability Assessment &nbsp;|&nbsp; Cybersecurity Researcher &nbsp;|&nbsp; Offensive Security Engineer &nbsp;|&nbsp; Digital Forensics &nbsp;|&nbsp; Penetration Tester &nbsp;|&nbsp; Vulnerability Assessment &nbsp;|&nbsp; Cybersecurity Researcher</span></div>
+  </div>
+  <div class="tb-status"><span class="tb-dot"></span>SYS ONLINE</div>
+</nav>
+<nav class="toc" id="toc">
+  <div class="toc-i active" onclick="goTo('#hero')" data-s="hero"><div class="toc-d"></div><span class="toc-l">INTRO</span></div>
+  <div class="toc-i" onclick="goTo('#setup')" data-s="setup"><div class="toc-d"></div><span class="toc-l">SETUP</span></div>
+  <div class="toc-i" onclick="goTo('#ingestion')" data-s="ingestion"><div class="toc-d"></div><span class="toc-l">DATA INGESTION</span></div>
+  <div class="toc-i" onclick="goTo('#spl')" data-s="spl"><div class="toc-d"></div><span class="toc-l">SPL SEARCH</span></div>
+  <div class="toc-i" onclick="goTo('#dashboards')" data-s="dashboards"><div class="toc-d"></div><span class="toc-l">DASHBOARDS</span></div>
+  <div class="toc-i" onclick="goTo('#alerts')" data-s="alerts"><div class="toc-d"></div><span class="toc-l">ALERTS</span></div>
+  <div class="toc-i" onclick="goTo('#hunting')" data-s="hunting"><div class="toc-d"></div><span class="toc-l">THREAT HUNTING</span></div>
+  <div class="toc-i" onclick="goTo('#soar')" data-s="soar"><div class="toc-d"></div><span class="toc-l">SOAR</span></div>
+  <div class="toc-i" onclick="goTo('#ai')" data-s="ai"><div class="toc-d"></div><span class="toc-l">AI INTEGRATION</span></div>
+</nav>
+<div class="wrap">
+
+<section class="hero" id="hero">
+  <div class="hero-canvas-wrap"><canvas id="hero-geo"></canvas></div>
+  <div class="hero-content">
+  <div class="hero-tag">NISARG CHASMAWALA &nbsp;//&nbsp; ALIAS: HEAVEN</div>
+  <h1 class="hero-title">
+    <div class="gw" data-t="SPLUNK SIEM"><span class="ht-line1">SPLUNK SIEM</span></div>
+    <span class="ht-sub">DATA INGESTION &middot; SPL &middot; THREAT HUNTING &middot; AI INTEGRATION</span>
+  </h1>
+  <p class="hero-desc">The definitive Splunk SIEM field guide for security professionals. From installation and data ingestion to Search Processing Language mastery, dashboard and alert creation, threat hunting workflows, SOAR automation, and full AI-powered security analytics. Splunk is the world's leading SIEM platform -- the central nervous system of every mature security operations centre.</p>
+  <div class="hero-meta">
+    <div class="m-item"><span class="m-lbl">Author</span><span class="m-val">Nisarg Chasmawala (Shroff)</span></div>
+    <div class="m-item"><span class="m-lbl">Alias</span><span class="m-val">HEAVEN</span></div>
+    <div class="m-item"><span class="m-lbl">Platform</span><span class="m-val">Linux &middot; Windows &middot; Cloud</span></div>
+    <div class="m-item"><span class="m-lbl">Category</span><span class="m-val">SIEM &middot; SOC &middot; AI</span></div>
+  </div>
+  </div>
+  <div class="hero-scroll-hint"><div class="hs-line"></div><span class="hs-txt">SCROLL TO BEGIN</span><div class="hs-pulse"></div></div>
+</section>
+<div class="div"></div>
+
+<!-- 01 SETUP -->
+<section class="sec rv" id="setup">
+  <div class="sec-hd"><span class="sec-n">01 //</span><h2 class="sec-t">Installation &amp; Environment Setup<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel rv-l">
+    <p><strong style="color:var(--t1)">Splunk</strong> is the most widely deployed Security Information and Event Management (SIEM) platform, used by over 90 of the Fortune 100. It collects, indexes, and correlates machine data from any source -- network devices, endpoints, cloud infrastructure, applications, and security tools -- making it searchable and actionable in real time. The <strong style="color:var(--c)">Splunk Enterprise Security (ES)</strong> premium app transforms Splunk into a full SIEM with pre-built detections, risk-based alerting, and incident management workflows.</p>
+    <p>Splunk operates on a distributed architecture: <strong style="color:var(--c)">Forwarders</strong> collect and ship data from sources, <strong style="color:var(--c)">Indexers</strong> store and index the data, and <strong style="color:var(--c)">Search Heads</strong> provide the GUI and execute searches. For labs and smaller deployments, a single standalone instance performs all three roles. <strong style="color:var(--c)">Splunk Cloud</strong> provides fully managed deployment.</p>
+  </div>
+  <div class="steps rv">
+    <div class="step"><div class="step-num">01</div><div class="step-body">
+      <div class="step-title">Download and Install</div>
+      <div class="step-desc">Download from <strong style="color:var(--c)">splunk.com/en_us/download/splunk-enterprise.html</strong>. Register for a free 60-day Enterprise trial or use the permanent <strong style="color:var(--g)">Splunk Free</strong> licence (500 MB/day indexing). On Linux: install the .deb or .rpm package and start with <code style="font-family:var(--mono);color:var(--c)">sudo /opt/splunk/bin/splunk start --accept-license</code>. On Windows: run the MSI installer -- Splunk starts automatically as a service.</div>
+      <div class="step-note">Enable boot-start on Linux: sudo /opt/splunk/bin/splunk enable boot-start</div>
+    </div></div>
+    <div class="step"><div class="step-num">02</div><div class="step-body">
+      <div class="step-title">Access the Splunk Web Interface</div>
+      <div class="step-desc">Navigate to <strong style="color:var(--c)">http://localhost:8000</strong> in your browser. Log in with the admin credentials you set during installation. The Splunk Home screen shows the Search &amp; Reporting app, data ingestion status, and installed apps. The top navigation provides access to Search, Apps, Settings, and the Activity monitor.</div>
+    </div></div>
+    <div class="step"><div class="step-num">03</div><div class="step-body">
+      <div class="step-title">Install Splunk Enterprise Security App</div>
+      <div class="step-desc">Navigate to <strong style="color:var(--c)">Apps &rarr; Find More Apps</strong> and search for <strong>"Splunk Enterprise Security"</strong>. Install the ES app -- this transforms Splunk into a full SIEM with pre-built MITRE ATT&amp;CK dashboards, notable events, risk-based alerting, and incident review workflows. For lab use, install the free <strong style="color:var(--c)">Splunk Security Essentials</strong> app which provides 250+ security use cases with guided SPL.</div>
+    </div></div>
+    <div class="step"><div class="step-num">04</div><div class="step-body">
+      <div class="step-title">Configure Roles and Users</div>
+      <div class="step-desc">Go to <strong style="color:var(--c)">Settings &rarr; Users and Authentication &rarr; Users</strong>. Create role-based accounts: <strong>SOC Analyst</strong> (search and alert access, no admin), <strong>Threat Hunter</strong> (full search, index access), <strong>SOC Manager</strong> (dashboards, reporting, no config). Splunk's RBAC controls which indexes, apps, and capabilities each user can access -- critical in production environments.</div>
+      <div class="step-note">Use LDAP/SAML integration in production: Settings &rarr; Users and Authentication &rarr; Authentication Methods</div>
+    </div></div>
+  </div>
+  <div class="panel rv">
+    <div class="panel-t">Splunk Deployment Tiers</div>
+    <table class="ptbl">
+      <thead><tr><th>Tier</th><th>Daily Ingest</th><th>Best For</th><th>Key Difference</th></tr></thead>
+      <tbody>
+        <tr><td>Splunk Free</td><td>500 MB</td><td>Home lab, learning</td><td>No auth, no distributed deployment, no alerts</td></tr>
+        <tr><td>Splunk Enterprise Trial</td><td>Unlimited (60 days)</td><td>PoC, evaluation</td><td>Full features, 60-day licence</td></tr>
+        <tr><td>Splunk Enterprise</td><td>Licensed volume</td><td>SMB SOC</td><td>Full SIEM features, on-prem control</td></tr>
+        <tr><td>Splunk Cloud</td><td>Licensed volume</td><td>Enterprise SOC</td><td>Fully managed, auto-scaling, no infra</td></tr>
+        <tr><td>Splunk ES</td><td>Licensed volume</td><td>Mature SOC</td><td>Risk-based alerting, MITRE dashboards, IR</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+<div class="div"></div>
+
+<!-- 02 INGESTION -->
+<section class="sec rv" id="ingestion">
+  <div class="sec-hd"><span class="sec-n">02 //</span><h2 class="sec-t">Data Ingestion &amp; Source Configuration<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel rv-l">
+    <p>Data ingestion quality is the foundation of SIEM effectiveness -- Splunk can only detect what it can see. The ingestion architecture centres on <strong style="color:var(--c)">Universal Forwarders</strong> (lightweight agents deployed on every endpoint and server), which send data to Splunk indexers. Splunk also ingests directly from APIs, syslog, S3 buckets, Kafka streams, and cloud service logs. Proper <strong style="color:var(--c)">source typing</strong> and <strong style="color:var(--c)">index assignment</strong> at ingestion time is critical -- these decisions determine how data is parsed, retained, and searched.</p>
+  </div>
+  <div class="gui-grid rv">
+    <div class="gui-card">
+      <div class="gui-card-title"><span class="gui-card-ico">&#128220;</span> Upload Files (Quick Start)</div>
+      <div class="gui-card-desc">Navigate to <strong style="color:var(--c)">Settings &rarr; Add Data &rarr; Upload</strong>. Drag and drop log files (CSV, JSON, syslog, Windows Event Logs). Splunk auto-detects the source type and shows a preview. Use for one-time ingestion of log samples, CTF challenge PCAPs, or evidence files during incident investigation. This is the fastest way to get data into Splunk for analysis.</div>
+    </div>
+    <div class="gui-card">
+      <div class="gui-card-title"><span class="gui-card-ico">&#128279;</span> Monitor Files and Directories</div>
+      <div class="gui-card-desc">Navigate to <strong style="color:var(--c)">Settings &rarr; Add Data &rarr; Monitor</strong>. Select a file or directory path. Splunk continuously monitors and ingests new log entries as they appear -- ideal for monitoring <code style="font-family:var(--mono);color:var(--c)">/var/log/</code> directories, application log folders, or Windows Event Log exports on the Splunk server itself.</div>
+    </div>
+    <div class="gui-card">
+      <div class="gui-card-title"><span class="gui-card-ico">&#128240;</span> Universal Forwarder (Endpoints)</div>
+      <div class="gui-card-desc">Install the lightweight <strong style="color:var(--c)">Splunk Universal Forwarder</strong> on every endpoint, server, and network device you want to monitor. Download from splunk.com. Configure <code style="font-family:var(--mono);color:var(--c)">inputs.conf</code> to specify what to monitor (event logs, file paths, network ports) and <code style="font-family:var(--mono);color:var(--c)">outputs.conf</code> to point to your indexer. Forwarders use minimal CPU and memory.</div>
+    </div>
+    <div class="gui-card">
+      <div class="gui-card-title"><span class="gui-card-ico">&#127760;</span> Network / Syslog Input</div>
+      <div class="gui-card-desc">Navigate to <strong style="color:var(--c)">Settings &rarr; Add Data &rarr; Network</strong>. Configure Splunk to listen on a UDP or TCP port for syslog data. Point your firewalls, routers, switches, and Linux servers to send syslog to Splunk's IP on the configured port. Immediately starts receiving network device logs without installing forwarders.</div>
+    </div>
+    <div class="gui-card">
+      <div class="gui-card-title"><span class="gui-card-ico">&#9729;&#65039;</span> Cloud Service Inputs</div>
+      <div class="gui-card-desc">Install add-ons from Splunkbase: <strong style="color:var(--c)">Splunk Add-on for AWS</strong> (CloudTrail, GuardDuty, VPC Flow Logs), <strong style="color:var(--c)">Microsoft Azure Add-on</strong> (Azure AD, Sentinel alerts), <strong style="color:var(--c)">Google Cloud Add-on</strong>. Each add-on provides pre-built source types, field extractions, and CIM-compliant data models for cloud telemetry without manual configuration.</div>
+    </div>
+    <div class="gui-card">
+      <div class="gui-card-title"><span class="gui-card-ico">&#128203;</span> Source Types and Indexes</div>
+      <div class="gui-card-desc">Every data source gets a <strong style="color:var(--c)">sourcetype</strong> (tells Splunk how to parse it: <code style="font-family:var(--mono);color:var(--c)">WinEventLog:Security</code>, <code style="font-family:var(--mono);color:var(--c)">syslog</code>, <code style="font-family:var(--mono);color:var(--c)">access_combined</code>) and an <strong style="color:var(--c)">index</strong> (determines retention and RBAC). Organise indexes by data type: <code style="font-family:var(--mono);color:var(--c)">index=windows</code>, <code style="font-family:var(--mono);color:var(--c)">index=network</code>, <code style="font-family:var(--mono);color:var(--c)">index=endpoint</code>. Proper index separation dramatically improves search performance and cost management.</div>
+    </div>
+  </div>
+</section>
+<div class="div"></div>
+
+<!-- 03 SPL -->
+<section class="sec rv" id="spl">
+  <div class="sec-hd"><span class="sec-n">03 //</span><h2 class="sec-t">Search Processing Language (SPL)<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel rv-l">
+    <p><strong style="color:var(--c)">SPL (Search Processing Language)</strong> is Splunk's query language -- the single most important skill in the entire platform. Every Splunk capability -- dashboards, alerts, threat hunting, reports, and ML -- is powered by SPL searches. SPL uses a pipe-delimited command structure where data flows from left to right: search generates events, then each pipe command transforms them. Mastering SPL is what separates a Splunk user from a Splunk analyst.</p>
+  </div>
+  <div class="spl-card rv">
+    <span class="spl-label">Basic Search Syntax</span>
+    <span class="spl-query">index=windows EventCode=4625 | stats count by src_ip, user | sort -count</span>
+    <div class="spl-desc">Count failed Windows logon attempts (Event 4625) grouped by source IP and username, sorted by frequency descending. The pattern: <strong style="color:var(--c)">index + filter</strong> selects events, <strong style="color:var(--c)">| stats count by</strong> aggregates, <strong style="color:var(--c)">| sort</strong> orders results. This single search surfaces brute force attempts across your entire Windows fleet.</div>
+  </div>
+  <div class="spl-card rv">
+    <span class="spl-label">Time Range and Field Filtering</span>
+    <span class="spl-query">index=network earliest=-24h latest=now src_ip=192.168.1.0/24 dest_port=445 | table _time, src_ip, dest_ip, dest_port, action</span>
+    <div class="spl-desc">Restrict search to the last 24 hours, filter to a subnet and a specific destination port (445 = SMB), then present results as a clean table. <code style="font-family:var(--mono);color:var(--c)">earliest</code> and <code style="font-family:var(--mono);color:var(--c)">latest</code> control time range. <code style="font-family:var(--mono);color:var(--c)">| table</code> selects specific fields to display. Essential for investigating lateral movement via SMB.</div>
+  </div>
+  <div class="spl-card rv">
+    <span class="spl-label">Aggregation and Rare Commands</span>
+    <span class="spl-query">index=windows EventCode=4688 | rare limit=20 CommandLine by host</span>
+    <div class="spl-desc">Find the 20 rarest process command lines per host -- the <code style="font-family:var(--mono);color:var(--c)">rare</code> command surfaces anomalies by showing what almost never happens. Rare processes on endpoints are high-signal indicators of malware execution, LOLBin abuse, or attacker tooling. Complement with <code style="font-family:var(--mono);color:var(--c)">top</code> to understand normal vs abnormal baseline.</div>
+  </div>
+  <div class="spl-card rv">
+    <span class="spl-label">Transaction Command -- Session Reconstruction</span>
+    <span class="spl-query">index=web_logs | transaction sessionid maxspan=30m | where eventcount > 50 | table sessionid, duration, eventcount, clientip</span>
+    <div class="spl-desc">Group events by session ID into logical transactions with a 30-minute max span. Filter for sessions with more than 50 events. The <code style="font-family:var(--mono);color:var(--c)">transaction</code> command reconstructs multi-event user sessions -- use to identify account takeover patterns, credential stuffing, and automated scraping behaviour from high-volume sessions.</div>
+  </div>
+  <div class="spl-card rv">
+    <span class="spl-label">Subsearch -- Chained Intelligence</span>
+    <span class="spl-query">index=network [search index=threat_intel | fields src_ip | rename src_ip as dest_ip] | stats count by dest_ip, dest_port</span>
+    <div class="spl-desc">Inner search (in brackets) queries a threat intelligence index for known-bad IPs, passes them as a filter to the outer search. This pattern cross-references live traffic against threat intel lookups -- the foundation of automated IOC-based detection in Splunk. The result shows connections to known-malicious IPs from your network.</div>
+  </div>
+  <div class="spl-card rv">
+    <span class="spl-label">SPL for DNS Tunnelling Detection</span>
+    <span class="spl-query">index=dns | eval qname_len=len(query) | where qname_len > 50 | stats count, avg(qname_len) as avg_len by src_ip | where count > 100 | sort -count</span>
+    <div class="spl-desc">Calculate DNS query name length, filter for unusually long names (DNS tunnelling encodes data in subdomains), then identify hosts making more than 100 such requests. DNS tunnelling produces queries far longer than normal (30+ characters vs typical 15-20). This search surfaces active DNS exfiltration attempts with statistical confidence.</div>
+  </div>
+</section>
+<div class="div"></div>
+
+<!-- 04 DASHBOARDS -->
+<section class="sec rv" id="dashboards">
+  <div class="sec-hd"><span class="sec-n">04 //</span><h2 class="sec-t">Dashboards &amp; Visualisations<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel rv-l">
+    <p>Splunk dashboards transform SPL search results into persistent, real-time visual intelligence that SOC analysts can monitor without running manual searches. A well-designed security dashboard surfaces the most critical information at a glance -- alert counts by severity, authentication anomalies, top threat actors, network traffic baselines, and compliance status. Dashboards are built in the <strong style="color:var(--c)">Dashboard Studio</strong> (modern, drag-and-drop) or <strong style="color:var(--c)">Classic Dashboard Editor</strong> (XML-based, more customisable).</p>
+  </div>
+  <div class="steps rv">
+    <div class="step"><div class="step-num">01</div><div class="step-body">
+      <div class="step-title">Create a New Dashboard</div>
+      <div class="step-desc">Navigate to <strong style="color:var(--c)">Search &amp; Reporting &rarr; Dashboards &rarr; Create New Dashboard</strong>. Give it a descriptive title (e.g. "SOC Overview -- Authentication Events"). Choose <strong>Dashboard Studio</strong> for modern layout with absolute and grid modes, or <strong>Classic</strong> for XML control. Set the dashboard as <strong>Shared in App</strong> so your whole SOC team can access it.</div>
+    </div></div>
+    <div class="step"><div class="step-num">02</div><div class="step-body">
+      <div class="step-title">Add Search-Powered Panels</div>
+      <div class="step-desc">Click <strong style="color:var(--c)">Add Panel</strong> and choose a visualisation type: <strong>Single Value</strong> (KPIs -- total alerts, critical event count), <strong>Column Chart</strong> (top 10 talkers, failed logins by host), <strong>Line Chart</strong> (event volume over time, traffic baseline), <strong>Map</strong> (geographic threat origin), or <strong>Table</strong> (detailed event list). Each panel runs its own SPL query on a configurable refresh interval.</div>
+    </div></div>
+    <div class="step"><div class="step-num">03</div><div class="step-body">
+      <div class="step-title">Add Time Range Picker and Filters</div>
+      <div class="step-desc">In <strong style="color:var(--c)">Edit &rarr; Add Input &rarr; Time</strong>, add a time range picker that controls all panels simultaneously. Add <strong>Dropdown</strong> or <strong>Text</strong> inputs as filter tokens (e.g. <code style="font-family:var(--mono);color:var(--c)">$host$</code>, <code style="font-family:var(--mono);color:var(--c)">$index$</code>) that analysts can use to drill into specific systems without editing SPL. Tokens make dashboards interactive investigation tools rather than static reports.</div>
+      <div class="step-note">Set auto-refresh: Edit &rarr; Settings &rarr; Refresh &rarr; every 60 seconds for live SOC dashboards.</div>
+    </div></div>
+    <div class="step"><div class="step-num">04</div><div class="step-body">
+      <div class="step-title">Essential SOC Dashboard Panels</div>
+      <div class="step-desc">Every SOC overview dashboard should include: <strong style="color:var(--c)">Total Alerts (24h)</strong> single value KPI, <strong style="color:var(--c)">Critical/High/Medium Alert Counts</strong> by severity, <strong style="color:var(--c)">Authentication Failures Over Time</strong> line chart, <strong style="color:var(--c)">Top Source IPs</strong> table, <strong style="color:var(--c)">Network Traffic Volume</strong> by protocol, <strong style="color:var(--c)">MITRE ATT&amp;CK Technique Coverage</strong> heatmap (from ES app), and <strong style="color:var(--c)">Open Incidents</strong> count. These seven panels give a full situational awareness picture at a glance.</div>
+    </div></div>
+  </div>
+</section>
+<div class="div"></div>
+
+<!-- 05 ALERTS -->
+<section class="sec rv" id="alerts">
+  <div class="sec-hd"><span class="sec-n">05 //</span><h2 class="sec-t">Alerts &amp; Correlation Rules<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel rv-l">
+    <p>Splunk alerts automate detection -- they run SPL searches on a schedule and trigger actions when results meet defined conditions. A well-tuned alert library is the core of a functioning SIEM. Alert quality is defined by <strong style="color:var(--c)">precision</strong> (low false positive rate) and <strong style="color:var(--c)">recall</strong> (missing no true positives). Splunk Enterprise Security extends basic alerting with <strong style="color:var(--c)">Correlation Searches</strong> and <strong style="color:var(--c)">Risk-Based Alerting (RBA)</strong> -- accumulating risk scores across multiple weak signals before generating a single high-confidence notable event.</p>
+  </div>
+  <div class="gui-grid rv">
+    <div class="gui-card">
+      <div class="gui-card-title"><span class="gui-card-ico">&#128226;</span> Creating a Scheduled Alert</div>
+      <div class="gui-card-desc">Run your detection SPL search. Click <strong style="color:var(--c)">Save As &rarr; Alert</strong>. Set: <strong>Schedule</strong> (every 5 min, hourly, daily), <strong>Trigger Condition</strong> (Number of Results &gt; 0, or custom condition), <strong>Throttling</strong> (suppress for N minutes after triggering to prevent alert storms). Throttling is critical -- a noisy alert with no throttle will flood your SOC and get ignored.</div>
+    </div>
+    <div class="gui-card">
+      <div class="gui-card-title"><span class="gui-card-ico">&#9889;</span> Alert Actions</div>
+      <div class="gui-card-desc">Configure what happens when an alert fires: <strong style="color:var(--c)">Send Email</strong> (to SOC distribution list with search results), <strong style="color:var(--c)">Trigger a Webhook</strong> (call PagerDuty, Slack, Teams), <strong style="color:var(--c)">Create a Notable Event</strong> (ES only -- appears in Incident Review), <strong style="color:var(--c)">Run a Script</strong> (custom response automation), or <strong style="color:var(--c)">Add to Risk</strong> (RBA -- contribute to a risk score without alerting yet).</div>
+    </div>
+    <div class="gui-card">
+      <div class="gui-card-title"><span class="gui-card-ico">&#128270;</span> Risk-Based Alerting (ES)</div>
+      <div class="gui-card-desc">Instead of triggering on every weak signal, RBA accumulates <strong style="color:var(--c)">risk scores</strong> on entities (user, host, IP). Low-confidence detections add 20-40 risk points; high-confidence add 80-100. When an entity's risk exceeds a threshold (e.g. 200 points), a single consolidated <strong>Risk Notable</strong> is created. This dramatically reduces alert fatigue while missing nothing -- the highest-value Splunk ES capability.</div>
+    </div>
+    <div class="gui-card">
+      <div class="gui-card-title"><span class="gui-card-ico">&#128300;</span> Incident Review Workflow (ES)</div>
+      <div class="gui-card-desc">Navigate to <strong style="color:var(--c)">Enterprise Security &rarr; Incident Review</strong>. All notable events appear here with status, owner, urgency, and MITRE ATT&amp;CK tags. Analysts: click a notable, review supporting events, run investigation searches, update status (New &rarr; In Progress &rarr; Resolved), document findings, and close. This is the primary SOC analyst workflow -- the triage queue for all Splunk detections.</div>
+    </div>
+    <div class="gui-card">
+      <div class="gui-card-title"><span class="gui-card-ico">&#127919;</span> Correlation Search Examples</div>
+      <div class="gui-card-desc">Key correlation searches every SOC should have: <strong style="color:var(--c)">Brute Force</strong> (5+ failed logins from same IP in 5 min), <strong style="color:var(--c)">Impossible Travel</strong> (same user authenticating from two geographically distant IPs within 1 hour), <strong style="color:var(--c)">Process Injection</strong> (parent/child process anomalies), <strong style="color:var(--c)">DNS Tunnelling</strong> (long query names, high volume), <strong style="color:var(--c)">Data Staging</strong> (large file creation before network transfer).</div>
+    </div>
+    <div class="gui-card">
+      <div class="gui-card-title"><span class="gui-card-ico">&#128202;</span> Alert Tuning and Suppression</div>
+      <div class="gui-card-desc">Reduce false positives without losing detections: use <code style="font-family:var(--mono);color:var(--c)">| lookup whitelist.csv src_ip OUTPUT is_whitelisted | where NOT is_whitelisted=true</code> to exclude known-good IPs. Use <strong style="color:var(--c)">Alert Suppression</strong> to prevent duplicate alerts for the same entity within a window. Review all alerts weekly with false-positive rate tracking -- any alert firing more than 20 times per day without action needs tuning.</div>
+    </div>
+  </div>
+</section>
+<div class="div"></div>
+
+<!-- 06 THREAT HUNTING -->
+<section class="sec rv" id="hunting">
+  <div class="sec-hd"><span class="sec-n">06 //</span><h2 class="sec-t">Threat Hunting with Splunk<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel rv-l">
+    <p>Threat hunting is the proactive search for adversaries who have bypassed your automated detections. While SIEM alerts are reactive (trigger when known-bad patterns occur), threat hunting is hypothesis-driven -- starting with an assumption ("an attacker is staging data before exfiltration") and searching the data to prove or disprove it. Splunk's SPL, combined with the <strong style="color:var(--c)">Splunk Security Essentials</strong> app's MITRE ATT&amp;CK coverage heatmap, provides the ideal environment for structured threat hunting.</p>
+  </div>
+  <div class="spl-card rv">
+    <span class="spl-label">Hunting -- Lateral Movement via WMI (T1021.006)</span>
+    <span class="spl-query">index=windows EventCode=4688 ParentImage="*wmiprvse.exe" | stats count by host, CommandLine | where count < 5 | sort -count</span>
+    <div class="spl-desc">Find rare child processes spawned by the WMI provider host -- a common lateral movement technique. Attackers use WMI to execute commands remotely, which spawns processes under <code style="font-family:var(--mono);color:var(--c)">wmiprvse.exe</code>. Rare command lines (count &lt; 5) are highest priority for investigation. Maps to MITRE ATT&amp;CK T1021.006.</div>
+  </div>
+  <div class="spl-card rv">
+    <span class="spl-label">Hunting -- Credential Dumping Indicators (T1003)</span>
+    <span class="spl-query">index=windows EventCode=10 TargetImage="*lsass.exe" | stats count by SourceImage, host | where count > 1 | sort -count</span>
+    <div class="spl-desc">Sysmon Event ID 10 logs process access to LSASS -- the memory location where Windows stores credentials. Any tool attempting to read LSASS memory (Mimikatz, ProcDump, Task Manager) generates these events. Any SourceImage other than known Windows binaries is a credential dumping indicator requiring immediate investigation.</div>
+  </div>
+  <div class="spl-card rv">
+    <span class="spl-label">Hunting -- Beaconing Detection (C2 Traffic)</span>
+    <span class="spl-query">index=network dest_port!=80 dest_port!=443 | bucket _time span=1h | stats count by _time, src_ip, dest_ip | streamstats avg(count) as avg_count stdev(count) as std_count by src_ip, dest_ip | where abs(count - avg_count) < std_count * 0.5 | stats count as beacon_hours by src_ip, dest_ip | where beacon_hours > 6</span>
+    <div class="spl-desc">Detect C2 beaconing -- connections that occur at highly regular intervals. This search finds src/dest pairs with consistent hourly connection counts (low standard deviation relative to mean) on non-standard ports over 6+ hours. Regular communication at fixed intervals is the hallmark of C2 beacon check-ins.</div>
+  </div>
+  <div class="tgrid rv">
+    <div class="tc"><div class="tcname">MITRE Navigator</div><span class="tctag">ATT&CK Mapping</span><div class="tcdesc">Splunk ES maps all detections to MITRE ATT&CK -- use the coverage heatmap to identify hunting gaps</div></div>
+    <div class="tc"><div class="tcname">Splunk UBA</div><span class="tctag">Behaviour Analytics</span><div class="tcdesc">Machine learning models baseline normal behaviour and surface anomalous users and entities automatically</div></div>
+    <div class="tc"><div class="tcname">Threat Intel</div><span class="tctag">IOC Lookup</span><div class="tcdesc">Load threat feeds into Splunk lookup tables for real-time IOC cross-referencing during hunts</div></div>
+    <div class="tc"><div class="tcname">Timeline</div><span class="tctag">ES Feature</span><div class="tcdesc">Splunk ES Timeline view reconstructs attacker activity across multiple systems in chronological order</div></div>
+  </div>
+</section>
+<div class="div"></div>
+
+<!-- 07 SOAR -->
+<section class="sec rv" id="soar">
+  <div class="sec-hd"><span class="sec-n">07 //</span><h2 class="sec-t">SOAR &amp; Automation with Splunk SOAR<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel rv-l">
+    <p><strong style="color:var(--c)">Splunk SOAR</strong> (Security Orchestration, Automation and Response) -- formerly Phantom -- connects Splunk detections to automated response playbooks that execute across your entire security tool stack. When Splunk ES creates a notable event, SOAR can automatically enrich it (VirusTotal lookup, passive DNS, GeoIP), contain the threat (isolate an endpoint via EDR, block an IP in the firewall), and notify the SOC -- all within seconds of detection, without human intervention. SOAR reduces mean time to respond (MTTR) from hours to seconds.</p>
+  </div>
+  <div class="steps rv">
+    <div class="step"><div class="step-num">01</div><div class="step-body">
+      <div class="step-title">Understanding Playbooks</div>
+      <div class="step-desc">SOAR playbooks are visual, drag-and-drop automation workflows. Each playbook starts with a <strong style="color:var(--c)">trigger</strong> (a notable event from Splunk ES, an alert, or a manual run), flows through a series of <strong style="color:var(--c)">actions</strong> (API calls to security tools), includes <strong style="color:var(--c)">decision blocks</strong> (if VT score &gt; 50, proceed to containment), and ends with <strong style="color:var(--c)">notifications</strong> or <strong style="color:var(--c)">ticket creation</strong>. Navigate to <strong style="color:var(--c)">SOAR &rarr; Playbooks &rarr; Create Playbook</strong>.</div>
+    </div></div>
+    <div class="step"><div class="step-num">02</div><div class="step-body">
+      <div class="step-title">Phishing Response Playbook</div>
+      <div class="step-desc">Build a phishing triage playbook: <strong style="color:var(--c)">Trigger</strong>: Email security alert with attachment. <strong>Step 1</strong>: Extract attachment hash &rarr; VirusTotal lookup. <strong>Decision</strong>: VT score &gt; 5? <strong>Yes</strong>: Block sender domain in email gateway, quarantine similar emails, notify SOC. <strong>No</strong>: Add to watch list, close as benign. <strong>Always</strong>: Create JIRA ticket with all findings, update Splunk notable event status to resolved or escalated.</div>
+      <div class="step-note">Pre-built playbook templates available in Splunk SOAR Community: splunkbase.splunk.com &rarr; search "SOAR playbook"</div>
+    </div></div>
+    <div class="step"><div class="step-num">03</div><div class="step-body">
+      <div class="step-title">Endpoint Isolation Playbook</div>
+      <div class="step-desc">When Splunk detects ransomware indicators: <strong>Step 1</strong>: Get hostname from notable event. <strong>Step 2</strong>: CrowdStrike/Defender API &rarr; isolate endpoint from network. <strong>Step 3</strong>: Active Directory &rarr; disable compromised user account. <strong>Step 4</strong>: Create ServiceNow P1 incident ticket. <strong>Step 5</strong>: Send Slack alert to SOC channel with all context. Total automated response time: under 30 seconds from detection to containment.</div>
+    </div></div>
+    <div class="step"><div class="step-num">04</div><div class="step-body">
+      <div class="step-title">App Connectors and Integrations</div>
+      <div class="step-desc">SOAR integrates with 350+ security products via app connectors. Essential connectors: <strong style="color:var(--c)">CrowdStrike/SentinelOne</strong> (EDR -- isolate, get process list), <strong style="color:var(--c)">Palo Alto/Cisco</strong> (firewall -- block IP, URL), <strong style="color:var(--c)">VirusTotal/Hybrid Analysis</strong> (threat intel), <strong style="color:var(--c)">Active Directory</strong> (disable account, reset password), <strong style="color:var(--c)">JIRA/ServiceNow</strong> (ticketing), <strong style="color:var(--c)">Slack/Teams</strong> (notification). Install from <strong style="color:var(--c)">SOAR &rarr; Apps &rarr; Browse Apps</strong>.</div>
+    </div></div>
+  </div>
+</section>
+<div class="div div-ai"></div>
+
+<!-- 08 AI -->
+<section class="sec rv sec-ai" id="ai">
+  <div class="sec-hd"><span class="sec-n">08 //</span><h2 class="sec-t">AI Integration in Splunk Operations<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel panel-ai rv-l">
+    <p>AI transforms Splunk from a powerful data platform into an intelligent security operations brain. LLMs excel at the tasks that are most expensive in a SOC: translating security questions into SPL queries, explaining alert context in plain English, correlating disparate events into coherent attack narratives, and generating incident reports. Splunk itself is investing heavily in AI -- the <strong style="color:var(--c)">Splunk AI Assistant</strong> provides native conversational SPL generation, while external AI pipelines via the Splunk API unlock custom intelligence workflows that no vendor product can replicate.</p>
+  </div>
+  <div class="alert al-p rv">
+    <span class="al-ic">[ AI ]</span>
+    <p class="al-tx">SOC teams using AI-augmented Splunk workflows report 60% faster alert triage, 70% reduction in SPL query writing time, and significantly improved analyst onboarding speed. Junior analysts with AI assistance produce investigation quality comparable to senior analysts within weeks, dramatically scaling SOC capacity without proportional headcount increases.</p>
+  </div>
+  <div class="ai-grid rv">
+    <div class="ai-card"><span class="ai-ico">&#9999;&#65039;</span><div class="ai-name">SPL Query Generation</div><div class="ai-desc">LLMs translate natural-language security questions into precise SPL -- "find all users who logged in after hours from a new device in the last 7 days" becomes a complete SPL query with the correct index, field names, time range, and statistical commands. Eliminates the SPL learning curve for new analysts, dramatically accelerates experienced analysts on complex hunts, and enables non-technical stakeholders to query Splunk directly.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128270;</span><div class="ai-name">Alert Triage Assistance</div><div class="ai-desc">AI analyses notable event context -- the triggering SPL, the raw events, the affected entity's recent history -- and produces a natural-language triage assessment: what happened, why it triggered, what the likely explanation is (true positive vs false positive), and what investigation steps to take next. Reduces average triage time from 15 minutes to 2 minutes per alert and dramatically improves junior analyst decision quality.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128196;</span><div class="ai-name">Incident Report Generation</div><div class="ai-desc">AI converts Splunk incident timeline data, notable events, and investigation notes into professional incident reports -- executive summary, technical timeline, affected systems, attacker TTPs mapped to MITRE ATT&amp;CK, indicators of compromise list, and remediation recommendations. Transforms the most time-consuming post-incident task from a 4-hour writing exercise into a 10-minute review and approval process.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128123;</span><div class="ai-name">Threat Hunt Hypothesis Generation</div><div class="ai-desc">AI generates structured threat hunt hypotheses from current threat intelligence reports and CVE disclosures -- "Based on this APT campaign report, what SPL searches would detect the described TTPs in a Splunk environment with Windows event logs and network flow data?" Produces a prioritised list of hunt hypotheses with the exact SPL to execute, mapped to MITRE ATT&amp;CK, aligned to your data sources.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128308;</span><div class="ai-name">SOAR Playbook Generation</div><div class="ai-desc">LLMs generate SOAR playbook logic and Python code for custom actions from plain-English requirement descriptions -- "write a Splunk SOAR playbook that triages phishing emails by extracting URLs, checking them against VirusTotal, and quarantining the email if any URL scores above 5." Produces fully functional Python action code ready to paste into the SOAR custom function editor.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128201;</span><div class="ai-name">Detection Engineering</div><div class="ai-desc">AI converts threat intelligence articles, CVE descriptions, and penetration test findings directly into Splunk correlation search SPL -- creating new detections without manual SIEM engineering. "This APT uses Cobalt Strike with these specific beacon parameters" becomes a working SPL detection search in minutes. Dramatically accelerates detection engineering velocity and reduces the time from threat disclosure to defensive coverage.</div></div>
+  </div>
+  <div class="panel panel-ai rv" style="margin-top:28px">
+    <div class="panel-t">AI Tools for Splunk Operations</div>
+    <table class="ptbl">
+      <thead><tr>
+        <th style="color:#bf00ff;border-bottom-color:rgba(191,0,255,.25)">Tool</th>
+        <th style="color:#bf00ff;border-bottom-color:rgba(191,0,255,.25)">Capability</th>
+        <th style="color:#bf00ff;border-bottom-color:rgba(191,0,255,.25)">Splunk Use Case</th>
+      </tr></thead>
+      <tbody>
+        <tr><td style="color:var(--g)">Splunk AI Assistant</td><td style="color:var(--t2)">Native conversational SPL generation</td><td style="color:var(--t2)">Ask questions in plain English, get SPL -- built directly into Splunk Cloud/ES</td></tr>
+        <tr><td style="color:var(--g)">GPT-4 / Claude</td><td style="color:var(--t2)">SPL generation, triage, report writing</td><td style="color:var(--t2)">Generate SPL, explain alerts, write incident reports, create hunt hypotheses</td></tr>
+        <tr><td style="color:var(--g)">Splunk MLTK</td><td style="color:var(--t2)">Native ML in SPL</td><td style="color:var(--t2)">Anomaly detection, forecasting, clustering directly in SPL queries</td></tr>
+        <tr><td style="color:var(--g)">Splunk UBA</td><td style="color:var(--t2)">User behaviour analytics</td><td style="color:var(--t2)">ML-based detection of insider threats and compromised accounts</td></tr>
+        <tr><td style="color:var(--g)">Python + OpenAI</td><td style="color:var(--t2)">Splunk REST API + AI pipeline</td><td style="color:var(--t2)">Query Splunk programmatically, feed results to GPT for automated intelligence</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="cb cb-ai rv" data-l="AI Pipeline -- Splunk REST API + GPT Alert Triage">
+    <code><span style="color:#bd93f9">#!/usr/bin/env python3</span>
+<span style="color:var(--t3)"># Query Splunk via REST API, send notable events to GPT for triage
+# pip install requests openai splunk-sdk</span>
+
+<span style="color:#bd93f9">import</span> requests, json, openai, urllib3
+urllib3.disable_warnings()
+
+SPLUNK = <span style="color:#ff79c6">"https://localhost:8089"</span>
+USER   = <span style="color:#ff79c6">"admin"</span>
+PASS   = <span style="color:#ff79c6">"your-password"</span>
+
+<span style="color:#8be9fd">def</span> <span style="color:var(--c)">splunk_search</span>(spl, timeframe=<span style="color:#ff79c6">"-24h"</span>):
+    <span style="color:var(--t3)"># Run a oneshot search via Splunk REST API</span>
+    resp = requests.post(
+        <span style="color:#ff79c6">f"{SPLUNK}/services/search/jobs/export"</span>,
+        auth=(USER, PASS), verify=<span style="color:#bd93f9">False</span>,
+        data={<span style="color:#ff79c6">"search"</span>: <span style="color:#ff79c6">f"search {spl}"</span>,
+              <span style="color:#ff79c6">"earliest_time"</span>: timeframe,
+              <span style="color:#ff79c6">"latest_time"</span>: <span style="color:#ff79c6">"now"</span>,
+              <span style="color:#ff79c6">"output_mode"</span>: <span style="color:#ff79c6">"json"</span>}
+    )
+    events = []
+    <span style="color:#bd93f9">for</span> line <span style="color:#bd93f9">in</span> resp.text.splitlines():
+        <span style="color:#bd93f9">try</span>:
+            obj = json.loads(line)
+            <span style="color:#bd93f9">if</span> <span style="color:#ff79c6">"result"</span> <span style="color:#bd93f9">in</span> obj: events.append(obj[<span style="color:#ff79c6">"result"</span>])
+        <span style="color:#bd93f9">except</span>: <span style="color:#bd93f9">pass</span>
+    <span style="color:#bd93f9">return</span> events
+
+<span style="color:#8be9fd">def</span> <span style="color:var(--c)">ai_triage</span>(events, context):
+    prompt = (
+        <span style="color:#ff79c6">"You are a senior SOC analyst. Analyse these Splunk security events and provide:
+"
+        "1. THREAT ASSESSMENT -- what is happening and how serious is it?
+"
+        "2. TRUE/FALSE POSITIVE VERDICT -- and reasoning
+"
+        "3. ATTACK STAGE -- which MITRE ATT&CK tactic/technique?
+"
+        "4. IMMEDIATE ACTIONS -- what should the SOC do right now?
+"
+        "5. ADDITIONAL SPLUNK SEARCHES -- to investigate further
+
+"
+        f"Context: {context}
+
+Events:
+"</span> + json.dumps(events[:20], indent=2)
+    )
+    r = openai.OpenAI().chat.completions.create(
+        model=<span style="color:#ff79c6">"gpt-4o"</span>,
+        messages=[{<span style="color:#ff79c6">"role"</span>:<span style="color:#ff79c6">"user"</span>,<span style="color:#ff79c6">"content"</span>:prompt}]
+    )
+    <span style="color:#bd93f9">return</span> r.choices[0].message.content
+
+<span style="color:var(--t3)"># Example: triage brute force notable events</span>
+spl = <span style="color:#ff79c6">'index=windows EventCode=4625 | stats count by src_ip, user | where count > 10'</span>
+events = splunk_search(spl)
+print(<span style="color:#ff79c6">f"[*] {len(events)} notable events retrieved"</span>)
+print(ai_triage(events, <span style="color:#ff79c6">"Multiple failed Windows logon attempts detected"</span>))</code>
+  </div>
+  <div class="cb cb-ai rv" data-l="AI -- SPL Query Generator from Natural Language">
+    <code><span style="color:#bd93f9">#!/usr/bin/env python3</span>
+<span style="color:var(--t3)"># Generate SPL queries from plain English using GPT
+# Usage: python3 spl_gen.py "find all failed logins followed by success within 10 minutes"</span>
+
+<span style="color:#bd93f9">import</span> openai, sys
+
+<span style="color:#8be9fd">def</span> <span style="color:var(--c)">generate_spl</span>(question, data_sources=<span style="color:#bd93f9">None</span>):
+    sources = data_sources <span style="color:#bd93f9">or</span> [<span style="color:#ff79c6">"Windows Security Events (index=windows)"</span>,
+                                  <span style="color:#ff79c6">"Network logs (index=network)"</span>,
+                                  <span style="color:#ff79c6">"Sysmon (index=sysmon)"</span>]
+    prompt = (
+        <span style="color:#ff79c6">"You are a Splunk SPL expert. Generate a complete, working SPL query for the "
+        "following security question. Include: proper index and sourcetype selection, "
+        "time range, field filters, stats/aggregation commands, and | table or | sort "
+        "for clean output. Return ONLY the SPL query, nothing else.
+
+"
+        f"Available data sources: {', '.join(sources)}
+
+"
+        f"Question: {question}"</span>
+    )
+    r = openai.OpenAI().chat.completions.create(
+        model=<span style="color:#ff79c6">"gpt-4o"</span>,
+        messages=[{<span style="color:#ff79c6">"role"</span>:<span style="color:#ff79c6">"user"</span>,<span style="color:#ff79c6">"content"</span>:prompt}],
+        temperature=0.1
+    )
+    <span style="color:#bd93f9">return</span> r.choices[0].message.content.strip()
+
+question = <span style="color:#ff79c6">" "</span>.join(sys.argv[1:]) <span style="color:#bd93f9">if</span> <span style="color:#8be9fd">len</span>(sys.argv) > 1 <span style="color:#bd93f9">else</span>            <span style="color:#ff79c6">"find users who accessed admin panel outside business hours"</span>
+spl = generate_spl(question)
+print(<span style="color:#ff79c6">f"Question : {question}"</span>)
+print(<span style="color:#ff79c6">f"
+SPL Query:
+{spl}"</span>)
+print(<span style="color:#ff79c6">"
+Paste directly into Splunk Search bar."</span>)</code>
+  </div>
+</section>
+
+<div class="cta rv">
+  <div class="cta-t">// The SOC never sleeps. Splunk makes sure neither do your detections. //</div>
+  <p class="cta-p">Splunk is the operating system of the modern SOC. Master SPL and you command every byte of data your organisation generates. Build tight correlation searches, tune them to near-zero false positives, automate response with SOAR, and augment every workflow with AI -- and you will have a security operations capability that scales beyond any team size, responds faster than any human, and sees further than any single tool. The data is already there. Splunk makes it speak.</p>
+  <div class="cta-btns">
+    <a href="https://github.com/nishu2402" class="btn btn-p" target="_blank" rel="noopener">GitHub -- nishu2402</a>
+    <a href="https://nishu2402.github.io" class="btn btn-s" target="_blank" rel="noopener">View Portfolio</a>
+  </div>
+</div>
+<footer class="footer">
+  <div class="f-l">Nisarg Chasmawala (Shroff)<br><span class="f-alias">// HEAVEN</span></div>
+  <div class="f-r">Offensive Security Engineer &middot; MSc Cyber Security, BCU<br>CEH Master &middot; CPENT &middot; CHFI &middot; ISO 27001 Lead Auditor<br><a href="https://github.com/nishu2402" target="_blank" rel="noopener">github.com/nishu2402</a></div>
+</footer>
+</div>
+<script>
+var cur=document.getElementById('cur'),cur2=document.getElementById('cur2'),cur3=document.getElementById('cur3');
+var mx=0,my=0;
+document.addEventListener('mousemove',function(e){mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
+(function loop(){cur2.style.left=mx+'px';cur2.style.top=my+'px';cur3.style.left=mx+'px';cur3.style.top=my+'px';requestAnimationFrame(loop);})();
+document.querySelectorAll('a,.btn,.ai-card,.panel,.cb,.tc,.gui-card,.step,.spl-card').forEach(function(el){
+  el.addEventListener('mouseenter',function(){cur.style.width='18px';cur.style.height='18px';cur.style.background='rgba(0,255,65,.25)';});
+  el.addEventListener('mouseleave',function(){cur.style.width='10px';cur.style.height='10px';cur.style.background='var(--g)';});
+});
+window.addEventListener('scroll',function(){document.getElementById('prog').style.width=((window.scrollY/(document.body.scrollHeight-window.innerHeight))*100)+'%';});
+(function(){
+  var c=document.getElementById('bg-particle'),ctx=c.getContext('2d');
+  var W,H,mX=innerWidth/2,mY=innerHeight/2,N=200,MAX=140,P=[];
+  function Pt(){this.reset(true);}
+  Pt.prototype.reset=function(i){this.x=Math.random()*W;this.y=i?Math.random()*H:H+10;this.z=Math.random()*3+.5;this.vx=(Math.random()-.5)*.4;this.vy=(Math.random()-.5)*.4-.1;this.life=Math.random()*300+200;this.maxLife=this.life;this.r=Math.random()*1.5+.5;var r=Math.random();this.color=r<.7?'0,255,65':r<.9?'0,229,255':'191,0,255';};
+  Pt.prototype.update=function(){var dx=this.x-mX,dy=this.y-mY,d=Math.sqrt(dx*dx+dy*dy);if(d<120){var f=(120-d)/120;this.vx+=dx/d*f*.6;this.vy+=dy/d*f*.6;}this.vx*=.98;this.vy*=.98;this.x+=this.vx;this.y+=this.vy;this.life--;if(this.life<=0||this.x<-50||this.x>W+50||this.y<-50||this.y>H+50)this.reset(false);};
+  Pt.prototype.draw=function(){var a=(this.life/this.maxLife)*.7*this.z;ctx.beginPath();ctx.arc(this.x,this.y,this.r*this.z,0,Math.PI*2);ctx.fillStyle='rgba('+this.color+','+a+')';ctx.fill();};
+  function resize(){W=c.width=innerWidth;H=c.height=innerHeight;}
+  function lines(){for(var i=0;i<P.length;i++){for(var j=i+1;j<P.length;j++){var a=P[i],b=P[j],dx=a.x-b.x,dy=a.y-b.y,d=Math.sqrt(dx*dx+dy*dy);if(d<MAX){var al=(1-d/MAX)*.18,g=ctx.createLinearGradient(a.x,a.y,b.x,b.y);g.addColorStop(0,'rgba('+a.color+','+al+')');g.addColorStop(1,'rgba('+b.color+','+al+')');ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.strokeStyle=g;ctx.lineWidth=(a.z+b.z)/2*.5;ctx.stroke();}}}}
+  function animate(){ctx.clearRect(0,0,W,H);var g=ctx.createRadialGradient(mX,mY,0,mX,mY,80);g.addColorStop(0,'rgba(0,255,65,0)');g.addColorStop(.7,'rgba(0,255,65,0.04)');g.addColorStop(1,'rgba(0,255,65,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(mX,mY,80,0,Math.PI*2);ctx.fill();lines();P.forEach(function(p){p.update();p.draw();});requestAnimationFrame(animate);}
+  resize();window.addEventListener('resize',resize);document.addEventListener('mousemove',function(e){mX=e.clientX;mY=e.clientY;});
+  for(var i=0;i<N;i++)P.push(new Pt());animate();
+})();
+(function(){
+  var c=document.getElementById('bg-hex'),ctx=c.getContext('2d');
+  var W,H,t=0,S=40;
+  function resize(){W=c.width=innerWidth;H=c.height=innerHeight;}
+  function hex(cx,cy,s){ctx.beginPath();for(var i=0;i<6;i++){var a=Math.PI/180*(60*i-30);if(i===0)ctx.moveTo(cx+s*Math.cos(a),cy+s*Math.sin(a));else ctx.lineTo(cx+s*Math.cos(a),cy+s*Math.sin(a));}ctx.closePath();}
+  function draw(){ctx.clearRect(0,0,W,H);t+=.008;var sy=window.scrollY,cols=Math.ceil(W/(S*1.732))+2,rows=Math.ceil(H/(S*1.5))+2;for(var r=-1;r<rows;r++){for(var col=-1;col<cols;col++){var cx=col*S*1.732+(r%2)*S*.866,cy=r*S*1.5-(sy*.03)%(S*1.5),w=Math.sin(t+col*.3+r*.2)*.5+.5;hex(cx,cy,S-2);ctx.strokeStyle='rgba(0,255,65,'+(0.02+w*0.07)+')';ctx.lineWidth=.6;ctx.stroke();if(w>.92){hex(cx,cy,S-2);ctx.fillStyle='rgba(0,255,65,'+(0.02+w*0.03)+')';ctx.fill();}}}requestAnimationFrame(draw);}
+  resize();window.addEventListener('resize',resize);draw();
+})();
+// HERO: SIEM EVENT CORRELATION FUNNEL
+// Many log events flow in from left, get correlated at centre node, alerts flow out right
+(function(){
+  var c=document.getElementById('hero-geo');if(!c)return;
+  var ctx=c.getContext('2d'),SZ=420;c.width=SZ;c.height=SZ;
+  var t=0,mrx=0,mry=0;
+  document.addEventListener('mousemove',function(e){mrx=(e.clientY/innerHeight-.5)*.1;mry=(e.clientX/innerWidth-.5)*.1;});
+
+  var CX=SZ/2,CY=SZ/2;
+
+  // Log source nodes on left
+  var sources=[
+    {x:60,y:80,  label:'Windows',col:'0,229,255', packets:[]},
+    {x:55,y:155, label:'Linux',  col:'0,255,65',  packets:[]},
+    {x:60,y:230, label:'Network',col:'191,0,255', packets:[]},
+    {x:55,y:305, label:'Cloud',  col:'255,200,80',packets:[]},
+    {x:60,y:375, label:'Endpt',  col:'255,100,100',packets:[]},
+  ];
+
+  // Alert output nodes on right
+  var outputs=[
+    {x:360,y:120, label:'CRITICAL',col:'220,30,30',  packets:[]},
+    {x:365,y:210, label:'HIGH',    col:'255,120,0',  packets:[]},
+    {x:360,y:300, label:'MEDIUM',  col:'255,210,0',  packets:[]},
+  ];
+
+  // Initialise source packets
+  sources.forEach(function(s){
+    for(var i=0;i<3;i++){
+      s.packets.push({prog:Math.random(), speed:0.006+Math.random()*0.006});
+    }
+  });
+
+  // Occasionally fire alert packets from centre to outputs
+  var alertQueue=[];
+  var alertTimer=0;
+
+  function draw(){
+    ctx.clearRect(0,0,SZ,SZ);
+    t+=0.018;
+    alertTimer++;
+    if(alertTimer>60){
+      alertTimer=0;
+      var src=outputs[Math.floor(Math.random()*outputs.length)];
+      alertQueue.push({ox:CX,oy:CY,tx:src.x,ty:src.y,col:src.col,prog:0,speed:0.012+Math.random()*0.008,label:src.label});
+    }
+
+    var ox=mry*10,oy=mrx*8;
+    ctx.save();ctx.translate(ox,oy);
+
+    // Draw connection lines source->centre
+    sources.forEach(function(s){
+      var g=ctx.createLinearGradient(s.x,s.y,CX,CY);
+      g.addColorStop(0,'rgba('+s.col+',0.12)');g.addColorStop(1,'rgba('+s.col+',0.04)');
+      ctx.beginPath();ctx.moveTo(s.x,s.y);ctx.lineTo(CX,CY);
+      ctx.strokeStyle=g;ctx.lineWidth=1;ctx.stroke();
+    });
+
+    // Draw connection lines centre->outputs
+    outputs.forEach(function(o){
+      var g=ctx.createLinearGradient(CX,CY,o.x,o.y);
+      g.addColorStop(0,'rgba('+o.col+',0.04)');g.addColorStop(1,'rgba('+o.col+',0.15)');
+      ctx.beginPath();ctx.moveTo(CX,CY);ctx.lineTo(o.x,o.y);
+      ctx.strokeStyle=g;ctx.lineWidth=1;ctx.stroke();
+    });
+
+    // Source nodes
+    sources.forEach(function(s,si){
+      var pulse=Math.sin(t*1.5+si)*.4+.6;
+      var ng=ctx.createRadialGradient(s.x,s.y,0,s.x,s.y,18);
+      ng.addColorStop(0,'rgba('+s.col+','+pulse*0.3+')');ng.addColorStop(1,'rgba('+s.col+',0)');
+      ctx.fillStyle=ng;ctx.beginPath();ctx.arc(s.x,s.y,18,0,Math.PI*2);ctx.fill();
+      ctx.beginPath();ctx.arc(s.x,s.y,7,0,Math.PI*2);
+      ctx.fillStyle='rgba(3,5,9,0.9)';ctx.fill();
+      ctx.strokeStyle='rgba('+s.col+','+pulse*0.9+')';ctx.lineWidth=1.5;ctx.stroke();
+      ctx.font='bold 8px Share Tech Mono';
+      ctx.fillStyle='rgba('+s.col+',0.7)';
+      ctx.textAlign='right';ctx.textBaseline='middle';
+      ctx.fillText(s.label,s.x-12,s.y);
+
+      // Move packets source->centre
+      s.packets.forEach(function(p){
+        p.prog+=p.speed;
+        if(p.prog>1){p.prog=0;}
+        var px=s.x+(CX-s.x)*p.prog;
+        var py=s.y+(CY-s.y)*p.prog;
+        var a=0.3+p.prog*0.5;
+        ctx.beginPath();ctx.arc(px,py,3,0,Math.PI*2);
+        ctx.fillStyle='rgba('+s.col+','+a+')';ctx.fill();
+      });
+    });
+
+    // Output nodes
+    outputs.forEach(function(o,oi){
+      var pulse=Math.sin(t*2+oi*1.5)*.4+.6;
+      var ng=ctx.createRadialGradient(o.x,o.y,0,o.x,o.y,20);
+      ng.addColorStop(0,'rgba('+o.col+','+pulse*0.35+')');ng.addColorStop(1,'rgba('+o.col+',0)');
+      ctx.fillStyle=ng;ctx.beginPath();ctx.arc(o.x,o.y,20,0,Math.PI*2);ctx.fill();
+      ctx.beginPath();ctx.arc(o.x,o.y,8,0,Math.PI*2);
+      ctx.fillStyle='rgba(3,5,9,0.9)';ctx.fill();
+      ctx.strokeStyle='rgba('+o.col+','+pulse*0.9+')';ctx.lineWidth=1.5;ctx.stroke();
+      ctx.font='bold 8px Share Tech Mono';
+      ctx.fillStyle='rgba('+o.col+',0.8)';
+      ctx.textAlign='left';ctx.textBaseline='middle';
+      ctx.fillText(o.label,o.x+14,o.y);
+    });
+
+    // Central SIEM node
+    var cpulse=Math.sin(t*1.2)*.5+.5;
+    var cg=ctx.createRadialGradient(CX,CY,0,CX,CY,36);
+    cg.addColorStop(0,'rgba(0,255,65,'+(0.3+cpulse*0.15)+')');
+    cg.addColorStop(.6,'rgba(0,229,255,0.08)');cg.addColorStop(1,'rgba(0,255,65,0)');
+    ctx.fillStyle=cg;ctx.beginPath();ctx.arc(CX,CY,36,0,Math.PI*2);ctx.fill();
+    ctx.beginPath();ctx.arc(CX,CY,22,0,Math.PI*2);
+    ctx.fillStyle='rgba(3,5,9,0.95)';ctx.fill();
+    ctx.strokeStyle='rgba(0,255,65,'+(0.5+cpulse*0.4)+')';ctx.lineWidth=2;ctx.stroke();
+    ctx.font='bold 10px Orbitron,sans-serif';
+    ctx.fillStyle='rgba(0,255,65,'+(0.7+cpulse*0.3)+')';
+    ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText('SIEM',CX,CY-1);
+
+    // Alert packets centre->outputs
+    alertQueue=alertQueue.filter(function(a){
+      a.prog+=a.speed;
+      if(a.prog>=1) return false;
+      var ax=a.ox+(a.tx-a.ox)*a.prog;
+      var ay=a.oy+(a.ty-a.oy)*a.prog;
+      var ng2=ctx.createRadialGradient(ax,ay,0,ax,ay,6);
+      ng2.addColorStop(0,'rgba('+a.col+',0.7)');ng2.addColorStop(1,'rgba('+a.col+',0)');
+      ctx.fillStyle=ng2;ctx.beginPath();ctx.arc(ax,ay,6,0,Math.PI*2);ctx.fill();
+      ctx.beginPath();ctx.arc(ax,ay,3,0,Math.PI*2);
+      ctx.fillStyle='rgba('+a.col+',0.9)';ctx.fill();
+      return true;
+    });
+
+    ctx.restore();
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+var rv=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('on');});},{threshold:.08});
+document.querySelectorAll('.rv,.rv-l').forEach(function(el){rv.observe(el);});
+var sIds=['hero','setup','ingestion','spl','dashboards','alerts','hunting','soar','ai'];
+var tItems=document.querySelectorAll('.toc-i');
+var so=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)tItems.forEach(function(ti){ti.classList.toggle('active',ti.dataset.s===x.target.id);});});},{threshold:.25});
+sIds.forEach(function(id){var el=document.getElementById(id);if(el)so.observe(el);});
+function goTo(h){document.querySelector(h).scrollIntoView({behavior:'smooth'});}
+document.querySelectorAll('.cb').forEach(function(b){
+  b.title='Click to copy';
+  b.addEventListener('click',function(){
+    navigator.clipboard.writeText(b.querySelector('code').innerText).catch(function(){});
+    var o=b.getAttribute('data-l');b.setAttribute('data-l',o+' \u2713 COPIED');
+    setTimeout(function(){b.setAttribute('data-l',o);},2000);
+  });
+});
+</script>
+</body>
+</html>
