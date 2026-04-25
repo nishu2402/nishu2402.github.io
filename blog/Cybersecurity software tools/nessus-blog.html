@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mastering Tenable Nessus | Nisarg Chasmawala</title>
+<meta name="description" content="Mastering Tenable Nessus - the definitive guide by Nisarg Chasmawala (Shroff), Offensive Security Engineer.">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--g:#00ff41;--c:#00e5ff;--p:#bf00ff;--r:#ff003c;--o:#ffd700;--bg:#030509;--t1:#d4ffe0;--t2:#7aad82;--t3:#2e4a32;--mono:'Share Tech Mono',monospace;--dsp:'Orbitron',sans-serif;--body:'Rajdhani',sans-serif;--glow:0 0 20px rgba(0,255,65,.4),0 0 60px rgba(0,255,65,.15);--cglow:0 0 20px rgba(0,229,255,.4),0 0 60px rgba(0,229,255,.1);--pglow:0 0 20px rgba(191,0,255,.4),0 0 60px rgba(191,0,255,.1)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;overflow-x:hidden}
+body{background:var(--bg);color:var(--t1);font-family:var(--body);font-size:17px;line-height:1.8;overflow-x:hidden;cursor:none}
+#bg-particle{position:fixed;inset:0;z-index:0;pointer-events:none}
+#bg-hex{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.35}
+#bg-scan{position:fixed;inset:0;z-index:9999;pointer-events:none;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,255,65,.009) 2px,rgba(0,255,65,.009) 4px)}
+#bg-vignette{position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse at 50% 50%,transparent 50%,rgba(3,5,9,.85) 100%)}
+#cur{position:fixed;width:10px;height:10px;border-radius:50%;background:var(--g);box-shadow:var(--glow);pointer-events:none;z-index:99999;transform:translate(-50%,-50%);transition:width .1s,height .1s}
+#cur2{position:fixed;width:30px;height:30px;border-radius:50%;border:1px solid rgba(0,255,65,.5);pointer-events:none;z-index:99998;transform:translate(-50%,-50%)}
+#cur3{position:fixed;width:50px;height:50px;border-radius:50%;border:1px solid rgba(0,255,65,.2);pointer-events:none;z-index:99997;transform:translate(-50%,-50%)}
+#prog{position:fixed;top:0;left:0;height:2px;background:linear-gradient(to right,var(--g),var(--c),var(--p));box-shadow:0 0 10px var(--g);z-index:10000;width:0%}
+.topbar{position:fixed;top:0;left:0;right:0;height:58px;background:rgba(3,5,9,.88);border-bottom:1px solid rgba(0,255,65,.12);backdrop-filter:blur(20px);z-index:1000;display:flex;align-items:center;justify-content:space-between;padding:0 32px}
+.tb-left{display:flex;flex-direction:column;gap:2px}
+.tb-name{font-family:var(--dsp);font-size:13px;font-weight:900;color:var(--t1);letter-spacing:3px}
+.tb-roles{font-family:var(--mono);font-size:9px;overflow:hidden;white-space:nowrap}
+.tb-inner{display:inline-block;color:var(--c);animation:ticker 18s linear infinite}
+@keyframes ticker{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
+.tb-status{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;color:var(--g)}
+.tb-dot{width:7px;height:7px;border-radius:50%;background:var(--g);box-shadow:0 0 10px var(--g);animation:tdot 1.2s ease-in-out infinite}
+@keyframes tdot{0%,100%{opacity:1}50%{opacity:.3}}
+.toc{position:fixed;right:20px;top:50%;transform:translateY(-50%);z-index:200;display:flex;flex-direction:column;gap:9px}
+.toc-i{display:flex;align-items:center;gap:8px;cursor:pointer}
+.toc-d{width:6px;height:6px;border-radius:50%;border:1px solid var(--t3);transition:all .25s;flex-shrink:0}
+.toc-i.active .toc-d,.toc-i:hover .toc-d{background:var(--g);border-color:var(--g);box-shadow:0 0 10px var(--g)}
+.toc-l{font-family:var(--mono);font-size:10px;color:var(--t3);opacity:0;transform:translateX(6px);transition:all .2s;white-space:nowrap}
+.toc-i:hover .toc-l,.toc-i.active .toc-l{opacity:1;transform:none;color:var(--g)}
+@media(max-width:1000px){.toc{display:none}}
+.wrap{position:relative;z-index:10;max-width:980px;margin:0 auto;padding:0 28px}
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:100px 0 60px;position:relative}
+.hero-canvas-wrap{position:absolute;right:-60px;top:50%;transform:translateY(-52%);width:420px;height:420px;pointer-events:none}
+.hero-content{max-width:520px;position:relative;z-index:2}
+.steps{display:flex;flex-direction:column;gap:14px;margin:20px 0}
+.step{display:flex;gap:16px;align-items:flex-start;background:rgba(0,255,65,.02);border:1px solid rgba(0,255,65,.1);border-radius:4px;padding:18px;transition:all .3s}
+.step:hover{border-color:rgba(0,229,255,.3);background:rgba(0,229,255,.03)}
+.step-num{font-family:var(--dsp);font-size:18px;font-weight:900;color:var(--g);min-width:32px;text-shadow:var(--glow)}
+.step-body{flex:1}
+.step-title{font-family:var(--mono);font-size:12px;color:var(--c);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;font-weight:700}
+.step-desc{font-size:14px;color:var(--t2);line-height:1.6}
+.step-note{font-family:var(--mono);font-size:11px;color:var(--o);margin-top:6px;background:rgba(255,215,0,.04);padding:6px 10px;border-radius:2px;border-left:2px solid var(--o)}
+.gui-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin:20px 0}
+.gui-card{background:rgba(0,255,65,.025);border:1px solid rgba(0,255,65,.12);border-radius:4px;padding:20px;transition:all .3s;position:relative;overflow:hidden}
+.gui-card::after{content:'';position:absolute;top:0;right:0;width:0;height:0;border-top:22px solid rgba(0,229,255,.2);border-left:22px solid transparent}
+.gui-card:hover{border-color:rgba(0,229,255,.4);transform:translateY(-3px);box-shadow:var(--cglow)}
+.gui-card-title{font-family:var(--mono);font-size:12px;color:var(--c);font-weight:700;letter-spacing:1px;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.gui-card-ico{font-size:16px}
+.gui-card-desc{font-size:13px;color:var(--t2);line-height:1.55}
+.nav-path{font-family:var(--mono);font-size:11px;color:var(--o);background:rgba(255,215,0,.05);border:1px solid rgba(255,215,0,.15);border-radius:3px;padding:4px 10px;display:inline-block;margin-bottom:10px}
+.tmpl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;margin:20px 0}
+.tmpl-card{background:rgba(0,0,0,.4);border:1px solid rgba(0,229,255,.15);border-radius:4px;padding:18px;transition:all .3s}
+.tmpl-card:hover{border-color:rgba(0,229,255,.35);transform:translateY(-2px)}
+.tmpl-name{font-family:var(--dsp);font-size:11px;font-weight:700;color:var(--c);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px}
+.tmpl-tag{font-family:var(--mono);font-size:9px;color:var(--o);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;display:block}
+.tmpl-desc{font-size:13px;color:var(--t2);line-height:1.5}
+@media(max-width:700px){.gui-grid,.tmpl-grid{grid-template-columns:1fr}}
+#hero-geo{width:100%;height:100%}
+.hero-tag{font-family:var(--mono);font-size:11px;letter-spacing:4px;color:var(--c);text-transform:uppercase;margin-bottom:18px;opacity:0;animation:fup .6s ease forwards .3s;display:flex;align-items:center;gap:12px}
+.hero-tag::before{content:'';width:40px;height:1px;background:linear-gradient(to right,transparent,var(--c))}
+.hero-tag::after{content:'';flex:1;max-width:100px;height:1px;background:linear-gradient(to right,var(--c),transparent)}
+.hero-title{font-family:var(--dsp);font-size:clamp(18px,3.5vw,42px);font-weight:900;line-height:1.0;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;opacity:0;animation:fup .7s ease forwards .5s}
+.ht-line1{display:block;color:var(--g);text-shadow:0 0 40px rgba(0,255,65,.6)}
+.ht-sub{display:block;font-size:.43em;letter-spacing:5px;color:rgba(200,255,220,.5);font-weight:400;margin-top:10px}
+.gw{position:relative;display:inline-block}
+.gw::before,.gw::after{content:attr(data-t);position:absolute;top:0;left:0;width:100%;font-family:var(--dsp);font-weight:900;font-size:inherit;letter-spacing:inherit;text-transform:uppercase}
+.gw::before{color:var(--c);animation:ga 5s infinite;clip-path:polygon(0 0,100% 0,100% 33%,0 33%)}
+.gw::after{color:var(--r);animation:gb 5s infinite;clip-path:polygon(0 66%,100% 66%,100% 100%,0 100%)}
+@keyframes ga{0%,85%,100%{transform:none;opacity:0}87%{transform:translate(-5px,2px);opacity:.9}93%{transform:none;opacity:0}}
+@keyframes gb{0%,87%,100%{transform:none;opacity:0}89%{transform:translate(5px,3px);opacity:.8}95%{transform:none;opacity:0}}
+.hero-desc{font-size:17px;font-weight:300;color:var(--t2);max-width:560px;line-height:1.75;margin-bottom:36px;opacity:0;animation:fup .8s ease forwards .8s;margin-top:20px}
+.hero-meta{display:flex;gap:24px;flex-wrap:wrap;opacity:0;animation:fup .8s ease forwards 1s}
+.m-item{display:flex;flex-direction:column;gap:3px}
+.m-lbl{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--t3);text-transform:uppercase}
+.m-val{font-family:var(--mono);font-size:12px;color:var(--c)}
+.hero-scroll-hint{position:absolute;bottom:24px;left:0;display:flex;align-items:center;gap:12px;opacity:0;animation:fin 1s ease forwards 1.8s}
+.hs-line{width:60px;height:1px;background:linear-gradient(to right,var(--g),transparent)}
+.hs-txt{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--t3)}
+.hs-pulse{width:6px;height:6px;border-radius:50%;background:var(--g);box-shadow:0 0 8px var(--g);animation:tdot 1.5s ease-in-out infinite}
+.sec{margin-bottom:100px}
+.sec-hd{display:flex;align-items:center;gap:14px;margin-bottom:40px}
+.sec-n{font-family:var(--mono);font-size:10px;color:var(--p);letter-spacing:2px;min-width:44px}
+.sec-ln{flex:1;height:1px;background:linear-gradient(to right,rgba(0,229,255,.35),transparent)}
+.sec-t{font-family:var(--dsp);font-size:clamp(14px,2.4vw,21px);font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--c);text-shadow:var(--cglow)}
+.tw-cursor{display:inline-block;width:2px;height:1em;background:var(--c);margin-left:4px;animation:blink 1s step-end infinite;vertical-align:middle}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.sec-ai .sec-t{color:#bf00ff;text-shadow:var(--pglow)}
+.sec-ai .sec-n{color:var(--c)}
+.sec-ai .sec-ln{background:linear-gradient(to right,rgba(191,0,255,.35),transparent)}
+.sec-ai .tw-cursor{background:#bf00ff}
+.panel{background:rgba(0,255,65,.025);border:1px solid rgba(0,255,65,.12);border-radius:4px;padding:32px;margin-bottom:22px;position:relative;overflow:hidden;transition:border-color .3s,box-shadow .3s,transform .3s}
+.panel::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:linear-gradient(to bottom,var(--g),transparent);opacity:0;transition:opacity .3s}
+.panel:hover{border-color:rgba(0,229,255,.4);box-shadow:0 0 50px rgba(0,229,255,.07),0 20px 60px rgba(0,0,0,.3);transform:translateY(-3px)}
+.panel:hover::before{opacity:1}
+.panel p{color:var(--t2);margin-bottom:12px}
+.panel p:last-child{margin-bottom:0}
+.panel-t{font-family:var(--dsp);font-size:12px;font-weight:700;letter-spacing:3px;color:var(--g);text-transform:uppercase;margin-bottom:18px;display:flex;align-items:center;gap:12px}
+.panel-t::after{content:'';flex:1;height:1px;background:linear-gradient(to right,rgba(0,255,65,.2),transparent)}
+.panel-ai{background:rgba(191,0,255,.03);border-color:rgba(191,0,255,.18)}
+.panel-ai:hover{border-color:rgba(191,0,255,.45)}
+.panel-ai .panel-t{color:#bf00ff}
+.panel-ai .panel-t::after{background:linear-gradient(to right,rgba(191,0,255,.2),transparent)}
+.panel-ai::before{background:linear-gradient(to bottom,#bf00ff,transparent)}
+.ai-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px;margin:20px 0}
+.ai-card{background:rgba(191,0,255,.04);border:1px solid rgba(191,0,255,.18);border-radius:4px;padding:22px;position:relative;overflow:hidden;transition:all .3s}
+.ai-card::after{content:'';position:absolute;top:0;right:0;width:0;height:0;border-top:26px solid rgba(191,0,255,.25);border-left:26px solid transparent}
+.ai-card:hover{border-color:rgba(191,0,255,.5);box-shadow:var(--pglow),0 16px 40px rgba(0,0,0,.25);transform:translateY(-3px)}
+.ai-ico{font-size:24px;margin-bottom:10px;display:block}
+.ai-name{font-family:var(--dsp);font-size:11px;font-weight:700;letter-spacing:2px;color:#bf00ff;text-transform:uppercase;margin-bottom:10px}
+.ai-desc{font-size:14px;color:var(--t2);line-height:1.65;font-weight:300}
+.alert{border-radius:4px;padding:16px 20px;margin:20px 0;display:flex;gap:14px;align-items:flex-start}
+.al-w{background:rgba(255,215,0,.04);border:1px solid rgba(255,215,0,.18);border-left:3px solid var(--o)}
+.al-p{background:rgba(191,0,255,.04);border:1px solid rgba(191,0,255,.18);border-left:3px solid #bf00ff}
+.al-i{background:rgba(0,229,255,.04);border:1px solid rgba(0,229,255,.14);border-left:3px solid var(--c)}
+.al-ic{font-family:var(--mono);font-size:13px;flex-shrink:0;margin-top:2px}
+.al-w .al-ic{color:var(--o)}.al-p .al-ic{color:#bf00ff}.al-i .al-ic{color:var(--c)}
+.al-tx{font-size:14px;color:var(--t2);line-height:1.6}
+.ptbl{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12px;margin:16px 0}
+.ptbl th{text-align:left;padding:11px 14px;color:var(--c);border-bottom:1px solid rgba(0,229,255,.3);letter-spacing:2px;font-size:10px;text-transform:uppercase}
+.ptbl td{padding:10px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05);vertical-align:top}
+.ptbl tr:hover td{background:rgba(0,255,65,.02)}
+.ptbl td:first-child{color:var(--g);font-weight:700}
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;margin:20px 0}
+.tc{background:rgba(0,229,255,.03);border:1px solid rgba(0,229,255,.1);border-radius:4px;padding:18px;transition:all .25s;position:relative;overflow:hidden}
+.tc::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(to right,var(--c),transparent);transform:scaleX(0);transform-origin:left;transition:transform .3s}
+.tc:hover{border-color:rgba(0,229,255,.4);background:rgba(0,229,255,.06);box-shadow:var(--cglow);transform:translateY(-3px)}
+.tc:hover::after{transform:scaleX(1)}
+.tcname{font-family:var(--mono);font-size:12px;color:var(--c);margin-bottom:4px}
+.tctag{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--o);text-transform:uppercase;margin-bottom:6px;display:block}
+.tcdesc{font-size:12px;color:var(--t3);line-height:1.45}
+.cb{background:rgba(0,0,0,.7);border:1px solid rgba(0,255,65,.1);border-left:3px solid var(--g);border-radius:0 4px 4px 0;padding:22px 26px;margin:16px 0;position:relative;overflow-x:auto;cursor:pointer;transition:all .3s}
+.cb::before{content:attr(data-l);position:absolute;top:0;right:0;font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--g);background:rgba(0,255,65,.07);padding:3px 12px;border-bottom-left-radius:4px;text-transform:uppercase}
+.cb:hover{border-color:rgba(0,255,65,.35)}
+.cb.cb-ai{border-left-color:#bf00ff}.cb.cb-ai::before{color:#bf00ff;background:rgba(191,0,255,.07)}
+.cb code{font-family:var(--mono);font-size:13px;color:var(--g);white-space:pre;display:block;line-height:1.9}
+.sev-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:20px 0}
+.sev-card{border-radius:4px;padding:16px;text-align:center;position:relative;overflow:hidden}
+.sev-c{background:rgba(220,0,0,.08);border:1px solid rgba(220,0,0,.35)}.sev-c .sev-label{color:#ff4444}
+.sev-h{background:rgba(255,100,0,.07);border:1px solid rgba(255,100,0,.3)}.sev-h .sev-label{color:#ff6600}
+.sev-m{background:rgba(255,200,0,.06);border:1px solid rgba(255,200,0,.28)}.sev-m .sev-label{color:var(--o)}
+.sev-l{background:rgba(0,200,100,.06);border:1px solid rgba(0,200,100,.25)}.sev-l .sev-label{color:#00cc66}
+.sev-i{background:rgba(0,150,255,.06);border:1px solid rgba(0,150,255,.25)}.sev-i .sev-label{color:#4da6ff}
+.sev-label{font-family:var(--dsp);font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;display:block;margin-bottom:4px}
+.sev-range{font-family:var(--mono);font-size:13px;color:var(--t1);display:block;margin-bottom:4px}
+.sev-desc{font-size:11px;color:var(--t3);line-height:1.4}
+.cta{background:linear-gradient(135deg,rgba(0,255,65,.04),rgba(191,0,255,.04));border:1px solid rgba(0,229,255,.3);border-radius:4px;padding:60px 50px;text-align:center;position:relative;overflow:hidden;margin-top:80px}
+.cta::before{content:'NESSUS';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:var(--dsp);font-size:140px;font-weight:900;color:rgba(0,255,65,.018);pointer-events:none;letter-spacing:10px}
+.cta-t{font-family:var(--dsp);font-size:20px;font-weight:700;letter-spacing:4px;color:var(--g);text-transform:uppercase;margin-bottom:16px;text-shadow:var(--glow)}
+.cta-p{color:var(--t2);font-size:16px;max-width:540px;margin:0 auto 32px;line-height:1.75}
+.cta-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+.btn{font-family:var(--mono);font-size:11px;letter-spacing:3px;text-transform:uppercase;padding:13px 30px;border-radius:2px;text-decoration:none;display:inline-block;transition:all .25s}
+.btn-p{border:1px solid var(--g);color:var(--g);background:rgba(0,255,65,.06)}
+.btn-p:hover{background:var(--g);color:var(--bg);box-shadow:var(--glow)}
+.btn-s{border:1px solid var(--c);color:var(--c);background:rgba(0,229,255,.05)}
+.btn-s:hover{background:var(--c);color:var(--bg);box-shadow:var(--cglow)}
+.footer{border-top:1px solid rgba(0,255,65,.1);padding:32px 0;margin-top:60px;display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:20px}
+.f-l{font-family:var(--mono);font-size:11px;color:var(--t3);letter-spacing:1.5px;line-height:2}
+.f-alias{color:var(--g);font-size:10px;letter-spacing:3px;text-shadow:0 0 8px var(--g)}
+.f-r{font-family:var(--mono);font-size:11px;color:var(--t3);text-align:right;line-height:2}
+.f-r a{color:var(--g);text-decoration:none}
+.f-r a:hover{text-shadow:var(--glow)}
+.div{height:1px;background:linear-gradient(to right,transparent,rgba(0,255,65,.15),transparent);margin:60px 0;position:relative}
+.div::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:6px;height:6px;border-radius:50%;background:var(--g);box-shadow:0 0 12px var(--g)}
+.div-ai{background:linear-gradient(to right,transparent,rgba(191,0,255,.22),transparent)}
+.div-ai::after{background:#bf00ff;box-shadow:0 0 12px #bf00ff}
+@keyframes fup{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+@keyframes fin{from{opacity:0}to{opacity:1}}
+.rv{opacity:0;transform:translateY(30px);transition:opacity .8s,transform .8s}
+.rv-l{opacity:0;transform:translateX(-30px);transition:opacity .8s,transform .8s}
+.rv.on,.rv-l.on{opacity:1;transform:none}
+@media(max-width:700px){.ai-grid,.tgrid,.sev-grid{grid-template-columns:1fr 1fr}.hero-canvas-wrap{display:none}.cta{padding:36px 20px}}
+</style>
+</head>
+<body>
+<canvas id="bg-particle"></canvas>
+<canvas id="bg-hex"></canvas>
+<div id="bg-vignette"></div>
+<div id="bg-scan"></div>
+<div id="cur"></div><div id="cur2"></div><div id="cur3"></div>
+<div id="prog"></div>
+<nav class="topbar">
+  <div class="tb-left">
+    <span class="tb-name">NISARG CHASMAWALA (SHROFF)</span>
+    <div class="tb-roles"><span class="tb-inner">Penetration Tester &nbsp;|&nbsp; Vulnerability Assessment &nbsp;|&nbsp; Cybersecurity Researcher &nbsp;|&nbsp; Offensive Security Engineer &nbsp;|&nbsp; Digital Forensics &nbsp;|&nbsp; Penetration Tester &nbsp;|&nbsp; Vulnerability Assessment &nbsp;|&nbsp; Cybersecurity Researcher</span></div>
+  </div>
+  <div class="tb-status"><span class="tb-dot"></span>SYS ONLINE</div>
+</nav>
+<nav class="toc" id="toc">
+  <div class="toc-i active" onclick="goTo('#hero')" data-s="hero"><div class="toc-d"></div><span class="toc-l">INTRO</span></div>
+  <div class="toc-i" onclick="goTo('#setup')" data-s="setup"><div class="toc-d"></div><span class="toc-l">SETUP</span></div>
+  <div class="toc-i" onclick="goTo('#policies')" data-s="policies"><div class="toc-d"></div><span class="toc-l">POLICIES</span></div>
+  <div class="toc-i" onclick="goTo('#scanning')" data-s="scanning"><div class="toc-d"></div><span class="toc-l">SCANNING</span></div>
+  <div class="toc-i" onclick="goTo('#results')" data-s="results"><div class="toc-d"></div><span class="toc-l">RESULTS</span></div>
+  <div class="toc-i" onclick="goTo('#reporting')" data-s="reporting"><div class="toc-d"></div><span class="toc-l">REPORTING</span></div>
+  <div class="toc-i" onclick="goTo('#advanced')" data-s="advanced"><div class="toc-d"></div><span class="toc-l">ADVANCED</span></div>
+  <div class="toc-i" onclick="goTo('#api')" data-s="api"><div class="toc-d"></div><span class="toc-l">API &amp; AUTOMATION</span></div>
+  <div class="toc-i" onclick="goTo('#ai')" data-s="ai"><div class="toc-d"></div><span class="toc-l">AI INTEGRATION</span></div>
+</nav>
+<div class="wrap">
+
+<section class="hero" id="hero">
+  <div class="hero-canvas-wrap"><canvas id="hero-geo"></canvas></div>
+  <div class="hero-content">
+  <div class="hero-tag">NISARG CHASMAWALA &nbsp;//&nbsp; ALIAS: HEAVEN</div>
+  <h1 class="hero-title">
+    <div class="gw" data-t="TENABLE NESSUS"><span class="ht-line1">TENABLE NESSUS</span></div>
+    <span class="ht-sub">VULNERABILITY SCANNING &middot; ASSESSMENT &middot; AI INTEGRATION</span>
+  </h1>
+  <p class="hero-desc">The definitive Tenable Nessus field guide for security professionals. From installation and scan policy configuration to credential scanning, result analysis, compliance auditing, professional report generation, REST API automation, and AI-powered vulnerability intelligence. Nessus is the world's most widely deployed vulnerability scanner -- mastering it is a core competency for every vulnerability assessment professional.</p>
+  <div class="hero-meta">
+    <div class="m-item"><span class="m-lbl">Author</span><span class="m-val">Nisarg Chasmawala (Shroff)</span></div>
+    <div class="m-item"><span class="m-lbl">Alias</span><span class="m-val">HEAVEN</span></div>
+    <div class="m-item"><span class="m-lbl">Platform</span><span class="m-val">Linux &middot; Windows &middot; macOS &middot; Docker</span></div>
+    <div class="m-item"><span class="m-lbl">Category</span><span class="m-val">Vulnerability Assessment &middot; AI</span></div>
+  </div>
+  </div>
+  <div class="hero-scroll-hint"><div class="hs-line"></div><span class="hs-txt">SCROLL TO BEGIN</span><div class="hs-pulse"></div></div>
+</section>
+<div class="div"></div>
+
+<!-- 01 SETUP -->
+<section class="sec rv" id="setup">
+  <div class="sec-hd"><span class="sec-n">01 //</span><h2 class="sec-t">Installation &amp; Initial Configuration<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel rv-l">
+    <p><strong style="color:var(--t1)">Tenable Nessus</strong> is the world's most widely deployed vulnerability scanner, trusted by over 30,000 organisations globally. It identifies vulnerabilities, misconfigurations, malware, and compliance violations across network devices, operating systems, databases, web applications, and cloud infrastructure. Nessus operates by deploying over 180,000 plugins -- small purpose-built scripts that test for specific vulnerabilities, misconfigurations, and compliance controls -- against target systems during a scan.</p>
+    <p><strong style="color:var(--c)">Nessus Essentials</strong> (free) scans up to 16 IP addresses and is sufficient for learning, home lab use, and small environments. <strong style="color:var(--c)">Nessus Professional</strong> removes IP limits, adds compliance auditing, live results, and advanced scanning capabilities. <strong style="color:var(--c)">Tenable.io</strong> and <strong style="color:var(--c)">Tenable Security Center</strong> are enterprise platforms providing centralised management, continuous monitoring, and team workflows.</p>
+  </div>
+  <div class="steps rv">
+    <div class="step"><div class="step-num">01</div><div class="step-body">
+      <div class="step-title">Download Nessus</div>
+      <div class="step-desc">Visit <strong style="color:var(--c)">tenable.com/products/nessus/select-your-operating-system</strong>. Choose your platform: Linux (.deb for Kali/Ubuntu, .rpm for RHEL/CentOS), Windows (.msi), macOS (.dmg), or Docker. Register at tenable.com for a free <strong style="color:var(--g)">Nessus Essentials</strong> activation code -- covers up to 16 IPs and is fully functional for learning and labs.</div>
+    </div></div>
+    <div class="step"><div class="step-num">02</div><div class="step-body">
+      <div class="step-title">Install the Service</div>
+      <div class="step-desc">On Kali/Debian: install the .deb package, then start the service with <code style="font-family:var(--mono);color:var(--c)">sudo systemctl start nessusd</code>. On Windows: run the .msi installer -- the service starts automatically. On macOS: open the .dmg and follow the installer. Docker: pull <code style="font-family:var(--mono);color:var(--c)">tenableofficial/nessus</code> and run with <code style="font-family:var(--mono);color:var(--c)">-p 8834:8834</code>.</div>
+      <div class="step-note">Enable auto-start on Linux: sudo systemctl enable nessusd</div>
+    </div></div>
+    <div class="step"><div class="step-num">03</div><div class="step-body">
+      <div class="step-title">Access the Web Interface</div>
+      <div class="step-desc">Open your browser and navigate to <strong style="color:var(--c)">https://localhost:8834</strong>. Accept the self-signed certificate warning (expected and safe for localhost). Create your administrator account, select <strong>"Nessus Essentials"</strong> or enter a Professional licence key, then enter your activation code.</div>
+    </div></div>
+    <div class="step"><div class="step-num">04</div><div class="step-body">
+      <div class="step-title">Wait for Plugin Initialisation</div>
+      <div class="step-desc">After activation, Nessus downloads its entire plugin database -- over <strong style="color:var(--g)">180,000 plugins</strong>. This takes 10-30 minutes. A progress bar shows on screen. Do not interrupt. Nessus cannot perform scans until the initial plugin download and compilation completes.</div>
+    </div></div>
+    <div class="step"><div class="step-num">05</div><div class="step-body">
+      <div class="step-title">Post-Install Configuration</div>
+      <div class="step-desc">Go to <strong style="color:var(--c)">Settings &rarr; Software Update</strong> and trigger a manual update for the latest plugins. Configure <strong style="color:var(--c)">Settings &rarr; SMTP Server</strong> for scan completion email alerts. Create a dedicated scan operator account under <strong style="color:var(--c)">Users</strong> -- avoid using the admin account for daily scanning.</div>
+    </div></div>
+  </div>
+  <div class="panel rv">
+    <div class="panel-t">Nessus Product Comparison</div>
+    <table class="ptbl">
+      <thead><tr><th>Feature</th><th>Essentials (Free)</th><th>Professional</th><th>Tenable.io</th></tr></thead>
+      <tbody>
+        <tr><td>IP Limit</td><td>16 IPs</td><td>Unlimited</td><td>Unlimited</td></tr>
+        <tr><td>Plugin Count</td><td>180,000+</td><td>180,000+</td><td>180,000+</td></tr>
+        <tr><td>Credentialed Scans</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+        <tr><td>Compliance Auditing</td><td>No</td><td>Yes (CIS/DISA)</td><td>Yes</td></tr>
+        <tr><td>Live Results</td><td>No</td><td>Yes</td><td>Yes</td></tr>
+        <tr><td>REST API Access</td><td>Limited</td><td>Full</td><td>Full</td></tr>
+        <tr><td>Scan Scheduling</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+        <tr><td>Report Formats</td><td>PDF/HTML/CSV</td><td>All formats</td><td>All formats</td></tr>
+        <tr><td>Multi-Scanner</td><td>No</td><td>No</td><td>Yes</td></tr>
+        <tr><td>Best For</td><td>Learning / Home lab</td><td>Pentest / VA</td><td>Enterprise</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- 02 POLICIES -->
+<section class="sec rv" id="policies">
+  <div class="sec-hd"><span class="sec-n">02 //</span><h2 class="sec-t">Scan Policies &amp; Templates<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel rv-l">
+    <p>Scan policies define what Nessus checks for, how aggressively it scans, and what credentials it uses to authenticate. Using the right scan template for the right context is one of the most important Nessus skills -- the wrong template wastes time, misses vulnerabilities, or causes performance issues on production systems. Nessus ships with over 20 pre-built templates covering everything from basic network discovery to deep application testing and compliance auditing.</p>
+  </div>
+  <div class="tmpl-grid rv">
+    <div class="tmpl-card">
+      <div class="tmpl-name">Basic Network Scan</div><span class="tmpl-tag">Most Common Starting Point</span>
+      <div class="tmpl-desc">General-purpose network vulnerability scan testing ~10,000 plugins across all common services. Supports credentials. Best for initial VA engagements, SMB networks, and external assessments. Navigate: <strong style="color:var(--c)">Scans &rarr; New Scan &rarr; Basic Network Scan</strong>.</div>
+    </div>
+    <div class="tmpl-card">
+      <div class="tmpl-name">Advanced Scan</div><span class="tmpl-tag">Full Control</span>
+      <div class="tmpl-desc">Full customisation of every scan parameter -- port ranges, plugin families, performance settings, credentials, and assessment intensity. Use when you need precise control. Navigate: <strong style="color:var(--c)">Scans &rarr; New Scan &rarr; Advanced Scan</strong>.</div>
+    </div>
+    <div class="tmpl-card">
+      <div class="tmpl-name">Credentialed Patch Audit</div><span class="tmpl-tag">Internal Compliance</span>
+      <div class="tmpl-desc">Checks for missing OS patches and outdated installed software using administrator credentials. Provides the most accurate patch gap analysis. Best for internal compliance and patch management validation assessments.</div>
+    </div>
+    <div class="tmpl-card">
+      <div class="tmpl-name">Web Application Tests</div><span class="tmpl-tag">Web Servers</span>
+      <div class="tmpl-desc">Targets web servers and applications. Checks HTTP headers, SSL/TLS configuration, CGI flaws, and common web vulnerabilities. Use as a complement to manual testing tools like Burp Suite for a comprehensive web assessment.</div>
+    </div>
+    <div class="tmpl-card">
+      <div class="tmpl-name">Malware Scan</div><span class="tmpl-tag">Incident Response</span>
+      <div class="tmpl-desc">Detects malware indicators, rogue processes, and known botnet C2 connections on Windows endpoints. Best for incident response and endpoint compromise verification workflows.</div>
+    </div>
+    <div class="tmpl-card">
+      <div class="tmpl-name">Compliance Audits</div><span class="tmpl-tag">Pro Only</span>
+      <div class="tmpl-desc">CIS Benchmarks, DISA STIGs, PCI DSS, and HIPAA templates produce control-by-control pass/fail compliance results. Navigate: <strong style="color:var(--c)">Scans &rarr; New Scan &rarr; Compliance</strong>. Requires Nessus Professional.</div>
+    </div>
+  </div>
+  <div class="panel rv">
+    <div class="panel-t">Creating a Custom Scan Policy</div>
+    <div class="steps" style="margin:0">
+      <div class="step" style="padding:12px"><div class="step-num" style="font-size:14px">01</div><div class="step-body"><div class="step-title">Open Policies</div><div class="step-desc">Navigate to <strong style="color:var(--c)">Scans &rarr; Policies &rarr; New Policy &rarr; Advanced Scan</strong>. Give the policy a descriptive name for the assessment type.</div></div></div>
+      <div class="step" style="padding:12px"><div class="step-num" style="font-size:14px">02</div><div class="step-body"><div class="step-title">Configure Discovery and Assessment</div><div class="step-desc">Under <strong style="color:var(--c)">Discovery</strong>: set port scan range (1-65535 for thorough). Under <strong style="color:var(--c)">Assessment</strong>: enable Safe Checks, set intensity. Under <strong style="color:var(--c)">Performance</strong>: set max concurrent hosts and checks.</div></div></div>
+      <div class="step" style="padding:12px"><div class="step-num" style="font-size:14px">03</div><div class="step-body"><div class="step-title">Select Plugin Families</div><div class="step-desc">Under <strong style="color:var(--c)">Plugins</strong>: enable the families you need (Backdoors, CGI, Databases, Windows, Service Detection). <strong style="color:var(--r)">Always disable Denial of Service</strong> on any production environment scan. Save the policy to reuse across multiple scans.</div></div></div>
+    </div>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- 03 SCANNING -->
+<section class="sec rv" id="scanning">
+  <div class="sec-hd"><span class="sec-n">03 //</span><h2 class="sec-t">Conducting Vulnerability Scans<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel rv-l">
+    <p>The quality of a Nessus scan is determined primarily by two factors: <strong style="color:var(--c)">credential configuration</strong> and <strong style="color:var(--c)">target accuracy</strong>. Unauthenticated scans detect only externally visible vulnerabilities -- they miss missing patches, weak configurations, and local privilege escalation paths that are only visible from inside the system. Credentialed scans can find 5-10x more vulnerabilities on the same target because they access the OS, registry, installed software list, and configuration files directly. Always run credentialed scans when the engagement scope permits.</p>
+  </div>
+  <div class="steps rv">
+    <div class="step"><div class="step-num">01</div><div class="step-body">
+      <div class="step-title">Create a New Scan</div>
+      <div class="step-desc">Navigate to <strong style="color:var(--c)">Scans &rarr; New Scan</strong> and choose your template. In Basic Settings: give the scan a descriptive name (e.g. "Internal VA Oct -- 10.0.0.0/24"). Enter targets as IP addresses, CIDR ranges, or hostnames -- one per line or comma-separated. Configure schedule (once, daily, or weekly) and email notifications for scan completion alerts.</div>
+    </div></div>
+    <div class="step"><div class="step-num">02</div><div class="step-body">
+      <div class="step-title">Configure Windows Credentials (SMB)</div>
+      <div class="step-desc">Click the <strong style="color:var(--c)">Credentials</strong> tab in the scan. Click <strong>Add &rarr; Windows</strong>. Enter username (<code style="font-family:var(--mono);color:var(--c)">DOMAINdministrator</code> or <code style="font-family:var(--mono);color:var(--c)">.\localadmin</code>) and password. Target requirements: SMB port 445 open, File and Printer Sharing enabled, Remote Registry running, firewall exception for SMB.</div>
+      <div class="step-note">Credentialed scans find 5-10x more vulnerabilities than unauthenticated scans on the same target.</div>
+    </div></div>
+    <div class="step"><div class="step-num">03</div><div class="step-body">
+      <div class="step-title">Configure Linux/Unix Credentials (SSH)</div>
+      <div class="step-desc">Click <strong>Add &rarr; SSH</strong>. Enter username (root or a sudo-capable account) and choose authentication method: Password or SSH private key. For sudo users, set <strong style="color:var(--c)">Elevate privileges with: sudo</strong> and enter the sudo binary path. The scan account should have NOPASSWD configured in sudoers for uninterrupted scanning.</div>
+    </div></div>
+    <div class="step"><div class="step-num">04</div><div class="step-body">
+      <div class="step-title">Performance and Safety Settings</div>
+      <div class="step-desc">Under <strong style="color:var(--c)">Settings &rarr; Assessment</strong>: ensure <strong style="color:var(--g)">Safe Checks is ON</strong> and <strong style="color:var(--r)">DoS plugins are DISABLED</strong> for any production target. Under <strong style="color:var(--c)">Settings &rarr; Performance</strong>: Max Concurrent Checks -- 5 for production, 10 for dedicated lab. Max Concurrent Hosts -- 5 for production, 30 for a dedicated scan network. Schedule during maintenance windows.</div>
+      <div class="step-note">Always enable Safe Checks on production. Never enable Denial of Service plugins on live business systems.</div>
+    </div></div>
+  </div>
+  <div class="alert al-w rv">
+    <span class="al-ic">[ ! ]</span>
+    <p class="al-tx"><strong>Production Scanning Safety.</strong> Always disable DoS plugins before scanning production systems. Set Max Concurrent Checks to 3-5 for production environments. Schedule scans during maintenance windows when possible. Ensure Safe Checks is enabled. Confirm written authorisation covers the target IPs before starting any scan -- unanticipated scanning even within a network can violate engagement scope.</p>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- 04 RESULTS -->
+<section class="sec rv" id="results">
+  <div class="sec-hd"><span class="sec-n">04 //</span><h2 class="sec-t">Analysing Scan Results<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel rv-l">
+    <p>Nessus scan results are structured around five severity levels based on the <strong style="color:var(--c)">Common Vulnerability Scoring System (CVSS)</strong>. Understanding how to triage and prioritise these findings is critical -- a large organisation may have thousands of findings across hundreds of systems, and effective prioritisation separates actionable security intelligence from overwhelming noise. Start with Critical findings on externally accessible systems; these represent the highest business risk and the most likely active exploitation paths.</p>
+  </div>
+  <div class="sev-grid rv">
+    <div class="sev-card sev-c"><span class="sev-label">Critical</span><span class="sev-range">9.0 - 10.0</span><span class="sev-desc">Remote code execution, authentication bypass, publicly exploitable CVEs</span></div>
+    <div class="sev-card sev-h"><span class="sev-label">High</span><span class="sev-range">7.0 - 8.9</span><span class="sev-desc">Privilege escalation, sensitive data exposure, significant service impact</span></div>
+    <div class="sev-card sev-m"><span class="sev-label">Medium</span><span class="sev-range">4.0 - 6.9</span><span class="sev-desc">Requires user interaction, limited impact scope, information disclosure</span></div>
+    <div class="sev-card sev-l"><span class="sev-label">Low</span><span class="sev-range">0.1 - 3.9</span><span class="sev-desc">Minimal impact, hardening improvements, defence-in-depth controls</span></div>
+    <div class="sev-card sev-i"><span class="sev-label">Info</span><span class="sev-range">0.0</span><span class="sev-desc">Version banners, port listings, best practice notes -- no direct risk</span></div>
+  </div>
+  <div class="gui-grid rv">
+    <div class="gui-card">
+      <div class="gui-card-title"><span class="gui-card-ico">&#128203;</span> View by Host</div>
+      <div class="gui-card-desc">The default view after scan completion. Left panel shows each scanned host with colour-coded bars representing Critical/High/Medium/Low/Info counts. Click any host to see all vulnerabilities discovered on that specific system. Best for host-by-host remediation planning.</div>
+    </div>
+    <div class="gui-card">
+      <div class="gui-card-title"><span class="gui-card-ico">&#128202;</span> View by Vulnerability</div>
+      <div class="gui-card-desc">Click the <strong style="color:var(--c)">Vulnerabilities</strong> tab in scan results. All findings sorted by severity -- Critical first. Each row shows Plugin ID, severity badge, vulnerability name, and number of affected hosts. Best for identifying the highest-impact issues across the entire scan scope.</div>
+    </div>
+    <div class="gui-card">
+      <div class="gui-card-title"><span class="gui-card-ico">&#128269;</span> Filter Bar</div>
+      <div class="gui-card-desc">The filter bar at the top of results lets you filter by: <strong style="color:var(--c)">Severity</strong> (Critical/High/Medium/Low/Info), <strong style="color:var(--c)">VPR Score</strong> (Tenable's threat-intel priority rating), <strong style="color:var(--c)">Plugin Family</strong> (Windows/CGI/Databases), <strong style="color:var(--c)">Port</strong>, or <strong style="color:var(--c)">Plugin ID</strong> for targeted review.</div>
+    </div>
+    <div class="gui-card">
+      <div class="gui-card-title"><span class="gui-card-ico">&#128196;</span> Reading a Finding</div>
+      <div class="gui-card-desc">Click any vulnerability to expand its full detail panel. You will see: <strong>Description</strong> (what the vulnerability is), <strong>Solution</strong> (how to fix it), <strong>CVSS Score and vector</strong>, <strong>CVE References</strong> (linked to NVD), <strong>Plugin Output</strong> (the actual scan evidence), and <strong>See Also</strong> (vendor advisories).</div>
+    </div>
+    <div class="gui-card">
+      <div class="gui-card-title"><span class="gui-card-ico">&#9989;</span> Verifying Findings</div>
+      <div class="gui-card-desc">Always verify using the Plugin Output field -- this is the actual evidence captured during scanning. A banner grab showing "Apache/2.4.49" confirms the vulnerable version. A registry value confirms an unpatched Windows KB. Evidence in the plugin output eliminates false positives before reporting.</div>
+    </div>
+    <div class="gui-card">
+      <div class="gui-card-title"><span class="gui-card-ico">&#128190;</span> Export Formats</div>
+      <div class="gui-card-desc">Click <strong style="color:var(--c)">Export</strong> (top right of results). Choose: <strong>PDF</strong> (client-ready report), <strong>HTML</strong> (interactive browser report), <strong>CSV</strong> (spreadsheet analysis and prioritisation), <strong>Nessus XML</strong> (import/API processing), or <strong>JSON</strong> (programmatic AI pipeline integration).</div>
+    </div>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- 05 REPORTING -->
+<section class="sec rv" id="reporting">
+  <div class="sec-hd"><span class="sec-n">05 //</span><h2 class="sec-t">Professional Reporting<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel rv-l">
+    <p>Nessus generates professional vulnerability assessment reports directly from scan data. The quality of a Nessus report -- and the remediation action it drives -- depends on proper configuration of report scope, audience-appropriate filtering, and intelligent presentation of findings. A raw Nessus export containing thousands of Info-level findings alongside Critical vulnerabilities is not a useful deliverable; a filtered, prioritised report presenting only actionable findings with clear remediation guidance is.</p>
+  </div>
+  <div class="steps rv">
+    <div class="step"><div class="step-num">01</div><div class="step-body">
+      <div class="step-title">Generate an Executive Summary Report</div>
+      <div class="step-desc">Navigate to <strong style="color:var(--c)">Scans &rarr; [completed scan] &rarr; Export</strong>. Choose <strong>PDF</strong> format. In Report Configuration set Min Severity to <strong>High</strong>. Group by <strong>Severity</strong>. Enable <strong>Charts and Statistics</strong> and <strong>Host counts</strong>. Disable individual plugin output. This produces a business-risk-focused document for C-suite and management audiences -- no technical jargon, clear risk context.</div>
+    </div></div>
+    <div class="step"><div class="step-num">02</div><div class="step-body">
+      <div class="step-title">Generate a Technical Remediation Report</div>
+      <div class="step-desc">Choose <strong>PDF or HTML</strong> format. Set Min Severity to <strong>Medium</strong> (Critical + High + Medium only). Group by <strong>Host</strong> (one section per system). Enable full plugin output, CVE references, and solution steps. This gives the IT/security operations team everything they need to understand, prioritise, and fix each finding without needing to access Nessus directly.</div>
+    </div></div>
+    <div class="step"><div class="step-num">03</div><div class="step-body">
+      <div class="step-title">Export a CSV for Remediation Tracking</div>
+      <div class="step-desc">Choose <strong>CSV</strong> format. This exports columns: Host, Plugin ID, Severity, CVE, Solution, and CVSS Score. Open in Excel or Google Sheets. Sort by Severity DESC then CVSS DESC. Use this as a prioritised remediation task list that patch management teams can work through and update as items are resolved.</div>
+      <div class="step-note">CSV is the most flexible format -- import directly into ServiceNow, Jira, or any ticketing system for remediation workflow management.</div>
+    </div></div>
+    <div class="step"><div class="step-num">04</div><div class="step-body">
+      <div class="step-title">Compliance Audit Reports (Pro)</div>
+      <div class="step-desc">After running a CIS, DISA STIG, or PCI DSS compliance scan, export the <strong style="color:var(--c)">Compliance</strong> chapter. Each control appears with a PASSED / FAILED / WARNING / ERROR status, the control reference number (CIS 1.1.1 or STIG V-12345), and the actual system value that caused the failure. Ready-to-submit audit evidence for regulatory assessments.</div>
+    </div></div>
+    <div class="step"><div class="step-num">05</div><div class="step-body">
+      <div class="step-title">Compare Scans for Remediation Progress</div>
+      <div class="step-desc">In <strong style="color:var(--c)">Scans &rarr; [scan] &rarr; Compare</strong>, select two scan instances (e.g. last month vs this month). Nessus shows <strong style="color:var(--g)">Remediated</strong> (fixed since last scan), <strong style="color:var(--r)">New</strong> (appeared since last scan), and <strong>Unchanged</strong> findings. This is your evidence of remediation progress for management reporting and SLA tracking.</div>
+    </div></div>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- 06 ADVANCED -->
+<section class="sec rv" id="advanced">
+  <div class="sec-hd"><span class="sec-n">06 //</span><h2 class="sec-t">Advanced Scanning Techniques<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel rv-l">
+    <p>Advanced Nessus techniques separate professional vulnerability assessors from basic users. <strong style="color:var(--c)">Agent-based scanning</strong> deploys lightweight Nessus agents on endpoints that scan locally and report to the manager -- ideal for remote workers and DMZ systems that cannot be reached by network-based scanning. <strong style="color:var(--c)">Compliance auditing</strong> tests systems against configuration benchmarks (CIS, DISA STIG, PCI DSS) and produces control-by-control pass/fail results. <strong style="color:var(--c)">Plugin customisation</strong> allows writing targeted checks for organisation-specific vulnerabilities.</p>
+  </div>
+  <div class="gui-grid rv">
+    <div class="gui-card">
+      <div class="gui-card-title"><span class="gui-card-ico">&#128187;</span> Nessus Agent Deployment</div>
+      <div class="gui-card-desc">Download the Nessus Agent from <strong style="color:var(--c)">tenable.com/downloads</strong>. Install on the endpoint (Linux: .deb/.rpm, Windows: .msi). After install, link the agent to your Nessus Manager via the agent settings -- enter the Linking Key (found in Nessus under <strong style="color:var(--c)">Settings &rarr; Sensors &rarr; Nessus Agents</strong>) and the manager hostname. The agent then appears in Nessus and can be included in agent scans without network connectivity to the target.</div>
+    </div>
+    <div class="gui-card">
+      <div class="gui-card-title"><span class="gui-card-ico">&#9989;</span> Compliance Audit Setup</div>
+      <div class="gui-card-desc">Navigate to <strong style="color:var(--c)">Scans &rarr; New Scan &rarr; Compliance</strong>. Choose your standard: CIS Level 1 or 2, DISA STIG (OS-specific), PCI DSS, or HIPAA. Add target credentials (SSH for Linux, WinRM for Windows). Each control reports as: <strong style="color:var(--g)">PASSED</strong>, <strong style="color:var(--r)">FAILED</strong> (with current value shown), <strong style="color:var(--o)">WARNING</strong> (needs manual review), or <strong>ERROR</strong> (could not be tested).</div>
+    </div>
+    <div class="gui-card">
+      <div class="gui-card-title"><span class="gui-card-ico">&#128736;&#65039;</span> Custom Audit Files</div>
+      <div class="gui-card-desc">Create a custom <code style="font-family:var(--mono);color:var(--c)">.audit</code> file with organisation-specific compliance checks using Nessus audit syntax. Define checks that test command output, registry values, file content, or service states against expected values. Upload via <strong style="color:var(--c)">Policies &rarr; [policy] &rarr; Compliance &rarr; Add file</strong>. Enables bespoke compliance controls beyond the built-in standards.</div>
+    </div>
+    <div class="gui-card">
+      <div class="gui-card-title"><span class="gui-card-ico">&#127760;</span> Web Application Scanning</div>
+      <div class="gui-card-desc">Use the <strong style="color:var(--c)">Web Application Tests</strong> scan template. In the scan settings, enable <strong>Follow Redirects</strong>, <strong>Test for common web flaws</strong> (XSS, SQLi, CSRF), and set thoroughness level. Provide HTTP login credentials for authenticated scanning. Combine with Burp Suite for comprehensive coverage -- Nessus for breadth, Burp for depth.</div>
+    </div>
+  </div>
+    <div class="tgrid rv">
+    <div class="tc"><div class="tcname">Plugin Families</div><span class="tctag">180,000+ Plugins</span><div class="tcdesc">Organised into 50+ families covering Windows, Linux, databases, web apps, network devices, and IoT</div></div>
+    <div class="tc"><div class="tcname">Nessus Agents</div><span class="tctag">Agent-Based</span><div class="tcdesc">Lightweight agents scan locally and report back -- ideal for remote endpoints and air-gapped systems</div></div>
+    <div class="tc"><div class="tcname">CIS Benchmarks</div><span class="tctag">Compliance</span><div class="tcdesc">Level 1/2 hardening audits for Windows, Linux, cloud services -- pass/fail per control</div></div>
+    <div class="tc"><div class="tcname">DISA STIGs</div><span class="tctag">Compliance</span><div class="tcdesc">DoD configuration standards -- essential for government and defence contractor assessments</div></div>
+    <div class="tc"><div class="tcname">PCI DSS</div><span class="tctag">Compliance</span><div class="tcdesc">Payment card industry security standard auditing for cardholder data environment systems</div></div>
+    <div class="tc"><div class="tcname">VPR Score</div><span class="tctag">Prioritisation</span><div class="tcdesc">Vulnerability Priority Rating -- Tenable's ML-based score incorporating threat intelligence beyond CVSS</div></div>
+    <div class="tc"><div class="tcname">Live Results</div><span class="tctag">Pro Feature</span><div class="tcdesc">See vulnerability results as they are discovered during scanning -- no waiting for scan completion</div></div>
+    <div class="tc"><div class="tcname">Audit Files</div><span class="tctag">Custom</span><div class="tcdesc">Custom .audit files allow writing organisation-specific compliance checks in Nessus audit syntax</div></div>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- 07 API & AUTOMATION -->
+<section class="sec rv" id="api">
+  <div class="sec-hd"><span class="sec-n">07 //</span><h2 class="sec-t">REST API &amp; Automation<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel rv-l">
+    <p>The <strong style="color:var(--c)">Nessus REST API</strong> enables full programmatic control of Nessus -- launching scans, monitoring progress, downloading results, and integrating Nessus data into SIEM, SOAR, and vulnerability management platforms. The API uses JSON over HTTPS and authenticates with API keys generated in the Nessus settings. Automating Nessus via the API is essential for mature security programmes that need continuous scanning, integration with ticketing systems, and automated remediation tracking.</p>
+  </div>
+  <div class="cb rv" data-l="Nessus REST API -- Python Automation Examples">
+    <code><span style="color:#bd93f9">#!/usr/bin/env python3</span>
+<span style="color:var(--t3)"># Nessus REST API automation
+# Generate API keys: Settings > My Account > API Keys > Generate</span>
+
+<span style="color:#bd93f9">import</span> requests, json, time, urllib3
+urllib3.disable_warnings()  <span style="color:var(--t3)"># suppress self-signed cert warning</span>
+
+<span style="color:var(--t3)"># ── CONFIGURATION ─────────────────────────────────────</span>
+NESSUS_URL  = <span style="color:#ff79c6">"https://localhost:8834"</span>
+ACCESS_KEY  = <span style="color:#ff79c6">"your-access-key"</span>
+SECRET_KEY  = <span style="color:#ff79c6">"your-secret-key"</span>
+HEADERS     = {<span style="color:#ff79c6">"X-ApiKeys"</span>: <span style="color:#ff79c6">f"accessKey={ACCESS_KEY}; secretKey={SECRET_KEY}"</span>,
+               <span style="color:#ff79c6">"Content-Type"</span>: <span style="color:#ff79c6">"application/json"</span>}
+
+<span style="color:#8be9fd">def</span> <span style="color:var(--c)">api</span>(method, endpoint, data=None):
+    url = NESSUS_URL + endpoint
+    resp = requests.request(method, url, headers=HEADERS,
+                            json=data, verify=False)
+    resp.raise_for_status()
+    <span style="color:#bd93f9">return</span> resp.json() <span style="color:#bd93f9">if</span> resp.text <span style="color:#bd93f9">else</span> {}
+
+<span style="color:var(--t3)"># ── LIST ALL SCANS ────────────────────────────────────</span>
+scans = api(<span style="color:#ff79c6">"GET"</span>, <span style="color:#ff79c6">"/scans"</span>)
+<span style="color:#bd93f9">for</span> s <span style="color:#bd93f9">in</span> scans.get(<span style="color:#ff79c6">"scans"</span>, []):
+    print(<span style="color:#ff79c6">f"  [{s['status']:&lt;12}] {s['id']:&gt;6}  {s['name']}"</span>)
+
+<span style="color:var(--t3)"># ── LAUNCH A SCAN ────────────────────────────────────</span>
+<span style="color:#8be9fd">def</span> <span style="color:var(--c)">launch_scan</span>(scan_id):
+    result = api(<span style="color:#ff79c6">"POST"</span>, <span style="color:#ff79c6">f"/scans/{scan_id}/launch"</span>)
+    <span style="color:#bd93f9">return</span> result.get(<span style="color:#ff79c6">"scan_uuid"</span>)
+
+<span style="color:var(--t3)"># ── WAIT FOR SCAN COMPLETION ──────────────────────────</span>
+<span style="color:#8be9fd">def</span> <span style="color:var(--c)">wait_for_scan</span>(scan_id, poll_interval=30):
+    print(<span style="color:#ff79c6">f"[*] Monitoring scan {scan_id}..."</span>)
+    <span style="color:#bd93f9">while True</span>:
+        detail = api(<span style="color:#ff79c6">"GET"</span>, <span style="color:#ff79c6">f"/scans/{scan_id}"</span>)
+        status = detail.get(<span style="color:#ff79c6">"info"</span>, {}).get(<span style="color:#ff79c6">"status"</span>, <span style="color:#ff79c6">"unknown"</span>)
+        print(<span style="color:#ff79c6">f"  Status: {status}"</span>)
+        <span style="color:#bd93f9">if</span> status <span style="color:#bd93f9">in</span> (<span style="color:#ff79c6">"completed"</span>, <span style="color:#ff79c6">"canceled"</span>, <span style="color:#ff79c6">"aborted"</span>): <span style="color:#bd93f9">break</span>
+        time.sleep(poll_interval)
+    <span style="color:#bd93f9">return</span> status
+
+<span style="color:var(--t3)"># ── EXPORT SCAN RESULTS AS CSV ────────────────────────</span>
+<span style="color:#8be9fd">def</span> <span style="color:var(--c)">export_scan</span>(scan_id, fmt=<span style="color:#ff79c6">"csv"</span>):
+    export = api(<span style="color:#ff79c6">"POST"</span>, <span style="color:#ff79c6">f"/scans/{scan_id}/export"</span>,
+                 data={<span style="color:#ff79c6">"format"</span>: fmt,
+                       <span style="color:#ff79c6">"chapters"</span>: <span style="color:#ff79c6">"vuln_hosts_summary"</span>})
+    file_id = export[<span style="color:#ff79c6">"file"</span>]
+    <span style="color:#bd93f9">while True</span>:
+        status = api(<span style="color:#ff79c6">"GET"</span>, <span style="color:#ff79c6">f"/scans/{scan_id}/export/{file_id}/status"</span>)
+        <span style="color:#bd93f9">if</span> status.get(<span style="color:#ff79c6">"status"</span>) == <span style="color:#ff79c6">"ready"</span>: <span style="color:#bd93f9">break</span>
+        time.sleep(5)
+    resp = requests.get(<span style="color:#ff79c6">f"{NESSUS_URL}/scans/{scan_id}/export/{file_id}/download"</span>,
+                        headers=HEADERS, verify=False)
+    fname = <span style="color:#ff79c6">f"nessus_scan_{scan_id}.{fmt}"</span>
+    <span style="color:#bd93f9">with</span> open(fname, <span style="color:#ff79c6">"wb"</span>) <span style="color:#bd93f9">as</span> f: f.write(resp.content)
+    print(<span style="color:#ff79c6">f"[+] Exported: {fname}"</span>)
+    <span style="color:#bd93f9">return</span> fname</code>
+  </div>
+</section>
+
+<div class="div div-ai"></div>
+
+<!-- 08 AI INTEGRATION -->
+<section class="sec rv sec-ai" id="ai">
+  <div class="sec-hd"><span class="sec-n">08 //</span><h2 class="sec-t">AI Integration in Nessus Workflows<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel panel-ai rv-l">
+    <p>AI transforms Nessus from a scanning tool into an intelligent vulnerability intelligence platform. Nessus produces vast amounts of structured data -- thousands of findings, CVE references, CVSS scores, and plugin output -- that are ideal inputs for LLM analysis. AI can prioritise findings based on real-world exploitability beyond CVSS scores, generate executive-ready narratives from raw vulnerability data, correlate findings across hosts to identify systemic weaknesses, and produce remediation roadmaps that patch management teams can actually execute. The combination of Nessus's comprehensive scanning with GPT reasoning produces security intelligence at a level previously requiring a team of senior analysts.</p>
+  </div>
+  <div class="alert al-p rv">
+    <span class="al-ic">[ AI ]</span>
+    <p class="al-tx">Security teams using AI-augmented Nessus workflows reduce vulnerability report writing time by 70% and improve remediation prioritisation accuracy by correlating Nessus findings with real-world threat intelligence, exploit availability, and asset criticality -- producing risk scores that CVSS alone cannot capture.</p>
+  </div>
+  <div class="ai-grid rv">
+    <div class="ai-card"><span class="ai-ico">&#128202;</span><div class="ai-name">Finding Prioritisation</div><div class="ai-desc">AI analyses Nessus CSV/JSON exports and re-prioritises findings beyond raw CVSS scores by incorporating exploit availability (Metasploit module exists?), asset criticality (internet-facing vs internal), and threat intelligence (actively exploited in the wild?). Produces a prioritised remediation queue where the most dangerous vulnerabilities on the most exposed systems appear first, regardless of CVSS score ordering.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128196;</span><div class="ai-name">Report Generation</div><div class="ai-desc">AI converts Nessus scan data into professional vulnerability assessment reports -- executive summaries with business risk narratives, technical finding sections with remediation steps, and compliance gap analysis. Transforms a raw CSV export with 2,000 rows into a structured, audience-appropriate report in minutes. Also generates management-level risk dashboards and remediation roadmaps with effort estimates per finding group.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128269;</span><div class="ai-name">Vulnerability Correlation</div><div class="ai-desc">AI identifies systemic vulnerability patterns across Nessus scan results that individual finding review misses -- "14 hosts have unpatched Apache 2.4.49, 8 of which are internet-facing and share a common service account. CVE-2021-41773 is actively exploited. This represents a critical attack chain from external to internal systems through a single shared credential." Attack chain analysis that no automated scanner provides natively.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128736;&#65039;</span><div class="ai-name">Custom Plugin Generation</div><div class="ai-desc">LLMs generate custom Nessus audit files and plugin NASL (Nessus Attack Scripting Language) code for organisation-specific checks -- "write a Nessus audit check that verifies our custom application's authentication header is present and meets our internal policy." Enables security teams to extend Nessus beyond its built-in 180,000 plugins for proprietary systems and internal compliance requirements.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128308;</span><div class="ai-name">Remediation Planning</div><div class="ai-desc">AI generates structured remediation plans from Nessus findings -- grouped by technology, prioritised by risk, with effort estimates and dependencies identified. "Patch these 47 Windows systems in this order because they share the same vulnerability and patching them together minimises downtime." Converts a vulnerability list into an actionable project plan that IT operations teams can execute without security expertise.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128201;</span><div class="ai-name">Trend Analysis</div><div class="ai-desc">AI analyses multiple Nessus scans over time to identify vulnerability trends, measure remediation velocity, and predict future risk posture. "Critical vulnerability count increased 23% last month due to new cloud assets being added without security review. At current remediation rate, the backlog will grow by 40% in 90 days." Converts point-in-time scan data into strategic security programme intelligence for management reporting.</div></div>
+  </div>
+  <div class="panel panel-ai rv" style="margin-top:28px">
+    <div class="panel-t">AI Tools for Nessus Vulnerability Management</div>
+    <table class="ptbl">
+      <thead><tr>
+        <th style="color:#bf00ff;border-bottom-color:rgba(191,0,255,.25)">Tool</th>
+        <th style="color:#bf00ff;border-bottom-color:rgba(191,0,255,.25)">Capability</th>
+        <th style="color:#bf00ff;border-bottom-color:rgba(191,0,255,.25)">Nessus Use Case</th>
+      </tr></thead>
+      <tbody>
+        <tr><td style="color:var(--g)">GPT-4 / Claude</td><td style="color:var(--t2)">Finding analysis, report writing, prioritisation</td><td style="color:var(--t2)">Parse Nessus CSV; generate VA reports; create remediation plans</td></tr>
+        <tr><td style="color:var(--g)">Tenable AI</td><td style="color:var(--t2)">Native Tenable AI capabilities</td><td style="color:var(--t2)">Built-in AI prioritisation (Tenable.io Lumin Exposure Management)</td></tr>
+        <tr><td style="color:var(--g)">Python + OpenAI</td><td style="color:var(--t2)">Nessus API + AI pipeline</td><td style="color:var(--t2)">Automate scan launch, export results, feed to GPT, generate report</td></tr>
+        <tr><td style="color:var(--g)">Elastic SIEM + AI</td><td style="color:var(--t2)">Vulnerability correlation</td><td style="color:var(--t2)">Ingest Nessus findings into Elastic, correlate with threat intel via AI</td></tr>
+        <tr><td style="color:var(--g)">ServiceNow + AI</td><td style="color:var(--t2)">Automated ticketing</td><td style="color:var(--t2)">Auto-create remediation tickets from Critical/High Nessus findings via API</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="cb cb-ai rv" data-l="AI Pipeline -- Nessus CSV Export + GPT Vulnerability Intelligence">
+    <code><span style="color:#bd93f9">#!/usr/bin/env python3</span>
+<span style="color:var(--t3)"># Parse Nessus CSV export, send to GPT for vulnerability intelligence
+# Export from Nessus: Scan > Export > CSV
+# Usage: python3 nessus_ai.py scan_export.csv</span>
+
+<span style="color:#bd93f9">import</span> csv, json, openai, sys
+<span style="color:#bd93f9">from</span> collections <span style="color:#bd93f9">import</span> Counter, defaultdict
+
+<span style="color:#8be9fd">def</span> <span style="color:var(--c)">parse_nessus_csv</span>(csv_file):
+    findings = []
+    <span style="color:#bd93f9">with</span> open(csv_file, newline=<span style="color:#ff79c6">""</span>, encoding=<span style="color:#ff79c6">"utf-8"</span>) <span style="color:#bd93f9">as</span> f:
+        reader = csv.DictReader(f)
+        <span style="color:#bd93f9">for</span> row <span style="color:#bd93f9">in</span> reader:
+            sev = row.get(<span style="color:#ff79c6">"Risk"</span>, <span style="color:#ff79c6">"Info"</span>)
+            <span style="color:#bd93f9">if</span> sev <span style="color:#bd93f9">in</span> (<span style="color:#ff79c6">"Critical"</span>, <span style="color:#ff79c6">"High"</span>, <span style="color:#ff79c6">"Medium"</span>):
+                findings.append({
+                    <span style="color:#ff79c6">"host"</span>       : row.get(<span style="color:#ff79c6">"Host"</span>),
+                    <span style="color:#ff79c6">"severity"</span>   : sev,
+                    <span style="color:#ff79c6">"plugin_id"</span>  : row.get(<span style="color:#ff79c6">"Plugin ID"</span>),
+                    <span style="color:#ff79c6">"name"</span>       : row.get(<span style="color:#ff79c6">"Name"</span>),
+                    <span style="color:#ff79c6">"cvss"</span>       : row.get(<span style="color:#ff79c6">"CVSS v3.0 Base Score"</span>, <span style="color:#ff79c6">"N/A"</span>),
+                    <span style="color:#ff79c6">"cve"</span>        : row.get(<span style="color:#ff79c6">"CVE"</span>, <span style="color:#ff79c6">""</span>),
+                    <span style="color:#ff79c6">"solution"</span>   : row.get(<span style="color:#ff79c6">"Solution"</span>, <span style="color:#ff79c6">""</span>)[:200],
+                })
+    sev_counts = Counter(f[<span style="color:#ff79c6">"severity"</span>] <span style="color:#bd93f9">for</span> f <span style="color:#bd93f9">in</span> findings)
+    hosts_aff  = defaultdict(list)
+    <span style="color:#bd93f9">for</span> f <span style="color:#bd93f9">in</span> findings: hosts_aff[f[<span style="color:#ff79c6">"severity"</span>]].append(f[<span style="color:#ff79c6">"host"</span>])
+    <span style="color:#bd93f9">return</span> {
+        <span style="color:#ff79c6">"severity_counts"</span> : dict(sev_counts),
+        <span style="color:#ff79c6">"unique_hosts"</span>    : len({f[<span style="color:#ff79c6">"host"</span>] <span style="color:#bd93f9">for</span> f <span style="color:#bd93f9">in</span> findings}),
+        <span style="color:#ff79c6">"total_findings"</span>  : len(findings),
+        <span style="color:#ff79c6">"top_findings"</span>    : findings[:30],  <span style="color:#bd93f9">sorted by severity</span>
+    }
+
+<span style="color:#8be9fd">def</span> <span style="color:var(--c)">ai_analysis</span>(data):
+    prompt = (
+        <span style="color:#ff79c6">"You are a senior vulnerability assessment specialist. "
+        "Analyse this Nessus scan summary and provide:
+"
+        "1. RISK EXECUTIVE SUMMARY -- 3 sentences for C-suite audience
+"
+        "2. CRITICAL ATTACK PATHS -- which findings chain to compromise?
+"
+        "3. PRIORITISED REMEDIATION -- top 10 actions, ordered by impact
+"
+        "4. SYSTEMIC WEAKNESSES -- patterns across multiple hosts
+"
+        "5. QUICK WINS -- findings fixable in under 1 hour
+
+"
+        "Nessus data:
+"</span> + json.dumps(data, indent=2)
+    )
+    r = openai.OpenAI().chat.completions.create(
+        model=<span style="color:#ff79c6">"gpt-4o"</span>,
+        messages=[{<span style="color:#ff79c6">"role"</span>:<span style="color:#ff79c6">"user"</span>,<span style="color:#ff79c6">"content"</span>:prompt}]
+    )
+    <span style="color:#bd93f9">return</span> r.choices[0].message.content
+
+csv_path = sys.argv[1] <span style="color:#bd93f9">if</span> len(sys.argv) > 1 <span style="color:#bd93f9">else</span> <span style="color:#ff79c6">"nessus_export.csv"</span>
+data = parse_nessus_csv(csv_path)
+print(<span style="color:#ff79c6">f"[*] {data['total_findings']} findings across {data['unique_hosts']} hosts"</span>)
+print(<span style="color:#ff79c6">f"[*] Severity: {data['severity_counts']}
+"</span>)
+print(ai_analysis(data))</code>
+  </div>
+  <div class="cb cb-ai rv" data-l="AI -- Full Automation: Nessus Scan Launch + Export + GPT Report">
+    <code><span style="color:#bd93f9">#!/usr/bin/env python3</span>
+<span style="color:var(--t3)"># End-to-end: launch scan via API, wait, export CSV, send to GPT
+# Requires: pip install requests openai</span>
+
+<span style="color:#bd93f9">import</span> requests, json, time, openai, urllib3
+urllib3.disable_warnings()
+
+NESSUS = <span style="color:#ff79c6">"https://localhost:8834"</span>
+HDRS   = {<span style="color:#ff79c6">"X-ApiKeys"</span>:<span style="color:#ff79c6">"accessKey=YOUR_KEY; secretKey=YOUR_SECRET"</span>}
+SCAN_ID = 5  <span style="color:#bd93f9"># change to your scan ID</span>
+
+<span style="color:#8be9fd">def</span> <span style="color:var(--c)">req</span>(method, path, data=None):
+    r = requests.request(method, NESSUS+path, headers=HDRS,
+                         json=data, verify=False)
+    <span style="color:#bd93f9">return</span> r.json() <span style="color:#bd93f9">if</span> r.text.strip() <span style="color:#bd93f9">else</span> {}
+
+<span style="color:var(--t3)"># 1. Launch scan</span>
+print(<span style="color:#ff79c6">"[1] Launching scan..."</span>)
+req(<span style="color:#ff79c6">"POST"</span>, <span style="color:#ff79c6">f"/scans/{SCAN_ID}/launch"</span>)
+
+<span style="color:var(--t3)"># 2. Wait for completion</span>
+print(<span style="color:#ff79c6">"[2] Waiting for scan completion..."</span>)
+<span style="color:#bd93f9">while True</span>:
+    info = req(<span style="color:#ff79c6">"GET"</span>, <span style="color:#ff79c6">f"/scans/{SCAN_ID}"</span>)
+    status = info.get(<span style="color:#ff79c6">"info"</span>,{}).get(<span style="color:#ff79c6">"status"</span>)
+    print(<span style="color:#ff79c6">f"  Status: {status}"</span>)
+    <span style="color:#bd93f9">if</span> status == <span style="color:#ff79c6">"completed"</span>: <span style="color:#bd93f9">break</span>
+    time.sleep(30)
+
+<span style="color:var(--t3)"># 3. Export to CSV</span>
+print(<span style="color:#ff79c6">"[3] Exporting results..."</span>)
+export = req(<span style="color:#ff79c6">"POST"</span>, <span style="color:#ff79c6">f"/scans/{SCAN_ID}/export"</span>,
+             {<span style="color:#ff79c6">"format"</span>:<span style="color:#ff79c6">"csv"</span>,<span style="color:#ff79c6">"chapters"</span>:<span style="color:#ff79c6">"vuln_hosts_summary"</span>})
+fid = export[<span style="color:#ff79c6">"file"</span>]
+<span style="color:#bd93f9">while</span> req(<span style="color:#ff79c6">"GET"</span>,<span style="color:#ff79c6">f"/scans/{SCAN_ID}/export/{fid}/status"</span>).get(<span style="color:#ff79c6">"status"</span>)!=<span style="color:#ff79c6">"ready"</span>:
+    time.sleep(5)
+csv_data = requests.get(<span style="color:#ff79c6">f"{NESSUS}/scans/{SCAN_ID}/export/{fid}/download"</span>,
+                        headers=HDRS, verify=False).text
+
+<span style="color:var(--t3)"># 4. Send top findings to GPT</span>
+print(<span style="color:#ff79c6">"[4] Sending to GPT for analysis..."</span>)
+lines = csv_data.splitlines()
+sample = <span style="color:#ff79c6">"
+"</span>.join(lines[:51])  <span style="color:var(--t3)"># header + first 50 rows</span>
+r = openai.OpenAI().chat.completions.create(
+    model=<span style="color:#ff79c6">"gpt-4o"</span>,
+    messages=[{<span style="color:#ff79c6">"role"</span>:<span style="color:#ff79c6">"user"</span>,
+               <span style="color:#ff79c6">"content"</span>:<span style="color:#ff79c6">"Analyse this Nessus CSV export. Provide: executive risk summary, top 5 critical findings with CVEs, recommended first-response remediation steps.
+
+"</span>+sample}]
+)
+print(<span style="color:#ff79c6">"
+[GPT ANALYSIS]
+"</span> + r.choices[0].message.content)</code>
+  </div>
+</section>
+
+<div class="cta rv">
+  <div class="cta-t">// Know Your Vulnerabilities Before Attackers Do. //</div>
+  <p class="cta-p">Tenable Nessus is the foundation of every mature vulnerability management programme. The organisations that are breached are not always the ones with the most vulnerabilities -- they are the ones that do not know what vulnerabilities they have. Scan continuously, triage intelligently, remediate systematically, and use AI to turn raw scan data into the risk intelligence that drives decisive security action.</p>
+  <div class="cta-btns">
+    <a href="https://github.com/nishu2402" class="btn btn-p" target="_blank" rel="noopener">GitHub -- nishu2402</a>
+    <a href="https://nishu2402.github.io" class="btn btn-s" target="_blank" rel="noopener">View Portfolio</a>
+  </div>
+</div>
+<footer class="footer">
+  <div class="f-l">Nisarg Chasmawala (Shroff)<br><span class="f-alias">// HEAVEN</span></div>
+  <div class="f-r">Offensive Security Engineer &middot; MSc Cyber Security, BCU<br>CEH Master &middot; CPENT &middot; CHFI &middot; ISO 27001 Lead Auditor<br><a href="https://github.com/nishu2402" target="_blank" rel="noopener">github.com/nishu2402</a></div>
+</footer>
+</div>
+<script>
+var cur=document.getElementById('cur'),cur2=document.getElementById('cur2'),cur3=document.getElementById('cur3');
+var mx=0,my=0;
+document.addEventListener('mousemove',function(e){mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
+(function loop(){cur2.style.left=mx+'px';cur2.style.top=my+'px';cur3.style.left=mx+'px';cur3.style.top=my+'px';requestAnimationFrame(loop);})();
+document.querySelectorAll('a,.btn,.ai-card,.panel,.cb,.tc').forEach(function(el){
+  el.addEventListener('mouseenter',function(){cur.style.width='18px';cur.style.height='18px';cur.style.background='rgba(0,255,65,.25)';});
+  el.addEventListener('mouseleave',function(){cur.style.width='10px';cur.style.height='10px';cur.style.background='var(--g)';});
+});
+window.addEventListener('scroll',function(){document.getElementById('prog').style.width=((window.scrollY/(document.body.scrollHeight-window.innerHeight))*100)+'%';});
+(function(){
+  var c=document.getElementById('bg-particle'),ctx=c.getContext('2d');
+  var W,H,mX=innerWidth/2,mY=innerHeight/2,N=200,MAX=140,P=[];
+  function Pt(){this.reset(true);}
+  Pt.prototype.reset=function(i){this.x=Math.random()*W;this.y=i?Math.random()*H:H+10;this.z=Math.random()*3+.5;this.vx=(Math.random()-.5)*.4;this.vy=(Math.random()-.5)*.4-.1;this.life=Math.random()*300+200;this.maxLife=this.life;this.r=Math.random()*1.5+.5;var r=Math.random();this.color=r<.7?'0,255,65':r<.9?'0,229,255':'191,0,255';};
+  Pt.prototype.update=function(){var dx=this.x-mX,dy=this.y-mY,d=Math.sqrt(dx*dx+dy*dy);if(d<120){var f=(120-d)/120;this.vx+=dx/d*f*.6;this.vy+=dy/d*f*.6;}this.vx*=.98;this.vy*=.98;this.x+=this.vx;this.y+=this.vy;this.life--;if(this.life<=0||this.x<-50||this.x>W+50||this.y<-50||this.y>H+50)this.reset(false);};
+  Pt.prototype.draw=function(){var a=(this.life/this.maxLife)*.7*this.z;ctx.beginPath();ctx.arc(this.x,this.y,this.r*this.z,0,Math.PI*2);ctx.fillStyle='rgba('+this.color+','+a+')';ctx.fill();};
+  function resize(){W=c.width=innerWidth;H=c.height=innerHeight;}
+  function lines(){for(var i=0;i<P.length;i++){for(var j=i+1;j<P.length;j++){var a=P[i],b=P[j],dx=a.x-b.x,dy=a.y-b.y,d=Math.sqrt(dx*dx+dy*dy);if(d<MAX){var al=(1-d/MAX)*.18,g=ctx.createLinearGradient(a.x,a.y,b.x,b.y);g.addColorStop(0,'rgba('+a.color+','+al+')');g.addColorStop(1,'rgba('+b.color+','+al+')');ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.strokeStyle=g;ctx.lineWidth=(a.z+b.z)/2*.5;ctx.stroke();}}}}
+  function animate(){ctx.clearRect(0,0,W,H);var g=ctx.createRadialGradient(mX,mY,0,mX,mY,80);g.addColorStop(0,'rgba(0,255,65,0)');g.addColorStop(.7,'rgba(0,255,65,0.04)');g.addColorStop(1,'rgba(0,255,65,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(mX,mY,80,0,Math.PI*2);ctx.fill();lines();P.forEach(function(p){p.update();p.draw();});requestAnimationFrame(animate);}
+  resize();window.addEventListener('resize',resize);document.addEventListener('mousemove',function(e){mX=e.clientX;mY=e.clientY;});
+  for(var i=0;i<N;i++)P.push(new Pt());animate();
+})();
+(function(){
+  var c=document.getElementById('bg-hex'),ctx=c.getContext('2d');
+  var W,H,t=0,S=40;
+  function resize(){W=c.width=innerWidth;H=c.height=innerHeight;}
+  function hex(cx,cy,s){ctx.beginPath();for(var i=0;i<6;i++){var a=Math.PI/180*(60*i-30);if(i===0)ctx.moveTo(cx+s*Math.cos(a),cy+s*Math.sin(a));else ctx.lineTo(cx+s*Math.cos(a),cy+s*Math.sin(a));}ctx.closePath();}
+  function draw(){ctx.clearRect(0,0,W,H);t+=.008;var sy=window.scrollY,cols=Math.ceil(W/(S*1.732))+2,rows=Math.ceil(H/(S*1.5))+2;for(var r=-1;r<rows;r++){for(var col=-1;col<cols;col++){var cx=col*S*1.732+(r%2)*S*.866,cy=r*S*1.5-(sy*.03)%(S*1.5),w=Math.sin(t+col*.3+r*.2)*.5+.5;hex(cx,cy,S-2);ctx.strokeStyle='rgba(0,255,65,'+(0.02+w*0.07)+')';ctx.lineWidth=.6;ctx.stroke();if(w>.92){hex(cx,cy,S-2);ctx.fillStyle='rgba(0,255,65,'+(0.02+w*0.03)+')';ctx.fill();}}}requestAnimationFrame(draw);}
+  resize();window.addEventListener('resize',resize);draw();
+})();
+// HERO: VULNERABILITY SEVERITY TOWER SYSTEM
+// 5 glowing 3D towers (Critical/High/Medium/Low/Info) with CVE nodes rising
+(function(){
+  var c=document.getElementById('hero-geo');if(!c)return;
+  var ctx=c.getContext('2d'),SZ=500;c.width=SZ;c.height=SZ;
+  var t=0,mrx=0,mry=0;
+
+  var severities=[
+    {label:'CRITICAL',col:'220,30,30',   height:280,count:7, x:60},
+    {label:'HIGH',    col:'255,120,0',   height:200,count:18,x:140},
+    {label:'MEDIUM',  col:'255,210,0',   height:140,count:35,x:220},
+    {label:'LOW',     col:'80,200,80',   height:80, count:52,x:300},
+    {label:'INFO',    col:'80,160,255',  height:50, count:124,x:380},
+  ];
+
+  // CVE nodes floating above towers
+  var cveNodes=[];
+  var cveLabels=['CVE-2024-1234','CVE-2023-9876','CVE-2024-5678','CVE-2023-4455',
+                 'CVE-2024-3322','CVE-2023-7711','CVE-2024-9001'];
+  severities.forEach(function(s,si){
+    for(var i=0;i<Math.min(s.count,4);i++){
+      cveNodes.push({
+        bx:s.x, col:s.col,
+        offY:-(s.height+20+i*22),
+        phase:Math.random()*Math.PI*2,
+        label: si===0 ? cveLabels[i%cveLabels.length] : ''
+      });
+    }
+  });
+
+  document.addEventListener('mousemove',function(e){mrx=(e.clientY/innerHeight-.5)*.12;mry=(e.clientX/innerWidth-.5)*.12;});
+
+  var BASE_Y=420;
+  var TW=48;
+
+  function draw3DBar(sx,sy,w,h,col,alpha,t2){
+    var dep=12; var ld=8;
+    // Front face
+    ctx.fillStyle='rgba('+col+','+alpha*0.5+')';
+    ctx.strokeStyle='rgba('+col+','+alpha*0.8+')';
+    ctx.lineWidth=1;
+    ctx.beginPath();
+    ctx.rect(sx-w/2,sy-h,w,h);
+    ctx.fill();ctx.stroke();
+    // Top face
+    ctx.beginPath();
+    ctx.moveTo(sx-w/2,sy-h);
+    ctx.lineTo(sx-w/2+dep,sy-h-ld);
+    ctx.lineTo(sx+w/2+dep,sy-h-ld);
+    ctx.lineTo(sx+w/2,sy-h);
+    ctx.closePath();
+    ctx.fillStyle='rgba('+col+','+alpha*0.7+')';ctx.fill();ctx.stroke();
+    // Right face
+    ctx.beginPath();
+    ctx.moveTo(sx+w/2,sy-h);
+    ctx.lineTo(sx+w/2+dep,sy-h-ld);
+    ctx.lineTo(sx+w/2+dep,sy-ld);
+    ctx.lineTo(sx+w/2,sy);
+    ctx.closePath();
+    ctx.fillStyle='rgba('+col+','+alpha*0.35+')';ctx.fill();ctx.stroke();
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,SZ,SZ);
+    t+=0.018;
+
+    var ox=mrx*15,oy=mry*15;
+    ctx.save();ctx.translate(ox,oy);
+
+    // Grid floor lines
+    for(var gx=20;gx<SZ-30;gx+=30){
+      ctx.beginPath();ctx.moveTo(gx,BASE_Y+12);ctx.lineTo(gx,BASE_Y+20);
+      ctx.strokeStyle='rgba(0,255,65,0.06)';ctx.lineWidth=1;ctx.stroke();
+    }
+    ctx.beginPath();ctx.moveTo(20,BASE_Y+12);ctx.lineTo(SZ-30,BASE_Y+12);
+    ctx.strokeStyle='rgba(0,255,65,0.12)';ctx.lineWidth=1;ctx.stroke();
+
+    severities.forEach(function(s,si){
+      var pulse=Math.sin(t*1.5+si)*.15+.85;
+      var h=s.height;
+      var sx=s.x+30;
+
+      // Tower glow
+      var tg=ctx.createRadialGradient(sx,BASE_Y-h/2,0,sx,BASE_Y-h/2,h*0.6);
+      tg.addColorStop(0,'rgba('+s.col+',0.06)');tg.addColorStop(1,'rgba('+s.col+',0)');
+      ctx.fillStyle=tg;ctx.fillRect(sx-40,BASE_Y-h-30,80,h+40);
+
+      // 3D bar
+      draw3DBar(sx,BASE_Y,TW,h,s.col,pulse*0.8,t);
+
+      // Label below
+      ctx.font='bold 8px Share Tech Mono';
+      ctx.fillStyle='rgba('+s.col+',0.9)';
+      ctx.textAlign='center';ctx.textBaseline='top';
+      ctx.fillText(s.label,sx,BASE_Y+18);
+      ctx.font='9px Share Tech Mono';
+      ctx.fillStyle='rgba('+s.col+',0.6)';
+      ctx.fillText(s.count,sx,BASE_Y+28);
+    });
+
+    // CVE nodes floating above Critical/High towers
+    cveNodes.forEach(function(n,ni){
+      var sx=n.bx+30;
+      var baseOY=n.offY;
+      var floatY=baseOY+Math.sin(t*1.2+n.phase)*6;
+      var nx=sx+Math.sin(t*0.8+n.phase)*8;
+      var ny=BASE_Y+floatY;
+      var pulse=Math.sin(t*2+n.phase)*.5+.5;
+      var alpha=0.4+pulse*0.3;
+      // Connecting line
+      ctx.beginPath();ctx.moveTo(sx,BASE_Y-severities[Math.floor(n.bx/80)>4?4:Math.floor(n.bx/80)].height);
+      ctx.lineTo(nx,ny);ctx.strokeStyle='rgba('+n.col+',0.1)';ctx.lineWidth=1;ctx.stroke();
+      // Node
+      var ng=ctx.createRadialGradient(nx,ny,0,nx,ny,7);
+      ng.addColorStop(0,'rgba('+n.col+','+alpha*0.5+')');ng.addColorStop(1,'rgba('+n.col+',0)');
+      ctx.fillStyle=ng;ctx.beginPath();ctx.arc(nx,ny,7,0,Math.PI*2);ctx.fill();
+      ctx.beginPath();ctx.arc(nx,ny,3,0,Math.PI*2);
+      ctx.fillStyle='rgba('+n.col+','+alpha*0.9+')';ctx.fill();
+      if(n.label && alpha>0.5){
+        ctx.font='7px Share Tech Mono';
+        ctx.fillStyle='rgba('+n.col+','+alpha*0.7+')';
+        ctx.textAlign='left';ctx.textBaseline='middle';
+        ctx.fillText(n.label,nx+6,ny);
+      }
+    });
+
+    // Title
+    var tp=Math.sin(t)*.5+.5;
+    ctx.font='bold 12px Orbitron,sans-serif';
+    ctx.fillStyle='rgba(0,255,65,'+(0.4+tp*0.3)+')';
+    ctx.textAlign='center';ctx.textBaseline='top';
+    ctx.fillText('VULNERABILITY ASSESSMENT',SZ/2-5,18);
+    ctx.font='9px Share Tech Mono';
+    ctx.fillStyle='rgba(0,229,255,0.5)';
+    ctx.fillText('180,000+ Plugins  |  CVSS Severity Stack',SZ/2-5,34);
+
+    ctx.restore();
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+var rv=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('on');});},{threshold:.08});
+document.querySelectorAll('.rv,.rv-l').forEach(function(el){rv.observe(el);});
+var sIds=['hero','setup','policies','scanning','results','reporting','advanced','api','ai'];
+var tItems=document.querySelectorAll('.toc-i');
+var so=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)tItems.forEach(function(ti){ti.classList.toggle('active',ti.dataset.s===x.target.id);});});},{threshold:.25});
+sIds.forEach(function(id){var el=document.getElementById(id);if(el)so.observe(el);});
+function goTo(h){document.querySelector(h).scrollIntoView({behavior:'smooth'});}
+document.querySelectorAll('.cb').forEach(function(b){
+  b.title='Click to copy';
+  b.addEventListener('click',function(){
+    navigator.clipboard.writeText(b.querySelector('code').innerText).catch(function(){});
+    var o=b.getAttribute('data-l');b.setAttribute('data-l',o+' \u2713 COPIED');
+    setTimeout(function(){b.setAttribute('data-l',o);},2000);
+  });
+});
+</script>
+</body>
+</html>

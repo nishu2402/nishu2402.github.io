@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mastering Wireshark | Nisarg Chasmawala</title>
+<meta name="description" content="Mastering Wireshark - the definitive guide by Nisarg Chasmawala (Shroff), Offensive Security Engineer.">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--g:#00ff41;--c:#00e5ff;--p:#bf00ff;--r:#ff003c;--o:#ffd700;--bg:#030509;--t1:#d4ffe0;--t2:#7aad82;--t3:#2e4a32;--mono:'Share Tech Mono',monospace;--dsp:'Orbitron',sans-serif;--body:'Rajdhani',sans-serif;--glow:0 0 20px rgba(0,255,65,.4),0 0 60px rgba(0,255,65,.15);--cglow:0 0 20px rgba(0,229,255,.4),0 0 60px rgba(0,229,255,.1);--pglow:0 0 20px rgba(191,0,255,.4),0 0 60px rgba(191,0,255,.1)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;overflow-x:hidden}
+body{background:var(--bg);color:var(--t1);font-family:var(--body);font-size:17px;line-height:1.8;overflow-x:hidden;cursor:none}
+#bg-particle{position:fixed;inset:0;z-index:0;pointer-events:none}
+#bg-hex{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.35}
+#bg-scan{position:fixed;inset:0;z-index:9999;pointer-events:none;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,255,65,.009) 2px,rgba(0,255,65,.009) 4px)}
+#bg-vignette{position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse at 50% 50%,transparent 50%,rgba(3,5,9,.85) 100%)}
+#cur{position:fixed;width:10px;height:10px;border-radius:50%;background:var(--g);box-shadow:var(--glow);pointer-events:none;z-index:99999;transform:translate(-50%,-50%);transition:width .1s,height .1s}
+#cur2{position:fixed;width:30px;height:30px;border-radius:50%;border:1px solid rgba(0,255,65,.5);pointer-events:none;z-index:99998;transform:translate(-50%,-50%)}
+#cur3{position:fixed;width:50px;height:50px;border-radius:50%;border:1px solid rgba(0,255,65,.2);pointer-events:none;z-index:99997;transform:translate(-50%,-50%)}
+#prog{position:fixed;top:0;left:0;height:2px;background:linear-gradient(to right,var(--g),var(--c),var(--p));box-shadow:0 0 10px var(--g);z-index:10000;width:0%}
+.topbar{position:fixed;top:0;left:0;right:0;height:58px;background:rgba(3,5,9,.88);border-bottom:1px solid rgba(0,255,65,.12);backdrop-filter:blur(20px);z-index:1000;display:flex;align-items:center;justify-content:space-between;padding:0 32px}
+.tb-left{display:flex;flex-direction:column;gap:2px}
+.tb-name{font-family:var(--dsp);font-size:13px;font-weight:900;color:var(--t1);letter-spacing:3px}
+.tb-roles{font-family:var(--mono);font-size:9px;overflow:hidden;white-space:nowrap}
+.tb-inner{display:inline-block;color:var(--c);animation:ticker 18s linear infinite}
+@keyframes ticker{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
+.tb-status{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;color:var(--g)}
+.tb-dot{width:7px;height:7px;border-radius:50%;background:var(--g);box-shadow:0 0 10px var(--g);animation:tdot 1.2s ease-in-out infinite}
+@keyframes tdot{0%,100%{opacity:1}50%{opacity:.3}}
+.toc{position:fixed;right:20px;top:50%;transform:translateY(-50%);z-index:200;display:flex;flex-direction:column;gap:9px}
+.toc-i{display:flex;align-items:center;gap:8px;cursor:pointer}
+.toc-d{width:6px;height:6px;border-radius:50%;border:1px solid var(--t3);transition:all .25s;flex-shrink:0}
+.toc-i.active .toc-d,.toc-i:hover .toc-d{background:var(--g);border-color:var(--g);box-shadow:0 0 10px var(--g)}
+.toc-l{font-family:var(--mono);font-size:10px;color:var(--t3);opacity:0;transform:translateX(6px);transition:all .2s;white-space:nowrap}
+.toc-i:hover .toc-l,.toc-i.active .toc-l{opacity:1;transform:none;color:var(--g)}
+@media(max-width:1000px){.toc{display:none}}
+.wrap{position:relative;z-index:10;max-width:980px;margin:0 auto;padding:0 28px}
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:100px 0 60px;position:relative}
+.hero-canvas-wrap{position:absolute;right:-60px;top:50%;transform:translateY(-52%);width:420px;height:420px;pointer-events:none}
+#hero-geo{width:100%;height:100%}
+.hero-content{max-width:520px;position:relative;z-index:2}
+.hero-tag{font-family:var(--mono);font-size:11px;letter-spacing:4px;color:var(--c);text-transform:uppercase;margin-bottom:18px;opacity:0;animation:fup .6s ease forwards .3s;display:flex;align-items:center;gap:12px}
+.hero-tag::before{content:'';width:40px;height:1px;background:linear-gradient(to right,transparent,var(--c))}
+.hero-tag::after{content:'';flex:1;max-width:100px;height:1px;background:linear-gradient(to right,var(--c),transparent)}
+.hero-title{font-family:var(--dsp);font-size:clamp(18px,3.5vw,42px);font-weight:900;line-height:1.0;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;opacity:0;animation:fup .7s ease forwards .5s}
+.ht-line1{display:block;color:var(--g);text-shadow:0 0 40px rgba(0,255,65,.6)}
+.ht-sub{display:block;font-size:.43em;letter-spacing:5px;color:rgba(200,255,220,.5);font-weight:400;margin-top:10px}
+.gw{position:relative;display:inline-block}
+.gw::before,.gw::after{content:attr(data-t);position:absolute;top:0;left:0;width:100%;font-family:var(--dsp);font-weight:900;font-size:inherit;letter-spacing:inherit;text-transform:uppercase}
+.gw::before{color:var(--c);animation:ga 5s infinite;clip-path:polygon(0 0,100% 0,100% 33%,0 33%)}
+.gw::after{color:var(--r);animation:gb 5s infinite;clip-path:polygon(0 66%,100% 66%,100% 100%,0 100%)}
+@keyframes ga{0%,85%,100%{transform:none;opacity:0}87%{transform:translate(-5px,2px);opacity:.9}93%{transform:none;opacity:0}}
+@keyframes gb{0%,87%,100%{transform:none;opacity:0}89%{transform:translate(5px,3px);opacity:.8}95%{transform:none;opacity:0}}
+.hero-desc{font-size:17px;font-weight:300;color:var(--t2);max-width:560px;line-height:1.75;margin-bottom:36px;opacity:0;animation:fup .8s ease forwards .8s;margin-top:20px}
+.hero-meta{display:flex;gap:24px;flex-wrap:wrap;opacity:0;animation:fup .8s ease forwards 1s}
+.m-item{display:flex;flex-direction:column;gap:3px}
+.m-lbl{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--t3);text-transform:uppercase}
+.m-val{font-family:var(--mono);font-size:12px;color:var(--c)}
+.hero-scroll-hint{position:absolute;bottom:24px;left:0;display:flex;align-items:center;gap:12px;opacity:0;animation:fin 1s ease forwards 1.8s}
+.hs-line{width:60px;height:1px;background:linear-gradient(to right,var(--g),transparent)}
+.hs-txt{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--t3)}
+.hs-pulse{width:6px;height:6px;border-radius:50%;background:var(--g);box-shadow:0 0 8px var(--g);animation:tdot 1.5s ease-in-out infinite}
+.sec{margin-bottom:100px}
+.sec-hd{display:flex;align-items:center;gap:14px;margin-bottom:40px}
+.sec-n{font-family:var(--mono);font-size:10px;color:var(--p);letter-spacing:2px;min-width:44px}
+.sec-ln{flex:1;height:1px;background:linear-gradient(to right,rgba(0,229,255,.35),transparent)}
+.sec-t{font-family:var(--dsp);font-size:clamp(14px,2.4vw,21px);font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--c);text-shadow:var(--cglow)}
+.tw-cursor{display:inline-block;width:2px;height:1em;background:var(--c);margin-left:4px;animation:blink 1s step-end infinite;vertical-align:middle}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.sec-ai .sec-t{color:#bf00ff;text-shadow:var(--pglow)}
+.sec-ai .sec-n{color:var(--c)}
+.sec-ai .sec-ln{background:linear-gradient(to right,rgba(191,0,255,.35),transparent)}
+.sec-ai .tw-cursor{background:#bf00ff}
+.panel{background:rgba(0,255,65,.025);border:1px solid rgba(0,255,65,.12);border-radius:4px;padding:32px;margin-bottom:22px;position:relative;overflow:hidden;transition:border-color .3s,box-shadow .3s,transform .3s}
+.panel::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:linear-gradient(to bottom,var(--g),transparent);opacity:0;transition:opacity .3s}
+.panel:hover{border-color:rgba(0,229,255,.4);box-shadow:0 0 50px rgba(0,229,255,.07),0 20px 60px rgba(0,0,0,.3);transform:translateY(-3px)}
+.panel:hover::before{opacity:1}
+.panel p{color:var(--t2);margin-bottom:12px}
+.panel p:last-child{margin-bottom:0}
+.panel-t{font-family:var(--dsp);font-size:12px;font-weight:700;letter-spacing:3px;color:var(--g);text-transform:uppercase;margin-bottom:18px;display:flex;align-items:center;gap:12px}
+.panel-t::after{content:'';flex:1;height:1px;background:linear-gradient(to right,rgba(0,255,65,.2),transparent)}
+.panel-ai{background:rgba(191,0,255,.03);border-color:rgba(191,0,255,.18)}
+.panel-ai:hover{border-color:rgba(191,0,255,.45)}
+.panel-ai .panel-t{color:#bf00ff}
+.panel-ai .panel-t::after{background:linear-gradient(to right,rgba(191,0,255,.2),transparent)}
+.panel-ai::before{background:linear-gradient(to bottom,#bf00ff,transparent)}
+.ai-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px;margin:20px 0}
+.ai-card{background:rgba(191,0,255,.04);border:1px solid rgba(191,0,255,.18);border-radius:4px;padding:22px;position:relative;overflow:hidden;transition:all .3s}
+.ai-card::after{content:'';position:absolute;top:0;right:0;width:0;height:0;border-top:26px solid rgba(191,0,255,.25);border-left:26px solid transparent}
+.ai-card:hover{border-color:rgba(191,0,255,.5);box-shadow:var(--pglow),0 16px 40px rgba(0,0,0,.25);transform:translateY(-3px)}
+.ai-ico{font-size:24px;margin-bottom:10px;display:block}
+.ai-name{font-family:var(--dsp);font-size:11px;font-weight:700;letter-spacing:2px;color:#bf00ff;text-transform:uppercase;margin-bottom:10px}
+.ai-desc{font-size:14px;color:var(--t2);line-height:1.65;font-weight:300}
+.alert{border-radius:4px;padding:16px 20px;margin:20px 0;display:flex;gap:14px;align-items:flex-start}
+.al-w{background:rgba(255,215,0,.04);border:1px solid rgba(255,215,0,.18);border-left:3px solid var(--o)}
+.al-p{background:rgba(191,0,255,.04);border:1px solid rgba(191,0,255,.18);border-left:3px solid #bf00ff}
+.al-i{background:rgba(0,229,255,.04);border:1px solid rgba(0,229,255,.14);border-left:3px solid var(--c)}
+.al-ic{font-family:var(--mono);font-size:13px;flex-shrink:0;margin-top:2px}
+.al-w .al-ic{color:var(--o)}.al-p .al-ic{color:#bf00ff}.al-i .al-ic{color:var(--c)}
+.al-tx{font-size:14px;color:var(--t2);line-height:1.6}
+.ptbl{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12px;margin:16px 0}
+.ptbl th{text-align:left;padding:11px 14px;color:var(--c);border-bottom:1px solid rgba(0,229,255,.3);letter-spacing:2px;font-size:10px;text-transform:uppercase}
+.ptbl td{padding:10px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05);vertical-align:top}
+.ptbl tr:hover td{background:rgba(0,255,65,.02)}
+.ptbl td:first-child{color:var(--g);font-weight:700}
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;margin:20px 0}
+.tc{background:rgba(0,229,255,.03);border:1px solid rgba(0,229,255,.1);border-radius:4px;padding:18px;transition:all .25s;position:relative;overflow:hidden}
+.tc::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(to right,var(--c),transparent);transform:scaleX(0);transform-origin:left;transition:transform .3s}
+.tc:hover{border-color:rgba(0,229,255,.4);background:rgba(0,229,255,.06);box-shadow:var(--cglow);transform:translateY(-3px)}
+.tc:hover::after{transform:scaleX(1)}
+.tcname{font-family:var(--mono);font-size:12px;color:var(--c);margin-bottom:4px}
+.tctag{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--o);text-transform:uppercase;margin-bottom:6px;display:block}
+.tcdesc{font-size:12px;color:var(--t3);line-height:1.45}
+.cb{background:rgba(0,0,0,.7);border:1px solid rgba(0,255,65,.1);border-left:3px solid var(--g);border-radius:0 4px 4px 0;padding:22px 26px;margin:16px 0;position:relative;overflow-x:auto;cursor:pointer;transition:all .3s}
+.cb::before{content:attr(data-l);position:absolute;top:0;right:0;font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--g);background:rgba(0,255,65,.07);padding:3px 12px;border-bottom-left-radius:4px;text-transform:uppercase}
+.cb:hover{border-color:rgba(0,255,65,.35)}
+.cb.cb-ai{border-left-color:#bf00ff}.cb.cb-ai::before{color:#bf00ff;background:rgba(191,0,255,.07)}
+.cb code{font-family:var(--mono);font-size:13px;color:var(--g);white-space:pre;display:block;line-height:1.9}
+.steps{display:flex;flex-direction:column;gap:14px;margin:20px 0}
+.step{display:flex;gap:16px;align-items:flex-start;background:rgba(0,255,65,.02);border:1px solid rgba(0,255,65,.1);border-radius:4px;padding:18px;transition:all .3s}
+.step:hover{border-color:rgba(0,229,255,.3);background:rgba(0,229,255,.03)}
+.step-num{font-family:var(--dsp);font-size:18px;font-weight:900;color:var(--g);min-width:32px;text-shadow:var(--glow)}
+.step-body{flex:1}
+.step-title{font-family:var(--mono);font-size:12px;color:var(--c);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;font-weight:700}
+.step-desc{font-size:14px;color:var(--t2);line-height:1.6}
+.step-note{font-family:var(--mono);font-size:11px;color:var(--o);margin-top:6px;background:rgba(255,215,0,.04);padding:6px 10px;border-radius:2px;border-left:2px solid var(--o)}
+.gui-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin:20px 0}
+.gui-card{background:rgba(0,255,65,.025);border:1px solid rgba(0,255,65,.12);border-radius:4px;padding:20px;transition:all .3s;position:relative;overflow:hidden}
+.gui-card::after{content:'';position:absolute;top:0;right:0;width:0;height:0;border-top:22px solid rgba(0,229,255,.2);border-left:22px solid transparent}
+.gui-card:hover{border-color:rgba(0,229,255,.4);transform:translateY(-3px);box-shadow:var(--cglow)}
+.gui-card-title{font-family:var(--mono);font-size:12px;color:var(--c);font-weight:700;letter-spacing:1px;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.gui-card-ico{font-size:16px}
+.gui-card-desc{font-size:13px;color:var(--t2);line-height:1.55}
+.filter-card{background:rgba(0,0,0,.5);border:1px solid rgba(0,229,255,.15);border-radius:4px;padding:16px;margin-bottom:12px}
+.filter-expr{font-family:var(--mono);font-size:13px;color:var(--g);background:rgba(0,255,65,.06);border:1px solid rgba(0,255,65,.2);border-radius:3px;padding:6px 12px;display:inline-block;margin-bottom:8px}
+.filter-desc{font-size:13px;color:var(--t2);line-height:1.55}
+.proto-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin:16px 0}
+.proto-badge{background:rgba(0,229,255,.04);border:1px solid rgba(0,229,255,.15);border-radius:4px;padding:12px;text-align:center;transition:all .25s}
+.proto-badge:hover{border-color:rgba(0,229,255,.4);transform:translateY(-2px)}
+.proto-name{font-family:var(--mono);font-size:12px;color:var(--c);font-weight:700;display:block;margin-bottom:4px}
+.proto-layer{font-family:var(--mono);font-size:9px;color:var(--o);letter-spacing:2px;text-transform:uppercase;display:block;margin-bottom:6px}
+.proto-desc{font-size:11px;color:var(--t3);line-height:1.4}
+.cta{background:linear-gradient(135deg,rgba(0,255,65,.04),rgba(191,0,255,.04));border:1px solid rgba(0,229,255,.3);border-radius:4px;padding:60px 50px;text-align:center;position:relative;overflow:hidden;margin-top:80px}
+.cta::before{content:'SHARK';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:var(--dsp);font-size:160px;font-weight:900;color:rgba(0,255,65,.018);pointer-events:none;letter-spacing:10px}
+.cta-t{font-family:var(--dsp);font-size:20px;font-weight:700;letter-spacing:4px;color:var(--g);text-transform:uppercase;margin-bottom:16px;text-shadow:var(--glow)}
+.cta-p{color:var(--t2);font-size:16px;max-width:540px;margin:0 auto 32px;line-height:1.75}
+.cta-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+.btn{font-family:var(--mono);font-size:11px;letter-spacing:3px;text-transform:uppercase;padding:13px 30px;border-radius:2px;text-decoration:none;display:inline-block;transition:all .25s}
+.btn-p{border:1px solid var(--g);color:var(--g);background:rgba(0,255,65,.06)}
+.btn-p:hover{background:var(--g);color:var(--bg);box-shadow:var(--glow)}
+.btn-s{border:1px solid var(--c);color:var(--c);background:rgba(0,229,255,.05)}
+.btn-s:hover{background:var(--c);color:var(--bg);box-shadow:var(--cglow)}
+.footer{border-top:1px solid rgba(0,255,65,.1);padding:32px 0;margin-top:60px;display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:20px}
+.f-l{font-family:var(--mono);font-size:11px;color:var(--t3);letter-spacing:1.5px;line-height:2}
+.f-alias{color:var(--g);font-size:10px;letter-spacing:3px;text-shadow:0 0 8px var(--g)}
+.f-r{font-family:var(--mono);font-size:11px;color:var(--t3);text-align:right;line-height:2}
+.f-r a{color:var(--g);text-decoration:none}
+.f-r a:hover{text-shadow:var(--glow)}
+.div{height:1px;background:linear-gradient(to right,transparent,rgba(0,255,65,.15),transparent);margin:60px 0;position:relative}
+.div::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:6px;height:6px;border-radius:50%;background:var(--g);box-shadow:0 0 12px var(--g)}
+.div-ai{background:linear-gradient(to right,transparent,rgba(191,0,255,.22),transparent)}
+.div-ai::after{background:#bf00ff;box-shadow:0 0 12px #bf00ff}
+@keyframes fup{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+@keyframes fin{from{opacity:0}to{opacity:1}}
+.rv{opacity:0;transform:translateY(30px);transition:opacity .8s,transform .8s}
+.rv-l{opacity:0;transform:translateX(-30px);transition:opacity .8s,transform .8s}
+.rv.on,.rv-l.on{opacity:1;transform:none}
+@media(max-width:700px){.ai-grid,.tgrid,.gui-grid,.proto-grid{grid-template-columns:1fr 1fr}.hero-canvas-wrap{display:none}.cta{padding:36px 20px}}
+</style>
+</head>
+<body>
+<canvas id="bg-particle"></canvas>
+<canvas id="bg-hex"></canvas>
+<div id="bg-vignette"></div>
+<div id="bg-scan"></div>
+<div id="cur"></div><div id="cur2"></div><div id="cur3"></div>
+<div id="prog"></div>
+<nav class="topbar">
+  <div class="tb-left">
+    <span class="tb-name">NISARG CHASMAWALA (SHROFF)</span>
+    <div class="tb-roles"><span class="tb-inner">Penetration Tester &nbsp;|&nbsp; Vulnerability Assessment &nbsp;|&nbsp; Cybersecurity Researcher &nbsp;|&nbsp; Offensive Security Engineer &nbsp;|&nbsp; Digital Forensics &nbsp;|&nbsp; Penetration Tester &nbsp;|&nbsp; Vulnerability Assessment &nbsp;|&nbsp; Cybersecurity Researcher</span></div>
+  </div>
+  <div class="tb-status"><span class="tb-dot"></span>SYS ONLINE</div>
+</nav>
+<nav class="toc" id="toc">
+  <div class="toc-i active" onclick="goTo('#hero')" data-s="hero"><div class="toc-d"></div><span class="toc-l">INTRO</span></div>
+  <div class="toc-i" onclick="goTo('#setup')" data-s="setup"><div class="toc-d"></div><span class="toc-l">SETUP</span></div>
+  <div class="toc-i" onclick="goTo('#capture')" data-s="capture"><div class="toc-d"></div><span class="toc-l">CAPTURING</span></div>
+  <div class="toc-i" onclick="goTo('#filters')" data-s="filters"><div class="toc-d"></div><span class="toc-l">FILTERS</span></div>
+  <div class="toc-i" onclick="goTo('#protocols')" data-s="protocols"><div class="toc-d"></div><span class="toc-l">PROTOCOLS</span></div>
+  <div class="toc-i" onclick="goTo('#streams')" data-s="streams"><div class="toc-d"></div><span class="toc-l">STREAMS</span></div>
+  <div class="toc-i" onclick="goTo('#forensics')" data-s="forensics"><div class="toc-d"></div><span class="toc-l">FORENSICS</span></div>
+  <div class="toc-i" onclick="goTo('#tshark')" data-s="tshark"><div class="toc-d"></div><span class="toc-l">TSHARK CLI</span></div>
+  <div class="toc-i" onclick="goTo('#ai')" data-s="ai"><div class="toc-d"></div><span class="toc-l">AI INTEGRATION</span></div>
+</nav>
+<div class="wrap">
+
+<section class="hero" id="hero">
+  <div class="hero-canvas-wrap"><canvas id="hero-geo"></canvas></div>
+  <div class="hero-content">
+  <div class="hero-tag">NISARG CHASMAWALA &nbsp;//&nbsp; ALIAS: HEAVEN</div>
+  <h1 class="hero-title">
+    <div class="gw" data-t="WIRESHARK"><span class="ht-line1">WIRESHARK</span></div>
+    <span class="ht-sub">PACKET ANALYSIS &middot; PROTOCOL FORENSICS &middot; AI INTEGRATION</span>
+  </h1>
+  <p class="hero-desc">The definitive Wireshark field guide for security professionals. From interface setup and live packet capture to display filters, protocol analysis, stream reconstruction, network forensics, TShark CLI automation, and AI-powered traffic intelligence. Wireshark is the world's most widely used network protocol analyser -- the essential tool for understanding exactly what travels across any network.</p>
+  <div class="hero-meta">
+    <div class="m-item"><span class="m-lbl">Author</span><span class="m-val">Nisarg Chasmawala (Shroff)</span></div>
+    <div class="m-item"><span class="m-lbl">Alias</span><span class="m-val">HEAVEN</span></div>
+    <div class="m-item"><span class="m-lbl">Platform</span><span class="m-val">Windows &middot; Linux &middot; macOS</span></div>
+    <div class="m-item"><span class="m-lbl">Category</span><span class="m-val">Network Analysis &middot; Forensics &middot; AI</span></div>
+  </div>
+  </div>
+  <div class="hero-scroll-hint"><div class="hs-line"></div><span class="hs-txt">SCROLL TO BEGIN</span><div class="hs-pulse"></div></div>
+</section>
+<div class="div"></div>
+
+<!-- 01 SETUP -->
+<section class="sec rv" id="setup">
+  <div class="sec-hd"><span class="sec-n">01 //</span><h2 class="sec-t">Installation &amp; Interface Setup<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel rv-l">
+    <p><strong style="color:var(--t1)">Wireshark</strong> is the world's most widely used open-source network protocol analyser, developed by Gerald Combs and maintained by a global community. It captures live network packets from any interface, dissects them into their component protocol fields, and presents them in a colour-coded, filterable GUI that makes complex traffic analysis accessible to security professionals at every level. Wireshark is pre-installed in Kali Linux and is freely available for Windows, macOS, and Linux from wireshark.org.</p>
+    <p>Wireshark operates in two modes: <strong style="color:var(--c)">live capture</strong> directly from a network interface (requires elevated privileges), and <strong style="color:var(--c)">PCAP file analysis</strong> (opening saved packet capture files -- no privileges required). The companion tool <strong style="color:var(--c)">TShark</strong> provides full Wireshark capabilities from the command line, enabling automation, scripting, and headless analysis in server environments.</p>
+  </div>
+  <div class="steps rv">
+    <div class="step"><div class="step-num">01</div><div class="step-body">
+      <div class="step-title">Download and Install</div>
+      <div class="step-desc">Download from <strong style="color:var(--c)">wireshark.org/download.html</strong>. On Windows: run the installer -- it includes Npcap (the packet capture driver) automatically. On Kali/Ubuntu: <code style="font-family:var(--mono);color:var(--c)">sudo apt install wireshark</code> -- when prompted whether non-superusers should capture, select <strong>Yes</strong> to allow your user to capture without root. On macOS: <code style="font-family:var(--mono);color:var(--c)">brew install --cask wireshark</code>.</div>
+      <div class="step-note">Linux: add your user to the wireshark group: sudo usermod -aG wireshark $USER (then log out and back in)</div>
+    </div></div>
+    <div class="step"><div class="step-num">02</div><div class="step-body">
+      <div class="step-title">The Wireshark Main Window</div>
+      <div class="step-desc">When Wireshark opens you see three areas: the <strong style="color:var(--c)">Packet List pane</strong> (top -- every captured packet as a row), the <strong style="color:var(--c)">Packet Details pane</strong> (middle -- expandable protocol tree for the selected packet), and the <strong style="color:var(--c)">Packet Bytes pane</strong> (bottom -- raw hex and ASCII). Above all three is the display filter bar where you type filter expressions to narrow what is shown.</div>
+    </div></div>
+    <div class="step"><div class="step-num">03</div><div class="step-body">
+      <div class="step-title">Colour Coding</div>
+      <div class="step-desc">Wireshark colour-codes packets by protocol and status. Default colours: <strong style="color:#a8d8a8">green = TCP</strong>, <strong style="color:#8ecae6">blue = UDP/DNS</strong>, <strong style="color:#f4a261">light orange = HTTP</strong>, <strong style="color:#e76f51">dark red = errors/RST packets</strong>, <strong style="color:#e9c46a">yellow = ARP/ICMP</strong>. Customise via <strong style="color:var(--c)">View &rarr; Coloring Rules</strong>. Colour rules make at-a-glance traffic pattern recognition dramatically faster.</div>
+    </div></div>
+    <div class="step"><div class="step-num">04</div><div class="step-body">
+      <div class="step-title">Configure Preferences for Security Analysis</div>
+      <div class="step-desc">Go to <strong style="color:var(--c)">Edit &rarr; Preferences</strong>. Key settings: <strong>Appearance &rarr; Layout</strong> -- choose a 3-pane layout that suits your workflow. <strong>Protocols &rarr; TCP</strong> -- enable "Allow subdissector to reassemble TCP streams" for proper HTTP/TLS reassembly. <strong>Protocols &rarr; HTTP</strong> -- enable "Reassemble HTTP headers spanning multiple TCP segments". These settings ensure complete protocol analysis of multi-packet conversations.</div>
+      <div class="step-note">For TLS decryption: Preferences &rarr; Protocols &rarr; TLS &rarr; set RSA Keys List or (Pre-)Master-Secret log filename if you have the keys.</div>
+    </div></div>
+  </div>
+</section>
+<div class="div"></div>
+
+<!-- 02 CAPTURE -->
+<section class="sec rv" id="capture">
+  <div class="sec-hd"><span class="sec-n">02 //</span><h2 class="sec-t">Capturing Live Traffic<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel rv-l">
+    <p>Live packet capture is the starting point for network analysis, incident response, and penetration testing validation. Wireshark gives you complete control over which interface to capture from, what traffic to collect with capture filters (applied before packets reach Wireshark), and how to manage capture size and rotation for long-running sessions. Understanding the difference between <strong style="color:var(--c)">capture filters</strong> (applied at capture time -- what gets saved) and <strong style="color:var(--c)">display filters</strong> (applied after capture -- what you see) is the most important Wireshark concept to master.</p>
+  </div>
+  <div class="gui-grid rv">
+    <div class="gui-card">
+      <div class="gui-card-title"><span class="gui-card-ico">&#127968;</span> Selecting an Interface</div>
+      <div class="gui-card-desc">The Wireshark welcome screen shows all available interfaces with a live sparkline of traffic activity. Double-click any interface to start capturing immediately. Key interfaces: <strong style="color:var(--c)">eth0/Ethernet</strong> (wired), <strong style="color:var(--c)">wlan0/Wi-Fi</strong> (wireless), <strong style="color:var(--c)">lo/Loopback</strong> (local machine traffic). On the welcome screen, click the gear icon next to any interface to set capture filters before starting.</div>
+    </div>
+    <div class="gui-card">
+      <div class="gui-card-title"><span class="gui-card-ico">&#128247;</span> Capture Filters (BPF Syntax)</div>
+      <div class="gui-card-desc">Set under <strong style="color:var(--c)">Capture &rarr; Options &rarr; Capture filter</strong>. These use Berkeley Packet Filter syntax and apply before packets are saved -- reducing file size and CPU load. Examples: <code style="font-family:var(--mono);color:var(--c)">host 192.168.1.10</code> (one host only), <code style="font-family:var(--mono);color:var(--c)">port 80 or port 443</code> (web only), <code style="font-family:var(--mono);color:var(--c)">not arp</code> (exclude ARP noise), <code style="font-family:var(--mono);color:var(--c)">tcp and port 22</code> (SSH only).</div>
+    </div>
+    <div class="gui-card">
+      <div class="gui-card-title"><span class="gui-card-ico">&#128190;</span> Saving Capture Files</div>
+      <div class="gui-card-desc">Go to <strong style="color:var(--c)">File &rarr; Save As</strong> to save the current capture. Standard format is <strong>.pcapng</strong> (preferred, supports metadata) or <strong>.pcap</strong> (legacy, maximum compatibility). For long-running captures, use <strong style="color:var(--c)">Capture &rarr; Options &rarr; Output</strong> to enable ring-buffer rotation -- automatically creates new files every N megabytes or N minutes, retaining only the last K files.</div>
+    </div>
+    <div class="gui-card">
+      <div class="gui-card-title"><span class="gui-card-ico">&#127760;</span> Remote Capture</div>
+      <div class="gui-card-desc">Wireshark can capture from a remote interface over SSH. Navigate to <strong style="color:var(--c)">Capture &rarr; Options &rarr; Manage Interfaces &rarr; Remote Interfaces</strong>. Alternatively, use SSH piping: <code style="font-family:var(--mono);color:var(--c)">ssh user@remote "tcpdump -w -" | wireshark -k -i -</code> on Linux/macOS captures remotely and pipes directly into your local Wireshark GUI in real time.</div>
+    </div>
+    <div class="gui-card">
+      <div class="gui-card-title"><span class="gui-card-ico">&#128681;</span> Stopping and Restarting</div>
+      <div class="gui-card-desc">Click the red <strong style="color:var(--r)">Stop</strong> button (square) in the toolbar to halt capture. Click the blue shark-fin <strong style="color:var(--c)">Restart</strong> button to clear and start fresh. Use <strong style="color:var(--c)">Capture &rarr; Start</strong> (Ctrl+E) to begin and the same shortcut to stop. The status bar at the bottom shows packet count, elapsed time, and capture rate in packets/second.</div>
+    </div>
+    <div class="gui-card">
+      <div class="gui-card-title"><span class="gui-card-ico">&#9940;</span> Promiscuous Mode</div>
+      <div class="gui-card-desc">Enabled by default in <strong style="color:var(--c)">Capture &rarr; Options</strong>. In promiscuous mode, the network adapter captures all packets on the segment, not just those addressed to your MAC. Essential for traffic analysis on shared networks. Note: on switched networks, promiscuous mode only captures broadcast/multicast and traffic to/from your host -- you need port mirroring or a hub to capture all segment traffic.</div>
+    </div>
+  </div>
+</section>
+<div class="div"></div>
+
+<!-- 03 FILTERS -->
+<section class="sec rv" id="filters">
+  <div class="sec-hd"><span class="sec-n">03 //</span><h2 class="sec-t">Display Filters -- The Most Powerful Skill<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel rv-l">
+    <p>Wireshark display filters are the most critical skill in the entire tool. A raw capture on a busy network can contain millions of packets -- display filters let you isolate exactly the traffic you care about with surgical precision. Wireshark's display filter language is vastly more expressive than the BPF syntax used for capture filters. You can filter on any protocol field, any value, any comparison, any boolean combination, and any string match across the entire protocol dissection tree.</p>
+  </div>
+  <div class="filter-card rv">
+    <div class="filter-expr">ip.addr == 192.168.1.10</div>
+    <div class="filter-desc">Show all traffic to or from a specific IP address (source OR destination). Use <code style="font-family:var(--mono);color:var(--c)">ip.src</code> or <code style="font-family:var(--mono);color:var(--c)">ip.dst</code> to restrict to one direction only.</div>
+  </div>
+  <div class="filter-card rv">
+    <div class="filter-expr">tcp.port == 443 &amp;&amp; ip.addr == 10.0.0.5</div>
+    <div class="filter-desc">Combine multiple conditions with <code style="font-family:var(--mono);color:var(--c)">&amp;&amp;</code> (AND), <code style="font-family:var(--mono);color:var(--c)">||</code> (OR), <code style="font-family:var(--mono);color:var(--c)">!</code> (NOT). This shows HTTPS traffic to/from one specific host -- isolating all TLS sessions for that IP.</div>
+  </div>
+  <div class="filter-card rv">
+    <div class="filter-expr">http.request.method == "POST"</div>
+    <div class="filter-desc">Filter on specific protocol field values. Shows only HTTP POST requests -- invaluable for spotting form submissions, API calls, login attempts, and data exfiltration over plain HTTP. Combine with <code style="font-family:var(--mono);color:var(--c)">http contains "password"</code> to find credential submissions.</div>
+  </div>
+  <div class="filter-card rv">
+    <div class="filter-expr">dns.qry.name contains "malicious"</div>
+    <div class="filter-desc">String matching on protocol fields. Filter DNS queries containing specific strings -- use to spot C2 domain generation algorithm (DGA) traffic, suspicious TLD lookups, or data exfiltration via DNS tunnelling. Try <code style="font-family:var(--mono);color:var(--c)">dns.qry.name matches ".*\.tk$"</code> for regex matching against suspicious TLDs.</div>
+  </div>
+  <div class="filter-card rv">
+    <div class="filter-expr">tcp.flags.syn == 1 &amp;&amp; tcp.flags.ack == 0</div>
+    <div class="filter-desc">Show only TCP SYN packets (connection initiation -- no ACK). This isolates all new connection attempts from a host. Use to detect port scanning (many SYN packets to different ports), SYN flood attacks, or map all outbound connections from a suspicious host.</div>
+  </div>
+  <div class="filter-card rv">
+    <div class="filter-expr">!(arp || dns || icmp)</div>
+    <div class="filter-desc">Exclude common noisy protocols to focus on application traffic. The <code style="font-family:var(--mono);color:var(--c)">!</code> operator negates and parentheses group. This removes ARP, DNS, and ICMP -- dramatically reducing noise in a busy capture to expose actual application-layer conversations.</div>
+  </div>
+  <div class="filter-card rv">
+    <div class="filter-expr">frame.time_delta &gt; 1</div>
+    <div class="filter-desc">Filter on timing. Shows packets where the inter-packet gap exceeds 1 second -- useful for identifying connection timeouts, network slowdowns, slow data exfiltration (beaconing), or suspicious pause-and-send patterns characteristic of malware C2 traffic.</div>
+  </div>
+  <div class="filter-card rv">
+    <div class="filter-expr">tcp.analysis.flags &amp;&amp; !tcp.analysis.window_update</div>
+    <div class="filter-desc">Show TCP analysis events (retransmissions, duplicate ACKs, out-of-order) while excluding window updates. Wireshark's TCP analysis engine automatically detects network problems -- this filter surfaces them. Essential for diagnosing slow networks, packet loss, and connection quality issues.</div>
+  </div>
+  <div class="alert al-i rv">
+    <span class="al-ic">[ * ]</span>
+    <p class="al-tx"><strong>Pro Tip -- Bookmark Your Filters:</strong> Right-click the display filter bar and select <strong>"Save this filter"</strong> to add frequently used filters to your bookmarks (the bookmark icon left of the filter bar). Build a library of security-relevant filters: C2 detection, port scan identification, credential capture patterns, and protocol anomalies. Saved filters are available in one click for every future session.</p>
+  </div>
+</section>
+<div class="div"></div>
+
+<!-- 04 PROTOCOLS -->
+<section class="sec rv" id="protocols">
+  <div class="sec-hd"><span class="sec-n">04 //</span><h2 class="sec-t">Protocol Analysis<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel rv-l">
+    <p>Wireshark supports over 3,000 protocols and dissects each one into its constituent fields displayed in the Packet Details pane. Security analysis focuses on a core set of protocols across the OSI stack -- from ARP at Layer 2 through to application-layer protocols like HTTP, DNS, SMB, and FTP. Understanding what each protocol's packets look like in the normal case is what allows you to spot the anomalies that indicate attacks, malware, misconfigurations, and data exfiltration.</p>
+  </div>
+  <div class="proto-grid rv">
+    <div class="proto-badge"><span class="proto-name">ARP</span><span class="proto-layer">Layer 2</span><div class="proto-desc">Address resolution -- spot ARP spoofing and poisoning attacks</div></div>
+    <div class="proto-badge"><span class="proto-name">ICMP</span><span class="proto-layer">Layer 3</span><div class="proto-desc">Ping and error messages -- detect ICMP tunnelling and network mapping</div></div>
+    <div class="proto-badge"><span class="proto-name">TCP</span><span class="proto-layer">Layer 4</span><div class="proto-desc">Connection management -- analyse flags, handshakes, resets</div></div>
+    <div class="proto-badge"><span class="proto-name">UDP</span><span class="proto-layer">Layer 4</span><div class="proto-desc">Connectionless -- DNS, DHCP, VoIP, and many C2 channels</div></div>
+    <div class="proto-badge"><span class="proto-name">DNS</span><span class="proto-layer">App</span><div class="proto-desc">Name resolution -- C2 detection, DGA traffic, DNS tunnelling</div></div>
+    <div class="proto-badge"><span class="proto-name">HTTP</span><span class="proto-layer">App</span><div class="proto-desc">Web traffic -- credential capture, malware download detection</div></div>
+    <div class="proto-badge"><span class="proto-name">TLS/SSL</span><span class="proto-layer">App</span><div class="proto-desc">Encrypted traffic -- certificate analysis, version, cipher suites</div></div>
+    <div class="proto-badge"><span class="proto-name">SMB</span><span class="proto-layer">App</span><div class="proto-desc">File sharing -- EternalBlue, pass-the-hash, lateral movement</div></div>
+    <div class="proto-badge"><span class="proto-name">FTP</span><span class="proto-layer">App</span><div class="proto-desc">File transfer -- plaintext credentials, data extraction</div></div>
+    <div class="proto-badge"><span class="proto-name">SSH</span><span class="proto-layer">App</span><div class="proto-desc">Encrypted shell -- detect brute force patterns and tunnelling</div></div>
+    <div class="proto-badge"><span class="proto-name">DHCP</span><span class="proto-layer">App</span><div class="proto-desc">IP assignment -- rogue DHCP detection, starvation attacks</div></div>
+    <div class="proto-badge"><span class="proto-name">ICMPV6</span><span class="proto-layer">Layer 3</span><div class="proto-desc">IPv6 control -- router advertisement attacks, ND spoofing</div></div>
+  </div>
+  <div class="panel rv">
+    <div class="panel-t">Protocol Analysis Techniques</div>
+    <table class="ptbl">
+      <thead><tr><th>Scenario</th><th>What to Look For</th><th>Display Filter</th></tr></thead>
+      <tbody>
+        <tr><td>ARP Spoofing</td><td>Duplicate ARP replies from different MACs for same IP</td><td>arp.duplicate-address-detected</td></tr>
+        <tr><td>Port Scan</td><td>Many TCP SYNs to sequential ports, mostly RST responses</td><td>tcp.flags.syn==1 &amp;&amp; tcp.flags.ack==0</td></tr>
+        <tr><td>DNS Tunnelling</td><td>Unusually long DNS queries, high-entropy subdomain names</td><td>dns &amp;&amp; dns.qry.name.len &gt; 50</td></tr>
+        <tr><td>FTP Credentials</td><td>USER and PASS commands in plaintext FTP stream</td><td>ftp.request.command == "USER" || ftp.request.command == "PASS"</td></tr>
+        <tr><td>SMB EternalBlue</td><td>Malformed SMB NT Trans requests on port 445</td><td>smb2.cmd == 0 &amp;&amp; tcp.dstport == 445</td></tr>
+        <tr><td>C2 Beaconing</td><td>Regular outbound connections at fixed intervals</td><td>tcp.flags.syn==1 &amp;&amp; ip.dst != 192.168.0.0/16</td></tr>
+        <tr><td>Cleartext Creds</td><td>HTTP Basic Auth, FTP/Telnet USER/PASS, SMTP AUTH</td><td>http.authorization || ftp.request || telnet</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+<div class="div"></div>
+
+<!-- 05 STREAMS -->
+<section class="sec rv" id="streams">
+  <div class="sec-hd"><span class="sec-n">05 //</span><h2 class="sec-t">Stream Reconstruction &amp; Statistics<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel rv-l">
+    <p>Individual packets tell you what was transmitted; <strong style="color:var(--c)">stream reconstruction</strong> tells you the full conversation. Following a TCP or UDP stream reassembles all related packets into the complete data exchange -- showing you an entire HTTP request and response, a complete FTP file transfer, or the full content of a telnet session in human-readable form. Combined with Wireshark's statistics tools, stream reconstruction is the fastest way to extract meaningful intelligence from a capture.</p>
+  </div>
+  <div class="steps rv">
+    <div class="step"><div class="step-num">01</div><div class="step-body">
+      <div class="step-title">Follow TCP Stream</div>
+      <div class="step-desc">Right-click any packet in a TCP conversation &rarr; <strong style="color:var(--c)">Follow &rarr; TCP Stream</strong>. A new window shows the entire conversation with client data in <strong style="color:var(--g)">one colour</strong> and server data in <strong style="color:var(--c)">another</strong>. You can see complete HTTP requests and responses, FTP commands and data, Telnet sessions, and any other plaintext TCP protocol in full. Use the <strong>Show and save data as</strong> dropdown to change encoding (ASCII, hex, raw, C arrays).</div>
+      <div class="step-note">Every TCP stream gets a stream index number. The display filter bar automatically updates to show only that stream's packets: tcp.stream eq N</div>
+    </div></div>
+    <div class="step"><div class="step-num">02</div><div class="step-body">
+      <div class="step-title">Follow UDP / HTTP / TLS Streams</div>
+      <div class="step-desc">Same right-click menu provides: <strong style="color:var(--c)">Follow UDP Stream</strong> (DNS queries and responses, VoIP, custom UDP protocols), <strong style="color:var(--c)">Follow HTTP Stream</strong> (reconstructs HTTP request + response pair), and <strong style="color:var(--c)">Follow TLS Stream</strong> (shows encrypted data -- decrypts if you have provided keys in Preferences). Each stream type reassembles its specific protocol's data correctly.</div>
+    </div></div>
+    <div class="step"><div class="step-num">03</div><div class="step-body">
+      <div class="step-title">Export Objects -- Recover Files</div>
+      <div class="step-desc">Navigate to <strong style="color:var(--c)">File &rarr; Export Objects</strong>. Choose protocol: <strong>HTTP</strong> (extract files downloaded over HTTP -- images, scripts, executables, documents), <strong>SMB</strong> (files transferred over the network), <strong>FTP-DATA</strong> (files transferred via FTP). Wireshark reassembles multi-packet file transfers and presents each file for export. Critical for malware sample extraction in incident response.</div>
+      <div class="step-note">Recovered files can be submitted to VirusTotal or analysed with a sandbox directly from Export Objects.</div>
+    </div></div>
+    <div class="step"><div class="step-num">04</div><div class="step-body">
+      <div class="step-title">Conversations and Endpoints Statistics</div>
+      <div class="step-desc">Navigate to <strong style="color:var(--c)">Statistics &rarr; Conversations</strong>. The Conversations window shows every unique two-host communication pair with bytes transferred, packet counts, and duration. Sort by bytes to quickly find the largest data transfers -- potential exfiltration. The <strong style="color:var(--c)">Endpoints</strong> view (Statistics &rarr; Endpoints) shows all unique hosts seen in the capture, sortable by traffic volume.</div>
+    </div></div>
+    <div class="step"><div class="step-num">05</div><div class="step-body">
+      <div class="step-title">I/O Graph and Protocol Hierarchy</div>
+      <div class="step-desc"><strong style="color:var(--c)">Statistics &rarr; I/O Graph</strong> plots packet rate or bytes/second over time -- spots traffic bursts, attack timing, and beaconing intervals as visual patterns. <strong style="color:var(--c)">Statistics &rarr; Protocol Hierarchy</strong> shows a percentage breakdown of all protocols in the capture -- immediately reveals unexpected protocols (e.g. Telnet in a network that should only have SSH, or IRC which often indicates malware C2).</div>
+    </div></div>
+  </div>
+</section>
+<div class="div"></div>
+
+<!-- 06 FORENSICS -->
+<section class="sec rv" id="forensics">
+  <div class="sec-hd"><span class="sec-n">06 //</span><h2 class="sec-t">Network Forensics &amp; Attack Detection<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel rv-l">
+    <p>Wireshark is a primary network forensics tool -- PCAP files are evidence. Analysing network captures during and after security incidents reveals attacker behaviour, data exfiltration paths, lateral movement, and malware C2 communication patterns that endpoint-only forensics cannot provide. The combination of Wireshark's protocol dissection, stream reconstruction, and statistical analysis produces network-level intelligence that is critical for complete incident reconstruction.</p>
+  </div>
+  <div class="gui-grid rv">
+    <div class="gui-card">
+      <div class="gui-card-title"><span class="gui-card-ico">&#128270;</span> Detecting ARP Spoofing</div>
+      <div class="gui-card-desc">Filter: <code style="font-family:var(--mono);color:var(--c)">arp.duplicate-address-detected</code>. Wireshark automatically flags when two different MAC addresses claim the same IP. In the Packet Details, look for "Duplicate IP address detected" warnings. ARP spoofing attacks generate a stream of gratuitous ARP replies trying to redirect traffic through the attacker's machine for MITM interception.</div>
+    </div>
+    <div class="gui-card">
+      <div class="gui-card-title"><span class="gui-card-ico">&#128200;</span> Port Scan Detection</div>
+      <div class="gui-card-desc">Use <strong style="color:var(--c)">Statistics &rarr; Conversations</strong> sorted by packet count to spot scanners -- many short TCP conversations to different destination ports from one source. Then filter: <code style="font-family:var(--mono);color:var(--c)">tcp.flags.syn==1 &amp;&amp; ip.src==ATTACKER_IP</code>. The pattern of SYN followed by RST/ACK (closed port) or SYN-ACK (open port) identifies the scan type (SYN, Connect, FIN etc.).</div>
+    </div>
+    <div class="gui-card">
+      <div class="gui-card-title"><span class="gui-card-ico">&#128123;</span> Malware C2 Traffic</div>
+      <div class="gui-card-desc">Look for: regular periodic outbound connections (beaconing) visible in <strong style="color:var(--c)">Statistics &rarr; I/O Graph</strong> as repeating spikes. Filter DNS for DGA-style names: <code style="font-family:var(--mono);color:var(--c)">dns.qry.name matches "^[a-z0-9]{12,}"</code>. Unusual protocols on non-standard ports (IRC on port 6667, HTTP on port 4444). Large DNS TXT record responses indicating DNS tunnelling.</div>
+    </div>
+    <div class="gui-card">
+      <div class="gui-card-title"><span class="gui-card-ico">&#128196;</span> Credential Capture</div>
+      <div class="gui-card-desc">For plaintext protocols, Follow Stream immediately reveals credentials. Filter: <code style="font-family:var(--mono);color:var(--c)">http.authorization</code> for HTTP Basic Auth, <code style="font-family:var(--mono);color:var(--c)">ftp.request.command == "PASS"</code> for FTP, <code style="font-family:var(--mono);color:var(--c)">smtp.req.parameter contains "AUTH"</code> for email. Follow the TCP stream to see the full authentication exchange including the username and password in cleartext.</div>
+    </div>
+    <div class="gui-card">
+      <div class="gui-card-title"><span class="gui-card-ico">&#9889;</span> Data Exfiltration</div>
+      <div class="gui-card-desc">In <strong style="color:var(--c)">Statistics &rarr; Conversations</strong>, sort by bytes transferred. Unusually large outbound transfers to external IPs deserve investigation. Filter by the top destination: <code style="font-family:var(--mono);color:var(--c)">ip.dst == SUSPECT_IP</code> and follow the stream to see what data was transferred. File &rarr; Export Objects reconstructs transferred files from HTTP/SMB/FTP sessions.</div>
+    </div>
+    <div class="gui-card">
+      <div class="gui-card-title"><span class="gui-card-ico">&#128274;</span> TLS Certificate Analysis</div>
+      <div class="gui-card-desc">Even without decrypting TLS, filter: <code style="font-family:var(--mono);color:var(--c)">tls.handshake.type == 11</code> (Certificate message). In the Packet Details, expand TLS &rarr; Handshake Protocol &rarr; Certificate to see the server certificate -- subject, issuer, validity period, and Subject Alternative Names. Malware C2 often uses self-signed certificates with suspicious or generic subjects that stand out from legitimate HTTPS traffic.</div>
+    </div>
+  </div>
+</section>
+<div class="div"></div>
+
+<!-- 07 TSHARK -->
+<section class="sec rv" id="tshark">
+  <div class="sec-hd"><span class="sec-n">07 //</span><h2 class="sec-t">TShark -- Command Line Power<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel rv-l">
+    <p><strong style="color:var(--c)">TShark</strong> is the terminal-mode companion to Wireshark, sharing all the same dissectors, filters, and protocol support but operating without a GUI. TShark is essential for security automation -- capturing on headless servers, processing PCAP files in scripts, integrating with SIEM pipelines, and feeding packet data into AI analysis tools. Every display filter that works in Wireshark works identically in TShark with the <code style="font-family:var(--mono);color:var(--c)">-Y</code> flag.</p>
+  </div>
+  <div class="cb rv" data-l="TShark -- Essential Security Commands">
+    <code><span style="color:var(--t3)"># Live capture on interface eth0, write to file</span>
+<span style="color:var(--c)">tshark</span> <span style="color:var(--o)">-i</span> eth0 <span style="color:var(--o)">-w</span> capture.pcapng
+
+<span style="color:var(--t3)"># Read PCAP and apply display filter</span>
+<span style="color:var(--c)">tshark</span> <span style="color:var(--o)">-r</span> capture.pcap <span style="color:var(--o)">-Y</span> <span style="color:#ff79c6">"http.request.method == POST"</span>
+
+<span style="color:var(--t3)"># Extract specific fields as CSV</span>
+<span style="color:var(--c)">tshark</span> <span style="color:var(--o)">-r</span> capture.pcap <span style="color:var(--o)">-T fields</span>   <span style="color:var(--o)">-e</span> frame.time <span style="color:var(--o)">-e</span> ip.src <span style="color:var(--o)">-e</span> ip.dst   <span style="color:var(--o)">-e</span> tcp.dstport <span style="color:var(--o)">-e</span> http.request.uri   <span style="color:var(--o)">-Y</span> <span style="color:#ff79c6">"http"</span> <span style="color:var(--o)">-E separator</span>=,
+
+<span style="color:var(--t3)"># Extract all DNS queries from a PCAP</span>
+<span style="color:var(--c)">tshark</span> <span style="color:var(--o)">-r</span> capture.pcap <span style="color:var(--o)">-Y dns -T fields</span>   <span style="color:var(--o)">-e</span> dns.qry.name <span style="color:var(--o)">-e</span> dns.a | <span style="color:var(--c)">sort -u</span>
+
+<span style="color:var(--t3)"># Reconstruct TCP stream N to file</span>
+<span style="color:var(--c)">tshark</span> <span style="color:var(--o)">-r</span> capture.pcap <span style="color:var(--o)">-Y</span> <span style="color:#ff79c6">"tcp.stream eq 3"</span>   <span style="color:var(--o)">-T fields -e</span> data.data | <span style="color:var(--c)">xxd -r -p</span> > stream3.bin
+
+<span style="color:var(--t3)"># Count packets per source IP (top talkers)</span>
+<span style="color:var(--c)">tshark</span> <span style="color:var(--o)">-r</span> capture.pcap <span style="color:var(--o)">-T fields -e</span> ip.src |   <span style="color:var(--c)">sort | uniq -c | sort -rn</span> | <span style="color:var(--c)">head -20</span>
+
+<span style="color:var(--t3)"># Export HTTP objects (files) to directory</span>
+<span style="color:var(--c)">tshark</span> <span style="color:var(--o)">-r</span> capture.pcap <span style="color:var(--o)">--export-objects</span> http,./extracted_files/
+
+<span style="color:var(--t3)"># Capture only specific traffic to PCAP (capture filter)</span>
+<span style="color:var(--c)">tshark</span> <span style="color:var(--o)">-i</span> eth0 <span style="color:var(--o)">-f</span> <span style="color:#ff79c6">"tcp port 80 or port 443"</span> <span style="color:var(--o)">-w</span> web_only.pcap
+
+<span style="color:var(--t3)"># Output as JSON for pipeline processing</span>
+<span style="color:var(--c)">tshark</span> <span style="color:var(--o)">-r</span> capture.pcap <span style="color:var(--o)">-T json -Y</span> <span style="color:#ff79c6">"dns"</span> > dns_packets.json</code>
+  </div>
+</section>
+<div class="div div-ai"></div>
+
+<!-- 08 AI INTEGRATION -->
+<section class="sec rv sec-ai" id="ai">
+  <div class="sec-hd"><span class="sec-n">08 //</span><h2 class="sec-t">AI Integration in Wireshark Analysis<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel panel-ai rv-l">
+    <p>AI transforms Wireshark from a manual inspection tool into an intelligent network threat detection platform. The critical pipeline: TShark extracts structured data from PCAP files at machine speed, outputs JSON or CSV, and feeds that structured traffic data into an LLM that reasons about attack patterns, anomalies, and protocol violations at a level no manual analysis can match at scale. AI identifies the subtle behavioural patterns -- beaconing intervals, DNS anomaly scores, unusual data volumes -- that indicate threats in traffic too large for human review.</p>
+  </div>
+  <div class="alert al-p rv">
+    <span class="al-ic">[ AI ]</span>
+    <p class="al-tx">Security analysts using AI-augmented PCAP analysis identify network-based threats 4-6x faster than manual Wireshark review on large captures. AI correlates traffic patterns across thousands of connections simultaneously, identifying C2 beaconing, DNS tunnelling, and lateral movement chains that would take hours to spot manually.</p>
+  </div>
+  <div class="ai-grid rv">
+    <div class="ai-card"><span class="ai-ico">&#128270;</span><div class="ai-name">Traffic Pattern Analysis</div><div class="ai-desc">AI analyses TShark-extracted conversation statistics, DNS queries, and protocol distribution data to identify attack patterns -- C2 beaconing (regular intervals visible in I/O graph data), DNS tunnelling (high-entropy long domain names), port scan signatures (many short-lived connections from one source), and lateral movement chains (internal host-to-host connection patterns). Processes captures too large for manual review in seconds.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128196;</span><div class="ai-name">PCAP Report Generation</div><div class="ai-desc">AI converts TShark-extracted packet metadata into professional incident analysis reports -- identifying the attack timeline, attacker IP behaviour, data exfiltration volumes, and affected systems from raw network captures. Generates findings suitable for technical reports, executive summaries, and legal evidence documentation without the analyst needing to manually trace every conversation.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128123;</span><div class="ai-name">Malware Traffic Detection</div><div class="ai-desc">Feed extracted DNS queries, HTTP user agents, TLS certificate fields, and connection patterns to an LLM trained on threat intelligence. AI identifies known malware communication signatures, suspicious DGA domain patterns, unusual protocol usage (IRC on port 443, HTTP on 8888), and C2 callback fingerprints -- correlating against known threat actor TTPs to provide attribution context beyond simple IOC matching.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128736;&#65039;</span><div class="ai-name">Filter Generation</div><div class="ai-desc">LLMs generate precise Wireshark display filter expressions from natural-language descriptions. "Show me all outbound connections to non-RFC1918 addresses that are not HTTP or HTTPS" produces the exact Wireshark filter syntax immediately. Eliminates the need to memorise complex field names and filter syntax for infrequently-used protocols -- just describe what you want to see.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128202;</span><div class="ai-name">Anomaly Detection Pipeline</div><div class="ai-desc">TShark extracts per-minute connection counts, bytes transferred, unique destinations, and DNS request rates to structured JSON. AI baselines normal behaviour from historical captures and flags statistical anomalies -- a host that normally makes 10 DNS queries/minute suddenly making 500 is an immediate indicator of infection or data exfiltration via DNS tunnelling, caught automatically without manual thresholds.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#9889;</span><div class="ai-name">Protocol Decode Assistance</div><div class="ai-desc">When encountering unfamiliar or custom protocols in a capture, AI analyses the raw hex data and packet structure to suggest what the protocol might be, what each field likely represents, and how to write a Wireshark dissector or Lua plugin to properly decode it. Invaluable for malware that uses custom binary C2 protocols or for reverse-engineering undocumented proprietary network applications.</div></div>
+  </div>
+  <div class="panel panel-ai rv" style="margin-top:28px">
+    <div class="panel-t">AI Tools for Wireshark and PCAP Analysis</div>
+    <table class="ptbl">
+      <thead><tr>
+        <th style="color:#bf00ff;border-bottom-color:rgba(191,0,255,.25)">Tool</th>
+        <th style="color:#bf00ff;border-bottom-color:rgba(191,0,255,.25)">Capability</th>
+        <th style="color:#bf00ff;border-bottom-color:rgba(191,0,255,.25)">Wireshark Use Case</th>
+      </tr></thead>
+      <tbody>
+        <tr><td style="color:var(--g)">GPT-4 / Claude</td><td style="color:var(--t2)">Traffic analysis, filter generation, report writing</td><td style="color:var(--t2)">Analyse TShark JSON output; generate display filters; write incident reports</td></tr>
+        <tr><td style="color:var(--g)">PacketSafari / AI</td><td style="color:var(--t2)">Cloud PCAP analysis</td><td style="color:var(--t2)">Upload PCAP for automated AI-powered threat detection and annotation</td></tr>
+        <tr><td style="color:var(--g)">Arkime (Moloch)</td><td style="color:var(--t2)">Full-packet capture at scale</td><td style="color:var(--t2)">Enterprise PCAP storage with search -- feed indexed metadata to AI for threat hunting</td></tr>
+        <tr><td style="color:var(--g)">Zeek + AI</td><td style="color:var(--t2)">Network behaviour analytics</td><td style="color:var(--t2)">Zeek generates structured logs from PCAP; AI analyses logs for anomaly detection</td></tr>
+        <tr><td style="color:var(--g)">Python + OpenAI</td><td style="color:var(--t2)">TShark pipeline automation</td><td style="color:var(--t2)">Extract fields with TShark, parse JSON, send to GPT for threat intelligence</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="cb cb-ai rv" data-l="AI Pipeline -- TShark Extraction + GPT Traffic Analysis">
+    <code><span style="color:#bd93f9">#!/usr/bin/env python3</span>
+<span style="color:var(--t3)"># TShark extracts structured traffic data, GPT analyses for threats
+# Requires: tshark installed, pip install openai
+# Usage: python3 pcap_ai.py capture.pcap</span>
+
+<span style="color:#bd93f9">import</span> subprocess, json, openai, sys
+<span style="color:#bd93f9">from</span> collections <span style="color:#bd93f9">import</span> Counter, defaultdict
+
+<span style="color:#8be9fd">def</span> <span style="color:var(--c)">extract_traffic</span>(pcap_file):
+    <span style="color:var(--t3)"># Extract DNS queries</span>
+    dns_cmd = [<span style="color:#ff79c6">"tshark"</span>,<span style="color:#ff79c6">"-r"</span>,pcap_file,<span style="color:#ff79c6">"-Y"</span>,<span style="color:#ff79c6">"dns"</span>,
+               <span style="color:#ff79c6">"-T"</span>,<span style="color:#ff79c6">"fields"</span>,<span style="color:#ff79c6">"-e"</span>,<span style="color:#ff79c6">"dns.qry.name"</span>,<span style="color:#ff79c6">"-e"</span>,<span style="color:#ff79c6">"ip.src"</span>]
+    dns_out = subprocess.run(dns_cmd, capture_output=<span style="color:#bd93f9">True</span>, text=<span style="color:#bd93f9">True</span>).stdout
+    dns_queries = Counter(l.split(<span style="color:#ff79c6">"	"</span>)[0] <span style="color:#bd93f9">for</span> l <span style="color:#bd93f9">in</span> dns_out.splitlines() <span style="color:#bd93f9">if</span> l)
+
+    <span style="color:var(--t3)"># Extract top connections</span>
+    conn_cmd = [<span style="color:#ff79c6">"tshark"</span>,<span style="color:#ff79c6">"-r"</span>,pcap_file,<span style="color:#ff79c6">"-T"</span>,<span style="color:#ff79c6">"fields"</span>,
+                <span style="color:#ff79c6">"-e"</span>,<span style="color:#ff79c6">"ip.src"</span>,<span style="color:#ff79c6">"-e"</span>,<span style="color:#ff79c6">"ip.dst"</span>,<span style="color:#ff79c6">"-e"</span>,<span style="color:#ff79c6">"tcp.dstport"</span>,
+                <span style="color:#ff79c6">"-Y"</span>,<span style="color:#ff79c6">"tcp.flags.syn == 1 && tcp.flags.ack == 0"</span>]
+    conn_out = subprocess.run(conn_cmd, capture_output=<span style="color:#bd93f9">True</span>, text=<span style="color:#bd93f9">True</span>).stdout
+    connections = [l.split(<span style="color:#ff79c6">"	"</span>) <span style="color:#bd93f9">for</span> l <span style="color:#bd93f9">in</span> conn_out.splitlines() <span style="color:#bd93f9">if</span> l]
+
+    <span style="color:var(--t3)"># Extract HTTP requests</span>
+    http_cmd = [<span style="color:#ff79c6">"tshark"</span>,<span style="color:#ff79c6">"-r"</span>,pcap_file,<span style="color:#ff79c6">"-Y"</span>,<span style="color:#ff79c6">"http.request"</span>,<span style="color:#ff79c6">"-T"</span>,<span style="color:#ff79c6">"fields"</span>,
+                <span style="color:#ff79c6">"-e"</span>,<span style="color:#ff79c6">"ip.src"</span>,<span style="color:#ff79c6">"-e"</span>,<span style="color:#ff79c6">"http.request.method"</span>,
+                <span style="color:#ff79c6">"-e"</span>,<span style="color:#ff79c6">"http.host"</span>,<span style="color:#ff79c6">"-e"</span>,<span style="color:#ff79c6">"http.request.uri"</span>]
+    http_out = subprocess.run(http_cmd, capture_output=<span style="color:#bd93f9">True</span>, text=<span style="color:#bd93f9">True</span>).stdout
+
+    <span style="color:#bd93f9">return</span> {
+        <span style="color:#ff79c6">"top_dns_queries"</span>  : dns_queries.most_common(20),
+        <span style="color:#ff79c6">"syn_connections"</span>  : connections[:30],
+        <span style="color:#ff79c6">"http_requests"</span>    : http_out.splitlines()[:20],
+        <span style="color:#ff79c6">"total_dns"</span>        : <span style="color:#8be9fd">sum</span>(dns_queries.values()),
+        <span style="color:#ff79c6">"unique_dst"</span>       : <span style="color:#8be9fd">len</span>(<span style="color:#8be9fd">set</span>(c[1] <span style="color:#bd93f9">for</span> c <span style="color:#bd93f9">in</span> connections <span style="color:#bd93f9">if</span> <span style="color:#8be9fd">len</span>(c)>1)),
+    }
+
+<span style="color:#8be9fd">def</span> <span style="color:var(--c)">ai_threat_analysis</span>(data):
+    prompt = (
+        <span style="color:#ff79c6">"You are a senior network security analyst. Analyse this Wireshark/TShark "
+        "extracted network traffic data and provide:
+"
+        "1. THREAT ASSESSMENT -- what malicious activity is visible?
+"
+        "2. C2 INDICATORS -- beaconing, suspicious DNS, unusual connections
+"
+        "3. DATA EXFILTRATION -- evidence of outbound data transfer
+"
+        "4. ATTACK TIMELINE -- sequence of events from the traffic
+"
+        "5. RECOMMENDED WIRESHARK FILTERS -- to investigate further
+
+"
+        "Traffic data:
+"</span> + json.dumps(data, indent=2)
+    )
+    r = openai.OpenAI().chat.completions.create(
+        model=<span style="color:#ff79c6">"gpt-4o"</span>,
+        messages=[{<span style="color:#ff79c6">"role"</span>:<span style="color:#ff79c6">"user"</span>,<span style="color:#ff79c6">"content"</span>:prompt}]
+    )
+    <span style="color:#bd93f9">return</span> r.choices[0].message.content
+
+pcap = sys.argv[1] <span style="color:#bd93f9">if</span> <span style="color:#8be9fd">len</span>(sys.argv) > 1 <span style="color:#bd93f9">else</span> <span style="color:#ff79c6">"capture.pcap"</span>
+data = extract_traffic(pcap)
+<span style="color:#8be9fd">print</span>(<span style="color:#ff79c6">f"[*] {data['total_dns']} DNS queries, {data['unique_dst']} unique destinations"</span>)
+<span style="color:#8be9fd">print</span>(ai_threat_analysis(data))</code>
+  </div>
+  <div class="cb cb-ai rv" data-l="AI -- Wireshark Filter Generator from Natural Language">
+    <code><span style="color:#bd93f9">#!/usr/bin/env python3</span>
+<span style="color:var(--t3)"># Generate precise Wireshark display filters from plain English
+# Usage: python3 filter_gen.py "show me all outbound connections to non-RFC1918 IPs"</span>
+
+<span style="color:#bd93f9">import</span> openai, sys
+
+<span style="color:#8be9fd">def</span> <span style="color:var(--c)">generate_filter</span>(description):
+    prompt = (
+        <span style="color:#ff79c6">"You are a Wireshark expert. Generate a precise Wireshark display filter "
+        "expression for the following requirement. Return ONLY the filter "
+        "expression, nothing else -- no explanation, no code block markers.
+
+"
+        "Requirement: "</span> + description
+    )
+    r = openai.OpenAI().chat.completions.create(
+        model=<span style="color:#ff79c6">"gpt-4o"</span>,
+        messages=[{<span style="color:#ff79c6">"role"</span>:<span style="color:#ff79c6">"user"</span>,<span style="color:#ff79c6">"content"</span>:prompt}],
+        temperature=0.1
+    )
+    <span style="color:#bd93f9">return</span> r.choices[0].message.content.strip()
+
+desc = <span style="color:#ff79c6">" "</span>.join(sys.argv[1:]) <span style="color:#bd93f9">if</span> <span style="color:#8be9fd">len</span>(sys.argv) > 1 <span style="color:#bd93f9">else</span>        <span style="color:#ff79c6">"show all TCP connections that were reset by the server"</span>
+
+ws_filter = generate_filter(desc)
+<span style="color:#8be9fd">print</span>(<span style="color:#ff79c6">f"Request : {desc}"</span>)
+<span style="color:#8be9fd">print</span>(<span style="color:#ff79c6">f"Filter  : {ws_filter}"</span>)
+<span style="color:#8be9fd">print</span>(<span style="color:#ff79c6">f"
+Paste directly into Wireshark display filter bar."</span>)</code>
+  </div>
+</section>
+
+<div class="cta rv">
+  <div class="cta-t">// Every packet tells a story. //</div>
+  <p class="cta-p">Wireshark is the closest thing to a universal truth machine in network security -- every packet that travels a wire passes through it unchanged, unfiltered, and unspun. Master the display filters, learn the protocol signatures, and develop the pattern recognition to spot the anomalies that reveal attacks, breaches, and misconfigurations. Add AI to process what the human eye cannot scale to, and you have the most powerful network intelligence platform available to any security professional.</p>
+  <div class="cta-btns">
+    <a href="https://github.com/nishu2402" class="btn btn-p" target="_blank" rel="noopener">GitHub -- nishu2402</a>
+    <a href="https://nishu2402.github.io" class="btn btn-s" target="_blank" rel="noopener">View Portfolio</a>
+  </div>
+</div>
+<footer class="footer">
+  <div class="f-l">Nisarg Chasmawala (Shroff)<br><span class="f-alias">// HEAVEN</span></div>
+  <div class="f-r">Offensive Security Engineer &middot; MSc Cyber Security, BCU<br>CEH Master &middot; CPENT &middot; CHFI &middot; ISO 27001 Lead Auditor<br><a href="https://github.com/nishu2402" target="_blank" rel="noopener">github.com/nishu2402</a></div>
+</footer>
+</div>
+<script>
+var cur=document.getElementById('cur'),cur2=document.getElementById('cur2'),cur3=document.getElementById('cur3');
+var mx=0,my=0;
+document.addEventListener('mousemove',function(e){mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
+(function loop(){cur2.style.left=mx+'px';cur2.style.top=my+'px';cur3.style.left=mx+'px';cur3.style.top=my+'px';requestAnimationFrame(loop);})();
+document.querySelectorAll('a,.btn,.ai-card,.panel,.cb,.tc,.gui-card,.step,.proto-badge').forEach(function(el){
+  el.addEventListener('mouseenter',function(){cur.style.width='18px';cur.style.height='18px';cur.style.background='rgba(0,255,65,.25)';});
+  el.addEventListener('mouseleave',function(){cur.style.width='10px';cur.style.height='10px';cur.style.background='var(--g)';});
+});
+window.addEventListener('scroll',function(){document.getElementById('prog').style.width=((window.scrollY/(document.body.scrollHeight-window.innerHeight))*100)+'%';});
+(function(){
+  var c=document.getElementById('bg-particle'),ctx=c.getContext('2d');
+  var W,H,mX=innerWidth/2,mY=innerHeight/2,N=200,MAX=140,P=[];
+  function Pt(){this.reset(true);}
+  Pt.prototype.reset=function(i){this.x=Math.random()*W;this.y=i?Math.random()*H:H+10;this.z=Math.random()*3+.5;this.vx=(Math.random()-.5)*.4;this.vy=(Math.random()-.5)*.4-.1;this.life=Math.random()*300+200;this.maxLife=this.life;this.r=Math.random()*1.5+.5;var r=Math.random();this.color=r<.7?'0,255,65':r<.9?'0,229,255':'191,0,255';};
+  Pt.prototype.update=function(){var dx=this.x-mX,dy=this.y-mY,d=Math.sqrt(dx*dx+dy*dy);if(d<120){var f=(120-d)/120;this.vx+=dx/d*f*.6;this.vy+=dy/d*f*.6;}this.vx*=.98;this.vy*=.98;this.x+=this.vx;this.y+=this.vy;this.life--;if(this.life<=0||this.x<-50||this.x>W+50||this.y<-50||this.y>H+50)this.reset(false);};
+  Pt.prototype.draw=function(){var a=(this.life/this.maxLife)*.7*this.z;ctx.beginPath();ctx.arc(this.x,this.y,this.r*this.z,0,Math.PI*2);ctx.fillStyle='rgba('+this.color+','+a+')';ctx.fill();};
+  function resize(){W=c.width=innerWidth;H=c.height=innerHeight;}
+  function lines(){for(var i=0;i<P.length;i++){for(var j=i+1;j<P.length;j++){var a=P[i],b=P[j],dx=a.x-b.x,dy=a.y-b.y,d=Math.sqrt(dx*dx+dy*dy);if(d<MAX){var al=(1-d/MAX)*.18,g=ctx.createLinearGradient(a.x,a.y,b.x,b.y);g.addColorStop(0,'rgba('+a.color+','+al+')');g.addColorStop(1,'rgba('+b.color+','+al+')');ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.strokeStyle=g;ctx.lineWidth=(a.z+b.z)/2*.5;ctx.stroke();}}}}
+  function animate(){ctx.clearRect(0,0,W,H);var g=ctx.createRadialGradient(mX,mY,0,mX,mY,80);g.addColorStop(0,'rgba(0,255,65,0)');g.addColorStop(.7,'rgba(0,255,65,0.04)');g.addColorStop(1,'rgba(0,255,65,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(mX,mY,80,0,Math.PI*2);ctx.fill();lines();P.forEach(function(p){p.update();p.draw();});requestAnimationFrame(animate);}
+  resize();window.addEventListener('resize',resize);document.addEventListener('mousemove',function(e){mX=e.clientX;mY=e.clientY;});
+  for(var i=0;i<N;i++)P.push(new Pt());animate();
+})();
+(function(){
+  var c=document.getElementById('bg-hex'),ctx=c.getContext('2d');
+  var W,H,t=0,S=40;
+  function resize(){W=c.width=innerWidth;H=c.height=innerHeight;}
+  function hex(cx,cy,s){ctx.beginPath();for(var i=0;i<6;i++){var a=Math.PI/180*(60*i-30);if(i===0)ctx.moveTo(cx+s*Math.cos(a),cy+s*Math.sin(a));else ctx.lineTo(cx+s*Math.cos(a),cy+s*Math.sin(a));}ctx.closePath();}
+  function draw(){ctx.clearRect(0,0,W,H);t+=.008;var sy=window.scrollY,cols=Math.ceil(W/(S*1.732))+2,rows=Math.ceil(H/(S*1.5))+2;for(var r=-1;r<rows;r++){for(var col=-1;col<cols;col++){var cx=col*S*1.732+(r%2)*S*.866,cy=r*S*1.5-(sy*.03)%(S*1.5),w=Math.sin(t+col*.3+r*.2)*.5+.5;hex(cx,cy,S-2);ctx.strokeStyle='rgba(0,255,65,'+(0.02+w*0.07)+')';ctx.lineWidth=.6;ctx.stroke();if(w>.92){hex(cx,cy,S-2);ctx.fillStyle='rgba(0,255,65,'+(0.02+w*0.03)+')';ctx.fill();}}}requestAnimationFrame(draw);}
+  resize();window.addEventListener('resize',resize);draw();
+})();
+// HERO: LIVE PACKET WAVE STREAM
+// Rows of packets streaming right, colour-coded by protocol, floating in 3D
+(function(){
+  var c=document.getElementById('hero-geo');if(!c)return;
+  var ctx=c.getContext('2d'),SZ=420;c.width=SZ;c.height=SZ;
+  var t=0,mrx=0,mry=0;
+  document.addEventListener('mousemove',function(e){mrx=(e.clientY/innerHeight-.5)*.1;mry=(e.clientX/innerWidth-.5)*.1;});
+
+  // Protocol lanes
+  var lanes=[
+    {y:60,  proto:'TCP',   col:'0,255,65',   speed:1.8, packets:[]},
+    {y:110, proto:'HTTP',  col:'255,200,80',  speed:1.4, packets:[]},
+    {y:160, proto:'DNS',   col:'0,229,255',   speed:2.2, packets:[]},
+    {y:210, proto:'TLS',   col:'191,0,255',   speed:1.6, packets:[]},
+    {y:260, proto:'UDP',   col:'100,220,255', speed:2.0, packets:[]},
+    {y:310, proto:'SMB',   col:'255,100,100', speed:1.2, packets:[]},
+    {y:360, proto:'ICMP',  col:'255,215,0',   speed:2.5, packets:[]},
+  ];
+
+  // Spawn initial packets
+  lanes.forEach(function(lane){
+    for(var i=0;i<5;i++){
+      lane.packets.push({x:Math.random()*SZ, w:Math.random()*30+20, alpha:0.6+Math.random()*0.3, pulse:Math.random()*Math.PI*2});
+    }
+  });
+
+  function draw(){
+    ctx.clearRect(0,0,SZ,SZ);
+    t+=0.016;
+
+    // Slight parallax via mouse
+    var ox=mry*12, oy=mrx*8;
+
+    ctx.save();ctx.translate(ox,oy);
+
+    // Background grid lines
+    for(var i=0;i<lanes.length;i++){
+      ctx.beginPath();ctx.moveTo(0,lanes[i].y);ctx.lineTo(SZ,lanes[i].y);
+      ctx.strokeStyle='rgba(0,255,65,0.06)';ctx.lineWidth=1;ctx.stroke();
+    }
+
+    lanes.forEach(function(lane){
+      var col=lane.col;
+      // Protocol label on left
+      ctx.font='bold 9px Share Tech Mono';
+      ctx.fillStyle='rgba('+col+',0.5)';
+      ctx.textAlign='left';ctx.textBaseline='middle';
+      ctx.fillText(lane.proto,4,lane.y);
+
+      // Move and draw packets
+      lane.packets.forEach(function(p){
+        p.x += lane.speed;
+        if(p.x > SZ+40) p.x = -p.w - Math.random()*60;
+        var depth=0.5+Math.sin(p.x/SZ*Math.PI)*.5;
+        var pulse=Math.sin(t*2+p.pulse)*.15+.85;
+        var a=p.alpha*pulse*depth;
+
+        // Packet body
+        ctx.fillStyle='rgba('+col+','+a*0.35+')';
+        ctx.strokeStyle='rgba('+col+','+a*0.8+')';
+        ctx.lineWidth=1.2*depth;
+        ctx.beginPath();ctx.rect(p.x,lane.y-6*depth,p.w*depth,12*depth);
+        ctx.fill();ctx.stroke();
+
+        // Glow
+        var ng=ctx.createRadialGradient(p.x+p.w*depth/2,lane.y,0,p.x+p.w*depth/2,lane.y,p.w*depth);
+        ng.addColorStop(0,'rgba('+col+','+a*0.2+')');ng.addColorStop(1,'rgba('+col+',0)');
+        ctx.fillStyle=ng;ctx.beginPath();ctx.ellipse(p.x+p.w*depth/2,lane.y,p.w*depth*.8,8*depth,0,0,Math.PI*2);ctx.fill();
+      });
+    });
+
+    // "Wireshark" packet inspector frame
+    var framePulse=Math.sin(t*0.8)*.5+.5;
+    ctx.strokeStyle='rgba(0,255,65,'+(0.12+framePulse*0.08)+')';
+    ctx.lineWidth=1;
+    ctx.beginPath();ctx.rect(14,36,SZ-28,SZ-80);ctx.stroke();
+
+    // Column header bar
+    ctx.fillStyle='rgba(0,255,65,0.06)';
+    ctx.fillRect(14,36,SZ-28,18);
+    ctx.font='7px Share Tech Mono';
+    ctx.fillStyle='rgba(0,229,255,0.6)';
+    ctx.textAlign='left';ctx.textBaseline='middle';
+    ctx.fillText('No.  Time        Source       Destination  Protocol  Length  Info',18,45);
+
+    // Scrolling row highlight
+    var rowIdx=Math.floor(t*8)%7;
+    ctx.fillStyle='rgba(0,255,65,0.04)';
+    ctx.fillRect(14,54+rowIdx*50,SZ-28,50);
+
+    ctx.restore();
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+var rv=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('on');});},{threshold:.08});
+document.querySelectorAll('.rv,.rv-l').forEach(function(el){rv.observe(el);});
+var sIds=['hero','setup','capture','filters','protocols','streams','forensics','tshark','ai'];
+var tItems=document.querySelectorAll('.toc-i');
+var so=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)tItems.forEach(function(ti){ti.classList.toggle('active',ti.dataset.s===x.target.id);});});},{threshold:.25});
+sIds.forEach(function(id){var el=document.getElementById(id);if(el)so.observe(el);});
+function goTo(h){document.querySelector(h).scrollIntoView({behavior:'smooth'});}
+document.querySelectorAll('.cb').forEach(function(b){
+  b.title='Click to copy';
+  b.addEventListener('click',function(){
+    navigator.clipboard.writeText(b.querySelector('code').innerText).catch(function(){});
+    var o=b.getAttribute('data-l');b.setAttribute('data-l',o+' \u2713 COPIED');
+    setTimeout(function(){b.setAttribute('data-l',o);},2000);
+  });
+});
+</script>
+</body>
+</html>

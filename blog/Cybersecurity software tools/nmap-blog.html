@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mastering Nmap | Nisarg Chasmawala</title>
+<meta name="description" content="Mastering Nmap - the definitive guide by Nisarg Chasmawala (Shroff), Offensive Security Engineer.">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--g:#00ff41;--c:#00e5ff;--p:#bf00ff;--r:#ff003c;--o:#ffd700;--bg:#030509;--t1:#d4ffe0;--t2:#7aad82;--t3:#2e4a32;--mono:'Share Tech Mono',monospace;--dsp:'Orbitron',sans-serif;--body:'Rajdhani',sans-serif;--glow:0 0 20px rgba(0,255,65,.4),0 0 60px rgba(0,255,65,.15);--cglow:0 0 20px rgba(0,229,255,.4),0 0 60px rgba(0,229,255,.1);--pglow:0 0 20px rgba(191,0,255,.4),0 0 60px rgba(191,0,255,.1)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;overflow-x:hidden}
+body{background:var(--bg);color:var(--t1);font-family:var(--body);font-size:17px;line-height:1.8;overflow-x:hidden;cursor:none}
+#bg-particle{position:fixed;inset:0;z-index:0;pointer-events:none}
+#bg-hex{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.35}
+#bg-scan{position:fixed;inset:0;z-index:9999;pointer-events:none;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,255,65,.009) 2px,rgba(0,255,65,.009) 4px)}
+#bg-vignette{position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse at 50% 50%,transparent 50%,rgba(3,5,9,.85) 100%)}
+#cur{position:fixed;width:10px;height:10px;border-radius:50%;background:var(--g);box-shadow:var(--glow);pointer-events:none;z-index:99999;transform:translate(-50%,-50%);transition:width .1s,height .1s}
+#cur2{position:fixed;width:30px;height:30px;border-radius:50%;border:1px solid rgba(0,255,65,.5);pointer-events:none;z-index:99998;transform:translate(-50%,-50%)}
+#cur3{position:fixed;width:50px;height:50px;border-radius:50%;border:1px solid rgba(0,255,65,.2);pointer-events:none;z-index:99997;transform:translate(-50%,-50%)}
+#prog{position:fixed;top:0;left:0;height:2px;background:linear-gradient(to right,var(--g),var(--c),var(--p));box-shadow:0 0 10px var(--g);z-index:10000;width:0%}
+.topbar{position:fixed;top:0;left:0;right:0;height:58px;background:rgba(3,5,9,.88);border-bottom:1px solid rgba(0,255,65,.12);backdrop-filter:blur(20px);z-index:1000;display:flex;align-items:center;justify-content:space-between;padding:0 32px}
+.tb-left{display:flex;flex-direction:column;gap:2px}
+.tb-name{font-family:var(--dsp);font-size:13px;font-weight:900;color:var(--t1);letter-spacing:3px}
+.tb-roles{font-family:var(--mono);font-size:9px;overflow:hidden;white-space:nowrap}
+.tb-inner{display:inline-block;color:var(--c);animation:ticker 18s linear infinite}
+@keyframes ticker{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
+.tb-status{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;color:var(--g)}
+.tb-dot{width:7px;height:7px;border-radius:50%;background:var(--g);box-shadow:0 0 10px var(--g);animation:tdot 1.2s ease-in-out infinite}
+@keyframes tdot{0%,100%{opacity:1}50%{opacity:.3}}
+.toc{position:fixed;right:20px;top:50%;transform:translateY(-50%);z-index:200;display:flex;flex-direction:column;gap:9px}
+.toc-i{display:flex;align-items:center;gap:8px;cursor:pointer}
+.toc-d{width:6px;height:6px;border-radius:50%;border:1px solid var(--t3);transition:all .25s;flex-shrink:0}
+.toc-i.active .toc-d,.toc-i:hover .toc-d{background:var(--g);border-color:var(--g);box-shadow:0 0 10px var(--g)}
+.toc-l{font-family:var(--mono);font-size:10px;color:var(--t3);opacity:0;transform:translateX(6px);transition:all .2s;white-space:nowrap}
+.toc-i:hover .toc-l,.toc-i.active .toc-l{opacity:1;transform:none;color:var(--g)}
+@media(max-width:1000px){.toc{display:none}}
+.wrap{position:relative;z-index:10;max-width:980px;margin:0 auto;padding:0 28px}
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:100px 0 60px;position:relative}
+.hero-canvas-wrap{position:absolute;right:-80px;top:50%;transform:translateY(-52%);width:500px;height:500px;pointer-events:none}
+#hero-geo{width:100%;height:100%}
+.hero-tag{font-family:var(--mono);font-size:11px;letter-spacing:4px;color:var(--c);text-transform:uppercase;margin-bottom:18px;opacity:0;animation:fup .6s ease forwards .3s;display:flex;align-items:center;gap:12px}
+.hero-tag::before{content:'';width:40px;height:1px;background:linear-gradient(to right,transparent,var(--c))}
+.hero-tag::after{content:'';flex:1;max-width:100px;height:1px;background:linear-gradient(to right,var(--c),transparent)}
+.hero-title{font-family:var(--dsp);font-size:clamp(18px,3.5vw,42px);font-weight:900;line-height:1.0;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;opacity:0;animation:fup .7s ease forwards .5s}
+.ht-line1{display:block;color:var(--g);text-shadow:0 0 40px rgba(0,255,65,.6)}
+.ht-sub{display:block;font-size:.43em;letter-spacing:5px;color:rgba(200,255,220,.5);font-weight:400;margin-top:10px}
+.gw{position:relative;display:inline-block}
+.gw::before,.gw::after{content:attr(data-t);position:absolute;top:0;left:0;width:100%;font-family:var(--dsp);font-weight:900;font-size:inherit;letter-spacing:inherit;text-transform:uppercase}
+.gw::before{color:var(--c);animation:ga 5s infinite;clip-path:polygon(0 0,100% 0,100% 33%,0 33%)}
+.gw::after{color:var(--r);animation:gb 5s infinite;clip-path:polygon(0 66%,100% 66%,100% 100%,0 100%)}
+@keyframes ga{0%,85%,100%{transform:none;opacity:0}87%{transform:translate(-5px,2px);opacity:.9}93%{transform:none;opacity:0}}
+@keyframes gb{0%,87%,100%{transform:none;opacity:0}89%{transform:translate(5px,3px);opacity:.8}95%{transform:none;opacity:0}}
+.hero-desc{font-size:17px;font-weight:300;color:var(--t2);max-width:560px;line-height:1.75;margin-bottom:36px;opacity:0;animation:fup .8s ease forwards .8s;margin-top:20px}
+.hero-meta{display:flex;gap:24px;flex-wrap:wrap;opacity:0;animation:fup .8s ease forwards 1s}
+.m-item{display:flex;flex-direction:column;gap:3px}
+.m-lbl{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--t3);text-transform:uppercase}
+.m-val{font-family:var(--mono);font-size:12px;color:var(--c)}
+.hero-scroll-hint{position:absolute;bottom:24px;left:0;display:flex;align-items:center;gap:12px;opacity:0;animation:fin 1s ease forwards 1.8s}
+.hs-line{width:60px;height:1px;background:linear-gradient(to right,var(--g),transparent)}
+.hs-txt{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--t3)}
+.hs-pulse{width:6px;height:6px;border-radius:50%;background:var(--g);box-shadow:0 0 8px var(--g);animation:tdot 1.5s ease-in-out infinite}
+.sec{margin-bottom:100px}
+.sec-hd{display:flex;align-items:center;gap:14px;margin-bottom:40px}
+.sec-n{font-family:var(--mono);font-size:10px;color:var(--p);letter-spacing:2px;min-width:44px}
+.sec-ln{flex:1;height:1px;background:linear-gradient(to right,rgba(0,229,255,.35),transparent)}
+.sec-t{font-family:var(--dsp);font-size:clamp(14px,2.4vw,21px);font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--c);text-shadow:var(--cglow)}
+.tw-cursor{display:inline-block;width:2px;height:1em;background:var(--c);margin-left:4px;animation:blink 1s step-end infinite;vertical-align:middle}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.sec-ai .sec-t{color:#bf00ff;text-shadow:var(--pglow)}
+.sec-ai .sec-n{color:var(--c)}
+.sec-ai .sec-ln{background:linear-gradient(to right,rgba(191,0,255,.35),transparent)}
+.sec-ai .tw-cursor{background:#bf00ff}
+.panel{background:rgba(0,255,65,.025);border:1px solid rgba(0,255,65,.12);border-radius:4px;padding:32px;margin-bottom:22px;position:relative;overflow:hidden;transition:border-color .3s,box-shadow .3s,transform .3s}
+.panel::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:linear-gradient(to bottom,var(--g),transparent);opacity:0;transition:opacity .3s}
+.panel:hover{border-color:rgba(0,229,255,.4);box-shadow:0 0 50px rgba(0,229,255,.07),0 20px 60px rgba(0,0,0,.3);transform:translateY(-3px)}
+.panel:hover::before{opacity:1}
+.panel p{color:var(--t2);margin-bottom:12px}
+.panel p:last-child{margin-bottom:0}
+.panel-t{font-family:var(--dsp);font-size:12px;font-weight:700;letter-spacing:3px;color:var(--g);text-transform:uppercase;margin-bottom:18px;display:flex;align-items:center;gap:12px}
+.panel-t::after{content:'';flex:1;height:1px;background:linear-gradient(to right,rgba(0,255,65,.2),transparent)}
+.panel-ai{background:rgba(191,0,255,.03);border-color:rgba(191,0,255,.18)}
+.panel-ai:hover{border-color:rgba(191,0,255,.45)}
+.panel-ai .panel-t{color:#bf00ff}
+.panel-ai .panel-t::after{background:linear-gradient(to right,rgba(191,0,255,.2),transparent)}
+.panel-ai::before{background:linear-gradient(to bottom,#bf00ff,transparent)}
+.ai-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px;margin:20px 0}
+.ai-card{background:rgba(191,0,255,.04);border:1px solid rgba(191,0,255,.18);border-radius:4px;padding:22px;position:relative;overflow:hidden;transition:all .3s}
+.ai-card::after{content:'';position:absolute;top:0;right:0;width:0;height:0;border-top:26px solid rgba(191,0,255,.25);border-left:26px solid transparent}
+.ai-card:hover{border-color:rgba(191,0,255,.5);box-shadow:var(--pglow),0 16px 40px rgba(0,0,0,.25);transform:translateY(-3px)}
+.ai-ico{font-size:24px;margin-bottom:10px;display:block}
+.ai-name{font-family:var(--dsp);font-size:11px;font-weight:700;letter-spacing:2px;color:#bf00ff;text-transform:uppercase;margin-bottom:10px}
+.ai-desc{font-size:14px;color:var(--t2);line-height:1.65;font-weight:300}
+.alert{border-radius:4px;padding:16px 20px;margin:20px 0;display:flex;gap:14px;align-items:flex-start}
+.al-w{background:rgba(255,215,0,.04);border:1px solid rgba(255,215,0,.18);border-left:3px solid var(--o)}
+.al-p{background:rgba(191,0,255,.04);border:1px solid rgba(191,0,255,.18);border-left:3px solid #bf00ff}
+.al-i{background:rgba(0,229,255,.04);border:1px solid rgba(0,229,255,.14);border-left:3px solid var(--c)}
+.al-ic{font-family:var(--mono);font-size:13px;flex-shrink:0;margin-top:2px}
+.al-w .al-ic{color:var(--o)}.al-p .al-ic{color:#bf00ff}.al-i .al-ic{color:var(--c)}
+.al-tx{font-size:14px;color:var(--t2);line-height:1.6}
+.ptbl{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12px;margin:16px 0}
+.ptbl th{text-align:left;padding:11px 14px;color:var(--c);border-bottom:1px solid rgba(0,229,255,.3);letter-spacing:2px;font-size:10px;text-transform:uppercase}
+.ptbl td{padding:10px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05);vertical-align:top}
+.ptbl tr:hover td{background:rgba(0,255,65,.02)}
+.ptbl td:first-child{color:var(--g);font-weight:700}
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;margin:20px 0}
+.tc{background:rgba(0,229,255,.03);border:1px solid rgba(0,229,255,.1);border-radius:4px;padding:18px;transition:all .25s;position:relative;overflow:hidden}
+.tc::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(to right,var(--c),transparent);transform:scaleX(0);transform-origin:left;transition:transform .3s}
+.tc:hover{border-color:rgba(0,229,255,.4);background:rgba(0,229,255,.06);box-shadow:var(--cglow);transform:translateY(-3px)}
+.tc:hover::after{transform:scaleX(1)}
+.tcname{font-family:var(--mono);font-size:12px;color:var(--c);margin-bottom:4px}
+.tctag{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--o);text-transform:uppercase;margin-bottom:6px;display:block}
+.tcdesc{font-size:12px;color:var(--t3);line-height:1.45}
+.cb{background:rgba(0,0,0,.7);border:1px solid rgba(0,255,65,.1);border-left:3px solid var(--g);border-radius:0 4px 4px 0;padding:22px 26px;margin:16px 0;position:relative;overflow-x:auto;cursor:pointer;transition:all .3s}
+.cb::before{content:attr(data-l);position:absolute;top:0;right:0;font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--g);background:rgba(0,255,65,.07);padding:3px 12px;border-bottom-left-radius:4px;text-transform:uppercase}
+.cb:hover{border-color:rgba(0,255,65,.35)}
+.cb.cb-ai{border-left-color:#bf00ff}.cb.cb-ai::before{color:#bf00ff;background:rgba(191,0,255,.07)}
+.cb code{font-family:var(--mono);font-size:13px;color:var(--g);white-space:pre;display:block;line-height:1.9}
+.cta{background:linear-gradient(135deg,rgba(0,255,65,.04),rgba(191,0,255,.04));border:1px solid rgba(0,229,255,.3);border-radius:4px;padding:60px 50px;text-align:center;position:relative;overflow:hidden;margin-top:80px}
+.cta::before{content:'NMAP';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:var(--dsp);font-size:190px;font-weight:900;color:rgba(0,255,65,.018);pointer-events:none;letter-spacing:20px}
+.cta-t{font-family:var(--dsp);font-size:20px;font-weight:700;letter-spacing:4px;color:var(--g);text-transform:uppercase;margin-bottom:16px;text-shadow:var(--glow)}
+.cta-p{color:var(--t2);font-size:16px;max-width:540px;margin:0 auto 32px;line-height:1.75}
+.cta-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+.btn{font-family:var(--mono);font-size:11px;letter-spacing:3px;text-transform:uppercase;padding:13px 30px;border-radius:2px;text-decoration:none;display:inline-block;transition:all .25s}
+.btn-p{border:1px solid var(--g);color:var(--g);background:rgba(0,255,65,.06)}
+.btn-p:hover{background:var(--g);color:var(--bg);box-shadow:var(--glow)}
+.btn-s{border:1px solid var(--c);color:var(--c);background:rgba(0,229,255,.05)}
+.btn-s:hover{background:var(--c);color:var(--bg);box-shadow:var(--cglow)}
+.footer{border-top:1px solid rgba(0,255,65,.1);padding:32px 0;margin-top:60px;display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:20px}
+.f-l{font-family:var(--mono);font-size:11px;color:var(--t3);letter-spacing:1.5px;line-height:2}
+.f-alias{color:var(--g);font-size:10px;letter-spacing:3px;text-shadow:0 0 8px var(--g)}
+.f-r{font-family:var(--mono);font-size:11px;color:var(--t3);text-align:right;line-height:2}
+.f-r a{color:var(--g);text-decoration:none}
+.f-r a:hover{text-shadow:var(--glow)}
+.div{height:1px;background:linear-gradient(to right,transparent,rgba(0,255,65,.15),transparent);margin:60px 0;position:relative}
+.div::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:6px;height:6px;border-radius:50%;background:var(--g);box-shadow:0 0 12px var(--g)}
+.div-ai{background:linear-gradient(to right,transparent,rgba(191,0,255,.22),transparent)}
+.div-ai::after{background:#bf00ff;box-shadow:0 0 12px #bf00ff}
+@keyframes fup{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+@keyframes fin{from{opacity:0}to{opacity:1}}
+.rv{opacity:0;transform:translateY(30px);transition:opacity .8s,transform .8s}
+.rv-l{opacity:0;transform:translateX(-30px);transition:opacity .8s,transform .8s}
+.rv.on,.rv-l.on{opacity:1;transform:none}
+@media(max-width:700px){.ai-grid,.tgrid{grid-template-columns:1fr}.hero-canvas-wrap{display:none}.cta{padding:36px 20px}}
+</style>
+</head>
+<body>
+<canvas id="bg-particle"></canvas>
+<canvas id="bg-hex"></canvas>
+<div id="bg-vignette"></div>
+<div id="bg-scan"></div>
+<div id="cur"></div><div id="cur2"></div><div id="cur3"></div>
+<div id="prog"></div>
+<nav class="topbar">
+  <div class="tb-left">
+    <span class="tb-name">NISARG CHASMAWALA (SHROFF)</span>
+    <div class="tb-roles"><span class="tb-inner">Penetration Tester &nbsp;|&nbsp; Vulnerability Assessment &nbsp;|&nbsp; Cybersecurity Researcher &nbsp;|&nbsp; Offensive Security Engineer &nbsp;|&nbsp; Digital Forensics &nbsp;|&nbsp; Penetration Tester &nbsp;|&nbsp; Vulnerability Assessment &nbsp;|&nbsp; Cybersecurity Researcher</span></div>
+  </div>
+  <div class="tb-status"><span class="tb-dot"></span>SYS ONLINE</div>
+</nav>
+<nav class="toc" id="toc">
+  <div class="toc-i active" onclick="goTo('#hero')" data-s="hero"><div class="toc-d"></div><span class="toc-l">INTRO</span></div>
+  <div class="toc-i" onclick="goTo('#basics')" data-s="basics"><div class="toc-d"></div><span class="toc-l">BASICS</span></div>
+  <div class="toc-i" onclick="goTo('#discovery')" data-s="discovery"><div class="toc-d"></div><span class="toc-l">HOST DISCOVERY</span></div>
+  <div class="toc-i" onclick="goTo('#scanning')" data-s="scanning"><div class="toc-d"></div><span class="toc-l">PORT SCANNING</span></div>
+  <div class="toc-i" onclick="goTo('#versions')" data-s="versions"><div class="toc-d"></div><span class="toc-l">VERSION DETECT</span></div>
+  <div class="toc-i" onclick="goTo('#os')" data-s="os"><div class="toc-d"></div><span class="toc-l">OS FINGERPRINT</span></div>
+  <div class="toc-i" onclick="goTo('#nse')" data-s="nse"><div class="toc-d"></div><span class="toc-l">NSE SCRIPTING</span></div>
+  <div class="toc-i" onclick="goTo('#evasion')" data-s="evasion"><div class="toc-d"></div><span class="toc-l">EVASION</span></div>
+  <div class="toc-i" onclick="goTo('#ai')" data-s="ai"><div class="toc-d"></div><span class="toc-l">AI INTEGRATION</span></div>
+</nav>
+<div class="wrap">
+
+<section class="hero" id="hero">
+  <div class="hero-canvas-wrap"><canvas id="hero-geo"></canvas></div>
+  <div class="hero-tag">NISARG CHASMAWALA &nbsp;//&nbsp; ALIAS: HEAVEN</div>
+  <h1 class="hero-title">
+    <div class="gw" data-t="MASTERING NMAP"><span class="ht-line1">MASTERING NMAP</span></div>
+    <span class="ht-sub">NETWORK DISCOVERY &middot; PORT SCANNING &middot; NSE &middot; AI INTEGRATION</span>
+  </h1>
+  <p class="hero-desc">The definitive Nmap field guide for penetration testers and security professionals. From host discovery and stealth scanning to service version detection, OS fingerprinting, the full Nmap Scripting Engine, firewall evasion techniques, output formats, and AI-powered scan analysis. Nmap is the first tool every professional runs -- and mastering it separates average testers from exceptional ones.</p>
+  <div class="hero-meta">
+    <div class="m-item"><span class="m-lbl">Author</span><span class="m-val">Nisarg Chasmawala (Shroff)</span></div>
+    <div class="m-item"><span class="m-lbl">Alias</span><span class="m-val">HEAVEN</span></div>
+    <div class="m-item"><span class="m-lbl">Platform</span><span class="m-val">Linux &middot; Kali &middot; Parrot &middot; macOS &middot; Windows</span></div>
+    <div class="m-item"><span class="m-lbl">Category</span><span class="m-val">Network Scanning &middot; Recon &middot; AI</span></div>
+  </div>
+  <div class="hero-scroll-hint"><div class="hs-line"></div><span class="hs-txt">SCROLL TO BEGIN</span><div class="hs-pulse"></div></div>
+</section>
+<div class="div"></div>
+
+<!-- 01 BASICS -->
+<section class="sec rv" id="basics">
+  <div class="sec-hd"><span class="sec-n">01 //</span><h2 class="sec-t">Nmap Fundamentals &amp; Installation<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel rv-l">
+    <p><strong style="color:var(--t1)">Nmap (Network Mapper)</strong> was created by Gordon Lyon (Fyodor) in 1997 and is the most widely used network scanning tool in existence. It is open-source, cross-platform, and ships pre-installed in Kali Linux, Parrot OS, and BlackArch. Every major penetration testing methodology -- PTES, OWASP, OSSTMM, and the CPENT/OSCP curricula -- begins with Nmap. Its core capabilities include host discovery, port scanning, service and version detection, OS fingerprinting, and a powerful scripting engine (NSE) with over 600 built-in scripts covering vulnerability detection, authentication testing, and service enumeration.</p>
+    <p>Nmap operates by crafting and sending specially formed IP packets to target hosts and analysing the responses. The type of packets sent and how responses are interpreted is determined by the scan type chosen. Understanding the mechanics behind each scan type -- which packets are sent, what response indicates open/closed/filtered -- is essential for using Nmap effectively and interpreting its output correctly in professional engagements.</p>
+  </div>
+  <div class="cb rv" data-l="Nmap -- Install and First Scans">
+    <code><span style="color:var(--t3)"># Install Nmap</span>
+<span style="color:var(--c)">sudo apt install nmap</span>           <span style="color:var(--t3)"># Kali / Parrot / Ubuntu / Debian</span>
+<span style="color:var(--c)">brew install nmap</span>               <span style="color:var(--t3)"># macOS</span>
+<span style="color:var(--t3)"># Windows: https://nmap.org/download.html (includes Zenmap GUI)</span>
+<span style="color:var(--c)">nmap --version</span>                  <span style="color:var(--t3)"># Verify and show version</span>
+
+<span style="color:var(--t3)"># Your very first scans</span>
+<span style="color:var(--c)">nmap</span> 192.168.1.10               <span style="color:var(--t3)"># Default scan: top 1000 TCP ports</span>
+<span style="color:var(--c)">nmap</span> 192.168.1.0/24             <span style="color:var(--t3)"># Scan entire /24 subnet</span>
+<span style="color:var(--c)">nmap</span> scanme.nmap.org            <span style="color:var(--t3)"># Legal public test target</span>
+
+<span style="color:var(--t3)"># Understanding Nmap port states</span>
+<span style="color:var(--t3)"># open       -- application actively accepting connections</span>
+<span style="color:var(--t3)"># closed     -- accessible but no application listening</span>
+<span style="color:var(--t3)"># filtered   -- firewall/filter blocking -- Nmap cannot determine state</span>
+<span style="color:var(--t3)"># unfiltered -- accessible but open/closed undetermined (ACK scan only)</span>
+<span style="color:var(--t3)"># open|filtered -- open or filtered, cannot distinguish</span>
+<span style="color:var(--t3)"># closed|filtered -- closed or filtered (IP ID idle scan only)</span>
+
+<span style="color:var(--t3)"># Essential output flags -- always save your scans</span>
+<span style="color:var(--c)">nmap</span> 192.168.1.10 <span style="color:var(--o)">-oN</span> scan.txt  <span style="color:var(--t3)"># Normal (human-readable)</span>
+<span style="color:var(--c)">nmap</span> 192.168.1.10 <span style="color:var(--o)">-oX</span> scan.xml  <span style="color:var(--t3)"># XML (parse with tools/AI)</span>
+<span style="color:var(--c)">nmap</span> 192.168.1.10 <span style="color:var(--o)">-oG</span> scan.gnmap <span style="color:var(--t3)"># Grepable</span>
+<span style="color:var(--c)">nmap</span> 192.168.1.10 <span style="color:var(--o)">-oA</span> scan      <span style="color:var(--t3)"># All three formats simultaneously</span>
+<span style="color:var(--c)">nmap</span> 192.168.1.10 <span style="color:var(--o)">-v</span>           <span style="color:var(--t3)"># Verbose output</span>
+<span style="color:var(--c)">nmap</span> 192.168.1.10 <span style="color:var(--o)">-vv</span>          <span style="color:var(--t3)"># Double verbose</span></code>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- 02 HOST DISCOVERY -->
+<section class="sec rv" id="discovery">
+  <div class="sec-hd"><span class="sec-n">02 //</span><h2 class="sec-t">Host Discovery Techniques<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel rv-l">
+    <p>Host discovery (ping scanning) is the phase before port scanning -- identifying which hosts in the target range are alive before spending time scanning individual ports. Nmap provides numerous host discovery techniques because different network configurations block different probe types. ICMP is frequently blocked by firewalls; TCP SYN to common ports often bypasses them. Understanding which technique to use based on network conditions is a key skill that separates experienced Nmap users from beginners.</p>
+  </div>
+  <div class="cb rv" data-l="Nmap Host Discovery -- All Techniques">
+    <code><span style="color:var(--t3)"># DEFAULT DISCOVERY (combined probe -- most useful for local networks)</span>
+<span style="color:var(--c)">nmap</span> <span style="color:var(--o)">-sn</span> 192.168.1.0/24         <span style="color:var(--t3)"># Ping scan only, no port scan</span>
+
+<span style="color:var(--t3)"># ICMP probes</span>
+<span style="color:var(--c)">sudo nmap</span> <span style="color:var(--o)">-sn -PE</span> 192.168.1.0/24  <span style="color:var(--t3)"># ICMP echo request (classic ping)</span>
+<span style="color:var(--c)">sudo nmap</span> <span style="color:var(--o)">-sn -PP</span> 192.168.1.0/24  <span style="color:var(--t3)"># ICMP timestamp request</span>
+<span style="color:var(--c)">sudo nmap</span> <span style="color:var(--o)">-sn -PM</span> 192.168.1.0/24  <span style="color:var(--t3)"># ICMP address mask request</span>
+
+<span style="color:var(--t3)"># TCP probes (bypass ICMP blocks)</span>
+<span style="color:var(--c)">sudo nmap</span> <span style="color:var(--o)">-sn -PS80,443,22</span> 192.168.1.0/24  <span style="color:var(--t3)"># TCP SYN to specified ports</span>
+<span style="color:var(--c)">sudo nmap</span> <span style="color:var(--o)">-sn -PA80,443</span> 192.168.1.0/24      <span style="color:var(--t3)"># TCP ACK (requires root)</span>
+
+<span style="color:var(--t3)"># UDP probe</span>
+<span style="color:var(--c)">sudo nmap</span> <span style="color:var(--o)">-sn -PU53</span> 192.168.1.0/24  <span style="color:var(--t3)"># UDP to port 53 (DNS)</span>
+
+<span style="color:var(--t3)"># ARP scan (fastest, local network only -- bypasses all firewalls)</span>
+<span style="color:var(--c)">sudo nmap</span> <span style="color:var(--o)">-sn -PR</span> 192.168.1.0/24
+
+<span style="color:var(--t3)"># Skip discovery entirely (treat all hosts as up)</span>
+<span style="color:var(--c)">sudo nmap</span> <span style="color:var(--o)">-Pn</span> 192.168.1.10       <span style="color:var(--t3)"># Assume host is up, go straight to port scan</span>
+<span style="color:var(--t3)"># Use -Pn when host blocks all probes but you know it exists</span>
+
+<span style="color:var(--t3)"># Read targets from file</span>
+<span style="color:var(--c)">nmap</span> <span style="color:var(--o)">-sn -iL</span> targets.txt        <span style="color:var(--t3)"># One IP/range/hostname per line</span>
+
+<span style="color:var(--t3)"># Exclude specific hosts from scan</span>
+<span style="color:var(--c)">nmap</span> <span style="color:var(--o)">-sn</span> 192.168.1.0/24 <span style="color:var(--o)">--exclude</span> 192.168.1.1,192.168.1.254
+<span style="color:var(--c)">nmap</span> <span style="color:var(--o)">-sn</span> 192.168.1.0/24 <span style="color:var(--o)">--excludefile</span> exclude.txt
+
+<span style="color:var(--t3)"># Parse results: extract live hosts from grepable output</span>
+<span style="color:var(--c)">grep "Up" scan.gnmap | awk</span> <span style="color:#ff79c6">'{print $2}'</span> > live_hosts.txt</code>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- 03 PORT SCANNING -->
+<section class="sec rv" id="scanning">
+  <div class="sec-hd"><span class="sec-n">03 //</span><h2 class="sec-t">Port Scanning Techniques<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel rv-l">
+    <p>Nmap implements over a dozen distinct port scanning techniques, each with different detection profiles, accuracy levels, and requirements. The choice of scan type determines stealth, speed, and completeness. <strong style="color:var(--c)">SYN scan (-sS)</strong> is the professional default -- it never completes the TCP handshake, making it faster and stealthier than connect scan. <strong style="color:var(--c)">UDP scan (-sU)</strong> is essential but slow -- most network auditors miss critical UDP services (DNS, SNMP, TFTP) by skipping it entirely.</p>
+  </div>
+  <div class="cb rv" data-l="Nmap Port Scanning -- All Scan Types">
+    <code><span style="color:var(--t3)"># TCP SCAN TYPES</span>
+<span style="color:var(--c)">sudo nmap</span> <span style="color:var(--o)">-sS</span> 192.168.1.10  <span style="color:var(--t3)"># SYN scan (stealth) -- DEFAULT, requires root</span>
+                              <span style="color:var(--t3)"># Sends SYN, gets SYN/ACK (open) or RST (closed)</span>
+                              <span style="color:var(--t3)"># Never completes handshake -- harder to log</span>
+
+<span style="color:var(--c)">nmap</span> <span style="color:var(--o)">-sT</span> 192.168.1.10       <span style="color:var(--t3)"># TCP Connect -- full 3-way handshake (no root needed)</span>
+                              <span style="color:var(--t3)"># Logged by target. Slower than SYN scan.</span>
+
+<span style="color:var(--c)">sudo nmap</span> <span style="color:var(--o)">-sA</span> 192.168.1.10  <span style="color:var(--t3)"># ACK scan -- map firewall rules, NOT open ports</span>
+                              <span style="color:var(--t3)"># RST=unfiltered  No response=filtered</span>
+
+<span style="color:var(--c)">sudo nmap</span> <span style="color:var(--o)">-sW</span> 192.168.1.10  <span style="color:var(--t3)"># Window scan -- like ACK but examines TCP window</span>
+<span style="color:var(--c)">sudo nmap</span> <span style="color:var(--o)">-sN</span> 192.168.1.10  <span style="color:var(--t3)"># NULL scan -- no flags set</span>
+<span style="color:var(--c)">sudo nmap</span> <span style="color:var(--o)">-sF</span> 192.168.1.10  <span style="color:var(--t3)"># FIN scan -- only FIN flag</span>
+<span style="color:var(--c)">sudo nmap</span> <span style="color:var(--o)">-sX</span> 192.168.1.10  <span style="color:var(--t3)"># Xmas scan -- FIN+PSH+URG flags</span>
+<span style="color:var(--t3)"># NULL/FIN/Xmas: bypass some stateless firewalls; fail against Windows</span>
+
+<span style="color:var(--c)">sudo nmap</span> <span style="color:var(--o)">-sM</span> 192.168.1.10  <span style="color:var(--t3)"># Maimon scan -- FIN+ACK (bypasses some BSD filters)</span>
+
+<span style="color:var(--t3)"># UDP SCAN (critical -- do not skip)</span>
+<span style="color:var(--c)">sudo nmap</span> <span style="color:var(--o)">-sU</span> 192.168.1.10              <span style="color:var(--t3)"># UDP top 1000 ports (slow)</span>
+<span style="color:var(--c)">sudo nmap</span> <span style="color:var(--o)">-sU --top-ports 100</span> 192.168.1.10   <span style="color:var(--t3)"># UDP top 100 (faster)</span>
+<span style="color:var(--c)">sudo nmap</span> <span style="color:var(--o)">-sU -sS</span> 192.168.1.10          <span style="color:var(--t3)"># Combine UDP + SYN scan</span>
+
+<span style="color:var(--t3)"># PORT RANGE SPECIFICATION</span>
+<span style="color:var(--c)">nmap</span> <span style="color:var(--o)">-p 80</span> 192.168.1.10             <span style="color:var(--t3)"># Single port</span>
+<span style="color:var(--c)">nmap</span> <span style="color:var(--o)">-p 80,443,8080</span> 192.168.1.10    <span style="color:var(--t3)"># Port list</span>
+<span style="color:var(--c)">nmap</span> <span style="color:var(--o)">-p 1-1000</span> 192.168.1.10         <span style="color:var(--t3)"># Port range</span>
+<span style="color:var(--c)">nmap</span> <span style="color:var(--o)">-p-</span> 192.168.1.10               <span style="color:var(--t3)"># All 65535 ports (thorough)</span>
+<span style="color:var(--c)">nmap</span> <span style="color:var(--o)">--top-ports 100</span> 192.168.1.10   <span style="color:var(--t3)"># Top 100 most common ports</span>
+<span style="color:var(--c)">nmap</span> <span style="color:var(--o)">-F</span> 192.168.1.10                <span style="color:var(--t3)"># Fast scan: top 100 ports</span>
+<span style="color:var(--c)">nmap</span> <span style="color:var(--o)">-p http,ftp,ssh</span> 192.168.1.10  <span style="color:var(--t3)"># By service name</span>
+
+<span style="color:var(--t3)"># TIMING TEMPLATES (T0=slowest/stealthy, T5=fastest/aggressive)</span>
+<span style="color:var(--c)">nmap</span> <span style="color:var(--o)">-T0</span> 192.168.1.10               <span style="color:var(--t3)"># Paranoid IDS evasion</span>
+<span style="color:var(--c)">nmap</span> <span style="color:var(--o)">-T1</span> 192.168.1.10               <span style="color:var(--t3)"># Sneaky</span>
+<span style="color:var(--c)">nmap</span> <span style="color:var(--o)">-T2</span> 192.168.1.10               <span style="color:var(--t3)"># Polite -- throttled</span>
+<span style="color:var(--c)">nmap</span> <span style="color:var(--o)">-T3</span> 192.168.1.10               <span style="color:var(--t3)"># Normal -- default</span>
+<span style="color:var(--c)">nmap</span> <span style="color:var(--o)">-T4</span> 192.168.1.10               <span style="color:var(--t3)"># Aggressive -- pentest standard</span>
+<span style="color:var(--c)">nmap</span> <span style="color:var(--o)">-T5</span> 192.168.1.10               <span style="color:var(--t3)"># Insane -- may miss ports</span>
+
+<span style="color:var(--t3)"># THE PROFESSIONAL FULL SCAN (pentest gold standard)</span>
+<span style="color:var(--c)">sudo nmap</span> <span style="color:var(--o)">-sS -sV -sC -O -A -p- -T4</span> 192.168.1.10 <span style="color:var(--o)">-oA</span> fullscan</code>
+  </div>
+  <div class="panel rv">
+    <div class="panel-t">Scan Type Comparison</div>
+    <table class="ptbl">
+      <thead><tr><th>Scan Type</th><th>Flag</th><th>Root Needed</th><th>Detection Risk</th><th>Best Use Case</th></tr></thead>
+      <tbody>
+        <tr><td>SYN (Stealth)</td><td>-sS</td><td>Yes</td><td>Low</td><td>Standard pentest default -- fast and stealthy</td></tr>
+        <tr><td>TCP Connect</td><td>-sT</td><td>No</td><td>High</td><td>No root access; testing firewalls from application layer</td></tr>
+        <tr><td>UDP</td><td>-sU</td><td>Yes</td><td>Low</td><td>Finding DNS, SNMP, TFTP, VoIP services</td></tr>
+        <tr><td>ACK</td><td>-sA</td><td>Yes</td><td>Low</td><td>Mapping firewall rulesets, not finding open ports</td></tr>
+        <tr><td>NULL/FIN/Xmas</td><td>-sN/-sF/-sX</td><td>Yes</td><td>Very Low</td><td>Bypassing stateless packet filters (fails on Windows)</td></tr>
+        <tr><td>Window</td><td>-sW</td><td>Yes</td><td>Low</td><td>Systems where window size differs between open/closed</td></tr>
+        <tr><td>Idle/Zombie</td><td>-sI zombie</td><td>Yes</td><td>Near Zero</td><td>Completely blind scanning using third-party zombie host</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- 04 VERSION DETECTION -->
+<section class="sec rv" id="versions">
+  <div class="sec-hd"><span class="sec-n">04 //</span><h2 class="sec-t">Service &amp; Version Detection<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel rv-l">
+    <p>Knowing a port is open is only half the information. Service and version detection (<code style="color:var(--c);font-family:var(--mono)">-sV</code>) is the flag that transforms a list of open ports into actionable intelligence -- identifying the exact software, version number, and sometimes build date of every service listening on the target. This is what powers CVE lookup and exploit selection. An open port 80 tells you "there is a web server"; <code style="color:var(--c);font-family:var(--mono)">-sV</code> tells you "Apache httpd 2.4.49 on Ubuntu Linux" -- which maps directly to CVE-2021-41773 (path traversal RCE).</p>
+  </div>
+  <div class="cb rv" data-l="Nmap Service and Version Detection">
+    <code><span style="color:var(--t3)"># BASIC VERSION DETECTION</span>
+<span style="color:var(--c)">nmap</span> <span style="color:var(--o)">-sV</span> 192.168.1.10              <span style="color:var(--t3)"># Detect service versions</span>
+
+<span style="color:var(--t3)"># VERSION INTENSITY LEVELS (0=lightest, 9=try everything)</span>
+<span style="color:var(--c)">nmap</span> <span style="color:var(--o)">-sV --version-intensity 0</span> 192.168.1.10  <span style="color:var(--t3)"># Only most likely probes</span>
+<span style="color:var(--c)">nmap</span> <span style="color:var(--o)">-sV --version-intensity 5</span> 192.168.1.10  <span style="color:var(--t3)"># Default</span>
+<span style="color:var(--c)">nmap</span> <span style="color:var(--o)">-sV --version-intensity 9</span> 192.168.1.10  <span style="color:var(--t3)"># Comprehensive (slow)</span>
+
+<span style="color:var(--t3)"># SHORTCUTS</span>
+<span style="color:var(--c)">nmap</span> <span style="color:var(--o)">-sV --version-light</span> 192.168.1.10   <span style="color:var(--t3)"># Intensity 2 -- fast</span>
+<span style="color:var(--c)">nmap</span> <span style="color:var(--o)">-sV --version-all</span> 192.168.1.10    <span style="color:var(--t3)"># Intensity 9 -- thorough</span>
+
+<span style="color:var(--t3)"># BANNER GRABBING only (no probe -- read whatever service sends)</span>
+<span style="color:var(--c)">nmap</span> <span style="color:var(--o)">-sV --version-intensity 0 -p</span> 21,22,25,80 192.168.1.10
+
+<span style="color:var(--t3)"># COMBINE with script scan for maximum intelligence</span>
+<span style="color:var(--c)">nmap</span> <span style="color:var(--o)">-sV -sC</span> 192.168.1.10          <span style="color:var(--t3)"># Version + default NSE scripts</span>
+<span style="color:var(--c)">nmap</span> <span style="color:var(--o)">-sV -A</span> 192.168.1.10           <span style="color:var(--t3)"># -A = -sV -sC -O --traceroute</span>
+
+<span style="color:var(--t3)"># RPC scan (for NFS, NIS, and RPC services)</span>
+<span style="color:var(--c)">sudo nmap</span> <span style="color:var(--o)">-sR</span> 192.168.1.10          <span style="color:var(--t3)"># RPC program version scan</span>
+
+<span style="color:var(--t3)"># Extract versions from XML for CVE lookup pipeline</span>
+<span style="color:var(--c)">nmap</span> <span style="color:var(--o)">-sV -oX</span> versions.xml 192.168.1.10
+<span style="color:var(--c)">grep</span> <span style="color:#ff79c6">"product="</span> versions.xml | <span style="color:var(--c)">grep</span> <span style="color:#ff79c6">"version="</span>
+<span style="color:var(--t3)"># Then feed to AI pipeline for automatic CVE matching</span></code>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- 05 OS FINGERPRINTING -->
+<section class="sec rv" id="os">
+  <div class="sec-hd"><span class="sec-n">05 //</span><h2 class="sec-t">OS Fingerprinting<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel rv-l">
+    <p>OS detection (<code style="color:var(--c);font-family:var(--mono)">-O</code>) works by sending a series of specifically crafted TCP, UDP, and ICMP packets to open and closed ports, then analysing the responses against a database of 2,600+ known OS fingerprints. Differences in TCP stack implementation between operating systems -- initial sequence numbers, IP TTL values, TCP window sizes, response to invalid flags -- create a unique fingerprint that Nmap matches against its database. OS detection requires at least one open and one closed port to work reliably.</p>
+  </div>
+  <div class="cb rv" data-l="Nmap OS Detection and Fingerprinting">
+    <code><span style="color:var(--t3)"># BASIC OS DETECTION</span>
+<span style="color:var(--c)">sudo nmap</span> <span style="color:var(--o)">-O</span> 192.168.1.10
+
+<span style="color:var(--t3)"># OS DETECTION OPTIONS</span>
+<span style="color:var(--c)">sudo nmap</span> <span style="color:var(--o)">-O --osscan-limit</span> 192.168.1.10   <span style="color:var(--t3)"># Only scan hosts with open+closed port</span>
+<span style="color:var(--c)">sudo nmap</span> <span style="color:var(--o)">-O --osscan-guess</span> 192.168.1.10   <span style="color:var(--t3)"># Guess aggressively when not certain</span>
+<span style="color:var(--c)">sudo nmap</span> <span style="color:var(--o)">-O --max-os-tries 5</span> 192.168.1.10  <span style="color:var(--t3)"># Retry OS probe 5 times</span>
+
+<span style="color:var(--t3)"># OS + VERSION + SCRIPTS (most comprehensive)</span>
+<span style="color:var(--c)">sudo nmap</span> <span style="color:var(--o)">-A</span> 192.168.1.10
+<span style="color:var(--t3)"># -A enables: OS detection, version detection, script scanning, traceroute</span>
+
+<span style="color:var(--t3)"># Understand OS detection output</span>
+<span style="color:var(--t3)"># "OS details: Microsoft Windows 10 1903-20H2" = high confidence match</span>
+<span style="color:var(--t3)"># "Aggressive OS guesses: Linux 3.11-4.1 (93%)" = confident guess</span>
+<span style="color:var(--t3)"># "No exact OS matches" = requires --osscan-guess or needs open+closed port</span>
+
+<span style="color:var(--t3)"># TTL hints for manual OS guessing (when Nmap OS fails)</span>
+<span style="color:var(--t3)"># TTL 64  = Linux / macOS / Android</span>
+<span style="color:var(--t3)"># TTL 128 = Windows</span>
+<span style="color:var(--t3"># TTL 255 = Cisco / network devices</span>
+<span style="color:var(--c)">ping</span> <span style="color:var(--o)">-c 1</span> 192.168.1.10 | <span style="color:var(--c)">grep ttl</span>
+
+<span style="color:var(--t3)"># Submit unknown fingerprint to Nmap.org database</span>
+<span style="color:var(--c)">sudo nmap</span> <span style="color:var(--o)">-O --send-ip</span> 192.168.1.10    <span style="color:var(--t3)"># Use raw IP for better accuracy</span></code>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- 06 NSE -->
+<section class="sec rv" id="nse">
+  <div class="sec-hd"><span class="sec-n">06 //</span><h2 class="sec-t">Nmap Scripting Engine (NSE)<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel rv-l">
+    <p>The <strong style="color:var(--c)">Nmap Scripting Engine (NSE)</strong> is the most powerful feature in Nmap and the capability that separates it from basic port scanners. NSE scripts are written in Lua and extend Nmap's functionality with service enumeration, vulnerability detection, authentication testing, backdoor detection, and malware discovery. There are currently over 600 official NSE scripts organised into 14 categories. Writing custom NSE scripts allows penetration testers to create bespoke detection capabilities for specific targets or custom vulnerability checks.</p>
+  </div>
+  <div class="cb rv" data-l="NSE -- Script Categories and Usage">
+    <code><span style="color:var(--t3)"># NSE SCRIPT CATEGORIES</span>
+<span style="color:var(--t3)"># auth      -- authentication bypass and credential testing</span>
+<span style="color:var(--t3)"># broadcast -- network broadcast discovery</span>
+<span style="color:var(--t3)"># brute     -- brute-force credential testing</span>
+<span style="color:var(--t3)"># default   -- safe, useful scripts run with -sC</span>
+<span style="color:var(--t3)"># discovery -- service enumeration and information gathering</span>
+<span style="color:var(--t3)"># dos       -- denial of service testing (use carefully)</span>
+<span style="color:var(--t3)"># exploit   -- vulnerability exploitation</span>
+<span style="color:var(--t3)"># external  -- queries third-party databases</span>
+<span style="color:var(--t3)"># fuzzer    -- sends unexpected/fuzzed inputs</span>
+<span style="color:var(--t3)"># intrusive -- not safe to run without authorisation</span>
+<span style="color:var(--t3)"># malware   -- checks for malware/backdoors</span>
+<span style="color:var(--t3)"># safe      -- unlikely to crash services</span>
+<span style="color:var(--t3)"># version   -- version detection enhancement</span>
+<span style="color:var(--t3)"># vuln      -- vulnerability detection</span>
+
+<span style="color:var(--t3)"># RUN SCRIPTS</span>
+<span style="color:var(--c)">nmap</span> <span style="color:var(--o)">-sC</span> 192.168.1.10                      <span style="color:var(--t3)"># Default scripts only</span>
+<span style="color:var(--c)">nmap</span> <span style="color:var(--o)">--script vuln</span> 192.168.1.10            <span style="color:var(--t3)"># All vuln scripts</span>
+<span style="color:var(--c)">nmap</span> <span style="color:var(--o)">--script safe</span> 192.168.1.10            <span style="color:var(--t3)"># All safe scripts</span>
+<span style="color:var(--c)">nmap</span> <span style="color:var(--o)">--script discovery</span> 192.168.1.10        <span style="color:var(--t3)"># Discovery category</span>
+<span style="color:var(--c)">nmap</span> <span style="color:var(--o)">--script "http-*"</span> 192.168.1.10         <span style="color:var(--t3)"># All HTTP scripts</span>
+<span style="color:var(--c)">nmap</span> <span style="color:var(--o)">--script "smb-vuln-*"</span> 192.168.1.10     <span style="color:var(--t3)"># All SMB vuln scripts</span>
+
+<span style="color:var(--t3)"># HIGH-VALUE INDIVIDUAL SCRIPTS</span>
+<span style="color:var(--c)">sudo nmap</span> <span style="color:var(--o)">--script smb-vuln-ms17-010</span> 192.168.1.10     <span style="color:var(--t3)"># EternalBlue check</span>
+<span style="color:var(--c)">sudo nmap</span> <span style="color:var(--o)">--script smb-vuln-ms08-067</span> 192.168.1.10     <span style="color:var(--t3)"># Conficker era vuln</span>
+<span style="color:var(--c)">sudo nmap</span> <span style="color:var(--o)">--script http-shellshock</span> 192.168.1.10        <span style="color:var(--t3)"># ShellShock test</span>
+<span style="color:var(--c)">sudo nmap</span> <span style="color:var(--o)">--script ssl-heartbleed</span> 192.168.1.10         <span style="color:var(--t3)"># Heartbleed test</span>
+<span style="color:var(--c)">sudo nmap</span> <span style="color:var(--o)">--script ssl-poodle</span> 192.168.1.10              <span style="color:var(--t3)"># POODLE test</span>
+<span style="color:var(--c)">sudo nmap</span> <span style="color:var(--o)">--script ftp-anon</span> 192.168.1.10               <span style="color:var(--t3)"># Anonymous FTP check</span>
+<span style="color:var(--c)">sudo nmap</span> <span style="color:var(--o)">--script ftp-brute</span> 192.168.1.10              <span style="color:var(--t3)"># FTP brute force</span>
+<span style="color:var(--c)">sudo nmap</span> <span style="color:var(--o)">--script http-enum</span> 192.168.1.10               <span style="color:var(--t3)"># Web directory enum</span>
+<span style="color:var(--c)">sudo nmap</span> <span style="color:var(--o)">--script http-auth-finder</span> 192.168.1.10       <span style="color:var(--t3)"># Find auth methods</span>
+<span style="color:var(--c)">sudo nmap</span> <span style="color:var(--o)">--script dns-zone-transfer --script-args</span> "dns-zone-transfer.domain=target.com" ns1.target.com
+
+<span style="color:var(--t3)"># SCRIPT WITH ARGUMENTS</span>
+<span style="color:var(--c)">nmap</span> <span style="color:var(--o)">--script http-brute --script-args</span> <span style="color:#ff79c6">"userdb=users.txt,passdb=rockyou.txt"</span> 192.168.1.10
+<span style="color:var(--c)">nmap</span> <span style="color:var(--o)">--script http-title --script-args</span> <span style="color:#ff79c6">"http.useragent=Mozilla/5.0"</span> 192.168.1.0/24
+
+<span style="color:var(--t3)"># FIND AND INSPECT SCRIPTS</span>
+<span style="color:var(--c)">ls</span> /usr/share/nmap/scripts/ | <span style="color:var(--c)">grep</span> smb
+<span style="color:var(--c)">nmap</span> <span style="color:var(--o)">--script-help</span> smb-vuln-ms17-010     <span style="color:var(--t3)"># Script documentation</span>
+<span style="color:var(--c)">nmap</span> <span style="color:var(--o)">--script-updatedb</span>                  <span style="color:var(--t3)"># Update script database</span></code>
+  </div>
+</section>
+
+<div class="div"></div>
+
+<!-- 07 EVASION -->
+<section class="sec rv" id="evasion">
+  <div class="sec-hd"><span class="sec-n">07 //</span><h2 class="sec-t">Firewall Evasion &amp; IDS Bypass<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel rv-l">
+    <p>Real-world penetration tests frequently encounter firewalls, IDS/IPS systems, and WAFs that block or detect standard Nmap scans. Nmap provides a comprehensive set of evasion techniques including packet fragmentation, decoy scanning, source port manipulation, timing adjustment, and IP spoofing. Understanding these techniques is essential both for evading detection during authorised engagements and for understanding what your own defences can and cannot detect.</p>
+  </div>
+  <div class="cb rv" data-l="Nmap Evasion -- Firewall and IDS Bypass Techniques">
+    <code><span style="color:var(--t3)"># PACKET FRAGMENTATION (split packets confuse stateless firewalls)</span>
+<span style="color:var(--c)">sudo nmap</span> <span style="color:var(--o)">-f</span> 192.168.1.10            <span style="color:var(--t3)"># Fragment into 8-byte pieces</span>
+<span style="color:var(--c)">sudo nmap</span> <span style="color:var(--o)">-ff</span> 192.168.1.10           <span style="color:var(--t3)"># Fragment into 16-byte pieces</span>
+<span style="color:var(--c)">sudo nmap</span> <span style="color:var(--o)">--mtu 16</span> 192.168.1.10     <span style="color:var(--t3)"># Custom MTU (must be multiple of 8)</span>
+
+<span style="color:var(--t3)"># DECOY SCANNING (disguise real source among fake decoys)</span>
+<span style="color:var(--c)">sudo nmap</span> <span style="color:var(--o)">-D</span> RND:10 192.168.1.10    <span style="color:var(--t3)"># 10 random decoys</span>
+<span style="color:var(--c)">sudo nmap</span> <span style="color:var(--o)">-D</span> 10.0.0.1,10.0.0.2,ME 192.168.1.10  <span style="color:var(--t3)"># Specific decoys + real</span>
+<span style="color:var(--t3)"># Logs show multiple source IPs -- harder to isolate real attacker</span>
+
+<span style="color:var(--t3)"># SOURCE PORT MANIPULATION (bypass trust rules on specific ports)</span>
+<span style="color:var(--c)">sudo nmap</span> <span style="color:var(--o)">--source-port 53</span> 192.168.1.10   <span style="color:var(--t3)"># Appear as DNS traffic</span>
+<span style="color:var(--c)">sudo nmap</span> <span style="color:var(--o)">--source-port 80</span> 192.168.1.10   <span style="color:var(--t3)"># Appear as HTTP traffic</span>
+
+<span style="color:var(--t3)"># TIMING MANIPULATION (slow scan to avoid rate-based IDS)</span>
+<span style="color:var(--c)">nmap</span> <span style="color:var(--o)">-T0</span> 192.168.1.10                   <span style="color:var(--t3)"># Paranoid: 5min between probes</span>
+<span style="color:var(--c)">nmap</span> <span style="color:var(--o)">--scan-delay 5s</span> 192.168.1.10      <span style="color:var(--t3)"># Custom delay between probes</span>
+<span style="color:var(--c)">nmap</span> <span style="color:var(--o)">--max-rate 10</span> 192.168.1.10        <span style="color:var(--t3)"># Max 10 packets/second</span>
+
+<span style="color:var(--t3)"># IP SPOOFING (requires same-subnet or specific routing)</span>
+<span style="color:var(--c)">sudo nmap</span> <span style="color:var(--o)">-S</span> 10.0.0.5 <span style="color:var(--o)">-e</span> eth0 192.168.1.10  <span style="color:var(--t3)"># Spoof source IP</span>
+
+<span style="color:var(--t3)"># RANDOMISE TARGET ORDER (avoid sequential scan signatures)</span>
+<span style="color:var(--c)">nmap</span> <span style="color:var(--o)">--randomize-hosts</span> 192.168.1.0/24
+
+<span style="color:var(--t3)"># APPEND RANDOM DATA (pad packets to avoid signature matching)</span>
+<span style="color:var(--c)">nmap</span> <span style="color:var(--o)">--data-length 25</span> 192.168.1.10     <span style="color:var(--t3)"># Add 25 random bytes to packets</span>
+
+<span style="color:var(--t3)"># IDLE/ZOMBIE SCAN (completely blind -- real source never touches target)</span>
+<span style="color:var(--c)">sudo nmap</span> <span style="color:var(--o)">-sI</span> zombie_host 192.168.1.10  <span style="color:var(--t3)"># Zombie must have predictable IP ID</span>
+
+<span style="color:var(--t3)"># SPOOF MAC ADDRESS</span>
+<span style="color:var(--c)">sudo nmap</span> <span style="color:var(--o)">--spoof-mac 0</span> 192.168.1.10   <span style="color:var(--t3)"># Random MAC</span>
+<span style="color:var(--c)">sudo nmap</span> <span style="color:var(--o)">--spoof-mac Apple</span> 192.168.1.10 <span style="color:var(--t3)"># Spoof Apple vendor MAC</span>
+
+<span style="color:var(--t3)"># COMBINED EVASION (professional engagement approach)</span>
+<span style="color:var(--c)">sudo nmap</span> <span style="color:var(--o)">-sS -f -T2 -D</span> RND:8 <span style="color:var(--o)">--source-port 53 --data-length 16</span> 192.168.1.10</code>
+  </div>
+</section>
+
+<div class="div div-ai"></div>
+
+<!-- 08 AI INTEGRATION -->
+<section class="sec rv sec-ai" id="ai">
+  <div class="sec-hd"><span class="sec-n">08 //</span><h2 class="sec-t">AI Integration in Nmap Workflows<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel panel-ai rv-l">
+    <p>Nmap produces rich structured output -- especially in XML format -- that is ideal for AI analysis. LLMs can parse Nmap scan results and transform raw port/service/version data into prioritised attack plans, CVE hypothesis lists, Metasploit module recommendations, and report-ready findings in seconds. The combination of Nmap's scanning precision with GPT reasoning about discovered services is one of the most immediately useful AI workflows in offensive security -- bridging the gap between raw data collection and actionable intelligence.</p>
+  </div>
+  <div class="alert al-p rv">
+    <span class="al-ic">[ AI ]</span>
+    <p class="al-tx">Security professionals using AI-augmented Nmap workflows report 50-70% faster time-to-intelligence on large network scopes. Feeding Nmap XML to GPT eliminates the manual cross-referencing between open ports, service versions, and CVE databases that previously consumed hours of analyst time on large-scope engagements.</p>
+  </div>
+  <div class="ai-grid rv">
+    <div class="ai-card"><span class="ai-ico">&#128202;</span><div class="ai-name">Scan Output Analysis</div><div class="ai-desc">AI parses Nmap XML output and produces structured attack surface intelligence -- identifying highest-risk service version combinations, flagging known vulnerable versions against the NVD database, prioritising hosts by exploitation likelihood, and suggesting the exact Metasploit module path for each identified vulnerability. Transforms a flat port list into a prioritised exploitation roadmap in under 30 seconds.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#9999;&#65039;</span><div class="ai-name">Command Generation</div><div class="ai-desc">LLMs generate optimised, context-specific Nmap command sequences from natural-language engagement requirements. "I need to scan a hospital network for the CPENT exam -- need to be stealthy, find all services including UDP, and check for common vulns without triggering IDS" produces the correct combination of scan types, timing templates, NSE scripts, and output formats for the specific scenario.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128196;</span><div class="ai-name">Finding Documentation</div><div class="ai-desc">AI transforms Nmap output into professional penetration test findings -- converting open port and service version data into structured findings with CVSSv4.0 scores, business impact statements, and remediation recommendations. A list of Nmap-discovered vulnerable services becomes polished report sections ready for client delivery, reducing report writing time from hours to minutes.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128736;&#65039;</span><div class="ai-name">Custom NSE Script Generation</div><div class="ai-desc">LLMs generate custom Lua NSE scripts from natural-language requirements -- "write an NSE script that checks if Apache 2.4.49 is running and tests for CVE-2021-41773 path traversal." Produces syntactically correct Lua with proper NSE structure, portrule, hostrule, and action functions. Enables security professionals to create bespoke vulnerability checks for specific targets without deep Lua expertise.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128272;</span><div class="ai-name">CVE Correlation</div><div class="ai-desc">AI cross-references detected service versions against known CVE databases and produces a prioritised vulnerability hypothesis list -- "OpenSSH 7.2p2 detected: likely vulnerable to CVE-2016-6515 (DoS), CVE-2016-6210 (user enumeration). Recommend running ssh2john, checking for default credentials, and testing CVE-2016-6210 timing oracle." Dramatically accelerates the scan-to-exploit planning phase.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128308;</span><div class="ai-name">Red Team Workflow Automation</div><div class="ai-desc">AI orchestrates full red team recon workflows -- generating an Nmap command, parsing its output, deciding which follow-up scripts to run, correlating discovered services with known attack paths, and producing a complete engagement plan with prioritised target list and exploitation sequence. Enables junior testers to execute senior-level recon methodology and accelerates experienced testers on large-scope engagements.</div></div>
+  </div>
+  <div class="panel panel-ai rv" style="margin-top:28px">
+    <div class="panel-t">AI Tools for Nmap Workflows</div>
+    <table class="ptbl">
+      <thead><tr>
+        <th style="color:#bf00ff;border-bottom-color:rgba(191,0,255,.25)">Tool</th>
+        <th style="color:#bf00ff;border-bottom-color:rgba(191,0,255,.25)">Capability</th>
+        <th style="color:#bf00ff;border-bottom-color:rgba(191,0,255,.25)">Nmap Use Case</th>
+      </tr></thead>
+      <tbody>
+        <tr><td style="color:var(--g)">GPT-4 / Claude</td><td style="color:var(--t2)">XML parsing, CVE correlation, finding generation</td><td style="color:var(--t2)">Parse Nmap XML; suggest exploits per version; write report findings</td></tr>
+        <tr><td style="color:var(--g)">GitHub Copilot</td><td style="color:var(--t2)">NSE Lua script completion</td><td style="color:var(--t2)">Autocomplete custom NSE scripts and Nmap XML parsing code in VS Code</td></tr>
+        <tr><td style="color:var(--g)">Vulners NSE Script</td><td style="color:var(--t2)">AI-powered CVE lookup via NSE</td><td style="color:var(--t2)">Run --script vulners for automatic CVE lookup against detected versions</td></tr>
+        <tr><td style="color:var(--g)">Python + OpenAI</td><td style="color:var(--t2)">Automated scan pipeline</td><td style="color:var(--t2)">Parse Nmap XML with ElementTree, feed to GPT for attack surface intelligence</td></tr>
+        <tr><td style="color:var(--g)">Metasploit AI</td><td style="color:var(--t2)">Module recommendation</td><td style="color:var(--t2)">Feed Nmap service versions to AI to get exact msf module paths and RHOSTS setup</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="cb cb-ai rv" data-l="AI Pipeline -- Nmap XML to GPT Attack Intelligence">
+    <code><span style="color:#bd93f9">#!/usr/bin/env python3</span>
+<span style="color:var(--t3)"># Full pipeline: run Nmap, parse XML, feed GPT, get attack plan
+# Usage: python3 nmap_ai.py 192.168.1.0/24</span>
+
+<span style="color:#bd93f9">import</span> subprocess, xml.etree.ElementTree <span style="color:#bd93f9">as</span> ET, json, openai, sys
+
+<span style="color:#8be9fd">def</span> <span style="color:var(--c)">run_nmap</span>(target):
+    print(<span style="color:#ff79c6">f"[*] Scanning {target}..."</span>)
+    result = subprocess.run(
+        [<span style="color:#ff79c6">"nmap"</span>,<span style="color:#ff79c6">"-sV"</span>,<span style="color:#ff79c6">"-sC"</span>,<span style="color:#ff79c6">"-T4"</span>,<span style="color:#ff79c6">"-oX"</span>,<span style="color:#ff79c6">"-"</span>, target],
+        capture_output=<span style="color:#bd93f9">True</span>, text=<span style="color:#bd93f9">True</span>
+    )
+    <span style="color:#bd93f9">return</span> result.stdout
+
+<span style="color:#8be9fd">def</span> <span style="color:var(--c)">parse_xml</span>(xml_data):
+    root = ET.fromstring(xml_data)
+    hosts = []
+    <span style="color:#bd93f9">for</span> host <span style="color:#bd93f9">in</span> root.findall(<span style="color:#ff79c6">'host'</span>):
+        status = host.find(<span style="color:#ff79c6">'status'</span>)
+        <span style="color:#bd93f9">if</span> status <span style="color:#bd93f9">is None</span> <span style="color:#bd93f9">or</span> status.get(<span style="color:#ff79c6">'state'</span>) != <span style="color:#ff79c6">'up'</span>: <span style="color:#bd93f9">continue</span>
+        addr = host.find(<span style="color:#ff79c6">'address'</span>)
+        ip = addr.get(<span style="color:#ff79c6">'addr'</span>) <span style="color:#bd93f9">if</span> addr <span style="color:#bd93f9">is not None else</span> <span style="color:#ff79c6">'unknown'</span>
+        ports = []
+        <span style="color:#bd93f9">for</span> port <span style="color:#bd93f9">in</span> host.findall(<span style="color:#ff79c6">'ports/port'</span>):
+            state = port.find(<span style="color:#ff79c6">'state'</span>)
+            <span style="color:#bd93f9">if</span> state <span style="color:#bd93f9">is None</span> <span style="color:#bd93f9">or</span> state.get(<span style="color:#ff79c6">'state'</span>) != <span style="color:#ff79c6">'open'</span>: <span style="color:#bd93f9">continue</span>
+            svc = port.find(<span style="color:#ff79c6">'service'</span>)
+            ports.append({
+                <span style="color:#ff79c6">'port'</span>   : port.get(<span style="color:#ff79c6">'portid'</span>),
+                <span style="color:#ff79c6">'service'</span>: svc.get(<span style="color:#ff79c6">'name'</span>,<span style="color:#ff79c6">''</span>) <span style="color:#bd93f9">if</span> svc <span style="color:#bd93f9">is not None else</span> <span style="color:#ff79c6">''</span>,
+                <span style="color:#ff79c6">'product'</span>: svc.get(<span style="color:#ff79c6">'product'</span>,<span style="color:#ff79c6">''</span>) <span style="color:#bd93f9">if</span> svc <span style="color:#bd93f9">is not None else</span> <span style="color:#ff79c6">''</span>,
+                <span style="color:#ff79c6">'version'</span>: svc.get(<span style="color:#ff79c6">'version'</span>,<span style="color:#ff79c6">''</span>) <span style="color:#bd93f9">if</span> svc <span style="color:#bd93f9">is not None else</span> <span style="color:#ff79c6">''</span>,
+            })
+        <span style="color:#bd93f9">if</span> ports: hosts.append({<span style="color:#ff79c6">'ip'</span>: ip, <span style="color:#ff79c6">'ports'</span>: ports})
+    <span style="color:#bd93f9">return</span> hosts
+
+<span style="color:#8be9fd">def</span> <span style="color:var(--c)">ai_plan</span>(hosts):
+    prompt = (
+        <span style="color:#ff79c6">"Senior penetration tester. Analyse Nmap results. Provide:
+"
+        "1. ATTACK SURFACE -- key findings per host
+"
+        "2. PRIORITY TARGETS -- highest exploitation likelihood and why
+"
+        "3. EXACT COMMANDS -- Metasploit/NSE/searchsploit to run next
+"
+        "4. CVE HYPOTHESES -- likely CVEs per detected version
+"
+        "5. ATTACK SEQUENCE -- optimal exploitation order
+
+"</span>
+        <span style="color:#ff79c6">"Nmap results:
+"</span> + json.dumps(hosts, indent=2)
+    )
+    r = openai.OpenAI().chat.completions.create(
+        model=<span style="color:#ff79c6">"gpt-4o"</span>,
+        messages=[{<span style="color:#ff79c6">"role"</span>:<span style="color:#ff79c6">"user"</span>,<span style="color:#ff79c6">"content"</span>:prompt}]
+    )
+    <span style="color:#bd93f9">return</span> r.choices[0].message.content
+
+target = sys.argv[1] <span style="color:#bd93f9">if</span> len(sys.argv) > 1 <span style="color:#bd93f9">else</span> <span style="color:#ff79c6">"scanme.nmap.org"</span>
+xml_data = run_nmap(target)
+hosts = parse_xml(xml_data)
+print(<span style="color:#ff79c6">f"[+] {len(hosts)} live hosts parsed. Sending to GPT...
+"</span>)
+print(ai_plan(hosts))</code>
+  </div>
+  <div class="cb cb-ai rv" data-l="AI -- Custom NSE Script Generator">
+    <code><span style="color:#bd93f9">#!/usr/bin/env python3</span>
+<span style="color:var(--t3)"># Generate custom NSE scripts using GPT
+# Usage: python3 nse_gen.py "check if Apache 2.4.49 path traversal CVE-2021-41773 exists"</span>
+
+<span style="color:#bd93f9">import</span> openai, sys
+
+<span style="color:#8be9fd">def</span> <span style="color:var(--c)">generate_nse</span>(requirement):
+    prompt = (
+        <span style="color:#ff79c6">"You are an expert Nmap NSE script developer. Write a complete, "
+        "syntactically correct Lua NSE script for Nmap. Include:
+"
+        "- Proper script metadata (description, categories, author)
+"
+        "- portrule or hostrule function
+"
+        "- action function with proper nmap library usage
+"
+        "- Clear comments explaining each section
+
+"
+        "Requirement: "</span> + requirement + <span style="color:#ff79c6">"
+
+Return only the Lua code."</span>
+    )
+    r = openai.OpenAI().chat.completions.create(
+        model=<span style="color:#ff79c6">"gpt-4o"</span>,
+        messages=[{<span style="color:#ff79c6">"role"</span>:<span style="color:#ff79c6">"user"</span>,<span style="color:#ff79c6">"content"</span>:prompt}],
+        temperature=0.2
+    )
+    <span style="color:#bd93f9">return</span> r.choices[0].message.content
+
+req = <span style="color:#ff79c6">" "</span>.join(sys.argv[1:]) <span style="color:#bd93f9">if</span> len(sys.argv) > 1 <span style="color:#bd93f9">else</span> <span style="color:#ff79c6">"detect anonymous FTP login"</span>
+print(<span style="color:#ff79c6">f"[*] Generating NSE script for: {req}
+"</span>)
+script = generate_nse(req)
+print(script)
+fname = <span style="color:#ff79c6">"custom_check.nse"</span>
+<span style="color:#bd93f9">with</span> open(fname, <span style="color:#ff79c6">"w"</span>) <span style="color:#bd93f9">as</span> f: f.write(script)
+print(<span style="color:#ff79c6">f"
+[+] Saved to {fname}"</span>)
+print(<span style="color:#ff79c6">f"[*] Test: nmap --script {fname} target"</span>)</code>
+  </div>
+</section>
+
+<div class="cta rv">
+  <div class="cta-t">// Nmap knows your network better than you do. //</div>
+  <p class="cta-p">Nmap is the closest thing to an industry-universal tool that cybersecurity has. From basic host discovery on day one of your security career to custom NSE scripts and AI-augmented attack surface analysis at the expert level, Nmap grows with you. Master it completely -- every flag, every scan type, every NSE category -- and you will never walk into a penetration test without knowing exactly what you are looking at.</p>
+  <div class="cta-btns">
+    <a href="https://github.com/nishu2402" class="btn btn-p" target="_blank" rel="noopener">GitHub -- nishu2402</a>
+    <a href="https://nishu2402.github.io" class="btn btn-s" target="_blank" rel="noopener">View Portfolio</a>
+  </div>
+</div>
+<footer class="footer">
+  <div class="f-l">Nisarg Chasmawala (Shroff)<br><span class="f-alias">// HEAVEN</span></div>
+  <div class="f-r">Offensive Security Engineer &middot; MSc Cyber Security, BCU<br>CEH Master &middot; CPENT &middot; CHFI &middot; ISO 27001 Lead Auditor<br><a href="https://github.com/nishu2402" target="_blank" rel="noopener">github.com/nishu2402</a></div>
+</footer>
+</div>
+<script>
+var cur=document.getElementById('cur'),cur2=document.getElementById('cur2'),cur3=document.getElementById('cur3');
+var mx=0,my=0;
+document.addEventListener('mousemove',function(e){mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
+(function loop(){cur2.style.left=mx+'px';cur2.style.top=my+'px';cur3.style.left=mx+'px';cur3.style.top=my+'px';requestAnimationFrame(loop);})();
+document.querySelectorAll('a,.btn,.ai-card,.panel,.cb,.tc').forEach(function(el){
+  el.addEventListener('mouseenter',function(){cur.style.width='18px';cur.style.height='18px';cur.style.background='rgba(0,255,65,.25)';});
+  el.addEventListener('mouseleave',function(){cur.style.width='10px';cur.style.height='10px';cur.style.background='var(--g)';});
+});
+window.addEventListener('scroll',function(){document.getElementById('prog').style.width=((window.scrollY/(document.body.scrollHeight-window.innerHeight))*100)+'%';});
+(function(){
+  var c=document.getElementById('bg-particle'),ctx=c.getContext('2d');
+  var W,H,mX=innerWidth/2,mY=innerHeight/2,N=200,MAX=140,P=[];
+  function Pt(){this.reset(true);}
+  Pt.prototype.reset=function(i){this.x=Math.random()*W;this.y=i?Math.random()*H:H+10;this.z=Math.random()*3+.5;this.vx=(Math.random()-.5)*.4;this.vy=(Math.random()-.5)*.4-.1;this.life=Math.random()*300+200;this.maxLife=this.life;this.r=Math.random()*1.5+.5;var r=Math.random();this.color=r<.7?'0,255,65':r<.9?'0,229,255':'191,0,255';};
+  Pt.prototype.update=function(){var dx=this.x-mX,dy=this.y-mY,d=Math.sqrt(dx*dx+dy*dy);if(d<120){var f=(120-d)/120;this.vx+=dx/d*f*.6;this.vy+=dy/d*f*.6;}this.vx*=.98;this.vy*=.98;this.x+=this.vx;this.y+=this.vy;this.life--;if(this.life<=0||this.x<-50||this.x>W+50||this.y<-50||this.y>H+50)this.reset(false);};
+  Pt.prototype.draw=function(){var a=(this.life/this.maxLife)*.7*this.z;ctx.beginPath();ctx.arc(this.x,this.y,this.r*this.z,0,Math.PI*2);ctx.fillStyle='rgba('+this.color+','+a+')';ctx.fill();};
+  function resize(){W=c.width=innerWidth;H=c.height=innerHeight;}
+  function lines(){for(var i=0;i<P.length;i++){for(var j=i+1;j<P.length;j++){var a=P[i],b=P[j],dx=a.x-b.x,dy=a.y-b.y,d=Math.sqrt(dx*dx+dy*dy);if(d<MAX){var al=(1-d/MAX)*.18,g=ctx.createLinearGradient(a.x,a.y,b.x,b.y);g.addColorStop(0,'rgba('+a.color+','+al+')');g.addColorStop(1,'rgba('+b.color+','+al+')');ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.strokeStyle=g;ctx.lineWidth=(a.z+b.z)/2*.5;ctx.stroke();}}}}
+  function animate(){ctx.clearRect(0,0,W,H);var g=ctx.createRadialGradient(mX,mY,0,mX,mY,80);g.addColorStop(0,'rgba(0,255,65,0)');g.addColorStop(.7,'rgba(0,255,65,0.04)');g.addColorStop(1,'rgba(0,255,65,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(mX,mY,80,0,Math.PI*2);ctx.fill();lines();P.forEach(function(p){p.update();p.draw();});requestAnimationFrame(animate);}
+  resize();window.addEventListener('resize',resize);document.addEventListener('mousemove',function(e){mX=e.clientX;mY=e.clientY;});
+  for(var i=0;i<N;i++)P.push(new Pt());animate();
+})();
+(function(){
+  var c=document.getElementById('bg-hex'),ctx=c.getContext('2d');
+  var W,H,t=0,S=40;
+  function resize(){W=c.width=innerWidth;H=c.height=innerHeight;}
+  function hex(cx,cy,s){ctx.beginPath();for(var i=0;i<6;i++){var a=Math.PI/180*(60*i-30);if(i===0)ctx.moveTo(cx+s*Math.cos(a),cy+s*Math.sin(a));else ctx.lineTo(cx+s*Math.cos(a),cy+s*Math.sin(a));}ctx.closePath();}
+  function draw(){ctx.clearRect(0,0,W,H);t+=.008;var sy=window.scrollY,cols=Math.ceil(W/(S*1.732))+2,rows=Math.ceil(H/(S*1.5))+2;for(var r=-1;r<rows;r++){for(var col=-1;col<cols;col++){var cx=col*S*1.732+(r%2)*S*.866,cy=r*S*1.5-(sy*.03)%(S*1.5),w=Math.sin(t+col*.3+r*.2)*.5+.5;hex(cx,cy,S-2);ctx.strokeStyle='rgba(0,255,65,'+(0.02+w*0.07)+')';ctx.lineWidth=.6;ctx.stroke();if(w>.92){hex(cx,cy,S-2);ctx.fillStyle='rgba(0,255,65,'+(0.02+w*0.03)+')';ctx.fill();}}}requestAnimationFrame(draw);}
+  resize();window.addEventListener('resize',resize);draw();
+})();
+// HERO: RADAR SWEEP with host nodes lighting up as sweep passes
+(function(){
+  var c=document.getElementById('hero-geo');if(!c)return;
+  var ctx=c.getContext('2d'),SZ=500;c.width=SZ;c.height=SZ;
+  var CX=SZ/2,CY=SZ/2;
+  var RINGS=[60,110,160,210];
+  var t=0,mrx=0,mry=0;
+  // Scatter hosts at various positions
+  var hosts=[];
+  var hostData=[
+    {r:70,a:0.8,label:'10.0.0.1',open:false,ports:'22,80'},
+    {r:115,a:2.1,label:'10.0.0.5',open:false,ports:'21,22,80'},
+    {r:95,a:3.5,label:'10.0.0.12',open:false,ports:'443,8080'},
+    {r:155,a:0.4,label:'10.0.0.20',open:false,ports:'3306,22'},
+    {r:175,a:1.6,label:'10.0.0.33',open:false,ports:'445,139'},
+    {r:130,a:4.2,label:'10.0.0.47',open:false,ports:'80,443'},
+    {r:200,a:2.8,label:'10.0.0.99',open:false,ports:'22'},
+    {r:60,a:5.1,label:'10.0.0.2',open:false,ports:'53'},
+    {r:190,a:5.8,label:'10.0.0.254',open:false,ports:'22,80,443'},
+  ];
+  hostData.forEach(function(h){
+    hosts.push({
+      x:CX+h.r*Math.cos(h.a),
+      y:CY+h.r*Math.sin(h.a),
+      angle:h.a,
+      label:h.label,
+      ports:h.ports,
+      lit:0,        // 0=dark, 1=just hit by sweep, fades
+      pulse:Math.random()*Math.PI*2
+    });
+  });
+
+  document.addEventListener('mousemove',function(e){mrx=(e.clientY/innerHeight-.5)*.2;mry=(e.clientX/innerWidth-.5)*.2;});
+
+  function draw(){
+    ctx.clearRect(0,0,SZ,SZ);
+    t+=0.025;
+    var sweepAngle=(t+mry)%(Math.PI*2);
+
+    // Outer glow
+    var bg=ctx.createRadialGradient(CX,CY,0,CX,CY,SZ/2);
+    bg.addColorStop(0,'rgba(0,255,65,0.03)');bg.addColorStop(1,'rgba(0,255,65,0)');
+    ctx.fillStyle=bg;ctx.fillRect(0,0,SZ,SZ);
+
+    // Concentric ring grid
+    RINGS.forEach(function(r){
+      ctx.beginPath();ctx.arc(CX,CY,r,0,Math.PI*2);
+      ctx.strokeStyle='rgba(0,255,65,0.12)';ctx.lineWidth=1;ctx.stroke();
+    });
+    // Crosshair lines
+    ['rgba(0,255,65,0.08)'].forEach(function(col){
+      ctx.strokeStyle=col;ctx.lineWidth=1;
+      ctx.beginPath();ctx.moveTo(CX-220,CY);ctx.lineTo(CX+220,CY);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(CX,CY-220);ctx.lineTo(CX,CY+220);ctx.stroke();
+    });
+
+    // Sweep trail (fading green wedge behind sweep line)
+    var trailLen=Math.PI*0.6;
+    for(var i=0;i<32;i++){
+      var a=sweepAngle-i*(trailLen/32);
+      var alpha=(1-i/32)*0.08;
+      var g=ctx.createConicalGradient ? null : null;
+      ctx.beginPath();
+      ctx.moveTo(CX,CY);
+      ctx.arc(CX,CY,220,a-trailLen/32,a);
+      ctx.closePath();
+      ctx.fillStyle='rgba(0,255,65,'+alpha+')';
+      ctx.fill();
+    }
+
+    // Sweep line
+    ctx.beginPath();
+    ctx.moveTo(CX,CY);
+    ctx.lineTo(CX+220*Math.cos(sweepAngle),CY+220*Math.sin(sweepAngle));
+    var sl=ctx.createLinearGradient(CX,CY,CX+220*Math.cos(sweepAngle),CY+220*Math.sin(sweepAngle));
+    sl.addColorStop(0,'rgba(0,255,65,0.9)');sl.addColorStop(1,'rgba(0,255,65,0)');
+    ctx.strokeStyle=sl;ctx.lineWidth=2;ctx.stroke();
+
+    // Center dot
+    var cg=ctx.createRadialGradient(CX,CY,0,CX,CY,18);
+    cg.addColorStop(0,'rgba(0,255,65,0.8)');cg.addColorStop(1,'rgba(0,255,65,0)');
+    ctx.fillStyle=cg;ctx.beginPath();ctx.arc(CX,CY,18,0,Math.PI*2);ctx.fill();
+    ctx.beginPath();ctx.arc(CX,CY,5,0,Math.PI*2);ctx.fillStyle='rgba(0,255,65,1)';ctx.fill();
+
+    // Host nodes -- light up when sweep passes their angle
+    hosts.forEach(function(h){
+      var hostAngle=Math.atan2(h.y-CY,h.x-CX);
+      if(hostAngle<0)hostAngle+=Math.PI*2;
+      var diff=((sweepAngle-hostAngle+Math.PI*4)%(Math.PI*2));
+      if(diff<0.08) h.lit=1.0;  // sweep just hit
+      if(h.lit>0) h.lit=Math.max(0,h.lit-0.008);  // fade slowly
+
+      var intensity=h.lit;
+      if(intensity<0.02)return;  // too faint to draw
+
+      var col=intensity>0.5?'0,255,65':'0,229,255';
+      var r=4+intensity*4;
+
+      // Glow
+      var ng=ctx.createRadialGradient(h.x,h.y,0,h.x,h.y,r*4);
+      ng.addColorStop(0,'rgba('+col+','+intensity*0.4+')');ng.addColorStop(1,'rgba('+col+',0)');
+      ctx.fillStyle=ng;ctx.beginPath();ctx.arc(h.x,h.y,r*4,0,Math.PI*2);ctx.fill();
+
+      // Core
+      ctx.beginPath();ctx.arc(h.x,h.y,r,0,Math.PI*2);
+      ctx.fillStyle='rgba('+col+','+intensity*0.9+')';ctx.fill();
+
+      // Label + ports
+      if(intensity>0.15){
+        ctx.font=Math.floor(8+intensity*4)+'px Share Tech Mono';
+        ctx.fillStyle='rgba('+col+','+intensity*0.8+')';
+        ctx.textAlign='left';ctx.textBaseline='middle';
+        ctx.fillText(h.label,h.x+r+4,h.y-5);
+        ctx.font='8px Share Tech Mono';
+        ctx.fillStyle='rgba(0,255,65,'+(intensity*0.5)+')';
+        ctx.fillText('['+h.ports+']',h.x+r+4,h.y+7);
+      }
+    });
+
+    // "SCANNING..." text top
+    var sp=Math.sin(t*2)*.5+.5;
+    ctx.font='11px Share Tech Mono';
+    ctx.fillStyle='rgba(0,255,65,'+(0.3+sp*0.4)+')';
+    ctx.textAlign='left';ctx.textBaseline='top';
+    ctx.fillText('nmap -sS -sV 10.0.0.0/24',18,18);
+
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+var rv=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('on');});},{threshold:.08});
+document.querySelectorAll('.rv,.rv-l').forEach(function(el){rv.observe(el);});
+var sIds=['hero','basics','discovery','scanning','versions','os','nse','evasion','ai'];
+var tItems=document.querySelectorAll('.toc-i');
+var so=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)tItems.forEach(function(ti){ti.classList.toggle('active',ti.dataset.s===x.target.id);});});},{threshold:.25});
+sIds.forEach(function(id){var el=document.getElementById(id);if(el)so.observe(el);});
+function goTo(h){document.querySelector(h).scrollIntoView({behavior:'smooth'});}
+document.querySelectorAll('.cb').forEach(function(b){
+  b.title='Click to copy';
+  b.addEventListener('click',function(){
+    navigator.clipboard.writeText(b.querySelector('code').innerText).catch(function(){});
+    var o=b.getAttribute('data-l');b.setAttribute('data-l',o+' \u2713 COPIED');
+    setTimeout(function(){b.setAttribute('data-l',o);},2000);
+  });
+});
+</script>
+</body>
+</html>
