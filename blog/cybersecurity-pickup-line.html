@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LOVE_EXPLOIT.exe // Social Engineering Dept.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#06000f;--pink:#ff1f8f;--purple:#b400ff;
+  --cyan:#00ffe0;--green:#00ff88;--orange:#ff9933;
+  --text:#c8c0e0;--dim:#3e3558;--white:#f0e8ff;
+  --card-bg:rgba(16,3,32,0.9);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Share Tech Mono',monospace;min-height:100vh;overflow-x:hidden;cursor:none}
+#bgCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;opacity:.45}
+.scanlines{position:fixed;inset:0;z-index:1;pointer-events:none;background:repeating-linear-gradient(to bottom,transparent 0,transparent 2px,rgba(0,0,0,.12) 2px,rgba(0,0,0,.12) 4px)}
+.vignette{position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse at center,transparent 55%,rgba(0,0,0,.75) 100%)}
+
+/* CURSOR */
+.cursor-dot{position:fixed;width:7px;height:7px;background:var(--pink);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);box-shadow:0 0 8px var(--pink),0 0 20px var(--pink)}
+.cursor-ring{position:fixed;width:30px;height:30px;border:1.5px solid var(--cyan);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);box-shadow:0 0 10px rgba(0,255,224,.6);transition:width .25s,height .25s,border-color .25s,box-shadow .25s}
+.cursor-ring.click{width:50px;height:50px;border-color:var(--pink);box-shadow:0 0 14px rgba(255,31,143,.7)}
+
+/* BOOT */
+#boot{position:fixed;inset:0;background:var(--bg);z-index:200;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:clamp(2rem,6vw,5rem);transition:opacity 1s ease}
+#boot.out{opacity:0;pointer-events:none}
+.bl{font-size:clamp(.68rem,1.4vw,.87rem);line-height:1.9;opacity:0;animation:bR .04s forwards;white-space:pre;font-family:'Share Tech Mono',monospace}
+.bc{color:var(--cyan)}.bp{color:var(--pink)}.bgg{color:var(--green)}.bo{color:var(--orange)}.bd{color:var(--dim)}.bw{color:var(--white)}
+@keyframes bR{to{opacity:1}}
+
+/* MAIN */
+#main{position:relative;z-index:2;max-width:1500px;margin:0 auto;padding:0 clamp(1rem,3vw,2.5rem) 8rem;opacity:0;transition:opacity .8s ease}
+#main.vis{opacity:1}
+
+/* HEADER */
+header{padding:clamp(3rem,7vw,6rem) 0 2.5rem;text-align:center}
+.sys-badge{font-size:.72rem;letter-spacing:.3em;color:var(--pink);border:1px solid rgba(255,31,143,.25);padding:.3rem 1rem;border-radius:2px;background:rgba(255,31,143,.05);display:inline-block;margin-bottom:1.2rem}
+.sys-badge::before{content:'▶ '}
+.title-wrap{display:inline-block;position:relative;margin-bottom:.4rem}
+.title-main{font-family:'Orbitron',monospace;font-size:clamp(1.8rem,5.5vw,4rem);font-weight:900;line-height:1;color:var(--white);text-shadow:0 0 25px rgba(255,31,143,.6),0 0 60px rgba(255,31,143,.3);display:block;position:relative}
+.title-main::before{content:attr(data-text);position:absolute;top:0;left:0;width:100%;height:100%;color:var(--pink);animation:glA 4s infinite;clip-path:polygon(0 18%,100% 18%,100% 38%,0 38%)}
+.title-main::after{content:attr(data-text);position:absolute;top:0;left:0;width:100%;height:100%;color:var(--cyan);animation:glB 4s infinite;clip-path:polygon(0 62%,100% 62%,100% 80%,0 80%)}
+@keyframes glA{0%,88%,100%{transform:translate(0);opacity:0}90%{transform:translate(-5px,2px);opacity:1}93%{transform:translate(4px,-2px);opacity:.7}97%{transform:translate(0);opacity:0}}
+@keyframes glB{0%,91%,100%{transform:translate(0);opacity:0}93%{transform:translate(5px,-3px);opacity:1}96%{transform:translate(-3px,2px);opacity:.6}99%{transform:translate(0);opacity:0}}
+.title-sub{font-family:'VT323',monospace;font-size:clamp(1.1rem,3vw,1.8rem);color:var(--cyan);letter-spacing:.2em;margin-bottom:2.5rem;display:block;opacity:.85}
+.hstats{display:inline-flex;justify-content:center;gap:clamp(.7rem,2.5vw,2.5rem);flex-wrap:wrap;padding:.9rem 1.8rem;border:1px solid rgba(255,255,255,.06);border-radius:4px;background:rgba(255,255,255,.02);backdrop-filter:blur(4px)}
+.si{font-size:.72rem;letter-spacing:.08em}
+.si .lbl{color:var(--dim);margin-right:.3rem}
+.si .val{color:var(--green)}
+
+/* FILTER TABS */
+.filter-bar{display:flex;justify-content:center;gap:.55rem;flex-wrap:wrap;margin:3.5rem 0 0;padding:.5rem}
+.ftab{font-family:'Share Tech Mono',monospace;font-size:.72rem;letter-spacing:.12em;padding:.45rem 1.1rem;border:1px solid rgba(255,255,255,.1);border-radius:3px;background:rgba(255,255,255,.02);color:var(--dim);cursor:none;transition:border-color .25s,color .25s,background .25s,box-shadow .25s}
+.ftab:hover{border-color:rgba(255,255,255,.22);color:var(--text)}
+.ftab.act{border-color:var(--ta,var(--cyan));color:var(--ta,var(--cyan));background:rgba(0,255,224,.05);box-shadow:0 0 12px rgba(0,255,224,.12)}
+.ftab[data-f="all"].act{--ta:var(--white);background:rgba(255,255,255,.04)}
+.ftab[data-f="cq"].act{--ta:var(--pink)}
+.ftab[data-f="pq"].act{--ta:var(--cyan)}
+.ftab[data-f="pl"].act{--ta:var(--purple)}
+.ftab .cnt{opacity:.55;margin-left:.3rem;font-size:.67rem}
+
+/* SECTIONS */
+.sec{margin-top:4rem}
+.sec-head{display:flex;align-items:center;gap:.8rem;margin-bottom:1.5rem;font-size:.8rem}
+.sc{color:var(--dim)}
+.sbadge{padding:.25rem .7rem;border-radius:2px;font-size:.74rem;letter-spacing:.15em;font-weight:700;white-space:nowrap}
+.srule{height:1px;flex:1;opacity:.18}
+.scount{font-size:.67rem;color:var(--dim);opacity:.6;white-space:nowrap}
+.s-cq .sbadge{color:var(--pink);border:1px solid rgba(255,31,143,.35);background:rgba(255,31,143,.06)}
+.s-cq .srule{background:var(--pink)}
+.s-pq .sbadge{color:var(--cyan);border:1px solid rgba(0,255,224,.35);background:rgba(0,255,224,.06)}
+.s-pq .srule{background:var(--cyan)}
+.s-pl .sbadge{color:var(--purple);border:1px solid rgba(180,0,255,.35);background:rgba(180,0,255,.06)}
+.s-pl .srule{background:var(--purple)}
+
+/* GRIDS */
+.g3{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,400px),1fr));gap:.95rem}
+.g2{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,480px),1fr));gap:1.05rem}
+
+/* CARD */
+.card{background:var(--card-bg);border:1px solid rgba(255,255,255,.07);border-radius:5px;padding:1.15rem 1.3rem;position:relative;cursor:none;overflow:hidden;transform-style:preserve-3d;transition:border-color .3s,box-shadow .3s;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);will-change:transform;user-select:none}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--acc,rgba(0,255,224,.8)) 50%,transparent);opacity:.9}
+.card::after{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,.04) 0%,transparent 65%);opacity:0;transition:opacity .4s}
+.card:hover::after{opacity:1}
+.card:hover{border-color:rgba(255,255,255,.13);box-shadow:0 0 0 1px rgba(255,255,255,.04),0 12px 40px rgba(0,0,0,.6),0 0 22px var(--ag,rgba(0,255,224,.12))}
+.t-cq{--acc:rgba(255,31,143,.85);--ag:rgba(255,31,143,.12);--at:var(--pink)}
+.t-pq{--acc:rgba(0,255,224,.85);--ag:rgba(0,255,224,.12);--at:var(--cyan)}
+.t-pl{--acc:rgba(180,0,255,.9);--ag:rgba(180,0,255,.14);--at:var(--purple)}
+.card.copied{animation:cpf .55s ease}
+@keyframes cpf{0%,100%{border-color:rgba(255,255,255,.07);box-shadow:none}50%{border-color:var(--green);box-shadow:0 0 28px rgba(0,255,136,.35),inset 0 0 18px rgba(0,255,136,.05)}}
+.ctop{display:flex;align-items:center;gap:.5rem;margin-bottom:.8rem}
+.cidx{font-size:.64rem;color:var(--at);opacity:.55;min-width:2.8rem}
+.ctag{font-size:.6rem;padding:.1rem .4rem;border-radius:2px;color:var(--at);border:1px solid currentColor;opacity:.5;letter-spacing:.05em;overflow:hidden;max-width:14ch;white-space:nowrap;text-overflow:ellipsis}
+.cem{margin-left:auto;font-size:1rem;opacity:.75;line-height:1}
+.cbody{font-size:clamp(.82rem,1.5vw,.92rem);line-height:1.72;color:var(--white);letter-spacing:.02em;position:relative;z-index:1;transition:color .08s}
+.cbody.glitch{text-shadow:2px 0 var(--cyan),-2px 0 var(--pink);color:#ffddf5}
+.cfoot{display:flex;align-items:center;justify-content:space-between;border-top:1px solid rgba(255,255,255,.05);padding-top:.6rem;margin-top:.85rem}
+.ccmd{font-size:.64rem;color:var(--at);letter-spacing:.1em;opacity:0;transition:opacity .2s}
+.card:hover .ccmd{opacity:.6}
+
+/* COPY FLOAT */
+.cpfloat{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:var(--green);font-size:.76rem;letter-spacing:.22em;pointer-events:none;animation:fup .9s ease forwards;z-index:20;text-shadow:0 0 12px var(--green),0 0 28px var(--green);white-space:nowrap;font-family:'Share Tech Mono',monospace}
+@keyframes fup{0%{opacity:0;transform:translate(-50%,-20%)}20%{opacity:1}100%{opacity:0;transform:translate(-50%,-150%)}}
+
+/* TOAST */
+#toast{position:fixed;bottom:2rem;right:2rem;background:rgba(0,8,4,.93);border:1px solid var(--green);color:var(--green);padding:.62rem 1.4rem;font-family:'Share Tech Mono',monospace;font-size:.74rem;letter-spacing:.18em;z-index:300;transform:translateY(80px);opacity:0;transition:transform .3s cubic-bezier(.34,1.4,.64,1),opacity .3s;box-shadow:0 0 18px rgba(0,255,136,.22),0 4px 20px rgba(0,0,0,.5);border-radius:3px;backdrop-filter:blur(8px);pointer-events:none}
+#toast.show{transform:translateY(0);opacity:1}
+#toast::before{content:'✓ '}
+
+/* DIVIDER */
+.divider{display:flex;align-items:center;gap:1rem;margin:4.5rem 0 0;opacity:.2}
+.dl{flex:1;height:1px;background:var(--dim)}
+.dt{font-size:.66rem;letter-spacing:.2em;color:var(--dim);white-space:nowrap}
+
+/* FOOTER */
+footer{margin-top:5.5rem}
+.op-card{background:linear-gradient(135deg,rgba(16,3,30,.97),rgba(32,3,55,.97));border:1px solid rgba(180,0,255,.18);border-radius:6px;padding:clamp(1.5rem,3.5vw,2.5rem);max-width:880px;margin:0 auto;position:relative;overflow:hidden;box-shadow:0 0 50px rgba(180,0,255,.07),0 25px 80px rgba(0,0,0,.5)}
+.op-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--purple) 25%,var(--pink) 50%,var(--cyan) 75%,transparent)}
+.op-card::after{content:'CLASSIFIED';position:absolute;top:1.4rem;right:1.5rem;font-size:.58rem;letter-spacing:.3em;color:var(--pink);opacity:.12;font-family:'Orbitron',monospace;font-weight:900}
+.optop{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:1.2rem}
+.odept{font-size:.6rem;letter-spacing:.3em;color:var(--purple);opacity:.65;margin-bottom:.35rem}
+.oname{font-family:'Orbitron',monospace;font-size:clamp(1.1rem,3vw,1.75rem);font-weight:700;color:var(--white);text-shadow:0 0 20px rgba(180,0,255,.4);margin-bottom:.12rem;line-height:1.2}
+.oalias{font-size:.74rem;color:var(--pink);letter-spacing:.12em;margin-bottom:.7rem}
+.oalias .lbl{color:var(--dim)}
+.otitles{font-size:.68rem;color:var(--cyan);letter-spacing:.04em;line-height:2;opacity:.8}
+.oclr .lbl2{font-size:.57rem;color:var(--dim);letter-spacing:.2em;margin-bottom:.4rem}
+.oclr-badge{display:inline-block;padding:.38rem .8rem;border:1px solid var(--green);color:var(--green);font-family:'Orbitron',monospace;font-size:.6rem;letter-spacing:.25em;font-weight:700;box-shadow:0 0 12px rgba(0,255,136,.25)}
+.ohr{height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.08),transparent);margin:1.4rem 0}
+.olinks{display:flex;flex-wrap:wrap;gap:.55rem}
+.olink{display:flex;align-items:center;gap:.4rem;padding:.35rem .78rem;border:1px solid rgba(255,255,255,.09);border-radius:3px;text-decoration:none;font-size:.7rem;color:var(--text);letter-spacing:.05em;transition:border-color .25s,color .25s,box-shadow .25s;background:rgba(255,255,255,.02)}
+.olink:hover{border-color:var(--lc,var(--cyan));color:var(--lc,var(--cyan));box-shadow:0 0 10px var(--lg,rgba(0,255,224,.2))}
+.olink svg{width:13px;height:13px;flex-shrink:0}
+.lpo{--lc:var(--cyan);--lg:rgba(0,255,224,.2)}
+.lem{--lc:var(--pink);--lg:rgba(255,31,143,.2)}
+.lli{--lc:#00a0dc;--lg:rgba(0,160,220,.2)}
+.lgh{--lc:#c8c0d8;--lg:rgba(200,192,216,.2)}
+.lkg{--lc:#20beff;--lg:rgba(32,190,255,.2)}
+.obot{margin-top:1.4rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.5rem}
+.osig{font-size:.6rem;color:var(--dim);opacity:.5;letter-spacing:.08em}
+.ostatus{font-size:.6rem;color:var(--green);letter-spacing:.1em;opacity:.6}
+.ostatus::before{content:'● ';animation:bl 2s step-end infinite}
+@keyframes bl{0%,100%{opacity:1}50%{opacity:0}}
+
+@media(max-width:640px){.optop{flex-direction:column}.g3,.g2{grid-template-columns:1fr}.ftab .cnt{display:none}}
+</style>
+</head>
+<body>
+
+<canvas id="bgCanvas"></canvas>
+<div class="scanlines"></div>
+<div class="vignette"></div>
+<div class="cursor-dot" id="cDot"></div>
+<div class="cursor-ring" id="cRing"></div>
+<div id="toast">PAYLOAD COPIED TO CLIPBOARD</div>
+
+<!-- BOOT -->
+<div id="boot">
+  <div class="bl bc" style="animation-delay:.1s">HEAVEN_OS v5.0 // BOOT SEQUENCE INITIALIZED</div>
+  <div class="bl bd" style="animation-delay:.35s">──────────────────────────────────────────────────────</div>
+  <div class="bl bc" style="animation-delay:.6s">  Loading kernel modules ........................... <span class="bgg">[ OK ]</span></div>
+  <div class="bl bc" style="animation-delay:.85s">  Mounting /dev/socialdrive ........................ <span class="bgg">[ OK ]</span></div>
+  <div class="bl bc" style="animation-delay:1.1s">  Initializing Social Engineering Dept ............. <span class="bgg">[ OK ]</span></div>
+  <div class="bl bc" style="animation-delay:1.35s">  Loading LOVE_EXPLOIT.exe ......................... <span class="bgg">[ OK ]</span></div>
+  <div class="bl bc" style="animation-delay:1.6s">  Indexing quote database .......................... <span class="bgg">[ 127 RECORDS ]</span></div>
+  <div class="bl bc" style="animation-delay:1.85s">  Arming charm payload ............................. <span class="bp">[ ARMED ]</span></div>
+  <div class="bl bd" style="animation-delay:2.05s">──────────────────────────────────────────────────────</div>
+  <div class="bl bo" style="animation-delay:2.25s">  WARNING: Emotional firewalls cannot protect you now.</div>
+  <div class="bl bd" style="animation-delay:2.5s">──────────────────────────────────────────────────────</div>
+  <div class="bl bw" style="animation-delay:2.7s">  READY. Click any card to copy payload.</div>
+</div>
+
+<!-- MAIN -->
+<div id="main">
+  <header>
+    <div class="sys-badge">SOCIAL ENGINEERING DEPT. // CLASSIFIED</div>
+    <div class="title-wrap">
+      <span class="title-main" data-text="LOVE_EXPLOIT.exe">LOVE_EXPLOIT.exe</span>
+    </div>
+    <span class="title-sub">// 127 Exploits — Quotes, Ops Intel &amp; Weaponised Pickup Lines</span>
+    <div class="hstats">
+      <div class="si"><span class="lbl">OPERATOR:</span><span class="val">HEAVEN</span></div>
+      <div class="si"><span class="lbl">MODULE:</span><span class="val">CHARM_v3.0</span></div>
+      <div class="si"><span class="lbl">TOTAL RECORDS:</span><span class="val">127</span></div>
+      <div class="si"><span class="lbl">PICKUP LINES:</span><span class="val">27</span></div>
+      <div class="si"><span class="lbl">STATUS:</span><span class="val">LIVE</span></div>
+    </div>
+  </header>
+
+  <div class="filter-bar">
+    <button class="ftab act" data-f="all">ALL <span class="cnt">[127]</span></button>
+    <button class="ftab" data-f="cq">// CYBER QUOTES <span class="cnt">[50]</span></button>
+    <button class="ftab" data-f="pq">// PENTEST QUOTES <span class="cnt">[50]</span></button>
+    <button class="ftab" data-f="pl">// PICKUP LINES <span class="cnt">[27]</span></button>
+  </div>
+
+  <!-- CYBER QUOTES -->
+  <div id="sec-cq" class="sec s-cq">
+    <div class="sec-head">
+      <span class="sc">/*</span>
+      <span class="sbadge">// CYBERSECURITY INTELLIGENCE — Quotes &amp; Ops Doctrine</span>
+      <div class="srule"></div>
+      <span class="scount">50 ENTRIES</span>
+      <span class="sc">*/</span>
+    </div>
+    <div class="g3" id="gcq"></div>
+  </div>
+
+  <div class="divider" id="div1"><div class="dl"></div><div class="dt">// SECTOR 02 //</div><div class="dl"></div></div>
+
+  <!-- PENTEST QUOTES -->
+  <div id="sec-pq" class="sec s-pq">
+    <div class="sec-head">
+      <span class="sc">/*</span>
+      <span class="sbadge">// PENETRATION TESTING DOCTRINE — Ops Intelligence</span>
+      <div class="srule"></div>
+      <span class="scount">50 ENTRIES</span>
+      <span class="sc">*/</span>
+    </div>
+    <div class="g3" id="gpq"></div>
+  </div>
+
+  <div class="divider" id="div2"><div class="dl"></div><div class="dt">// SECTOR 03 — WEAPONS FREE //</div><div class="dl"></div></div>
+
+  <!-- PICKUP LINES -->
+  <div id="sec-pl" class="sec s-pl">
+    <div class="sec-head">
+      <span class="sc">/*</span>
+      <span class="sbadge">// WEAPONISED PICKUP LINES — Social Engineering Payload</span>
+      <div class="srule"></div>
+      <span class="scount">27 ENTRIES</span>
+      <span class="sc">*/</span>
+    </div>
+    <div class="g2" id="gpl"></div>
+  </div>
+
+  <div class="divider"><div class="dl"></div><div class="dt">// OPERATOR PROFILE //</div><div class="dl"></div></div>
+
+  <footer>
+    <div class="op-card">
+      <div class="optop">
+        <div>
+          <div class="odept">▶ SOCIAL ENGINEERING DEPT. // OPERATOR FILE</div>
+          <div class="oname">Nisarg Chasmawala (shroff)</div>
+          <div class="oalias"><span class="lbl">// alias: </span>HEAVEN</div>
+          <div class="otitles">Penetration Tester &nbsp;|&nbsp; Vulnerability Assessment &nbsp;|&nbsp; Cybersecurity Researcher<br>Offensive Security Engineer &nbsp;|&nbsp; Digital Forensics</div>
+        </div>
+        <div class="oclr">
+          <div class="lbl2">CLEARANCE LEVEL</div>
+          <div class="oclr-badge">TOP SECRET</div>
+        </div>
+      </div>
+      <div class="ohr"></div>
+      <div class="olinks">
+        <a class="olink lpo" href="https://nishu2402.github.io" target="_blank" rel="noopener">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 1 0 20M12 2a14.5 14.5 0 0 0 0 20M2 12h20"/></svg>nishu2402.github.io
+        </a>
+        <a class="olink lem" href="mailto:nisargkc@gmail.com">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>nisargkc@gmail.com
+        </a>
+        <a class="olink lli" href="https://www.linkedin.com/in/nisarg-chasmawala" target="_blank" rel="noopener">
+          <svg fill="currentColor" viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2zM4 3a2 2 0 1 1 0 4 2 2 0 0 1 0-4z"/></svg>nisarg-chasmawala
+        </a>
+        <a class="olink lgh" href="https://github.com/nishu2402" target="_blank" rel="noopener">
+          <svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>nishu2402
+        </a>
+        <a class="olink lkg" href="https://www.kaggle.com/nisargshroff2402" target="_blank" rel="noopener">
+          <svg fill="currentColor" viewBox="0 0 24 24"><path d="M18.825 23.859c-.022.092-.117.141-.281.141h-3.139c-.187 0-.351-.082-.492-.248l-5.178-6.589-1.448 1.374v5.111c0 .235-.117.352-.351.352H5.505c-.236 0-.354-.117-.354-.352V.353c0-.233.118-.353.354-.353h2.431c.234 0 .351.12.351.353v14.343l6.203-6.272c.165-.165.33-.246.495-.246h3.239c.144 0 .236.06.285.18.046.149.034.255-.036.315l-6.555 6.344 6.836 8.507c.095.104.117.208.07.334z"/></svg>nisargshroff2402
+        </a>
+      </div>
+      <div class="obot">
+        <div class="osig">// All exploits for educational &amp; entertainment purposes. Click any card to copy.</div>
+        <div class="ostatus">OPERATOR ONLINE</div>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<script>
+/* ─── DATA ─── */
+const DATA = {
+  cq:[
+    ['🧑‍💻','HUMAN_ELEMENT','A firewall keeps the enemy out, but it can\'t protect us from our own mistakes.'],
+    ['🛑','TRUE_DEFENCE','Security isn\'t just about stopping attacks; it\'s about surviving them without a scratch.'],
+    ['🚪','OPEN_DOOR','Hackers rarely break in — they just wait patiently for an invitation.'],
+    ['⛈️','DIGITAL_STORMS','Every unpatched system is an open window in a digital hurricane.'],
+    ['🪤','ZERO_DAY_HUMAN','The most dangerous exploit isn\'t in the code; it\'s in our own overconfidence.'],
+    ['🎣','THE_BIG_CATCH','You\'re never too small to be hacked — only too unprepared.'],
+    ['🔄','MOVING_TARGETS','Cybersecurity is a moving target; staying updated is your only armor.'],
+    ['🚶','BAD_HABITS','Malware doesn\'t knock on your door — it walks right in through your bad digital habits.'],
+    ['🔑','MASTER_KEY','A single weak password is a master key given freely to a hacker.'],
+    ['🖱️','THINK_CLICK','Sober minds can still click with zero caution. Stay alert.'],
+    ['🥷','SILENT_STRIKE','The deadliest breach is the one you never saw coming.'],
+    ['💔','REAL_COST','Data breaches don\'t kill companies; the loss of customer trust does.'],
+    ['🧪','PROACTIVE_DEF','If you don\'t test your own security, a hacker will gladly do it for you.'],
+    ['🧠','WEAKEST_LINK','The weakest link in any encryption protocol is the human typing the password.'],
+    ['🎭','HACKERS_DIET','Hackers thrive on two things: easy access and user ignorance.'],
+    ['🎯','CLICKBAIT','Clickbait isn\'t harmless entertainment; it\'s a targeted attack vector.'],
+    ['⏳','BORROWED_TIME','Your network is only as secure as your absolute last software update.'],
+    ['🎲','CYBER_ROULETTE','Every careless click is a roll of the cyber dice.'],
+    ['🤝','SOCIAL_ENG','The best social engineers don\'t steal your password; they politely convince you to hand it over.'],
+    ['🫣','OBSCURITY','Security by obscurity isn\'t a defence strategy — it\'s just an expensive waiting game.'],
+    ['🧠','HACKING_MIND','Hackers don\'t just hack systems; they manipulate human trust.'],
+    ['🚰','SLOW_LEAK','Data leaks rarely scream; they whisper in the background until it\'s too late.'],
+    ['💥','ONE_BAD_MOVE','A successful cyberattack doesn\'t need brute force — just a single moment of carelessness.'],
+    ['🚨','HIGH_ALERT','The safest network is the one built on the assumption that it\'s already under attack.'],
+    ['🏹','INVISIBLE_TGT','A hacker\'s greatest advantage is your belief that you aren\'t a target.'],
+    ['⚖️','CONVENIENCE','The more convenient a system is, the less secure it tends to be.'],
+    ['🚪','MISPLACED_TRUST','The real danger isn\'t the malware itself; it\'s the misplaced trust that let it in.'],
+    ['🗝️','FORGOTTEN_LOCKS','Cybercriminals don\'t kick down doors; they just turn the handles we forgot to lock.'],
+    ['📜','BURIED_SECRETS','A backdoor is only as hidden as your security logs allow it to be.'],
+    ['💼','OPPORTUNISTIC','The vast majority of hacks aren\'t sophisticated — they\'re just highly opportunistic.'],
+    ['🏎️','THE_REBOUND','True security isn\'t measured by how tall your walls are, but by how fast you recover when they fall.'],
+    ['🎁','ILLUSION_CTRL','The ultimate exploit doesn\'t take control from you; it tricks you into giving it away voluntarily.'],
+    ['🐜','FINDING_CRACKS','Hackers don\'t smash through firewalls; they quietly crawl through the unpatched cracks.'],
+    ['🗓️','EXPIRED_HABITS','Passwords might expire every 90 days, but bad human habits endure forever.'],
+    ['🧘','STATE_OF_MIND','Cybersecurity isn\'t a software feature you buy; it\'s a mindset you practice.'],
+    ['🎭','THE_BLUFF','Sometimes hackers don\'t need actual access; they just need you to think they have it.'],
+    ['🤥','DECEPTION_PWR','Encryption is incredibly powerful, but a convincing lie can bypass it instantly.'],
+    ['🏚️','SYSTEM_FAILURE','Every security measure fails the moment trust is handed to the wrong person.'],
+    ['🌊','DIGITAL_SEA','Cyber threats don\'t come knocking; they phish you.'],
+    ['💌','THE_RSVP','An unpatched, forgotten vulnerability is an open invitation to a cyber disaster.'],
+    ['🔕','SILENT_ALARMS','The deadliest attacks aren\'t alarms and sirens; they are silent data extractions.'],
+    ['📱','FRONT_DOOR','Every unsecured device is a welcome mat for an opportunistic attacker.'],
+    ['👻','GHOST_MACHINE','A cybercriminal\'s greatest weapon is your blissful ignorance of their existence.'],
+    ['🔍','NOTHING_PERFECT','There is no such thing as an unbreakable system — only vulnerabilities not yet discovered.'],
+    ['🧬','HUMAN_CODE','The most devastating exploits are never written in software; they are coded into human nature.'],
+    ['🛠️','DAILY_GRIND','You can\'t buy cybersecurity off a shelf; it\'s a relentless daily practice.'],
+    ['💸','GIVING_AWAY','You rarely lose control in a breach — you hand it over long before the alarm sounds.'],
+    ['🐢','FATAL_FLAWS','The absolute fastest way to compromise your own network is to underestimate the threat.'],
+    ['🎯','FALSE_COMFORT','The exact moment you think you\'re perfectly safe is the moment you are compromised.'],
+    ['👁️','ULTIMATE_PRICE','The price of security is eternal vigilance; the cost of complacency is everything you have.'],
+  ],
+  pq:[
+    ['🏗️','FOUNDATION','A system is only as strong as its weakest assumption.'],
+    ['🔍','BLIND_SPOT','The best penetration test starts exactly where the security team stopped looking.'],
+    ['🎭','THE_ILLUSION','A hacker\'s biggest weapon isn\'t malicious code; it\'s the illusion of safety.'],
+    ['🧩','THE_CHALLENGE','To a pentester, every locked door is simply a puzzle waiting to be solved.'],
+    ['🗝️','LOOSE_GRIP','The most advanced encryption is useless if the user holds the key too loosely.'],
+    ['🚪','OPEN_DOOR_PT','A pentester doesn\'t knock to break in; they just check which doors were left wide open.'],
+    ['🧠','HACK_HUMAN','Social engineering isn\'t about hacking computers; it\'s about hacking human nature.'],
+    ['🛡️','SURVIVAL_GAME','Security isn\'t just about blocking attacks — it\'s about surviving them gracefully.'],
+    ['🔦','THE_SHADOWS','The most dangerous vulnerabilities are the ones nobody bothers to search for.'],
+    ['⏳','WAITING_GAME','A hacker doesn\'t always have to be smarter than you; they just have to be more patient.'],
+    ['🤝','ABUSED_RSRC','Trust is the single most abused resource in network security.'],
+    ['🎯','FORGOTTEN_TGT','No system is too small to be a target — only too ignored to be properly defended.'],
+    ['👻','GHOST_SEC','Part of a pentester\'s job is to prove that the security you thought you had never existed.'],
+    ['👤','HUMAN_FACTOR','No system is ever truly secure; it just hasn\'t met the right, determined human yet.'],
+    ['👣','FOLLOW_TRAIL','Hackers don\'t always break in; they follow the footprints that careless security left behind.'],
+    ['🎫','GOLDEN_TICKET','One single misconfiguration can easily become an attacker\'s golden ticket.'],
+    ['🎛️','MANAGE_RISK','Cybersecurity isn\'t about eliminating threats entirely; it\'s about regulating your exposure.'],
+    ['💀','AFTERTHOUGHT','If security is an afterthought, then so is your company\'s survival.'],
+    ['🔓','OPEN_PORT','An open port today is an inevitable data breach tomorrow.'],
+    ['👀','THE_WATCHERS','A zero-day exploit is only a complete disaster if nobody is watching the logs.'],
+    ['🥷','UNSEEN_THREAT','Security isn\'t just about threats you defend against; it\'s about ones you don\'t see coming.'],
+    ['🗣️','PERSUASION','The best exploits don\'t force an entry — they politely convince the system to open up.'],
+    ['🏢','HOUSE_CARDS','One weak endpoint, and the entire corporate network can come crashing down.'],
+    ['🛠️','BEST_TOOL','A hacker\'s absolute greatest tool is the software you forgot to update.'],
+    ['🥊','BOUNCE_BACK','Cybersecurity is not about achieving perfection; it is about building resilience.'],
+    ['🚧','FRICTION_FX','The more friction you add to security, the more creative hackers get at bypassing it.'],
+    ['🩹','RECOVERY','You\'re never too small to get hacked — just too unprepared to recover.'],
+    ['🚨','SAFEST_ASSUME','The absolute safest system operates as if it\'s already been compromised.'],
+    ['📏','TEST_LIMITS','Pentesting isn\'t about breaking the rules; it\'s about testing the boundaries of compliance.'],
+    ['🏚️','FRONT_DOOR_PT','Hackers rarely need to build a backdoor when they can sneak through the front door you forgot to lock.'],
+    ['📜','THE_AUTOPSY','Security logs don\'t prevent cyberattacks; they just inform you when it\'s already too late.'],
+    ['🤥','PERFECT_LIE','The most dangerous exploit isn\'t written in complex code — it\'s a very well-told lie.'],
+    ['🤦','HUMAN_ERROR','Encryption protects your data, but no algorithm protects against bad human decisions.'],
+    ['♻️','RECYCLED_EXP','Attackers don\'t need new vulnerabilities; they just rely on old ones left unpatched.'],
+    ['⛓️','WEAKEST_CHAIN','Cyberattacks are rarely about brute force; they\'re about finding the weakest link.'],
+    ['🔑','SKELETON_KEY','A single exposed credential is all it takes to collapse an entire infrastructure.'],
+    ['🚀','ARMS_RACE','Security isn\'t a final destination; it\'s a never-ending arms race.'],
+    ['🏁','STARTING_LINE','The most robust security strategy starts with one assumption: you\'ve already been breached.'],
+    ['🔬','THE_METHOD','Great pentesters don\'t guess. They observe, they analyse, then they execute.'],
+    ['🏴‍☠️','TREASURE_CHEST','An overlooked, forgotten database is a hacker\'s ultimate treasure chest.'],
+    ['🙈','THE_DELAY','Security through obscurity isn\'t real security — it\'s just dangerous procrastination.'],
+    ['🗝️','MISSING_PIECE','All it takes to completely own your system is a single leaked API key.'],
+    ['🛠️','THE_CREATORS','Hackers don\'t always look for existing weaknesses. Sometimes they create their own.'],
+    ['👔','DELEGATION','Why fight for admin access when a good pentester can convince the admin to do the work for them?'],
+    ['🤷','BYSTANDER_FX','The biggest cybersecurity threat in any org is thinking someone else is doing the job.'],
+    ['💔','REAL_LOSS_PT','A breach isn\'t just about stolen data — it\'s about the permanent loss of customer trust.'],
+    ['🏥','THE_TRIAGE','True cybersecurity isn\'t about preventing every attack; it\'s about surviving the worst.'],
+    ['😰','WAKE_UP_CALL','A properly executed pentest should make the defending team incredibly uncomfortable.'],
+    ['🖱️','SIMPLE_CLICK','Hackers don\'t always need million-dollar tools — sometimes just a tired employee and a shiny link.'],
+    ['🛡️','ULTIMATE_FLAW','The absolute biggest security flaw in the world? Believing you\'re completely secure.'],
+  ],
+  pl:[
+    // ── Original Cybersecurity Pickup Lines ──
+    ['🛡️','FIREWALL_HEART','Are you a firewall? Because you\'re keeping all the bad things out of my heart.'],
+    ['🥷','ZERO_DAY_LOVER','I must be a zero-day exploit, because you didn\'t see me coming but I\'ve already taken over your system.'],
+    ['🔑','SSH_ACCESS','Are you an SSH key? Because you have secure, exclusive access to my heart.'],
+    ['🎣','PHISH_FALL','You must be a well-crafted phishing email, because I\'m totally falling for you.'],
+    ['💾','BACKUP_DATE','Let\'s make like a good data backup and get together regularly.'],
+    // ── Original Pentest Pickup Lines ──
+    ['🔌','OPEN_PORT_LV','Are you an open port? Because I\'m definitely looking to establish a connection.'],
+    ['💘','PENTEST_BYPASS','I must be a pentester, because I just found a complete bypass straight to your heart.'],
+    ['👑','ADMIN_ACCESS','Are you an admin dashboard? Because I\'m trying to get full access to you tonight.'],
+    ['😍','VULN_SMILE','You don\'t need to run a vulnerability scan to see that I\'m fully compromised by your smile.'],
+    ['📶','WIFI_CONNECT','Is your name Wi-Fi? Because I\'m really feeling a strong connection right now.'],
+    // ── Extended Creative Payload ──
+    ['💉','SQL_DROP','Are you SQL? Because every time I look at you, my defenses just DROP TABLE.'],
+    ['🕸️','XSS_SMILE','I think I have an XSS vulnerability — because your smile keeps executing across every one of my contexts.'],
+    ['🧬','INPUT_INJECT','You injected yourself into my thoughts, and no amount of input sanitization is working.'],
+    ['🔓','API_EXPLOIT','Call me a misconfigured API — because you\'ve got full, unrestricted access to all my endpoints. No rate limiting.'],
+    ['💥','STACK_SMASH','Are you a buffer overflow? Because you\'ve filled every register of my heart and overwritten my entire return address.'],
+    ['🤝','TCP_HANDSHAKE','Can I initiate a three-way handshake? SYN → SYN-ACK → dinner tonight?'],
+    ['🔒','HTTPS_PRIV','You must be HTTPS — because everything between us feels perfectly encrypted, completely private, and certificate-verified.'],
+    ['🛡️','TLS_CHANNEL','Are you TLS 1.3? Because you negotiated a perfectly secure channel straight to my soul — zero round-trip time.'],
+    ['📡','KEEPALIVE','Let\'s skip the TCP overhead and go straight to a persistent, encrypted, keepalive connection. No timeouts.'],
+    ['⚠️','CVE_CRITICAL','I\'m like an unpatched CVE — the longer you ignore me, the more critical my CVSS severity score becomes.'],
+    ['💎','ZERO_DAY_RARE','Are you a zero-day? Because no CVE database has ever catalogued anything quite like you.'],
+    ['🎭','SOCIAL_BYPASS','Are you a social engineer? Because you bypassed all my defenses without a single packet of effort.'],
+    ['🧠','PRETEXT_FALL','I don\'t usually fall for pretexts — but you\'ve successfully compromised my better judgment, and I\'m not filing an incident report.'],
+    ['💬','HELLO_WORLD','You had me at Hello World. Textbook pretexting — and I\'m still not reporting this as a security incident.'],
+    ['🌐','DEFAULT_GW','Are you my default gateway? Because every single packet of love I send is routing straight through you.'],
+    ['🖥️','ROOT_SHELL','You\'re like a root shell — once I have you, I have complete access to everything that matters.'],
+    ['🔍','RECON_NIGHT','Are you an open port? I\'ve been running reconnaissance for a connection like this all night.'],
+  ]
+};
+
+/* ─── RENDER ─── */
+const GLITCH = '!@#$%^&*<>{}[]|01♥█▓▒░╬═║';
+const GRIDS = {cq:'gcq', pq:'gpq', pl:'gpl'};
+const TYPES = {cq:'t-cq', pq:'t-pq', pl:'t-pl'};
+const CMDS = {cq:'[ CLICK TO COPY ]', pq:'[ CLICK TO COPY ]', pl:'[ CLICK TO COPY & USE ]'};
+
+let globalIdx = 0;
+function render() {
+  Object.entries(DATA).forEach(([type, rows]) => {
+    const g = document.getElementById(GRIDS[type]);
+    rows.forEach(([em, tag, text]) => {
+      const idx = ++globalIdx;
+      const d = document.createElement('div');
+      d.className = `card ${TYPES[type]}`;
+      d.dataset.text = text;
+      d.innerHTML =
+        `<div class="ctop">` +
+          `<span class="cidx">${idx.toString(16).toUpperCase().padStart(2,'0')}</span>` +
+          `<span class="ctag">${tag}</span>` +
+          `<span class="cem">${em}</span>` +
+        `</div>` +
+        `<div class="cbody">${text}</div>` +
+        `<div class="cfoot">` +
+          `<span class="ccmd">${CMDS[type]}</span>` +
+        `</div>`;
+      g.appendChild(d);
+    });
+  });
+  bindCards();
+}
+
+/* ─── INTERACTIONS ─── */
+const TOAST = document.getElementById('toast');
+let tTimer;
+function showToast() {
+  TOAST.classList.add('show');
+  clearTimeout(tTimer);
+  tTimer = setTimeout(()=>TOAST.classList.remove('show'), 2000);
+}
+
+async function doCopy(text, card) {
+  try { await navigator.clipboard.writeText(text); }
+  catch {
+    const ta = Object.assign(document.createElement('textarea'),{value:text});
+    ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0';
+    document.body.appendChild(ta); ta.select(); document.execCommand('copy');
+    document.body.removeChild(ta);
+  }
+  const f = document.createElement('div');
+  f.className = 'cpfloat'; f.textContent = '✓ COPIED';
+  card.appendChild(f);
+  setTimeout(()=>f.remove(), 900);
+  card.classList.add('copied');
+  setTimeout(()=>card.classList.remove('copied'), 600);
+  showToast();
+}
+
+function scramble(el) {
+  const orig = el.dataset.orig || el.textContent.trim();
+  el.dataset.orig = orig;
+  if(el._gt) clearInterval(el._gt);
+  el.classList.add('glitch');
+  let i = 0;
+  el._gt = setInterval(()=>{
+    el.textContent = orig.split('').map((c,j)=>{
+      if(c===' ') return ' ';
+      if(j<i) return orig[j];
+      return GLITCH[Math.floor(Math.random()*GLITCH.length)];
+    }).join('');
+    i += 3;
+    if(i>=orig.length){ clearInterval(el._gt); el.textContent=orig; el.classList.remove('glitch'); }
+  }, 25);
+}
+function unscramble(el) {
+  if(el._gt) clearInterval(el._gt);
+  el.textContent = el.dataset.orig || el.textContent;
+  el.classList.remove('glitch');
+}
+
+function bindCards() {
+  document.querySelectorAll('.card').forEach(card => {
+    const body = card.querySelector('.cbody');
+    card.addEventListener('click', ()=>doCopy(card.dataset.text, card));
+    card.addEventListener('mousemove', e => {
+      const r = card.getBoundingClientRect();
+      const dx = (e.clientX-r.left-r.width/2)/(r.width/2);
+      const dy = (e.clientY-r.top-r.height/2)/(r.height/2);
+      card.style.transform = `perspective(900px) rotateX(${-dy*7}deg) rotateY(${dx*10}deg) scale3d(1.015,1.015,1.015)`;
+      card.style.setProperty('--mx',((e.clientX-r.left)/r.width*100)+'%');
+      card.style.setProperty('--my',((e.clientY-r.top)/r.height*100)+'%');
+    });
+    card.addEventListener('mouseenter', ()=>scramble(body));
+    card.addEventListener('mouseleave', ()=>{ card.style.transform=''; unscramble(body); });
+  });
+}
+
+/* ─── FILTER TABS ─── */
+document.querySelectorAll('.ftab').forEach(tab=>{
+  tab.addEventListener('click', ()=>{
+    document.querySelectorAll('.ftab').forEach(t=>t.classList.remove('act'));
+    tab.classList.add('act');
+    const f = tab.dataset.f;
+    const map = {cq:'sec-cq', pq:'sec-pq', pl:'sec-pl'};
+    const all = f==='all';
+    Object.entries(map).forEach(([k,id])=>{
+      document.getElementById(id).style.display = (all||f===k)?'':'none';
+    });
+    ['div1','div2'].forEach(id=>{ document.getElementById(id).style.display = all?'':'none'; });
+  });
+});
+
+/* ─── CANVAS RAIN ─── */
+const cv = document.getElementById('bgCanvas');
+const cx2 = cv.getContext('2d');
+const FS = 14;
+let drops=[];
+function resize(){ cv.width=innerWidth; cv.height=innerHeight; drops=Array.from({length:Math.floor(cv.width/FS)},()=>Math.random()*-(cv.height/FS)); }
+resize(); window.addEventListener('resize',resize);
+function rain(){
+  cx2.fillStyle='rgba(6,0,15,0.055)'; cx2.fillRect(0,0,cv.width,cv.height);
+  for(let i=0;i<drops.length;i++){
+    const r=Math.random(); let ch,col;
+    if(r>.975){ ch='♥'; col=`rgba(255,31,143,${.5+Math.random()*.5})`; cx2.font=`bold ${FS}px monospace`; }
+    else if(r>.958){ ch='♥'; col=`rgba(180,0,255,${.35+Math.random()*.35})`; cx2.font=`${FS-2}px monospace`; }
+    else{ ch=Math.random()>.5?'1':'0'; const b=.25+Math.random()*.75; col=drops[i]<1?`rgba(220,220,255,${b})`:`rgba(0,255,224,${b*.75})`; cx2.font=`${FS}px monospace`; }
+    cx2.fillStyle=col; cx2.fillText(ch,i*FS,drops[i]*FS);
+    if(drops[i]*FS>cv.height&&Math.random()>.975) drops[i]=0;
+    drops[i]+=.5+Math.random()*.55;
+  }
+}
+setInterval(rain,45);
+
+/* ─── CURSOR ─── */
+const dot=document.getElementById('cDot'), ring=document.getElementById('cRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{ mx=e.clientX; my=e.clientY; dot.style.left=mx+'px'; dot.style.top=my+'px'; });
+document.addEventListener('mousedown',()=>ring.classList.add('click'));
+document.addEventListener('mouseup',()=>ring.classList.remove('click'));
+(function loop(){ rx+=(mx-rx)*.1; ry+=(my-ry)*.1; ring.style.left=rx+'px'; ring.style.top=ry+'px'; requestAnimationFrame(loop); })();
+setInterval(()=>{ if(Math.random()>.82){ ring.style.borderColor='var(--pink)'; ring.style.boxShadow='0 0 14px rgba(255,31,143,.7)'; setTimeout(()=>{ ring.style.borderColor=''; ring.style.boxShadow=''; },110); } },2200);
+
+/* ─── BOOT ─── */
+render();
+const boot=document.getElementById('boot'), main=document.getElementById('main');
+setTimeout(()=>{ boot.classList.add('out'); setTimeout(()=>{ boot.style.display='none'; main.classList.add('vis'); },950); },3250);
+</script>
+</body>
+</html>
