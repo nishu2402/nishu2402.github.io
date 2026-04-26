@@ -1,0 +1,1107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CEH v12 | 15-Minute Exam Mastery — Nisarg Chasmawala</title>
+<meta name="description" content="How I completed the CEH v12 exam in 15 minutes and scored 91.2% — a tactical breakdown of the preparation methodology by Nisarg Chasmawala.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Exo+2:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   CSS CUSTOM PROPERTIES
+============================================================ */
+:root {
+  --bg:          #020b14;
+  --bg2:         #06121e;
+  --bg-card:     rgba(4, 18, 32, 0.72);
+  --cyan:        #00e5ff;
+  --cyan-dim:    #00a0cc;
+  --cyan-faint:  rgba(0,229,255,0.08);
+  --amber:       #ffb700;
+  --amber-faint: rgba(255,183,0,0.07);
+  --green:       #00ff9d;
+  --green-faint: rgba(0,255,157,0.07);
+  --border:      rgba(0,229,255,0.15);
+  --border-hi:   rgba(0,229,255,0.35);
+  --text-hi:     #e4f2ff;
+  --text:        #8fb8cc;
+  --text-lo:     #3d5c6e;
+  --ff-head:     'Orbitron', monospace;
+  --ff-body:     'Exo 2', sans-serif;
+  --ff-mono:     'Share Tech Mono', monospace;
+  --glow-c:      0 0 18px rgba(0,229,255,0.35), 0 0 40px rgba(0,229,255,0.12);
+  --glow-a:      0 0 18px rgba(255,183,0,0.35), 0 0 40px rgba(255,183,0,0.12);
+  --glow-g:      0 0 18px rgba(0,255,157,0.35), 0 0 40px rgba(0,255,157,0.12);
+  --radius:      14px;
+}
+
+/* ============================================================
+   RESET & BASE
+============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--ff-body);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.72;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+a { text-decoration: none; color: inherit; }
+strong { color: var(--text-hi); font-weight: 600; }
+code {
+  font-family: var(--ff-mono);
+  background: rgba(0,229,255,0.08);
+  border: 1px solid rgba(0,229,255,0.18);
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 0.85em;
+  color: var(--cyan-dim);
+}
+
+/* ============================================================
+   CUSTOM CURSOR
+============================================================ */
+* { cursor: none; }
+#c-dot {
+  position: fixed; width: 7px; height: 7px;
+  background: var(--green); border-radius: 50%;
+  pointer-events: none; z-index: 10001;
+  transform: translate(-50%,-50%);
+  box-shadow: 0 0 10px var(--green), 0 0 22px rgba(0,255,157,0.5);
+  transition: transform 0.08s;
+}
+#c-ring {
+  position: fixed; width: 34px; height: 34px;
+  border: 1px solid rgba(0,255,157,0.5);
+  border-radius: 50%; pointer-events: none;
+  z-index: 10000; transform: translate(-50%,-50%);
+  transition: width 0.2s, height 0.2s, border-color 0.2s, background 0.2s;
+}
+#c-dot.active { transform: translate(-50%,-50%) scale(1.8); }
+#c-ring.active {
+  width: 52px; height: 52px;
+  border-color: var(--green);
+  background: rgba(0,255,157,0.04);
+}
+
+/* ============================================================
+   SCROLL PROGRESS
+============================================================ */
+#scroll-bar {
+  position: fixed; top: 0; left: 0; height: 2px;
+  background: linear-gradient(90deg, var(--green), var(--cyan), var(--amber));
+  z-index: 9998; width: 0%;
+  transition: width 0.08s linear;
+  box-shadow: 0 0 8px var(--green);
+}
+
+/* ============================================================
+   THREE.JS CANVAS
+============================================================ */
+#bg-canvas {
+  position: fixed; top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 0; pointer-events: none;
+}
+
+/* ============================================================
+   SCANLINES + GRAIN
+============================================================ */
+.scanlines {
+  position: fixed; inset: 0; z-index: 1; pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg, transparent, transparent 2px,
+    rgba(0,0,0,0.025) 2px, rgba(0,0,0,0.025) 4px
+  );
+}
+.grain {
+  position: fixed; inset: 0; z-index: 2; pointer-events: none;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ============================================================
+   SITE WRAPPER
+============================================================ */
+.wrap {
+  position: relative; z-index: 3;
+  max-width: 1080px; margin: 0 auto;
+  padding: 0 28px 100px;
+}
+
+/* ============================================================
+   TOP NAV
+============================================================ */
+.top-nav {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 22px 0;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 70px;
+  font-family: var(--ff-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  color: var(--text-lo);
+}
+.nav-classified { color: rgba(0,255,157,0.55); }
+.nav-alias { color: var(--cyan); letter-spacing: 0.32em; font-size: 0.88rem; }
+.nav-certcode { color: var(--amber); }
+
+/* ============================================================
+   HERO
+============================================================ */
+.hero {
+  text-align: center;
+  padding: 60px 0 50px;
+  animation: fadeUp 0.9s ease both;
+}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: var(--green-faint);
+  border: 1px solid rgba(0,255,157,0.22);
+  border-radius: 30px; padding: 7px 22px;
+  font-family: var(--ff-mono); font-size: 0.7rem;
+  color: rgba(0,255,157,0.75); letter-spacing: 0.18em;
+  text-transform: uppercase; margin-bottom: 36px;
+}
+.hero-badge .blink {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--green); flex-shrink: 0;
+  animation: blink 2s infinite;
+}
+@keyframes blink {
+  0%,100% { opacity:1; box-shadow: 0 0 6px var(--green); }
+  50%      { opacity:0.3; box-shadow: none; }
+}
+.hero h1 {
+  font-family: var(--ff-head);
+  font-size: clamp(1.75rem, 4.2vw, 3.1rem);
+  font-weight: 900; line-height: 1.18;
+  color: var(--text-hi); letter-spacing: 0.02em;
+  margin-bottom: 18px;
+}
+.hero h1 .c { color: var(--cyan); }
+.hero h1 .g { color: var(--green); }
+.hero h1 .a { color: var(--amber); }
+.hero-sub {
+  font-family: var(--ff-mono);
+  font-size: clamp(0.72rem, 1.4vw, 0.88rem);
+  color: var(--text-lo); letter-spacing: 0.14em; margin-bottom: 50px;
+}
+.hero-stats {
+  display: flex; justify-content: center;
+  gap: 52px; flex-wrap: wrap;
+  animation: fadeUp 0.9s 0.18s ease both;
+}
+.stat { text-align: center; }
+.stat-val {
+  font-family: var(--ff-head);
+  font-size: clamp(2rem, 4vw, 2.9rem);
+  font-weight: 700; line-height: 1; margin-bottom: 6px;
+}
+.stat-val.c { color: var(--cyan);  text-shadow: var(--glow-c); }
+.stat-val.a { color: var(--amber); text-shadow: var(--glow-a); }
+.stat-val.g { color: var(--green); text-shadow: var(--glow-g); }
+.stat-lbl {
+  font-family: var(--ff-mono); font-size: 0.64rem;
+  color: var(--text-lo); letter-spacing: 0.2em; text-transform: uppercase;
+}
+
+/* ============================================================
+   SECTION REVEALS
+============================================================ */
+.s-wrap {
+  margin-bottom: 88px;
+  opacity: 0; transform: translateY(32px);
+  transition: opacity 0.72s ease, transform 0.72s ease;
+}
+.s-wrap.in { opacity: 1; transform: translateY(0); }
+.s-head { display: flex; align-items: center; gap: 14px; margin-bottom: 34px; }
+.s-num {
+  font-family: var(--ff-mono); font-size: 0.68rem;
+  color: var(--text-lo); letter-spacing: 0.18em; min-width: 28px;
+}
+.s-title {
+  font-family: var(--ff-head);
+  font-size: clamp(0.92rem, 2.2vw, 1.28rem);
+  font-weight: 700; color: var(--text-hi);
+  letter-spacing: 0.05em; white-space: nowrap;
+}
+.s-title .c { color: var(--cyan); }
+.s-title .a { color: var(--amber); }
+.s-title .g { color: var(--green); }
+.s-line { flex: 1; height: 1px; background: linear-gradient(90deg, var(--border), transparent); }
+
+/* ============================================================
+   PROSE CARD
+============================================================ */
+.prose-card {
+  background: var(--bg-card);
+  backdrop-filter: blur(22px) saturate(180%);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 38px 40px; position: relative; overflow: hidden;
+}
+.prose-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--green), var(--cyan), transparent);
+}
+.prose-card p { font-size: 0.96rem; line-height: 1.82; margin-bottom: 16px; color: var(--text); }
+.prose-card p:last-child { margin-bottom: 0; }
+
+/* ============================================================
+   DATA TABLE
+============================================================ */
+.tbl-wrap {
+  overflow-x: auto; border-radius: var(--radius);
+  border: 1px solid var(--border); background: var(--bg-card);
+  backdrop-filter: blur(22px);
+}
+.data-tbl { width: 100%; border-collapse: collapse; font-size: 0.91rem; }
+.data-tbl th {
+  font-family: var(--ff-mono); font-size: 0.68rem;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--green); padding: 13px 22px; text-align: left;
+  border-bottom: 1px solid var(--border); background: var(--green-faint);
+}
+.data-tbl td {
+  padding: 11px 22px; border-bottom: 1px solid rgba(0,229,255,0.055);
+  color: var(--text); transition: background 0.2s;
+}
+.data-tbl tr:last-child td { border-bottom: none; }
+.data-tbl tr:hover td { background: rgba(0,255,157,0.03); }
+.data-tbl td:first-child {
+  font-family: var(--ff-mono); font-size: 0.76rem;
+  color: var(--text-lo); letter-spacing: 0.08em;
+}
+.data-tbl td.hi-a {
+  color: var(--amber); font-family: var(--ff-head); font-weight: 700;
+  font-size: 1.02rem; text-shadow: var(--glow-a);
+}
+
+/* ============================================================
+   STRATEGY CARDS GRID
+============================================================ */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+  gap: 22px;
+}
+.s-card {
+  background: var(--bg-card);
+  backdrop-filter: blur(22px) saturate(180%);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 30px; position: relative; overflow: hidden;
+  transition: border-color 0.28s, box-shadow 0.28s;
+  transform-style: preserve-3d; will-change: transform;
+}
+.s-card::after {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--green), var(--cyan), transparent);
+  opacity: 0; transition: opacity 0.28s;
+}
+.s-card:hover::after { opacity: 1; }
+.s-card:hover {
+  border-color: rgba(0,255,157,0.32);
+  box-shadow: 0 0 34px rgba(0,255,157,0.08), 0 24px 60px rgba(0,0,0,0.45);
+}
+.card-ghost-num {
+  font-family: var(--ff-head); font-size: 4rem; font-weight: 900;
+  color: rgba(0,255,157,0.045); position: absolute; top: 14px; right: 18px;
+  line-height: 1; user-select: none; letter-spacing: -0.02em;
+}
+.card-icon {
+  width: 46px; height: 46px;
+  background: var(--green-faint);
+  border: 1px solid rgba(0,255,157,0.22);
+  border-radius: 10px; display: flex; align-items: center;
+  justify-content: center; font-size: 1.35rem; margin-bottom: 18px;
+}
+.card-kicker {
+  font-family: var(--ff-mono); font-size: 0.65rem;
+  color: rgba(0,255,157,0.65); letter-spacing: 0.2em;
+  text-transform: uppercase; margin-bottom: 7px;
+}
+.card-title {
+  font-family: var(--ff-head); font-size: 0.94rem; font-weight: 700;
+  color: var(--text-hi); margin-bottom: 14px; line-height: 1.35;
+}
+.card-body { font-size: 0.87rem; color: var(--text); line-height: 1.68; margin-bottom: 16px; }
+.card-list { list-style: none; margin-bottom: 16px; }
+.card-list li {
+  font-size: 0.84rem; color: var(--text);
+  padding: 5px 0 5px 20px; position: relative; line-height: 1.52;
+}
+.card-list li::before {
+  content: '▹'; position: absolute; left: 0;
+  color: var(--green); font-size: 0.78rem; top: 7px;
+}
+.pro-tip {
+  background: var(--amber-faint); border: 1px solid rgba(255,183,0,0.2);
+  border-radius: 8px; padding: 11px 14px;
+  font-size: 0.81rem; color: rgba(255,183,0,0.88); line-height: 1.55;
+}
+.pro-tip b {
+  font-family: var(--ff-mono); font-size: 0.66rem; color: var(--amber);
+  letter-spacing: 0.14em; font-weight: normal; display: block; margin-bottom: 4px;
+}
+.ex-block {
+  background: rgba(0,0,0,0.35); border-left: 2px solid var(--green);
+  border-radius: 0 8px 8px 0; padding: 12px 14px; margin: 14px 0; font-size: 0.81rem;
+}
+.ex-lbl {
+  font-family: var(--ff-mono); font-size: 0.62rem; color: var(--text-lo);
+  letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 7px;
+}
+.ex-q { color: var(--text); font-style: italic; margin-bottom: 7px; line-height: 1.5; }
+.ex-a { color: var(--green); font-family: var(--ff-mono); font-size: 0.79rem; line-height: 1.5; }
+
+/* ============================================================
+   EXECUTION TIMELINE
+============================================================ */
+.tl-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  border: 1px solid var(--border); border-radius: var(--radius);
+  overflow: hidden; background: var(--bg-card); backdrop-filter: blur(22px);
+}
+.tl-phase {
+  padding: 26px 22px; border-right: 1px solid var(--border);
+  position: relative; transition: background 0.25s;
+}
+.tl-phase:last-child { border-right: none; }
+.tl-phase:hover { background: rgba(0,255,157,0.03); }
+.tl-dot {
+  position: absolute; top: 14px; right: 14px;
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--green); animation: blink 2s infinite;
+}
+.tl-time { font-family: var(--ff-mono); font-size: 0.82rem; color: var(--amber); margin-bottom: 10px; letter-spacing: 0.04em; }
+.tl-title {
+  font-family: var(--ff-head); font-size: 0.7rem; font-weight: 700;
+  color: var(--text-hi); letter-spacing: 0.08em; margin-bottom: 10px; text-transform: uppercase;
+}
+.tl-desc { font-size: 0.81rem; color: var(--text-lo); line-height: 1.55; }
+
+/* ============================================================
+   MERMAID
+============================================================ */
+.mermaid-wrap {
+  background: var(--bg-card); backdrop-filter: blur(22px);
+  border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 40px 24px; overflow-x: auto;
+}
+.mermaid { display: flex; justify-content: center; }
+.mermaid svg { max-width: 100%; height: auto; }
+
+/* ============================================================
+   CONCLUSION CHECKLIST
+============================================================ */
+.check-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 12px; margin-top: 28px;
+}
+.check-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  background: rgba(0,255,157,0.03);
+  border: 1px solid rgba(0,255,157,0.1);
+  border-radius: 8px; padding: 11px 14px;
+  font-size: 0.88rem; color: var(--text);
+  transition: border-color 0.2s, background 0.2s;
+}
+.check-item:hover { border-color: rgba(0,255,157,0.25); background: rgba(0,255,157,0.06); }
+.check-item .arr { color: var(--green); flex-shrink: 0; font-size: 0.8rem; margin-top: 2px; }
+
+/* ============================================================
+   AUTHOR FOOTER
+============================================================ */
+.author-footer { border-top: 1px solid var(--border); padding-top: 62px; margin-top: 30px; }
+.author-inner { display: flex; gap: 36px; align-items: flex-start; flex-wrap: wrap; }
+.author-av {
+  width: 82px; height: 82px; border: 2px solid var(--cyan);
+  border-radius: 14px; background: linear-gradient(135deg, #001a30, #002e50);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--ff-head); font-size: 1.45rem; font-weight: 900;
+  color: var(--cyan); flex-shrink: 0; box-shadow: var(--glow-c);
+  position: relative; overflow: hidden;
+  animation: glowPulse 4s infinite ease-in-out;
+}
+.author-av::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(0,229,255,0.1), transparent 55%);
+}
+@keyframes glowPulse {
+  0%,100% { box-shadow: var(--glow-c); }
+  50%      { box-shadow: 0 0 30px rgba(0,229,255,0.5), 0 0 60px rgba(0,229,255,0.18); }
+}
+.author-info { flex: 1; min-width: 220px; }
+.author-name { font-family: var(--ff-head); font-size: 1.28rem; font-weight: 700; color: var(--text-hi); margin-bottom: 3px; }
+.author-alias { font-family: var(--ff-mono); font-size: 0.72rem; color: var(--text-lo); letter-spacing: 0.2em; margin-bottom: 12px; }
+.author-alias span { color: var(--cyan); }
+.author-titles { font-size: 0.8rem; color: var(--cyan-dim); line-height: 1.65; margin-bottom: 22px; letter-spacing: 0.015em; }
+.author-links { display: flex; flex-wrap: wrap; gap: 9px; }
+.a-link {
+  display: inline-flex; align-items: center; gap: 7px; padding: 7px 15px;
+  background: rgba(4,18,32,0.85); border: 1px solid var(--border);
+  border-radius: 6px; font-family: var(--ff-mono); font-size: 0.7rem;
+  color: var(--text-lo); letter-spacing: 0.06em; transition: all 0.2s;
+}
+.a-link:hover { border-color: var(--cyan); color: var(--cyan); box-shadow: 0 0 14px rgba(0,229,255,0.18); }
+.a-link svg { flex-shrink: 0; }
+
+/* ============================================================
+   PAGE FOOTER
+============================================================ */
+.page-foot {
+  text-align: center; padding: 48px 0 16px;
+  border-top: 1px solid rgba(0,229,255,0.055); margin-top: 60px;
+  font-family: var(--ff-mono); font-size: 0.66rem;
+  color: var(--text-lo); letter-spacing: 0.14em; line-height: 2;
+}
+
+/* ============================================================
+   ANIMATIONS
+============================================================ */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(36px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================================
+   SCROLLBAR
+============================================================ */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: rgba(0,255,157,0.28); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(0,255,157,0.5); }
+::selection { background: rgba(0,255,157,0.18); color: var(--green); }
+
+/* ============================================================
+   RESPONSIVE
+============================================================ */
+@media (max-width: 880px) {
+  .tl-grid { grid-template-columns: 1fr 1fr; }
+  .tl-phase { border-bottom: 1px solid var(--border); }
+  .tl-phase:nth-child(2n) { border-right: none; }
+  .tl-phase:nth-last-child(-n+2) { border-bottom: none; }
+}
+@media (max-width: 640px) {
+  .wrap { padding: 0 16px 80px; }
+  .top-nav { flex-direction: column; gap: 6px; text-align: center; }
+  .cards-grid { grid-template-columns: 1fr; }
+  .tl-grid { grid-template-columns: 1fr; }
+  .tl-phase { border-right: none; border-bottom: 1px solid var(--border); }
+  .tl-phase:last-child { border-bottom: none; }
+  .hero-stats { gap: 28px; }
+  .prose-card { padding: 26px 22px; }
+  .author-inner { flex-direction: column; }
+  .author-av { width: 66px; height: 66px; font-size: 1.1rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ───────── CURSORS ───────── -->
+<div id="c-dot"></div>
+<div id="c-ring"></div>
+
+<!-- ───────── SCROLL PROGRESS ───────── -->
+<div id="scroll-bar"></div>
+
+<!-- ───────── BG CANVAS ───────── -->
+<canvas id="bg-canvas"></canvas>
+
+<!-- ───────── OVERLAYS ───────── -->
+<div class="scanlines"></div>
+<div class="grain"></div>
+
+<!-- ═══════════════════════════════════════════
+     MAIN CONTENT
+═══════════════════════════════════════════ -->
+<div class="wrap">
+
+  <!-- TOP NAV -->
+  <nav class="top-nav">
+    <span class="nav-classified">[ CLASSIFIED // EC-COUNCIL CERTIFIED ]</span>
+    <span class="nav-alias">HEAVEN</span>
+    <span class="nav-certcode">CEH v12 · ECC5081642397</span>
+  </nav>
+
+  <!-- ─── HERO ─── -->
+  <section class="hero">
+    <div class="hero-badge">
+      <span class="blink"></span>
+      Achievement Unlocked · Certified Ethical Hacker
+    </div>
+    <h1>
+      How I Completed the<br>
+      <span class="g">CEH v12</span> Exam in<br>
+      <span class="a">15 Minutes</span> — Scoring 91.2%
+    </h1>
+    <p class="hero-sub">A TACTICAL BREAKDOWN OF THE PREPARATION METHODOLOGY</p>
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="stat-val g">15</div>
+        <div class="stat-lbl">Minutes to Complete</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val a">91.2%</div>
+        <div class="stat-lbl">Final Score</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val c">125</div>
+        <div class="stat-lbl">MCQ Questions</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val a">700+</div>
+        <div class="stat-lbl">Practice Questions</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── 01 INTRODUCTION ─── -->
+  <div class="s-wrap">
+    <div class="s-head">
+      <span class="s-num">01</span>
+      <h2 class="s-title"><span class="c">—</span> Introduction</h2>
+      <div class="s-line"></div>
+    </div>
+    <div class="prose-card">
+      <p>The <strong>Certified Ethical Hacker (CEH) v12</strong> certification, issued by <strong>EC-Council</strong>, is one of the most prestigious and globally recognised credentials in offensive cybersecurity. It rigorously validates knowledge of <strong>ethical hacking methodologies, attack vectors, exploitation techniques, security tooling, and defensive countermeasures</strong> — establishing the benchmark for practitioner-level penetration testing competency.</p>
+      <p>While the standard examination window allocates <strong>4 hours</strong> for 125 multiple-choice questions, I completed the entire examination in <strong>15 minutes</strong> — achieving a final score of <strong>91.2%</strong>, comfortably above the regional passing threshold. This post documents the exact preparation framework, structured across five strategic pillars, that made this possible.</p>
+    </div>
+  </div>
+
+  <!-- ─── 02 EXAM OVERVIEW ─── -->
+  <div class="s-wrap">
+    <div class="s-head">
+      <span class="s-num">02</span>
+      <h2 class="s-title"><span class="c">—</span> Exam Overview <span class="a">&amp; Specifications</span></h2>
+      <div class="s-line"></div>
+    </div>
+    <div class="tbl-wrap">
+      <table class="data-tbl">
+        <thead>
+          <tr><th>Parameter</th><th>Details</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Certification</td><td>Certified Ethical Hacker (CEH) v12</td></tr>
+          <tr><td>Issuing Body</td><td>EC-Council</td></tr>
+          <tr><td>Certificate No.</td><td>ECC5081642397</td></tr>
+          <tr><td>Total Questions</td><td>125 Multiple Choice Questions (MCQ)</td></tr>
+          <tr><td>Allotted Duration</td><td>4 Hours</td></tr>
+          <tr><td>Passing Threshold</td><td>70%–85% (varies by jurisdiction)</td></tr>
+          <tr><td>Question Format</td><td>Multiple Choice — Single Best Answer</td></tr>
+          <tr><td>My Completion Time</td><td class="hi-a">15 Minutes</td></tr>
+          <tr><td>My Final Score</td><td class="hi-a">91.2%</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ─── 03 FIVE-STEP STRATEGY ─── -->
+  <div class="s-wrap">
+    <div class="s-head">
+      <span class="s-num">03</span>
+      <h2 class="s-title"><span class="c">—</span> The 5-Step <span class="a">Preparation</span> Framework</h2>
+      <div class="s-line"></div>
+    </div>
+    <div class="cards-grid">
+
+      <!-- CARD 1 -->
+      <div class="s-card">
+        <span class="card-ghost-num">01</span>
+        <div class="card-icon">🎯</div>
+        <div class="card-kicker">Step 01 / Preparation</div>
+        <div class="card-title">Mastering CEH v12 Question Banks</div>
+        <p class="card-body">The fastest route to high-velocity exam completion is deep familiarity with the question taxonomy. CEH v12 questions consistently recycle attack patterns, tooling categories, and defensive frameworks with slight variation — making prior exposure to a large question corpus a decisive advantage.</p>
+        <ul class="card-list">
+          <li>Worked through 700+ curated CEH v12 practice questions with domain-specific explanations</li>
+          <li>Leveraged official EC-Council preparation materials for authoritative question framing</li>
+          <li>Engaged with ethical hacking forums, study groups, and technical communities</li>
+          <li>Reviewed complete answer rationales to build conceptual grounding — not surface recall</li>
+        </ul>
+        <div class="pro-tip">
+          <b>⚡ PRO TIP</b>
+          CEH v12 heavily tests <em>tools, attack techniques, and security countermeasures</em> — these domains appear with the highest frequency across question categories. Prioritise them in your preparation corpus.
+        </div>
+      </div>
+
+      <!-- CARD 2 -->
+      <div class="s-card">
+        <span class="card-ghost-num">02</span>
+        <div class="card-icon">⚡</div>
+        <div class="card-kicker">Step 02 / Speed</div>
+        <div class="card-title">Keyword Scanning &amp; Rapid Question Parsing</div>
+        <p class="card-body">CEH v12 questions are deliberately verbose, designed to slow down candidates through contextual padding. Speed-reading the entire question stem word-for-word is a critical time error. I applied a structured keyword-scanning protocol that extracts actionable signal within 3–5 seconds per question.</p>
+        <ul class="card-list">
+          <li>Discard boilerplate phrasing ("Which of the following best represents…")</li>
+          <li>Isolate attack-domain keywords: tool name, attack vector, network layer, protocol</li>
+          <li>Scan answer choices first to establish the decision frame, then re-read the stem</li>
+          <li>Match pre-memorised tool-to-technique associations for instant resolution</li>
+        </ul>
+        <div class="ex-block">
+          <div class="ex-lbl">// Example Question</div>
+          <div class="ex-q">"Which tool is most commonly used for SQL Injection exploitation?"</div>
+          <div class="ex-a">Scan: "tool" + "SQL Injection" → sqlmap ✓ — Answered in &lt;5 sec</div>
+        </div>
+        <div class="pro-tip">
+          <b>⚡ PRO TIP</b>
+          Train keyword recognition as a conditioned response through rapid single-question drills. The goal is sub-5-second contextual extraction — not comprehension speed.
+        </div>
+      </div>
+
+      <!-- CARD 3 -->
+      <div class="s-card">
+        <span class="card-ghost-num">03</span>
+        <div class="card-icon">🔬</div>
+        <div class="card-kicker">Step 03 / Accuracy</div>
+        <div class="card-title">Systematic Elimination Protocol</div>
+        <p class="card-body">For questions where immediate pattern recall was not triggered, I deployed a structured elimination methodology — reducing the solution space against CEH's established attack frameworks, OSI model constraints, and tool capability boundaries to identify the single most technically consistent answer.</p>
+        <ul class="card-list">
+          <li>Eliminate answers that contradict the attack layer or protocol context of the question</li>
+          <li>Prefer answers referencing industry-standard tools: Nmap, Metasploit, Wireshark, Burp Suite, sqlmap, Nessus</li>
+          <li>Distinguish detection-only tools (IDS/IPS) from prevention tools for countermeasure questions</li>
+          <li>Cross-reference OSI layer constraints — many answers collapse under basic network model logic</li>
+        </ul>
+        <div class="ex-block">
+          <div class="ex-lbl">// Elimination in Action</div>
+          <div class="ex-q">"What is the best defence against ARP poisoning attacks?" A) Firewall &nbsp;B) Static ARP entries &nbsp;C) IDS/IPS &nbsp;D) Port mirroring</div>
+          <div class="ex-a">ARP = Layer 2 → Firewall useless (A❌) → IDS/IPS detects, not prevents (C❌) → Static ARP entries (B✓) — 5 sec</div>
+        </div>
+        <div class="pro-tip">
+          <b>⚡ PRO TIP</b>
+          Trust your first instinct on elimination. CEH distractors are designed to look plausible — deliberate re-evaluation after the first pass is where accuracy erodes.
+        </div>
+      </div>
+
+      <!-- CARD 4 -->
+      <div class="s-card">
+        <span class="card-ghost-num">04</span>
+        <div class="card-icon">⏱️</div>
+        <div class="card-kicker">Step 04 / Velocity</div>
+        <div class="card-title">15-Minute Constrained Mock Testing</div>
+        <p class="card-body">Rather than practising with 4-hour mock exams — which condition comfort rather than speed — I specifically designed constraint-based simulations with a hard 15-minute ceiling for all 125 questions. This calibrates neurological response speed to match the operational target cadence of ≤7 seconds per question.</p>
+        <ul class="card-list">
+          <li>Set a hard 15-minute timer for complete 125-question mock sessions</li>
+          <li>Target cadence: each question resolved in ≤7 seconds on average</li>
+          <li>Multiple high-velocity rounds to build consistency under simulated exam pressure</li>
+          <li>Post-session gap analysis: flagged questions reviewed to close domain weaknesses</li>
+        </ul>
+        <div class="pro-tip">
+          <b>⚡ PRO TIP</b>
+          Do not condition at the allotted exam duration. Speed is a trained behaviour — the constraint forces velocity, and your question familiarity governs accuracy. Separate the two concerns in training.
+        </div>
+      </div>
+
+      <!-- CARD 5 -->
+      <div class="s-card">
+        <span class="card-ghost-num">05</span>
+        <div class="card-icon">⌨️</div>
+        <div class="card-kicker">Step 05 / Interface</div>
+        <div class="card-title">Navigation Mechanics &amp; Rapid Selection</div>
+        <p class="card-body">CEH v12 is delivered as a computer-based examination via the EC-Council ECC Exam Centre. Interface fluency eliminates micro-latency between cognitive decisions and recorded answers — cumulatively recovering meaningful seconds across 125 items when operating at sub-10-second cadence.</p>
+        <ul class="card-list">
+          <li>Use <code>Tab</code> to navigate between interface elements without switching to mouse</li>
+          <li>Use <code>Space</code> to confirm answer selection — instant, no mouse travel</li>
+          <li>Click "Next" the moment an answer is committed — zero post-selection hesitation</li>
+          <li>Flag uncertain questions and advance immediately; return only if buffer time permits</li>
+        </ul>
+        <div class="pro-tip">
+          <b>⚡ PRO TIP</b>
+          Never exceed 7 seconds on any single question. Flag, advance, maintain momentum. At this cadence, stalling on one question is a structural disruption — not a recoverable pause.
+        </div>
+      </div>
+
+    </div><!-- .cards-grid -->
+  </div>
+
+  <!-- ─── 04 EXECUTION TIMELINE ─── -->
+  <div class="s-wrap">
+    <div class="s-head">
+      <span class="s-num">04</span>
+      <h2 class="s-title"><span class="c">—</span> Exam Execution <span class="a">Timeline</span></h2>
+      <div class="s-line"></div>
+    </div>
+    <div class="tl-grid">
+      <div class="tl-phase">
+        <div class="tl-dot"></div>
+        <div class="tl-time">0:00 → 13:00</div>
+        <div class="tl-title">Primary Sweep</div>
+        <p class="tl-desc">All high-confidence questions answered on first pass using pattern recall and keyword scanning. Maintain strict ≤7-second cadence throughout.</p>
+      </div>
+      <div class="tl-phase">
+        <div class="tl-time">13:00 → 14:30</div>
+        <div class="tl-title">Elimination Pass</div>
+        <p class="tl-desc">Systematic elimination applied to all flagged questions. Reduce each to the most technically consistent answer using OSI model and tool capability logic.</p>
+      </div>
+      <div class="tl-phase">
+        <div class="tl-time">14:30 → 15:00</div>
+        <div class="tl-title">Final Review</div>
+        <p class="tl-desc">Rapid review of any remaining flagged items. Commit to answers with conviction — no revision of already-locked answers. Trust the preparation.</p>
+      </div>
+      <div class="tl-phase">
+        <div class="tl-time">15:00</div>
+        <div class="tl-title">Submit ✅</div>
+        <p class="tl-desc">Examination submitted with complete confidence. Final score: <strong>91.2%</strong>. CEH v12 certification confirmed.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── 05 CERTIFICATION PATHWAY ─── -->
+  <div class="s-wrap">
+    <div class="s-head">
+      <span class="s-num">05</span>
+      <h2 class="s-title"><span class="c">—</span> Certification <span class="a">Skill Tree</span></h2>
+      <div class="s-line"></div>
+    </div>
+    <div class="mermaid-wrap">
+      <div class="mermaid">
+%%{init: {'theme': 'base', 'flowchart': {'htmlLabels': true, 'curve': 'basis'}, 'themeVariables': {'primaryColor':'#001428','primaryTextColor':'#c8d8e8','primaryBorderColor':'#004466','lineColor':'#00a0cc','secondaryColor':'#000d1a','tertiaryColor':'#000a14','background':'#020b14','mainBkg':'#001428','nodeBorder':'#004466','clusterBkg':'#000d1a','titleColor':'#00ff9d','edgeLabelBackground':'#000d1a','textColor':'#c8d8e8'}}}%%
+flowchart LR
+    EHE["🛡️ <b>EHE</b><br/>Ethical Hacking Essentials"]
+    CEH["⚔️ <b>CEH v12</b><br/>★ Active Certification ★"]
+    CEHM["🏆 <b>CEH Master</b><br/>Advanced Exploitation"]
+    CPENT["🎯 <b>CPENT</b><br/>Penetration Testing Pro"]
+    CHFI["🔬 <b>CHFI v10</b><br/>Digital Forensics"]
+    ISO["📋 <b>ISO 27001</b><br/>Lead Auditor"]
+    RT["🚀 <b>Red Team</b><br/>Operations"]
+    DFIR["🔍 <b>DFIR &amp;</b><br/>Incident Response"]
+    GRC["📊 <b>GRC &amp;</b><br/>Risk Management"]
+
+    EHE --> CEH
+    CEH --> CEHM
+    CEH --> CHFI
+    CEHM --> CPENT
+    CPENT --> RT
+    CHFI --> DFIR
+    ISO --> GRC
+
+    style CEH fill:#001400,stroke:#00ff9d,stroke-width:2px,color:#00ff9d
+    style EHE fill:#001428,stroke:#004466,color:#7ab8cc
+    style CEHM fill:#001428,stroke:#0077aa,color:#00c8f0
+    style CPENT fill:#001428,stroke:#0077aa,color:#00c8f0
+    style CHFI fill:#001428,stroke:#0077aa,color:#00c8f0
+    style ISO fill:#001428,stroke:#004466,color:#7ab8cc
+    style RT fill:#0c0020,stroke:#5500aa,color:#9966ff
+    style DFIR fill:#0c0020,stroke:#5500aa,color:#9966ff
+    style GRC fill:#0c0020,stroke:#5500aa,color:#9966ff
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── 06 FINAL ASSESSMENT ─── -->
+  <div class="s-wrap">
+    <div class="s-head">
+      <span class="s-num">06</span>
+      <h2 class="s-title"><span class="c">—</span> Final Assessment</h2>
+      <div class="s-line"></div>
+    </div>
+    <div class="prose-card">
+      <p>Completing the CEH v12 examination in 15 minutes with a 91.2% score is the direct result of <strong>structured preparation architecture applied with genuine discipline</strong> — not exceptional circumstance. Every pillar documented here compounds into measurable examination velocity without degrading accuracy, because speed and depth were trained as separate, independent variables.</p>
+      <p>This methodology is fully reproducible. The single non-negotiable prerequisite is honest, sustained execution — the framework delivers consistent results when practised with the rigour the exam deserves.</p>
+      <div class="check-grid">
+        <div class="check-item"><span class="arr">▹</span> Build deep familiarity via 700+ practice questions</div>
+        <div class="check-item"><span class="arr">▹</span> Develop keyword scanning as a trained reflex</div>
+        <div class="check-item"><span class="arr">▹</span> Master the systematic elimination protocol</div>
+        <div class="check-item"><span class="arr">▹</span> Simulate completion under a hard 15-minute constraint</div>
+        <div class="check-item"><span class="arr">▹</span> Achieve fluency in examination interface navigation</div>
+        <div class="check-item"><span class="arr">▹</span> Trust your preparation — commit with conviction on exam day</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── AUTHOR ─── -->
+  <footer class="author-footer">
+    <div class="author-inner">
+      <div class="author-av">NC</div>
+      <div class="author-info">
+        <div class="author-name">Nisarg Chasmawala (shroff)</div>
+        <div class="author-alias">Alias: <span>HEAVEN</span></div>
+        <div class="author-titles">
+          Penetration Tester | Vulnerability Assessment | Cybersecurity Researcher | Offensive Security Engineer | Digital Forensics |
+        </div>
+        <div class="author-links">
+          <a href="https://nishu2402.github.io" target="_blank" rel="noopener" class="a-link">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/>
+              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+            </svg>
+            Portfolio
+          </a>
+          <a href="mailto:nisargkc@gmail.com" class="a-link">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+              <polyline points="22,6 12,13 2,6"/>
+            </svg>
+            nisargkc@gmail.com
+          </a>
+          <a href="https://www.linkedin.com/in/nisarg-chasmawala" target="_blank" rel="noopener" class="a-link">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+              <rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/>
+            </svg>
+            LinkedIn
+          </a>
+          <a href="https://github.com/nishu2402" target="_blank" rel="noopener" class="a-link">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+            </svg>
+            GitHub
+          </a>
+          <a href="https://www.kaggle.com/nisargshroff2402" target="_blank" rel="noopener" class="a-link">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+              <path d="M18.825 23.859c-.022.092-.117.141-.281.141h-3.139c-.187 0-.351-.082-.492-.248l-5.178-6.589-1.448 1.374v5.111c0 .235-.117.352-.351.352H5.505c-.236 0-.354-.117-.354-.352V.353c0-.234.118-.353.354-.353h2.431c.234 0 .351.119.351.353v14.343l6.203-6.272c.165-.165.33-.246.495-.246h3.239c.144 0 .236.06.285.18.046.149.034.255-.036.315l-6.555 6.344 6.836 8.507c.095.104.117.208.07.311z"/>
+            </svg>
+            Kaggle
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- PAGE FOOTER -->
+  <div class="page-foot">
+    <p>CEH v12 · EC-Council Certified · Ethical Hacking &amp; Penetration Testing</p>
+    <p>Nisarg Chasmawala (shroff) · alias HEAVEN · Offensive Security Research</p>
+  </div>
+
+</div><!-- .wrap -->
+
+<!-- ───────── SCRIPTS ───────── -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+
+<script>
+/* ============================================================
+   MERMAID
+============================================================ */
+mermaid.initialize({
+  startOnLoad: true,
+  theme: 'base',
+  flowchart: { htmlLabels: true, curve: 'basis', diagramPadding: 24 },
+  themeVariables: {
+    primaryColor:        '#001428',
+    primaryTextColor:    '#c8d8e8',
+    primaryBorderColor:  '#004466',
+    lineColor:           '#00a0cc',
+    background:          '#020b14',
+    mainBkg:             '#001428',
+    nodeBorder:          '#004466',
+    clusterBkg:          '#000d1a',
+    titleColor:          '#00ff9d',
+    edgeLabelBackground: '#000d1a',
+    textColor:           '#c8d8e8',
+    fontSize:            '14px'
+  }
+});
+
+/* ============================================================
+   THREE.JS — HOLOGRAPHIC CONSTELLATION (GREEN VARIANT)
+============================================================ */
+(function () {
+  const canvas = document.getElementById('bg-canvas');
+  if (!canvas || typeof THREE === 'undefined') return;
+
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setSize(window.innerWidth, window.innerHeight);
+
+  const scene  = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 200);
+  camera.position.set(0, 0, 26);
+
+  const N    = 155;
+  const BXYZ = [20, 12, 14];
+  const pos  = new Float32Array(N * 3);
+  const vel  = new Float32Array(N * 3);
+  const col  = new Float32Array(N * 3);
+
+  for (let i = 0; i < N; i++) {
+    pos[i*3]   = (Math.random() - 0.5) * BXYZ[0] * 2;
+    pos[i*3+1] = (Math.random() - 0.5) * BXYZ[1] * 2;
+    pos[i*3+2] = (Math.random() - 0.5) * BXYZ[2] * 2;
+    vel[i*3]   = (Math.random() - 0.5) * 0.013;
+    vel[i*3+1] = (Math.random() - 0.5) * 0.009;
+    vel[i*3+2] = (Math.random() - 0.5) * 0.007;
+    // Green base
+    col[i*3]   = 0.0;
+    col[i*3+1] = 0.78 + Math.random() * 0.22;
+    col[i*3+2] = 0.35 + Math.random() * 0.25;
+  }
+
+  const ptGeo = new THREE.BufferGeometry();
+  ptGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  ptGeo.setAttribute('color',    new THREE.BufferAttribute(col, 3));
+
+  const ptMat = new THREE.PointsMaterial({
+    size: 0.13, vertexColors: true,
+    transparent: true, opacity: 0.78, sizeAttenuation: true
+  });
+  scene.add(new THREE.Points(ptGeo, ptMat));
+
+  const MAX_CONN = 420;
+  const lPos = new Float32Array(MAX_CONN * 6);
+  const lCol = new Float32Array(MAX_CONN * 6);
+  const lGeo = new THREE.BufferGeometry();
+  lGeo.setAttribute('position', new THREE.BufferAttribute(lPos, 3));
+  lGeo.setAttribute('color',    new THREE.BufferAttribute(lCol, 3));
+  lGeo.setDrawRange(0, 0);
+  const lMat = new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, opacity: 0.18 });
+  const linesMesh = new THREE.LineSegments(lGeo, lMat);
+  scene.add(linesMesh);
+
+  const CONN_DIST = 6.2;
+  let frame = 0, scrollRatio = 0, targetScroll = 0;
+
+  window.addEventListener('scroll', () => {
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    targetScroll = max > 0 ? window.scrollY / max : 0;
+  });
+
+  function updateConnections() {
+    let cnt = 0;
+    const p = ptGeo.attributes.position.array;
+    for (let i = 0; i < N && cnt < MAX_CONN; i++) {
+      for (let j = i + 1; j < N && cnt < MAX_CONN; j++) {
+        const dx = p[i*3]-p[j*3], dy = p[i*3+1]-p[j*3+1], dz = p[i*3+2]-p[j*3+2];
+        const d  = Math.sqrt(dx*dx + dy*dy + dz*dz);
+        if (d < CONN_DIST) {
+          const al  = 1 - d / CONN_DIST;
+          const ci  = cnt * 6;
+          lPos[ci]  = p[i*3];   lPos[ci+1] = p[i*3+1]; lPos[ci+2] = p[i*3+2];
+          lPos[ci+3]= p[j*3];   lPos[ci+4] = p[j*3+1]; lPos[ci+5] = p[j*3+2];
+          // Green → amber shift on scroll
+          const r = scrollRatio * al * 0.9;
+          const g = (0.75 - scrollRatio * 0.35) * al;
+          const b = (0.35 - scrollRatio * 0.3) * al;
+          lCol[ci]=r; lCol[ci+1]=g; lCol[ci+2]=b;
+          lCol[ci+3]=r; lCol[ci+4]=g; lCol[ci+5]=b;
+          cnt++;
+        }
+      }
+    }
+    lGeo.attributes.position.needsUpdate = true;
+    lGeo.attributes.color.needsUpdate    = true;
+    lGeo.setDrawRange(0, cnt * 2);
+  }
+
+  function animate() {
+    requestAnimationFrame(animate);
+    frame++;
+    scrollRatio += (targetScroll - scrollRatio) * 0.045;
+
+    const p = ptGeo.attributes.position.array;
+    const c = ptGeo.attributes.color.array;
+    for (let i = 0; i < N; i++) {
+      p[i*3]   += vel[i*3];
+      p[i*3+1] += vel[i*3+1];
+      p[i*3+2] += vel[i*3+2];
+      if (Math.abs(p[i*3])   > BXYZ[0]) vel[i*3]   *= -1;
+      if (Math.abs(p[i*3+1]) > BXYZ[1]) vel[i*3+1] *= -1;
+      if (Math.abs(p[i*3+2]) > BXYZ[2]) vel[i*3+2] *= -1;
+      // Green → amber as scroll increases
+      c[i*3]   = scrollRatio * 0.85;
+      c[i*3+1] = 0.78 - scrollRatio * 0.45;
+      c[i*3+2] = 0.38 - scrollRatio * 0.35;
+    }
+    ptGeo.attributes.position.needsUpdate = true;
+    ptGeo.attributes.color.needsUpdate    = true;
+
+    if (frame % 24 === 0) updateConnections();
+
+    camera.position.x = Math.sin(frame * 0.0022) * 1.8;
+    camera.position.y = Math.cos(frame * 0.0016) * 1.1;
+    camera.position.z = 26 - scrollRatio * 5;
+    camera.lookAt(0, 0, 0);
+    renderer.render(scene, camera);
+  }
+
+  animate();
+
+  window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+})();
+
+/* ============================================================
+   CUSTOM CURSOR
+============================================================ */
+(function () {
+  const dot  = document.getElementById('c-dot');
+  const ring = document.getElementById('c-ring');
+  if (!dot || !ring) return;
+
+  let mx = 0, my = 0, rx = 0, ry = 0;
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    dot.style.left = mx + 'px';
+    dot.style.top  = my + 'px';
+  });
+  document.addEventListener('mouseleave', () => { dot.style.opacity = '0'; ring.style.opacity = '0'; });
+  document.addEventListener('mouseenter', () => { dot.style.opacity = '1'; ring.style.opacity = '1'; });
+
+  (function loopRing() {
+    rx += (mx - rx) * 0.11;
+    ry += (my - ry) * 0.11;
+    ring.style.left = rx + 'px';
+    ring.style.top  = ry + 'px';
+    requestAnimationFrame(loopRing);
+  })();
+
+  document.querySelectorAll('a, .s-card, button').forEach(el => {
+    el.addEventListener('mouseenter', () => { dot.classList.add('active');  ring.classList.add('active'); });
+    el.addEventListener('mouseleave', () => { dot.classList.remove('active'); ring.classList.remove('active'); });
+  });
+})();
+
+/* ============================================================
+   SCROLL PROGRESS BAR
+============================================================ */
+(function () {
+  const bar = document.getElementById('scroll-bar');
+  if (!bar) return;
+  window.addEventListener('scroll', () => {
+    const pct = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight) * 100;
+    bar.style.width = pct + '%';
+  });
+})();
+
+/* ============================================================
+   INTERSECTION OBSERVER — SECTION REVEALS
+============================================================ */
+(function () {
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+  }, { threshold: 0.08, rootMargin: '0px 0px -50px 0px' });
+  document.querySelectorAll('.s-wrap').forEach(el => obs.observe(el));
+})();
+
+/* ============================================================
+   3D TILT ON STRATEGY CARDS
+============================================================ */
+(function () {
+  document.querySelectorAll('.s-card').forEach(card => {
+    card.addEventListener('mousemove', e => {
+      const r  = card.getBoundingClientRect();
+      const dx = (e.clientX - (r.left + r.width  / 2)) / (r.width  / 2);
+      const dy = (e.clientY - (r.top  + r.height / 2)) / (r.height / 2);
+      card.style.transition = 'border-color 0.28s, box-shadow 0.28s';
+      card.style.transform  = `perspective(900px) rotateY(${dx*9}deg) rotateX(${-dy*9}deg) translateZ(10px)`;
+    });
+    card.addEventListener('mouseleave', () => {
+      card.style.transition = 'transform 0.55s ease, border-color 0.28s, box-shadow 0.28s';
+      card.style.transform  = 'perspective(900px) rotateY(0deg) rotateX(0deg) translateZ(0)';
+    });
+  });
+})();
+</script>
+
+</body>
+</html>

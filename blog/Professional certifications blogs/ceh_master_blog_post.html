@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CEH Master | Complete Journey — Nisarg Chasmawala</title>
+<meta name="description" content="How I achieved CEH Master certification — the complete preparation journey, dual-exam strategy, and roadmap by Nisarg Chasmawala.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Exo+2:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   CSS CUSTOM PROPERTIES
+============================================================ */
+:root {
+  --bg:          #020b14;
+  --bg2:         #06121e;
+  --bg-card:     rgba(4, 18, 32, 0.72);
+  --gold:        #ffd700;
+  --gold-dim:    #c9a800;
+  --gold-faint:  rgba(255,215,0,0.07);
+  --fire:        #ff6b35;
+  --fire-faint:  rgba(255,107,53,0.07);
+  --cyan:        #00e5ff;
+  --cyan-dim:    #00a0cc;
+  --cyan-faint:  rgba(0,229,255,0.07);
+  --border:      rgba(255,215,0,0.14);
+  --border-hi:   rgba(255,215,0,0.35);
+  --text-hi:     #f0e6c8;
+  --text:        #8fb8cc;
+  --text-lo:     #3d5c6e;
+  --ff-head:     'Orbitron', monospace;
+  --ff-body:     'Exo 2', sans-serif;
+  --ff-mono:     'Share Tech Mono', monospace;
+  --glow-g:      0 0 18px rgba(255,215,0,0.4),  0 0 45px rgba(255,215,0,0.14);
+  --glow-f:      0 0 18px rgba(255,107,53,0.4),  0 0 40px rgba(255,107,53,0.14);
+  --glow-c:      0 0 18px rgba(0,229,255,0.35),   0 0 40px rgba(0,229,255,0.12);
+  --radius:      14px;
+}
+
+/* ============================================================
+   RESET & BASE
+============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--ff-body);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.72;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+a { text-decoration: none; color: inherit; }
+strong { color: var(--text-hi); font-weight: 600; }
+code {
+  font-family: var(--ff-mono);
+  background: rgba(255,215,0,0.07);
+  border: 1px solid rgba(255,215,0,0.2);
+  padding: 1px 6px; border-radius: 4px;
+  font-size: 0.85em; color: var(--gold-dim);
+}
+
+/* ============================================================
+   CUSTOM CURSOR
+============================================================ */
+* { cursor: none; }
+#c-dot {
+  position: fixed; width: 7px; height: 7px;
+  background: var(--gold); border-radius: 50%;
+  pointer-events: none; z-index: 10001;
+  transform: translate(-50%,-50%);
+  box-shadow: 0 0 10px var(--gold), 0 0 24px rgba(255,215,0,0.55);
+  transition: transform 0.08s;
+}
+#c-ring {
+  position: fixed; width: 34px; height: 34px;
+  border: 1px solid rgba(255,215,0,0.5);
+  border-radius: 50%; pointer-events: none;
+  z-index: 10000; transform: translate(-50%,-50%);
+  transition: width 0.2s, height 0.2s, border-color 0.2s, background 0.2s;
+}
+#c-dot.active { transform: translate(-50%,-50%) scale(1.8); }
+#c-ring.active { width: 52px; height: 52px; border-color: var(--gold); background: rgba(255,215,0,0.04); }
+
+/* ============================================================
+   SCROLL PROGRESS
+============================================================ */
+#scroll-bar {
+  position: fixed; top: 0; left: 0; height: 2px;
+  background: linear-gradient(90deg, var(--gold), var(--fire), var(--cyan));
+  z-index: 9998; width: 0%; transition: width 0.08s linear;
+  box-shadow: 0 0 8px var(--gold);
+}
+
+/* ============================================================
+   BG CANVAS + OVERLAYS
+============================================================ */
+#bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+.scanlines {
+  position: fixed; inset: 0; z-index: 1; pointer-events: none;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.025) 2px, rgba(0,0,0,0.025) 4px);
+}
+.grain {
+  position: fixed; inset: 0; z-index: 2; pointer-events: none; opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ============================================================
+   SITE WRAPPER
+============================================================ */
+.wrap { position: relative; z-index: 3; max-width: 1080px; margin: 0 auto; padding: 0 28px 100px; }
+
+/* ============================================================
+   TOP NAV
+============================================================ */
+.top-nav {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 22px 0; border-bottom: 1px solid var(--border);
+  margin-bottom: 70px; font-family: var(--ff-mono);
+  font-size: 0.72rem; letter-spacing: 0.14em; color: var(--text-lo);
+}
+.nav-classified { color: rgba(255,215,0,0.5); }
+.nav-alias { color: var(--cyan); letter-spacing: 0.32em; font-size: 0.88rem; }
+.nav-certcode { color: var(--fire); }
+
+/* ============================================================
+   HERO
+============================================================ */
+.hero { text-align: center; padding: 60px 0 50px; animation: fadeUp 0.9s ease both; }
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: var(--gold-faint); border: 1px solid rgba(255,215,0,0.22);
+  border-radius: 30px; padding: 7px 22px;
+  font-family: var(--ff-mono); font-size: 0.7rem;
+  color: rgba(255,215,0,0.75); letter-spacing: 0.18em;
+  text-transform: uppercase; margin-bottom: 36px;
+}
+.hero-badge .blink { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); flex-shrink: 0; animation: blink 2s infinite; }
+@keyframes blink {
+  0%,100% { opacity:1; box-shadow: 0 0 8px var(--gold); }
+  50%      { opacity:0.3; box-shadow: none; }
+}
+.hero h1 {
+  font-family: var(--ff-head); font-size: clamp(1.75rem, 4.2vw, 3.1rem);
+  font-weight: 900; line-height: 1.18; color: var(--text-hi);
+  letter-spacing: 0.02em; margin-bottom: 18px;
+}
+.hero h1 .g { color: var(--gold); text-shadow: var(--glow-g); }
+.hero h1 .f { color: var(--fire); }
+.hero h1 .c { color: var(--cyan); }
+.hero-sub { font-family: var(--ff-mono); font-size: clamp(0.72rem, 1.4vw, 0.88rem); color: var(--text-lo); letter-spacing: 0.14em; margin-bottom: 50px; }
+
+/* MASTER EMBLEM */
+.master-emblem {
+  display: inline-flex; flex-direction: column; align-items: center;
+  justify-content: center; width: 140px; height: 140px;
+  border-radius: 50%; margin: 0 auto 50px;
+  background: radial-gradient(circle at 40% 35%, rgba(255,215,0,0.14), rgba(255,107,53,0.06) 60%, transparent);
+  border: 2px solid rgba(255,215,0,0.3);
+  box-shadow: 0 0 40px rgba(255,215,0,0.12), 0 0 80px rgba(255,215,0,0.05), inset 0 0 30px rgba(255,215,0,0.04);
+  animation: emblemPulse 4s infinite ease-in-out;
+  position: relative;
+}
+.master-emblem::before {
+  content: ''; position: absolute; inset: 8px; border-radius: 50%;
+  border: 1px solid rgba(255,215,0,0.12);
+}
+.master-emblem::after {
+  content: ''; position: absolute; inset: -8px; border-radius: 50%;
+  border: 1px solid rgba(255,215,0,0.06);
+}
+@keyframes emblemPulse {
+  0%,100% { box-shadow: 0 0 40px rgba(255,215,0,0.12), 0 0 80px rgba(255,215,0,0.05), inset 0 0 30px rgba(255,215,0,0.04); }
+  50%      { box-shadow: 0 0 60px rgba(255,215,0,0.22), 0 0 120px rgba(255,215,0,0.09), inset 0 0 40px rgba(255,215,0,0.08); }
+}
+.emblem-icon { font-size: 2.6rem; line-height: 1; margin-bottom: 4px; }
+.emblem-text { font-family: var(--ff-head); font-size: 0.58rem; color: var(--gold-dim); letter-spacing: 0.28em; text-transform: uppercase; }
+
+.hero-stats { display: flex; justify-content: center; gap: 52px; flex-wrap: wrap; animation: fadeUp 0.9s 0.18s ease both; }
+.stat { text-align: center; }
+.stat-val { font-family: var(--ff-head); font-size: clamp(2rem, 4vw, 2.9rem); font-weight: 700; line-height: 1; margin-bottom: 6px; }
+.stat-val.g { color: var(--gold);  text-shadow: var(--glow-g); }
+.stat-val.f { color: var(--fire);  text-shadow: var(--glow-f); }
+.stat-val.c { color: var(--cyan);  text-shadow: var(--glow-c); }
+.stat-lbl { font-family: var(--ff-mono); font-size: 0.64rem; color: var(--text-lo); letter-spacing: 0.2em; text-transform: uppercase; }
+
+/* ============================================================
+   SECTION REVEALS
+============================================================ */
+.s-wrap { margin-bottom: 88px; opacity: 0; transform: translateY(32px); transition: opacity 0.72s ease, transform 0.72s ease; }
+.s-wrap.in { opacity: 1; transform: translateY(0); }
+.s-head { display: flex; align-items: center; gap: 14px; margin-bottom: 34px; }
+.s-num { font-family: var(--ff-mono); font-size: 0.68rem; color: var(--text-lo); letter-spacing: 0.18em; min-width: 28px; }
+.s-title { font-family: var(--ff-head); font-size: clamp(0.92rem, 2.2vw, 1.28rem); font-weight: 700; color: var(--text-hi); letter-spacing: 0.05em; white-space: nowrap; }
+.s-title .g { color: var(--gold); }
+.s-title .f { color: var(--fire); }
+.s-title .c { color: var(--cyan); }
+.s-line { flex: 1; height: 1px; background: linear-gradient(90deg, var(--border), transparent); }
+
+/* ============================================================
+   PROSE CARD
+============================================================ */
+.prose-card {
+  background: var(--bg-card); backdrop-filter: blur(22px) saturate(180%);
+  border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 38px 40px; position: relative; overflow: hidden;
+}
+.prose-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), var(--fire), var(--cyan), transparent);
+}
+.prose-card p { font-size: 0.96rem; line-height: 1.82; margin-bottom: 16px; color: var(--text); }
+.prose-card p:last-child { margin-bottom: 0; }
+
+/* ============================================================
+   DUAL-EXAM ARCHITECTURE
+============================================================ */
+.dual-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.exam-pillar {
+  background: var(--bg-card); backdrop-filter: blur(22px);
+  border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 30px; position: relative; overflow: hidden;
+  transition: border-color 0.28s, box-shadow 0.28s;
+  transform-style: preserve-3d; will-change: transform;
+}
+.exam-pillar::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+.exam-pillar.p2::before { background: linear-gradient(90deg, transparent, var(--fire), transparent); }
+.exam-pillar:hover { border-color: var(--border-hi); box-shadow: 0 0 32px rgba(255,215,0,0.09), 0 22px 55px rgba(0,0,0,0.4); }
+.exam-pillar.p2:hover { border-color: rgba(255,107,53,0.35); box-shadow: 0 0 32px rgba(255,107,53,0.08), 0 22px 55px rgba(0,0,0,0.4); }
+.pillar-ghost {
+  font-family: var(--ff-head); font-size: 3.5rem; font-weight: 900;
+  position: absolute; top: 12px; right: 16px; line-height: 1;
+  color: rgba(255,215,0,0.04); user-select: none;
+}
+.exam-pillar.p2 .pillar-ghost { color: rgba(255,107,53,0.04); }
+.pillar-badge {
+  display: inline-block; font-family: var(--ff-mono); font-size: 0.6rem;
+  letter-spacing: 0.2em; text-transform: uppercase; padding: 4px 11px;
+  border-radius: 4px; margin-bottom: 16px;
+}
+.pillar-badge.theory { background: rgba(255,215,0,0.08); border: 1px solid rgba(255,215,0,0.22); color: var(--gold); }
+.pillar-badge.practical { background: rgba(255,107,53,0.08); border: 1px solid rgba(255,107,53,0.22); color: var(--fire); }
+.pillar-title { font-family: var(--ff-head); font-size: 0.92rem; font-weight: 700; color: var(--text-hi); margin-bottom: 14px; line-height: 1.3; }
+.pillar-stat-row { display: flex; gap: 18px; margin-bottom: 16px; flex-wrap: wrap; }
+.p-stat { text-align: center; }
+.p-stat-val { font-family: var(--ff-head); font-size: 1.35rem; font-weight: 700; color: var(--gold); line-height: 1; margin-bottom: 3px; }
+.exam-pillar.p2 .p-stat-val { color: var(--fire); }
+.p-stat-lbl { font-family: var(--ff-mono); font-size: 0.58rem; color: var(--text-lo); letter-spacing: 0.14em; text-transform: uppercase; }
+.pillar-list { list-style: none; }
+.pillar-list li { font-size: 0.84rem; color: var(--text); padding: 4px 0 4px 20px; position: relative; line-height: 1.5; }
+.pillar-list li::before { content: '▹'; position: absolute; left: 0; color: var(--gold); font-size: 0.78rem; top: 6px; }
+.exam-pillar.p2 .pillar-list li::before { color: var(--fire); }
+
+/* ============================================================
+   STRATEGY CARDS GRID
+============================================================ */
+.cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 22px; }
+.s-card {
+  background: var(--bg-card); backdrop-filter: blur(22px) saturate(180%);
+  border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 30px; position: relative; overflow: hidden;
+  transition: border-color 0.28s, box-shadow 0.28s;
+  transform-style: preserve-3d; will-change: transform;
+}
+.s-card::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), var(--fire), transparent); opacity: 0; transition: opacity 0.28s; }
+.s-card:hover::after { opacity: 1; }
+.s-card:hover { border-color: var(--border-hi); box-shadow: 0 0 34px rgba(255,215,0,0.08), 0 24px 60px rgba(0,0,0,0.45); }
+.card-ghost-num { font-family: var(--ff-head); font-size: 4rem; font-weight: 900; color: rgba(255,215,0,0.04); position: absolute; top: 14px; right: 18px; line-height: 1; user-select: none; }
+.card-icon { width: 46px; height: 46px; background: var(--gold-faint); border: 1px solid rgba(255,215,0,0.2); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.35rem; margin-bottom: 18px; }
+.card-kicker { font-family: var(--ff-mono); font-size: 0.65rem; color: var(--gold-dim); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 7px; }
+.card-title { font-family: var(--ff-head); font-size: 0.94rem; font-weight: 700; color: var(--text-hi); margin-bottom: 14px; line-height: 1.35; }
+.card-body { font-size: 0.87rem; color: var(--text); line-height: 1.68; margin-bottom: 16px; }
+.card-list { list-style: none; margin-bottom: 14px; }
+.card-list li { font-size: 0.84rem; color: var(--text); padding: 5px 0 5px 20px; position: relative; line-height: 1.52; }
+.card-list li::before { content: '▹'; position: absolute; left: 0; color: var(--gold); font-size: 0.78rem; top: 7px; }
+.pro-tip { background: var(--fire-faint); border: 1px solid rgba(255,107,53,0.2); border-radius: 8px; padding: 11px 14px; font-size: 0.81rem; color: rgba(255,107,53,0.9); line-height: 1.55; }
+.pro-tip b { font-family: var(--ff-mono); font-size: 0.66rem; color: var(--fire); letter-spacing: 0.14em; font-weight: normal; display: block; margin-bottom: 4px; }
+
+/* ============================================================
+   DOMAINS TABLE — NUMBERED
+============================================================ */
+.domains-wrap {
+  background: var(--bg-card); backdrop-filter: blur(22px);
+  border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden;
+}
+.domains-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 0; 
+}
+.domain-item {
+  display: flex; align-items: flex-start; gap: 14px;
+  padding: 16px 22px; border-bottom: 1px solid rgba(255,215,0,0.055);
+  border-right: 1px solid rgba(255,215,0,0.055);
+  transition: background 0.2s;
+}
+.domain-item:hover { background: rgba(255,215,0,0.03); }
+.domain-num { font-family: var(--ff-head); font-size: 0.68rem; font-weight: 700; color: var(--gold-dim); min-width: 28px; opacity: 0.6; margin-top: 2px; }
+.domain-body { flex: 1; }
+.domain-name { font-family: var(--ff-head); font-size: 0.78rem; font-weight: 700; color: var(--text-hi); margin-bottom: 3px; letter-spacing: 0.02em; }
+.domain-desc { font-size: 0.78rem; color: var(--text-lo); line-height: 1.45; }
+
+/* ============================================================
+   RESOURCES GRID
+============================================================ */
+.res-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
+.res-card {
+  background: var(--bg-card); backdrop-filter: blur(18px);
+  border: 1px solid var(--border); border-radius: 10px;
+  padding: 20px; transition: border-color 0.2s, background 0.2s;
+}
+.res-card:hover { border-color: rgba(255,215,0,0.28); background: rgba(255,215,0,0.025); }
+.res-cat { font-family: var(--ff-mono); font-size: 0.6rem; color: var(--gold-dim); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 10px; }
+.res-list { list-style: none; }
+.res-list li { font-size: 0.83rem; color: var(--text); padding: 4px 0 4px 16px; position: relative; line-height: 1.5; }
+.res-list li::before { content: '·'; position: absolute; left: 4px; color: var(--gold); font-size: 1rem; top: 1px; }
+
+/* ============================================================
+   JOURNEY PHASES — VERTICAL TIMELINE
+============================================================ */
+.journey-tl { display: flex; flex-direction: column; gap: 0; }
+.j-phase {
+  display: flex; gap: 28px; align-items: flex-start;
+  padding: 30px 0; position: relative;
+}
+.j-phase:not(:last-child)::before {
+  content: ''; position: absolute; left: 18px; top: 68px; bottom: -30px; width: 1px;
+  background: linear-gradient(180deg, rgba(255,215,0,0.25), rgba(255,107,53,0.12), transparent);
+}
+.j-node {
+  width: 38px; height: 38px; flex-shrink: 0; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--ff-head); font-size: 0.72rem; font-weight: 700;
+  position: relative; z-index: 1;
+}
+.j-node.theory {
+  background: rgba(255,215,0,0.1); border: 2px solid rgba(255,215,0,0.4);
+  color: var(--gold); box-shadow: 0 0 16px rgba(255,215,0,0.2);
+}
+.j-node.practical {
+  background: rgba(255,107,53,0.1); border: 2px solid rgba(255,107,53,0.4);
+  color: var(--fire); box-shadow: 0 0 16px rgba(255,107,53,0.2);
+}
+.j-node.achieved {
+  background: linear-gradient(135deg, rgba(255,215,0,0.18), rgba(255,107,53,0.12));
+  border: 2px solid rgba(255,215,0,0.55);
+  color: var(--gold); box-shadow: 0 0 24px rgba(255,215,0,0.3);
+  font-size: 1.1rem;
+}
+.j-content { flex: 1; }
+.j-label { font-family: var(--ff-mono); font-size: 0.65rem; color: var(--text-lo); letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 6px; }
+.j-title { font-family: var(--ff-head); font-size: 1.02rem; font-weight: 700; color: var(--text-hi); margin-bottom: 10px; letter-spacing: 0.03em; }
+.j-title .g { color: var(--gold); }
+.j-title .f { color: var(--fire); }
+.j-body { font-size: 0.88rem; color: var(--text); line-height: 1.72; }
+
+/* ============================================================
+   FUTURE GOALS
+============================================================ */
+.goals-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+.goal-card {
+  background: var(--bg-card); backdrop-filter: blur(18px);
+  border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 24px; position: relative; overflow: hidden;
+  transition: border-color 0.25s, box-shadow 0.25s;
+  transform-style: preserve-3d; will-change: transform;
+}
+.goal-card:hover { border-color: var(--border-hi); box-shadow: 0 0 28px rgba(255,215,0,0.07), 0 20px 50px rgba(0,0,0,0.4); }
+.goal-icon { font-size: 1.6rem; margin-bottom: 12px; display: block; }
+.goal-title { font-family: var(--ff-head); font-size: 0.82rem; font-weight: 700; color: var(--text-hi); margin-bottom: 10px; letter-spacing: 0.04em; }
+.goal-list { list-style: none; }
+.goal-list li { font-size: 0.82rem; color: var(--text); padding: 3px 0 3px 18px; position: relative; line-height: 1.5; }
+.goal-list li::before { content: '▸'; position: absolute; left: 0; color: var(--gold-dim); font-size: 0.72rem; top: 5px; }
+
+/* ============================================================
+   MERMAID
+============================================================ */
+.mermaid-wrap {
+  background: var(--bg-card); backdrop-filter: blur(22px);
+  border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 40px 24px; overflow-x: auto;
+}
+.mermaid { display: flex; justify-content: center; }
+.mermaid svg { max-width: 100%; height: auto; }
+
+/* ============================================================
+   CONCLUSION CHECKLIST
+============================================================ */
+.check-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; margin-top: 28px; }
+.check-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  background: var(--gold-faint); border: 1px solid rgba(255,215,0,0.1);
+  border-radius: 8px; padding: 11px 14px;
+  font-size: 0.88rem; color: var(--text);
+  transition: border-color 0.2s, background 0.2s;
+}
+.check-item:hover { border-color: rgba(255,215,0,0.25); background: rgba(255,215,0,0.06); }
+.check-item .arr { color: var(--gold); flex-shrink: 0; font-size: 0.8rem; margin-top: 2px; }
+
+/* ============================================================
+   DATA TABLE
+============================================================ */
+.tbl-wrap { overflow-x: auto; border-radius: var(--radius); border: 1px solid var(--border); background: var(--bg-card); backdrop-filter: blur(22px); }
+.data-tbl { width: 100%; border-collapse: collapse; font-size: 0.91rem; }
+.data-tbl th { font-family: var(--ff-mono); font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); padding: 13px 22px; text-align: left; border-bottom: 1px solid var(--border); background: var(--gold-faint); }
+.data-tbl td { padding: 11px 22px; border-bottom: 1px solid rgba(255,215,0,0.05); color: var(--text); transition: background 0.2s; }
+.data-tbl tr:last-child td { border-bottom: none; }
+.data-tbl tr:hover td { background: rgba(255,215,0,0.025); }
+.data-tbl td:first-child { font-family: var(--ff-mono); font-size: 0.76rem; color: var(--text-lo); letter-spacing: 0.08em; }
+.data-tbl td.hi-g { color: var(--gold); font-family: var(--ff-head); font-weight: 700; font-size: 1.02rem; text-shadow: var(--glow-g); }
+
+/* ============================================================
+   AUTHOR FOOTER
+============================================================ */
+.author-footer { border-top: 1px solid var(--border); padding-top: 62px; margin-top: 30px; }
+.author-inner { display: flex; gap: 36px; align-items: flex-start; flex-wrap: wrap; }
+.author-av {
+  width: 82px; height: 82px; border: 2px solid var(--cyan);
+  border-radius: 14px; background: linear-gradient(135deg, #001a30, #002e50);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--ff-head); font-size: 1.45rem; font-weight: 900;
+  color: var(--cyan); flex-shrink: 0; box-shadow: var(--glow-c);
+  position: relative; overflow: hidden; animation: glowPulse 4s infinite ease-in-out;
+}
+.author-av::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(0,229,255,0.1), transparent 55%); }
+@keyframes glowPulse {
+  0%,100% { box-shadow: var(--glow-c); }
+  50%      { box-shadow: 0 0 30px rgba(0,229,255,0.5), 0 0 60px rgba(0,229,255,0.18); }
+}
+.author-info { flex: 1; min-width: 220px; }
+.author-name { font-family: var(--ff-head); font-size: 1.28rem; font-weight: 700; color: var(--text-hi); margin-bottom: 3px; }
+.author-alias { font-family: var(--ff-mono); font-size: 0.72rem; color: var(--text-lo); letter-spacing: 0.2em; margin-bottom: 12px; }
+.author-alias span { color: var(--cyan); }
+.author-titles { font-size: 0.8rem; color: var(--cyan-dim); line-height: 1.65; margin-bottom: 22px; letter-spacing: 0.015em; }
+.author-links { display: flex; flex-wrap: wrap; gap: 9px; }
+.a-link {
+  display: inline-flex; align-items: center; gap: 7px; padding: 7px 15px;
+  background: rgba(4,18,32,0.85); border: 1px solid rgba(0,229,255,0.15);
+  border-radius: 6px; font-family: var(--ff-mono); font-size: 0.7rem;
+  color: var(--text-lo); letter-spacing: 0.06em; transition: all 0.2s;
+}
+.a-link:hover { border-color: var(--cyan); color: var(--cyan); box-shadow: 0 0 14px rgba(0,229,255,0.18); }
+.a-link svg { flex-shrink: 0; }
+
+/* ============================================================
+   PAGE FOOTER
+============================================================ */
+.page-foot {
+  text-align: center; padding: 48px 0 16px;
+  border-top: 1px solid rgba(255,215,0,0.05); margin-top: 60px;
+  font-family: var(--ff-mono); font-size: 0.66rem; color: var(--text-lo);
+  letter-spacing: 0.14em; line-height: 2;
+}
+
+/* ANIMATIONS */
+@keyframes fadeUp { from { opacity:0; transform:translateY(36px); } to { opacity:1; transform:translateY(0); } }
+
+/* SCROLLBAR */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: rgba(255,215,0,0.22); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,215,0,0.42); }
+::selection { background: rgba(255,215,0,0.18); color: var(--gold); }
+
+/* RESPONSIVE */
+@media (max-width: 760px) { .dual-grid { grid-template-columns: 1fr; } }
+@media (max-width: 640px) {
+  .wrap { padding: 0 16px 80px; }
+  .top-nav { flex-direction: column; gap: 6px; text-align: center; }
+  .cards-grid, .goals-grid, .res-grid { grid-template-columns: 1fr; }
+  .hero-stats { gap: 28px; }
+  .prose-card { padding: 26px 22px; }
+  .author-inner { flex-direction: column; }
+  .author-av { width: 66px; height: 66px; font-size: 1.1rem; }
+  .j-phase::before { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div id="c-dot"></div>
+<div id="c-ring"></div>
+<div id="scroll-bar"></div>
+<canvas id="bg-canvas"></canvas>
+<div class="scanlines"></div>
+<div class="grain"></div>
+
+<div class="wrap">
+
+  <!-- TOP NAV -->
+  <nav class="top-nav">
+    <span class="nav-classified">[ CLASSIFIED // EC-COUNCIL MASTER CERTIFIED ]</span>
+    <span class="nav-alias">HEAVEN</span>
+    <span class="nav-certcode">CEH Master · ECC1382059467</span>
+  </nav>
+
+  <!-- ─── HERO ─── -->
+  <section class="hero">
+    <div class="hero-badge">
+      <span class="blink"></span>
+      Master Tier Unlocked · Theory + Practical · April 2024
+    </div>
+
+    <div class="master-emblem">
+      <span class="emblem-icon">🏆</span>
+      <span class="emblem-text">CEH MASTER</span>
+    </div>
+
+    <h1>
+      How I Achieved the<br>
+      <span class="g">CEH Master</span> Certification<br>
+      <span class="f">Theory</span> <span class="c">+</span> <span class="f">Practical</span>
+    </h1>
+    <p class="hero-sub">A COMPLETE PREPARATION JOURNEY — DUAL-EXAM STRATEGY &amp; FULL ROADMAP</p>
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="stat-val g">2</div>
+        <div class="stat-lbl">Exams Cleared</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val f">20+</div>
+        <div class="stat-lbl">CEH Domains</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val c">20</div>
+        <div class="stat-lbl">Practical Tasks</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val g">April<br><span style="font-size:1.4rem">2024</span></div>
+        <div class="stat-lbl">Certification Date</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── 01 INTRODUCTION ─── -->
+  <div class="s-wrap">
+    <div class="s-head">
+      <span class="s-num">01</span>
+      <h2 class="s-title"><span class="g">—</span> Introduction</h2>
+      <div class="s-line"></div>
+    </div>
+    <div class="prose-card">
+      <p>The <strong>Certified Ethical Hacker (CEH) Master</strong> is the pinnacle credential in EC-Council's ethical hacking certification architecture. Unlike the CEH knowledge exam — which validates theoretical understanding — the Master designation is only awarded to professionals who have demonstrated <strong>both theoretical command and practical execution capability</strong>. It requires passing two distinct, rigorous examinations: the CEH multiple-choice theory exam and the CEH Practical hands-on assessment.</p>
+      <p>After months of disciplined preparation spanning official EC-Council courseware, iLabs practice environments, CTF platforms, and real-world penetration testing exercises, I was awarded the <strong>CEH Master Certification (ECC1382059467)</strong> in April 2024. This post documents the complete preparation journey — from theory exam strategy through practical lab execution — and the resources that made it possible.</p>
+    </div>
+  </div>
+
+  <!-- ─── 02 WHAT IS CEH MASTER ─── -->
+  <div class="s-wrap">
+    <div class="s-head">
+      <span class="s-num">02</span>
+      <h2 class="s-title"><span class="g">—</span> What is <span class="f">CEH Master</span></h2>
+      <div class="s-line"></div>
+    </div>
+    <div class="dual-grid">
+      <div class="exam-pillar">
+        <span class="pillar-ghost">01</span>
+        <span class="pillar-badge theory">Exam 01 / Theory</span>
+        <div class="pillar-title">CEH Knowledge Examination</div>
+        <div class="pillar-stat-row">
+          <div class="p-stat"><div class="p-stat-val">125</div><div class="p-stat-lbl">MCQs</div></div>
+          <div class="p-stat"><div class="p-stat-val">4H</div><div class="p-stat-lbl">Duration</div></div>
+          <div class="p-stat"><div class="p-stat-val">20+</div><div class="p-stat-lbl">Domains</div></div>
+        </div>
+        <ul class="pillar-list">
+          <li>Single-best-answer multiple choice format</li>
+          <li>Covers footprinting, scanning, exploitation, malware, web security, cloud, cryptography</li>
+          <li>Passing score varies by difficulty band: typically 60%–85%</li>
+          <li>Administered via EC-Council ECC Exam Centre (proctored)</li>
+        </ul>
+      </div>
+      <div class="exam-pillar p2">
+        <span class="pillar-ghost">02</span>
+        <span class="pillar-badge practical">Exam 02 / Practical</span>
+        <div class="pillar-title">CEH Practical Assessment</div>
+        <div class="pillar-stat-row">
+          <div class="p-stat"><div class="p-stat-val">20</div><div class="p-stat-lbl">Tasks</div></div>
+          <div class="p-stat"><div class="p-stat-val">6H</div><div class="p-stat-lbl">Duration</div></div>
+          <div class="p-stat"><div class="p-stat-val">70%</div><div class="p-stat-lbl">Pass Mark</div></div>
+        </div>
+        <ul class="pillar-list">
+          <li>20 real-world hacking scenarios in a live virtual lab environment</li>
+          <li>Covers network scanning, exploitation, privilege escalation, web attacks, forensics</li>
+          <li>Requires actual tool execution — Nmap, Metasploit, Burp Suite, Wireshark, Hydra</li>
+          <li>Results delivered within one week of submission</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── 03 CERTIFICATION TABLE ─── -->
+  <div class="s-wrap">
+    <div class="s-head">
+      <span class="s-num">03</span>
+      <h2 class="s-title"><span class="g">—</span> Certification <span class="f">Record</span></h2>
+      <div class="s-line"></div>
+    </div>
+    <div class="tbl-wrap">
+      <table class="data-tbl">
+        <thead><tr><th>Parameter</th><th>Details</th></tr></thead>
+        <tbody>
+          <tr><td>Certification</td><td>Certified Ethical Hacker (CEH) Master</td></tr>
+          <tr><td>Issuing Body</td><td>EC-Council</td></tr>
+          <tr><td>Certificate No.</td><td>ECC1382059467</td></tr>
+          <tr><td>Date Achieved</td><td>April 2024</td></tr>
+          <tr><td>Components</td><td>CEH Theory (MCQ) + CEH Practical (Live Lab)</td></tr>
+          <tr><td>Theory Format</td><td>125 Multiple Choice Questions · 4 Hours</td></tr>
+          <tr><td>Practical Format</td><td>20 Real-World Hacking Tasks · 6 Hours</td></tr>
+          <tr><td>Practical Pass Mark</td><td>140/200 (70%)</td></tr>
+          <tr><td>Master Status</td><td class="hi-g">✓ Awarded — Both Exams Cleared</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ─── 04 THE JOURNEY ─── -->
+  <div class="s-wrap">
+    <div class="s-head">
+      <span class="s-num">04</span>
+      <h2 class="s-title"><span class="g">—</span> The <span class="f">Journey</span></h2>
+      <div class="s-line"></div>
+    </div>
+    <div class="journey-tl">
+
+      <div class="j-phase">
+        <div class="j-node theory">01</div>
+        <div class="j-content">
+          <div class="j-label">Phase 01 · Theory Preparation</div>
+          <div class="j-title">Passing the <span class="g">CEH Knowledge Exam</span></div>
+          <p class="j-body">The first gate to CEH Master is the 125-question multiple-choice theory examination. Preparation focused on three parallel tracks: official EC-Council courseware for authoritative domain coverage, iLabs for hands-on reinforcement of theoretical concepts, and a structured bank of practice examinations for pace training and weak-area identification. Study resources included the <strong>CEH v12 Certified Ethical Hacker Study Guide</strong> (Sybex), Udemy's CEH Masterclass, Cybrary's exam prep materials, and technical YouTube channels — HackerSploit, The Cyber Mentor, and Professor Messer — for practical demonstrations of exam-relevant techniques. Mock examination platforms including Boson CEH Practice Exams and EC-Council's native practice questions were used to benchmark readiness and train time management before the live attempt. The result: CEH knowledge exam cleared.</p>
+        </div>
+      </div>
+
+      <div class="j-phase">
+        <div class="j-node practical">02</div>
+        <div class="j-content">
+          <div class="j-label">Phase 02 · Practical Preparation</div>
+          <div class="j-title">Passing the <span class="f">CEH Practical Exam</span></div>
+          <p class="j-body">The practical examination is the distinguishing component of the Master credential — it separates those who understand ethical hacking from those who can <em>execute</em> it. Preparation ran across four tracks simultaneously. First, a personal ethical hacking lab was built using Kali Linux as the attack machine, with Metasploitable, DVWA, and Windows VMs as targets managed under VirtualBox — providing a fully offline environment for unrestricted technique practice. Second, EC-Council iLabs provided cloud-based scenarios directly mapped to exam task categories, eliminating environment setup overhead. Third, CTF platforms — <strong>Hack The Box, TryHackMe, and VulnHub</strong> — supplied unpredictable, novel challenges that sharpened privilege escalation, buffer overflow, and web exploitation skills beyond the predictable iLabs exercise set. Fourth, penetration test report writing was practised as a discrete discipline using Dradis and KeepNote — documentation quality being as examinable a skill as technical execution. The result: CEH Practical cleared, CEH Master awarded.</p>
+        </div>
+      </div>
+
+      <div class="j-phase">
+        <div class="j-node achieved">🏆</div>
+        <div class="j-content">
+          <div class="j-label">Achievement · April 2024</div>
+          <div class="j-title"><span class="g">CEH Master</span> — Certification Confirmed</div>
+          <p class="j-body">With both the CEH theory examination and CEH Practical assessment cleared, EC-Council formally awarded the <strong>CEH Master Certification (ECC1382059467)</strong>. The Master designation validates both theoretical knowledge across 20+ ethical hacking domains and demonstrated practical ability to execute real penetration testing workflows under examination conditions — a credential that bridges conceptual understanding and operational execution in offensive security.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ─── 05 THEORY PREPARATION ─── -->
+  <div class="s-wrap">
+    <div class="s-head">
+      <span class="s-num">05</span>
+      <h2 class="s-title"><span class="g">—</span> Theory Exam — <span class="f">Preparation Strategy</span></h2>
+      <div class="s-line"></div>
+    </div>
+    <div class="cards-grid">
+
+      <div class="s-card">
+        <span class="card-ghost-num">01</span>
+        <div class="card-icon">📚</div>
+        <div class="card-kicker">Resource Track 01</div>
+        <div class="card-title">Official Courseware &amp; Study Guides</div>
+        <p class="card-body">EC-Council's official training materials provide the canonical coverage of every exam domain — they define the scope boundary. Supplementary study guides add alternative explanations and edge-case coverage for topics where the official material is dense.</p>
+        <ul class="card-list">
+          <li>EC-Council Official CEH Courseware — authoritative domain coverage</li>
+          <li>CEH v12 Certified Ethical Hacker Study Guide (Sybex)</li>
+          <li>The CEH Prep Guide — Ronald L. Krutz</li>
+          <li>EC-Council iLabs — cloud-based hands-on exercises reinforcing theory</li>
+        </ul>
+      </div>
+
+      <div class="s-card">
+        <span class="card-ghost-num">02</span>
+        <div class="card-icon">🎓</div>
+        <div class="card-kicker">Resource Track 02</div>
+        <div class="card-title">Online Courses &amp; Video Instruction</div>
+        <p class="card-body">Video-format instruction delivers the highest information density for visual learners and provides practical demonstrations of tool usage that static text cannot replicate. Course platforms and YouTube channels were used in parallel for maximum coverage and alternative explanations of complex domains.</p>
+        <ul class="card-list">
+          <li>Udemy — CEH Masterclass (video + lab exercises)</li>
+          <li>Cybrary — CEH Exam Prep structured curriculum</li>
+          <li>Pluralsight — CEH video lecture series</li>
+          <li>YouTube: HackerSploit, The Cyber Mentor, Professor Messer</li>
+        </ul>
+      </div>
+
+      <div class="s-card">
+        <span class="card-ghost-num">03</span>
+        <div class="card-icon">📝</div>
+        <div class="card-kicker">Resource Track 03</div>
+        <div class="card-title">Mock Exams &amp; Practice Question Banks</div>
+        <p class="card-body">Mock examination platforms serve three functions: knowledge gap identification, pace calibration, and exam-day confidence. Multiple platforms were used to avoid pattern familiarity with any single question bank — diversity of question exposure is more valuable than repetition of the same bank.</p>
+        <ul class="card-list">
+          <li>Boson CEH Practice Exams — highest-fidelity exam simulation</li>
+          <li>EC-Council native practice question sets</li>
+          <li>Udemy CEH mock tests for supplementary coverage</li>
+          <li>Post-mock weak-area analysis → targeted domain review cycles</li>
+        </ul>
+        <div class="pro-tip"><b>⚡ PRO TIP</b>Track per-domain accuracy across mock exams. Domains below 75% accuracy get a full re-study pass before sitting the real exam.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ─── 06 KEY DOMAINS ─── -->
+  <div class="s-wrap">
+    <div class="s-head">
+      <span class="s-num">06</span>
+      <h2 class="s-title"><span class="g">—</span> Key Exam <span class="f">Domains</span></h2>
+      <div class="s-line"></div>
+    </div>
+    <div class="domains-wrap">
+      <div class="domains-grid">
+        <div class="domain-item">
+          <span class="domain-num">01</span>
+          <div class="domain-body"><div class="domain-name">Footprinting &amp; Reconnaissance</div><div class="domain-desc">OSINT, passive target enumeration, DNS reconnaissance</div></div>
+        </div>
+        <div class="domain-item">
+          <span class="domain-num">02</span>
+          <div class="domain-body"><div class="domain-name">Scanning Networks</div><div class="domain-desc">Nmap, live host discovery, port &amp; service identification</div></div>
+        </div>
+        <div class="domain-item">
+          <span class="domain-num">03</span>
+          <div class="domain-body"><div class="domain-name">Enumeration</div><div class="domain-desc">Usernames, shared folders, SNMP, NetBIOS, LDAP extraction</div></div>
+        </div>
+        <div class="domain-item">
+          <span class="domain-num">04</span>
+          <div class="domain-body"><div class="domain-name">System Hacking</div><div class="domain-desc">Password cracking, privilege escalation, rootkits, steganography</div></div>
+        </div>
+        <div class="domain-item">
+          <span class="domain-num">05</span>
+          <div class="domain-body"><div class="domain-name">Malware Threats</div><div class="domain-desc">Trojans, viruses, ransomware types, analysis &amp; detection</div></div>
+        </div>
+        <div class="domain-item">
+          <span class="domain-num">06</span>
+          <div class="domain-body"><div class="domain-name">Sniffing</div><div class="domain-desc">ARP poisoning, Wireshark analysis, man-in-the-middle techniques</div></div>
+        </div>
+        <div class="domain-item">
+          <span class="domain-num">07</span>
+          <div class="domain-body"><div class="domain-name">Social Engineering</div><div class="domain-desc">Phishing, pretexting, insider threat vectors</div></div>
+        </div>
+        <div class="domain-item">
+          <span class="domain-num">08</span>
+          <div class="domain-body"><div class="domain-name">Denial-of-Service</div><div class="domain-desc">DoS/DDoS attack types, detection, mitigation countermeasures</div></div>
+        </div>
+        <div class="domain-item">
+          <span class="domain-num">09</span>
+          <div class="domain-body"><div class="domain-name">Web Application Hacking</div><div class="domain-desc">SQL injection, XSS, CSRF, LFI, authentication bypass</div></div>
+        </div>
+        <div class="domain-item">
+          <span class="domain-num">10</span>
+          <div class="domain-body"><div class="domain-name">Wireless Network Security</div><div class="domain-desc">WPA2 cracking, rogue AP, wireless attack methodologies</div></div>
+        </div>
+        <div class="domain-item">
+          <span class="domain-num">11</span>
+          <div class="domain-body"><div class="domain-name">Cloud Security</div><div class="domain-desc">Cloud misconfigurations, IAM exploitation, S3 vulnerabilities</div></div>
+        </div>
+        <div class="domain-item">
+          <span class="domain-num">12</span>
+          <div class="domain-body"><div class="domain-name">Cryptography &amp; Steganography</div><div class="domain-desc">Encryption algorithms, hash functions, data hiding techniques</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── 07 PRACTICAL PREPARATION ─── -->
+  <div class="s-wrap">
+    <div class="s-head">
+      <span class="s-num">07</span>
+      <h2 class="s-title"><span class="g">—</span> Practical Exam — <span class="f">Lab Strategy</span></h2>
+      <div class="s-line"></div>
+    </div>
+    <div class="cards-grid">
+
+      <div class="s-card">
+        <span class="card-ghost-num">01</span>
+        <div class="card-icon">🖥️</div>
+        <div class="card-kicker">Lab Setup</div>
+        <div class="card-title">Personal Ethical Hacking Lab</div>
+        <p class="card-body">Building a personal lab environment removes dependency on external platforms for unrestricted technique practice. A locally-hosted network of attack and target machines enables repetition of any technique without session limits, bandwidth constraints, or lab availability windows.</p>
+        <ul class="card-list">
+          <li>Kali Linux as primary attack machine (full offensive toolset)</li>
+          <li>Metasploitable and DVWA as intentionally vulnerable target VMs</li>
+          <li>Windows Server VM for Active Directory and RDP scenario practice</li>
+          <li>VirtualBox host-only and NAT network configurations for isolated lab environments</li>
+        </ul>
+      </div>
+
+      <div class="s-card">
+        <span class="card-ghost-num">02</span>
+        <div class="card-icon">🧪</div>
+        <div class="card-kicker">Cloud Lab Platform</div>
+        <div class="card-title">EC-Council iLabs — Exam-Mapped Scenarios</div>
+        <p class="card-body">CEH iLabs provides pre-configured virtual environments with guided exercises mapped directly to the practical examination's task categories. The platform eliminates environment setup overhead and delivers repeatable, consistent scenarios for velocity and accuracy training.</p>
+        <ul class="card-list">
+          <li>Network scanning, service enumeration, and exploitation scenarios</li>
+          <li>Privilege escalation paths on both Linux and Windows targets</li>
+          <li>Web application attack scenarios: SQLi, XSS, Burp Suite interception</li>
+          <li>Forensics exercises: Wireshark traffic analysis, hash cracking, steganography</li>
+        </ul>
+        <div class="pro-tip"><b>⚡ PRO TIP</b>Complete iLabs exercises at increasing velocity across multiple passes. The final pass should simulate exam-day pace constraints.</div>
+      </div>
+
+      <div class="s-card">
+        <span class="card-ghost-num">03</span>
+        <div class="card-icon">🎯</div>
+        <div class="card-kicker">CTF Platforms</div>
+        <div class="card-title">Hack The Box, TryHackMe &amp; VulnHub</div>
+        <p class="card-body">CTF platforms introduce the element that iLabs cannot fully replicate: novel, unpredictable challenge design. Machines from these platforms develop real problem-solving capability and expose edge cases in privilege escalation and exploitation that don't appear in guided exercises.</p>
+        <ul class="card-list">
+          <li>Hack The Box — retired machines for privilege escalation and lateral movement practice</li>
+          <li>TryHackMe — structured learning paths for specific technique domains</li>
+          <li>VulnHub — offline vulnerable VMs for deep exploitation practice</li>
+          <li>Focus areas: privilege escalation, buffer overflows, web exploitation chains</li>
+        </ul>
+      </div>
+
+      <div class="s-card">
+        <span class="card-ghost-num">04</span>
+        <div class="card-icon">📋</div>
+        <div class="card-kicker">Documentation</div>
+        <div class="card-title">Penetration Test Report Writing</div>
+        <p class="card-body">Report writing is an examinable skill in its own right — not a formality. Clear, structured documentation of findings, evidence, and remediation recommendations is a professional deliverable that distinguishes a capable penetration tester from one who can only exploit. It was practised as a primary discipline, not an afterthought.</p>
+        <ul class="card-list">
+          <li>Practised writing full penetration test reports for every lab engagement</li>
+          <li>Dradis — collaborative report generation with finding templates</li>
+          <li>KeepNote — structured note-taking during live test sessions</li>
+          <li>Report sections practised: Executive Summary, Technical Findings, Evidence, Remediation</li>
+        </ul>
+        <div class="pro-tip"><b>⚡ PRO TIP</b>Screenshot and document every finding in real time during practice — building this habit before the exam prevents missed evidence under pressure.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ─── 08 SKILL TREE ─── -->
+  <div class="s-wrap">
+    <div class="s-head">
+      <span class="s-num">08</span>
+      <h2 class="s-title"><span class="g">—</span> Certification <span class="f">Skill Tree</span></h2>
+      <div class="s-line"></div>
+    </div>
+    <div class="mermaid-wrap">
+      <div class="mermaid">
+%%{init: {'theme': 'base', 'flowchart': {'htmlLabels': true, 'curve': 'basis'}, 'themeVariables': {'primaryColor':'#001428','primaryTextColor':'#c8d8e8','primaryBorderColor':'#004466','lineColor':'#8a6a00','secondaryColor':'#000d1a','tertiaryColor':'#000a14','background':'#020b14','mainBkg':'#001428','nodeBorder':'#004466','clusterBkg':'#000d1a','titleColor':'#ffd700','edgeLabelBackground':'#000d1a','textColor':'#c8d8e8'}}}%%
+flowchart LR
+    EHE["🛡️ <b>EHE</b><br/>Ethical Hacking Essentials"]
+    CEHv["⚔️ <b>CEH v12</b><br/>Theory Exam"]
+    CEHP["💥 <b>CEH Practical</b><br/>Hands-On Lab"]
+    CEHM["🏆 <b>CEH MASTER</b><br/>★ Active Certification ★"]
+    CPENT["🎯 <b>CPENT</b><br/>Penetration Testing Pro"]
+    CHFI["🔬 <b>CHFI v10</b><br/>Digital Forensics"]
+    ISO["📋 <b>ISO 27001</b><br/>Lead Auditor"]
+    OSCP["🔴 <b>OSCP</b><br/>Next Goal"]
+    LPT["⭐ <b>LPT Master</b><br/>Next Goal"]
+
+    EHE --> CEHv
+    CEHv --> CEHP
+    CEHv --> CHFI
+    CEHP --> CEHM
+    CEHv --> CEHM
+    CEHM --> CPENT
+    CEHM --> OSCP
+    CPENT --> LPT
+    ISO --> CEHM
+
+    style CEHM fill:#1a1200,stroke:#ffd700,stroke-width:2.5px,color:#ffd700
+    style EHE fill:#001428,stroke:#004466,color:#7ab8cc
+    style CEHv fill:#001428,stroke:#0077aa,color:#00c8f0
+    style CEHP fill:#001428,stroke:#0077aa,color:#00c8f0
+    style CPENT fill:#001428,stroke:#004466,color:#7ab8cc
+    style CHFI fill:#001428,stroke:#004466,color:#7ab8cc
+    style ISO fill:#001428,stroke:#004466,color:#7ab8cc
+    style OSCP fill:#1a0500,stroke:#ff6b35,stroke-width:1.5px,color:#ff6b35
+    style LPT fill:#1a0500,stroke:#ff6b35,stroke-width:1.5px,color:#ff6b35
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── 09 FUTURE GOALS ─── -->
+  <div class="s-wrap">
+    <div class="s-head">
+      <span class="s-num">09</span>
+      <h2 class="s-title"><span class="g">—</span> Next Objectives</h2>
+      <div class="s-line"></div>
+    </div>
+    <div class="goals-grid">
+      <div class="goal-card">
+        <span class="goal-icon">🚀</span>
+        <div class="goal-title">Advanced Certifications</div>
+        <ul class="goal-list">
+          <li>Offensive Security Certified Professional (OSCP)</li>
+          <li>Certified Penetration Testing Professional (CPENT)</li>
+          <li>Licensed Penetration Tester Master (LPT Master)</li>
+        </ul>
+      </div>
+      <div class="goal-card">
+        <span class="goal-icon">💻</span>
+        <div class="goal-title">Bug Bounty &amp; Real-World Testing</div>
+        <ul class="goal-list">
+          <li>Active participation in HackerOne and Bugcrowd programmes</li>
+          <li>Responsible disclosure and vulnerability reporting for live organisations</li>
+          <li>Building a tracked, public vulnerability research portfolio</li>
+        </ul>
+      </div>
+      <div class="goal-card">
+        <span class="goal-icon">📡</span>
+        <div class="goal-title">Continuous Research</div>
+        <ul class="goal-list">
+          <li>Tracking emerging threat vectors and offensive tooling developments</li>
+          <li>Publishing technical security research and CTF writeups</li>
+          <li>Expanding Red Team operations and adversary simulation capability</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── 10 FINAL ASSESSMENT ─── -->
+  <div class="s-wrap">
+    <div class="s-head">
+      <span class="s-num">10</span>
+      <h2 class="s-title"><span class="g">—</span> Final Assessment</h2>
+      <div class="s-line"></div>
+    </div>
+    <div class="prose-card">
+      <p>The <strong>CEH Master</strong> is not a single examination — it is a two-gate process that demands proficiency at both the theoretical and operational levels. Candidates who approach only the theory component and neglect hands-on practice will be exposed by the Practical. Candidates who focus only on tool execution without theoretical grounding will struggle with the knowledge exam's nuanced domain coverage. Preparation must be genuinely dual-track.</p>
+      <p>The most transferable insight from this journey: <strong>iLabs is the preparation environment closest to the actual examination</strong>. Prioritise it above all other resources for Practical preparation. Supplement with CTF platforms for unpredictability, and build report writing as a parallel, equally-weighted discipline throughout the process.</p>
+      <div class="check-grid">
+        <div class="check-item"><span class="arr">▹</span> Study all 20+ domains using official EC-Council courseware</div>
+        <div class="check-item"><span class="arr">▹</span> Complete multiple mock exam platforms for knowledge validation</div>
+        <div class="check-item"><span class="arr">▹</span> Build a personal hacking lab for unrestricted technique practice</div>
+        <div class="check-item"><span class="arr">▹</span> Master iLabs — it maps closest to real exam task categories</div>
+        <div class="check-item"><span class="arr">▹</span> Use HTB and TryHackMe for unpredictable challenge exposure</div>
+        <div class="check-item"><span class="arr">▹</span> Practise penetration test report writing as a primary skill</div>
+        <div class="check-item"><span class="arr">▹</span> Screenshot and document every finding during lab sessions</div>
+        <div class="check-item"><span class="arr">▹</span> Treat preparation as a dual-track programme — theory and practical in parallel</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── AUTHOR ─── -->
+  <footer class="author-footer">
+    <div class="author-inner">
+      <div class="author-av">NC</div>
+      <div class="author-info">
+        <div class="author-name">Nisarg Chasmawala (shroff)</div>
+        <div class="author-alias">Alias: <span>HEAVEN</span></div>
+        <div class="author-titles">
+          Penetration Tester | Vulnerability Assessment | Cybersecurity Researcher | Offensive Security Engineer | Digital Forensics |
+        </div>
+        <div class="author-links">
+          <a href="https://nishu2402.github.io" target="_blank" rel="noopener" class="a-link">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            Portfolio
+          </a>
+          <a href="mailto:nisargkc@gmail.com" class="a-link">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            nisargkc@gmail.com
+          </a>
+          <a href="https://www.linkedin.com/in/nisarg-chasmawala" target="_blank" rel="noopener" class="a-link">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+            LinkedIn
+          </a>
+          <a href="https://github.com/nishu2402" target="_blank" rel="noopener" class="a-link">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+            GitHub
+          </a>
+          <a href="https://www.kaggle.com/nisargshroff2402" target="_blank" rel="noopener" class="a-link">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M18.825 23.859c-.022.092-.117.141-.281.141h-3.139c-.187 0-.351-.082-.492-.248l-5.178-6.589-1.448 1.374v5.111c0 .235-.117.352-.351.352H5.505c-.236 0-.354-.117-.354-.352V.353c0-.234.118-.353.354-.353h2.431c.234 0 .351.119.351.353v14.343l6.203-6.272c.165-.165.33-.246.495-.246h3.239c.144 0 .236.06.285.18.046.149.034.255-.036.315l-6.555 6.344 6.836 8.507c.095.104.117.208.07.311z"/></svg>
+            Kaggle
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <div class="page-foot">
+    <p>CEH Master · EC-Council Certified · Ethical Hacking — Theory &amp; Practical</p>
+    <p>Nisarg Chasmawala (shroff) · alias HEAVEN · Offensive Security Research</p>
+  </div>
+
+</div><!-- .wrap -->
+
+<!-- SCRIPTS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>
+/* MERMAID */
+mermaid.initialize({
+  startOnLoad: true, theme: 'base',
+  flowchart: { htmlLabels: true, curve: 'basis', diagramPadding: 24 },
+  themeVariables: {
+    primaryColor:'#001428', primaryTextColor:'#c8d8e8', primaryBorderColor:'#004466',
+    lineColor:'#8a6a00', background:'#020b14', mainBkg:'#001428',
+    nodeBorder:'#004466', clusterBkg:'#000d1a', titleColor:'#ffd700',
+    edgeLabelBackground:'#000d1a', textColor:'#c8d8e8', fontSize:'14px'
+  }
+});
+
+/* THREE.JS — GOLD CONSTELLATION */
+(function () {
+  const canvas = document.getElementById('bg-canvas');
+  if (!canvas || typeof THREE === 'undefined') return;
+
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setSize(window.innerWidth, window.innerHeight);
+
+  const scene  = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 200);
+  camera.position.set(0, 0, 26);
+
+  const N = 165, BXYZ = [20, 12, 14];
+  const pos = new Float32Array(N * 3);
+  const vel = new Float32Array(N * 3);
+  const col = new Float32Array(N * 3);
+
+  for (let i = 0; i < N; i++) {
+    pos[i*3]   = (Math.random()-.5)*BXYZ[0]*2;
+    pos[i*3+1] = (Math.random()-.5)*BXYZ[1]*2;
+    pos[i*3+2] = (Math.random()-.5)*BXYZ[2]*2;
+    vel[i*3]   = (Math.random()-.5)*0.011;
+    vel[i*3+1] = (Math.random()-.5)*0.008;
+    vel[i*3+2] = (Math.random()-.5)*0.007;
+    // Gold: R high, G medium-high, B low
+    col[i*3]   = 0.72 + Math.random()*0.28;
+    col[i*3+1] = 0.52 + Math.random()*0.28;
+    col[i*3+2] = 0.0  + Math.random()*0.08;
+  }
+
+  const ptGeo = new THREE.BufferGeometry();
+  ptGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  ptGeo.setAttribute('color',    new THREE.BufferAttribute(col, 3));
+  const ptMat = new THREE.PointsMaterial({ size: 0.14, vertexColors: true, transparent: true, opacity: 0.75, sizeAttenuation: true });
+  scene.add(new THREE.Points(ptGeo, ptMat));
+
+  const MAX_CONN = 450;
+  const lPos = new Float32Array(MAX_CONN*6), lCol = new Float32Array(MAX_CONN*6);
+  const lGeo = new THREE.BufferGeometry();
+  lGeo.setAttribute('position', new THREE.BufferAttribute(lPos, 3));
+  lGeo.setAttribute('color',    new THREE.BufferAttribute(lCol, 3));
+  lGeo.setDrawRange(0, 0);
+  const lMat = new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, opacity: 0.18 });
+  scene.add(new THREE.LineSegments(lGeo, lMat));
+
+  const CONN_DIST = 6.2;
+  let frame = 0, scrollRatio = 0, targetScroll = 0;
+  window.addEventListener('scroll', () => {
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    targetScroll = max > 0 ? window.scrollY / max : 0;
+  });
+
+  function updateConnections() {
+    let cnt = 0;
+    const p = ptGeo.attributes.position.array;
+    for (let i = 0; i < N && cnt < MAX_CONN; i++) {
+      for (let j = i+1; j < N && cnt < MAX_CONN; j++) {
+        const dx=p[i*3]-p[j*3], dy=p[i*3+1]-p[j*3+1], dz=p[i*3+2]-p[j*3+2];
+        const d = Math.sqrt(dx*dx+dy*dy+dz*dz);
+        if (d < CONN_DIST) {
+          const al = 1-d/CONN_DIST, ci = cnt*6;
+          lPos[ci]=p[i*3]; lPos[ci+1]=p[i*3+1]; lPos[ci+2]=p[i*3+2];
+          lPos[ci+3]=p[j*3]; lPos[ci+4]=p[j*3+1]; lPos[ci+5]=p[j*3+2];
+          // Gold → fire orange on scroll
+          const r = (0.72 + scrollRatio*0.28)*al;
+          const g = (0.52 - scrollRatio*0.25)*al;
+          const b = (0.02 + scrollRatio*0.1) *al;
+          lCol[ci]=r; lCol[ci+1]=g; lCol[ci+2]=b;
+          lCol[ci+3]=r; lCol[ci+4]=g; lCol[ci+5]=b;
+          cnt++;
+        }
+      }
+    }
+    lGeo.attributes.position.needsUpdate = true;
+    lGeo.attributes.color.needsUpdate    = true;
+    lGeo.setDrawRange(0, cnt*2);
+  }
+
+  function animate() {
+    requestAnimationFrame(animate);
+    frame++;
+    scrollRatio += (targetScroll-scrollRatio)*0.045;
+
+    const p = ptGeo.attributes.position.array;
+    const c = ptGeo.attributes.color.array;
+    for (let i = 0; i < N; i++) {
+      p[i*3]   += vel[i*3];
+      p[i*3+1] += vel[i*3+1];
+      p[i*3+2] += vel[i*3+2];
+      if (Math.abs(p[i*3])   > BXYZ[0]) vel[i*3]   *= -1;
+      if (Math.abs(p[i*3+1]) > BXYZ[1]) vel[i*3+1] *= -1;
+      if (Math.abs(p[i*3+2]) > BXYZ[2]) vel[i*3+2] *= -1;
+      // Gold → fire orange as scroll increases
+      c[i*3]   = 0.72 + scrollRatio*0.28;
+      c[i*3+1] = 0.52 - scrollRatio*0.28;
+      c[i*3+2] = 0.02 + scrollRatio*0.08;
+    }
+    ptGeo.attributes.position.needsUpdate = true;
+    ptGeo.attributes.color.needsUpdate    = true;
+    if (frame % 24 === 0) updateConnections();
+    camera.position.x = Math.sin(frame*0.002)*1.8;
+    camera.position.y = Math.cos(frame*0.0016)*1.1;
+    camera.position.z = 26 - scrollRatio*5;
+    camera.lookAt(0,0,0);
+    renderer.render(scene, camera);
+  }
+  animate();
+
+  window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth/window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+})();
+
+/* CURSOR */
+(function () {
+  const dot=document.getElementById('c-dot'), ring=document.getElementById('c-ring');
+  if (!dot||!ring) return;
+  let mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;dot.style.left=mx+'px';dot.style.top=my+'px';});
+  document.addEventListener('mouseleave',()=>{dot.style.opacity='0';ring.style.opacity='0';});
+  document.addEventListener('mouseenter',()=>{dot.style.opacity='1';ring.style.opacity='1';});
+  (function loop(){rx+=(mx-rx)*0.11;ry+=(my-ry)*0.11;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop);})();
+  document.querySelectorAll('a,.s-card,.exam-pillar,.goal-card,.res-card,button').forEach(el=>{
+    el.addEventListener('mouseenter',()=>{dot.classList.add('active');ring.classList.add('active');});
+    el.addEventListener('mouseleave',()=>{dot.classList.remove('active');ring.classList.remove('active');});
+  });
+})();
+
+/* SCROLL PROGRESS */
+(function(){
+  const bar=document.getElementById('scroll-bar');
+  if(!bar)return;
+  window.addEventListener('scroll',()=>{bar.style.width=(window.scrollY/(document.documentElement.scrollHeight-window.innerHeight)*100)+'%';});
+})();
+
+/* INTERSECTION OBSERVER */
+(function(){
+  const obs=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in');}),{threshold:0.07,rootMargin:'0px 0px -40px 0px'});
+  document.querySelectorAll('.s-wrap').forEach(el=>obs.observe(el));
+})();
+
+/* 3D TILT */
+(function(){
+  document.querySelectorAll('.s-card,.exam-pillar,.goal-card').forEach(card=>{
+    card.addEventListener('mousemove',e=>{
+      const r=card.getBoundingClientRect();
+      const dx=(e.clientX-(r.left+r.width/2))/(r.width/2);
+      const dy=(e.clientY-(r.top+r.height/2))/(r.height/2);
+      card.style.transition='border-color 0.28s,box-shadow 0.28s';
+      card.style.transform=`perspective(900px) rotateY(${dx*8}deg) rotateX(${-dy*8}deg) translateZ(9px)`;
+    });
+    card.addEventListener('mouseleave',()=>{
+      card.style.transition='transform 0.55s ease,border-color 0.28s,box-shadow 0.28s';
+      card.style.transform='perspective(900px) rotateY(0) rotateX(0) translateZ(0)';
+    });
+  });
+})();
+</script>
+</body>
+</html>
