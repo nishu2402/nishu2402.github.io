@@ -297,9 +297,170 @@ body{background:var(--bg);color:var(--tx);font-family:'Share Tech Mono',monospac
 /* Responsive */
 @media(max-width:900px){.op-header{padding:.7rem 1rem;}.op-titles{max-width:260px;}.main{padding:1.5rem 1rem;}.hero-stats{gap:1.8rem;}.cards-grid{grid-template-columns:1fr;}}
 @media(max-width:560px){.op-online{display:none;}.hero-title{font-size:1.6rem;}.op-name{font-size:.74rem;}.pk-stamp{font-size:.48rem;letter-spacing:3px;}}
+
+/* ===== BOOT ANIMATION ===== */
+#boot{
+  position:fixed;inset:0;z-index:99999;
+  background:#000;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  overflow:hidden;
+  transition:opacity .7s ease, transform .7s ease;
+}
+#boot.exit{opacity:0;transform:scale(1.04);pointer-events:none;}
+.boot-grid{
+  position:absolute;inset:0;
+  background-image:linear-gradient(rgba(0,245,255,.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,245,255,.025) 1px,transparent 1px);
+  background-size:36px 36px;
+}
+.boot-vignette{
+  position:absolute;inset:0;
+  background:radial-gradient(ellipse at center,transparent 30%,rgba(0,0,0,.92) 100%);
+}
+.boot-scanlines{
+  position:absolute;inset:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,.12) 3px,rgba(0,0,0,.12) 4px);
+  pointer-events:none;
+}
+/* Horizontal moving scan */
+.boot-scan-h{
+  position:absolute;left:0;right:0;height:2px;top:0;
+  background:linear-gradient(90deg,transparent,var(--c),transparent);
+  opacity:.5;animation:bsh 2.8s ease-in-out infinite;
+}
+@keyframes bsh{0%{top:0%;opacity:.3}50%{opacity:.8}100%{top:100%;opacity:.3}}
+
+.boot-inner{
+  position:relative;z-index:2;
+  display:flex;flex-direction:column;align-items:center;
+  width:min(680px,92vw);
+}
+
+/* ASCII logo block */
+.boot-logo-wrap{margin-bottom:2rem;text-align:center;position:relative;}
+.boot-ascii{
+  font-family:'Share Tech Mono',monospace;
+  font-size:clamp(.38rem,.9vw,.6rem);
+  line-height:1.25;
+  color:var(--c);
+  text-shadow:0 0 8px rgba(0,245,255,.6);
+  white-space:pre;
+  display:block;
+  animation:logo-flicker 4s ease-in-out infinite;
+}
+@keyframes logo-flicker{
+  0%,98%,100%{opacity:1;}
+  99%{opacity:.2;}
+}
+.boot-name{
+  font-family:'Orbitron',sans-serif;font-size:clamp(.9rem,2.5vw,1.4rem);
+  font-weight:900;letter-spacing:6px;
+  color:#fff;margin-top:.6rem;
+  text-shadow:0 0 20px rgba(0,245,255,.4);
+}
+.boot-alias{font-family:'Share Tech Mono',monospace;font-size:.65rem;color:var(--c);letter-spacing:4px;margin-top:.2rem;opacity:.7;}
+
+/* Separator */
+.boot-sep{
+  width:100%;height:1px;margin:1.2rem 0;
+  background:linear-gradient(90deg,transparent,var(--c) 20%,rgba(191,0,255,.6) 80%,transparent);
+}
+
+/* Terminal lines */
+.boot-terminal{
+  width:100%;font-family:'Share Tech Mono',monospace;font-size:.72rem;
+  color:var(--txd);line-height:2;min-height:160px;
+}
+.boot-line{display:block;opacity:0;animation:bline .1s ease forwards;}
+@keyframes bline{to{opacity:1;}}
+.bt-g{color:var(--g);}
+.bt-c{color:var(--c);}
+.bt-a{color:var(--a);}
+.bt-pk{color:var(--pk);}
+.bt-w{color:#fff;}
+.bt-dim{color:#2a4055;}
+
+/* Progress bar */
+.boot-prog-wrap{width:100%;margin-top:1.4rem;}
+.boot-prog-label{
+  display:flex;justify-content:space-between;align-items:center;
+  font-size:.58rem;color:var(--txd);letter-spacing:2px;margin-bottom:.4rem;
+}
+.boot-prog-pct{color:var(--c);}
+.boot-prog-bar{
+  width:100%;height:3px;
+  background:rgba(0,245,255,.08);border-radius:2px;overflow:hidden;
+}
+.boot-prog-fill{
+  height:100%;width:0%;border-radius:2px;
+  background:linear-gradient(90deg,var(--c),var(--pu));
+  box-shadow:0 0 10px rgba(0,245,255,.5);
+  transition:width .18s ease;
+}
+
+/* Skip button */
+.boot-skip{
+  position:absolute;bottom:24px;right:28px;
+  font-family:'Share Tech Mono',monospace;font-size:.58rem;
+  color:rgba(74,106,128,.45);letter-spacing:2px;
+  background:none;border:none;cursor:pointer;
+  transition:color .2s;z-index:3;
+}
+.boot-skip:hover{color:var(--c);}
+
+/* Glitch flash */
+@keyframes boot-glitch{
+  0%,100%{clip-path:none;transform:none;}
+  10%{clip-path:inset(30% 0 50% 0);transform:translateX(-6px);}
+  20%{clip-path:inset(60% 0 10% 0);transform:translateX(6px);}
+  30%{clip-path:none;transform:none;}
+  50%{clip-path:inset(10% 0 70% 0);transform:translateX(-3px);}
+  60%{clip-path:none;transform:none;}
+}
+.boot-ascii.glitch{animation:boot-glitch .25s steps(2) forwards, logo-flicker 4s ease-in-out 0.3s infinite;}
 </style>
 </head>
 <body>
+
+<!-- ===== BOOT OVERLAY ===== -->
+<div id="boot">
+  <div class="boot-grid"></div>
+  <div class="boot-vignette"></div>
+  <div class="boot-scanlines"></div>
+  <div class="boot-scan-h"></div>
+
+  <div class="boot-inner">
+    <div class="boot-logo-wrap">
+      <span class="boot-ascii" id="boot-ascii">
+ ██████╗██╗   ██╗██████╗ ███████╗██████╗       ███╗   ██╗███████╗██╗  ██╗██╗   ██╗███████╗
+██╔════╝╚██╗ ██╔╝██╔══██╗██╔════╝██╔══██╗      ████╗  ██║██╔════╝╚██╗██╔╝██║   ██║██╔════╝
+██║      ╚████╔╝ ██████╔╝█████╗  ██████╔╝█████╗██╔██╗ ██║█████╗   ╚███╔╝ ██║   ██║███████╗
+██║       ╚██╔╝  ██╔══██╗██╔══╝  ██╔══██╗╚════╝██║╚██╗██║██╔══╝   ██╔██╗ ██║   ██║╚════██║
+╚██████╗   ██║   ██████╔╝███████╗██║  ██║      ██║ ╚████║███████╗██╔╝ ██╗╚██████╔╝███████║
+ ╚═════╝   ╚═╝   ╚═════╝ ╚══════╝╚═╝  ╚═╝      ╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝</span>
+      <div class="boot-name">NISARG CHASMAWALA</div>
+      <div class="boot-alias">// ALIAS: HEAVEN //</div>
+    </div>
+
+    <div class="boot-sep"></div>
+
+    <div class="boot-terminal" id="boot-term"></div>
+
+    <div class="boot-prog-wrap">
+      <div class="boot-prog-label">
+        <span>SYSTEM INITIALISATION</span>
+        <span class="boot-prog-pct" id="boot-pct">0%</span>
+      </div>
+      <div class="boot-prog-bar">
+        <div class="boot-prog-fill" id="boot-fill"></div>
+      </div>
+    </div>
+  </div>
+
+  <button class="boot-skip" id="boot-skip">[ SKIP &rarr; ]</button>
+</div>
+
+<!-- ===== PAGE CONTENT ===== -->
 
 <div id="cur"></div>
 <div id="cur-dot"></div>
@@ -436,6 +597,80 @@ body{background:var(--bg);color:var(--tx);font-family:'Share Tech Mono',monospac
   </footer>
 </div>
 </div>
+
+<script>
+/* ============================================================
+   BOOT ANIMATION
+   ============================================================ */
+(function(){
+  var boot  = document.getElementById('boot');
+  var term  = document.getElementById('boot-term');
+  var fill  = document.getElementById('boot-fill');
+  var pct   = document.getElementById('boot-pct');
+  var skip  = document.getElementById('boot-skip');
+  var ascii = document.getElementById('boot-ascii');
+
+  /* Lines config: [delay_ms, html_content, progress_0-100] */
+  var LINES = [
+    [0,   '<span class="bt-dim">┌──────────────────────────────────────────────────────┐</span>', 0],
+    [120, '<span class="bt-g">  [BOOT]</span> CYBER-NEXUS OS v4.7.1 — Initialising...', 4],
+    [320, '<span class="bt-g">  [BOOT]</span> Loading kernel modules <span class="bt-c">................</span> <span class="bt-g">OK</span>', 10],
+    [550, '<span class="bt-g">  [SYS ]</span> Mounting encrypted volumes <span class="bt-c">............</span> <span class="bt-g">OK</span>', 17],
+    [780, '<span class="bt-g">  [NET ]</span> Establishing secure tunnel <span class="bt-c">............</span> <span class="bt-g">OK</span>', 24],
+    [980, '<span class="bt-a">  [AUTH]</span> Verifying operator credentials...', 31],
+    [1260,'<span class="bt-g">  [AUTH]</span> Identity confirmed: <span class="bt-w">NISARG CHASMAWALA</span>', 38],
+    [1460,'<span class="bt-g">  [AUTH]</span> Alias resolved: <span class="bt-pk">HEAVEN</span> <span class="bt-dim">// clearance: ALPHA</span>', 44],
+    [1680,'<span class="bt-g">  [DB  ]</span> Loading intel archive <span class="bt-c">................</span> <span class="bt-g">OK</span>', 52],
+    [1880,'<span class="bt-g">  [DB  ]</span> Indexing <span class="bt-c">40</span> classified entries across <span class="bt-c">6</span> categories', 60],
+    [2080,'<span class="bt-g">  [UI  ]</span> Rendering holographic interface <span class="bt-c">.......</span> <span class="bt-g">OK</span>', 68],
+    [2280,'<span class="bt-g">  [3D  ]</span> Spinning up global threat globe <span class="bt-c">.......</span> <span class="bt-g">OK</span>', 76],
+    [2480,'<span class="bt-g">  [SEC ]</span> Activating firewall & anomaly detection <span class="bt-c">...</span> <span class="bt-g">OK</span>', 84],
+    [2680,'<span class="bt-a">  [WARN]</span> <span class="bt-pk">Unauthorised charm detected in sector 7 — standing by</span>', 90],
+    [2900,'<span class="bt-g">  [BOOT]</span> All systems nominal. <span class="bt-w">Welcome, Operator.</span>', 96],
+    [3100,'<span class="bt-dim">└──────────────────────────────────────────────────────┘</span>', 100],
+  ];
+
+  function setProgress(p) {
+    fill.style.width = p + '%';
+    pct.textContent  = p + '%';
+  }
+
+  function addLine(html) {
+    var s = document.createElement('span');
+    s.className = 'boot-line';
+    s.innerHTML = html;
+    term.appendChild(s);
+    /* keep scrolled to bottom */
+    term.scrollTop = term.scrollHeight;
+  }
+
+  function dismiss() {
+    boot.classList.add('exit');
+    setTimeout(function(){ boot.style.display = 'none'; }, 750);
+  }
+
+  /* Glitch flash on ASCII at mid-point */
+  function triggerGlitch() {
+    ascii.classList.add('glitch');
+    setTimeout(function(){ ascii.classList.remove('glitch'); }, 300);
+  }
+
+  /* Schedule all lines */
+  LINES.forEach(function(l, i) {
+    setTimeout(function(){
+      addLine(l[1]);
+      setProgress(l[2]);
+      if (i === 9) triggerGlitch(); /* glitch at ~60% */
+    }, l[0]);
+  });
+
+  /* Auto-dismiss after last line + short pause */
+  setTimeout(dismiss, 3700);
+
+  /* Skip button */
+  skip.addEventListener('click', dismiss);
+})();
+</script>
 
 <script>
 /* ============================================================
