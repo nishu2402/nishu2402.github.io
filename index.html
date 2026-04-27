@@ -91,11 +91,39 @@ nav{position:fixed;top:0;left:0;right:0;z-index:800;height:58px;display:flex;ali
 .n-logo:hover .al::after{transform:scaleX(1);}
 .n-logo .d2{color:var(--R);}
 .n-ul{display:flex;gap:.7rem;list-style:none;flex-wrap:nowrap;}
-.n-ul a{font-size:.44rem;letter-spacing:1.5px;text-transform:uppercase;color:rgba(0,255,65,.45);border-bottom:1px solid transparent;transition:color .25s,border-color .25s;white-space:nowrap;}
-.n-ul a:hover{color:var(--G);border-color:rgba(0,255,65,.3);}
-.n-ext{display:flex;gap:.4rem;flex-shrink:0;}
-.n-ext a{font-size:.44rem;letter-spacing:1.2px;color:rgba(0,255,65,.4);border:1px solid rgba(0,255,65,.15);padding:.18rem .5rem;transition:all .3s;white-space:nowrap;}
-.n-ext a:hover{color:var(--C);border-color:rgba(0,212,255,.4);}
+.n-ul a{font-size:.58rem;letter-spacing:2px;text-transform:uppercase;color:rgba(0,255,65,.65);border-bottom:1px solid transparent;transition:color .25s,border-color .25s,text-shadow .25s;white-space:nowrap;font-weight:500;}
+.n-ul a:hover{color:var(--G);border-color:rgba(0,255,65,.5);text-shadow:0 0 8px rgba(0,255,65,.35);}
+.n-ext{display:flex;gap:.45rem;flex-shrink:0;align-items:center;}
+.n-ext a{
+  font-size:.56rem;letter-spacing:2px;font-family:var(--F);
+  color:rgba(0,255,65,.75);border:1px solid rgba(0,255,65,.32);
+  padding:.32rem .82rem;transition:all .3s;white-space:nowrap;
+  font-weight:500;position:relative;overflow:hidden;
+}
+.n-ext a::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(0,255,65,.1),transparent);transform:translateX(-100%);transition:transform .4s;}
+.n-ext a:hover::before{transform:translateX(100%);}
+.n-ext a:hover{color:var(--G);border-color:var(--G);box-shadow:0 0 16px rgba(0,255,65,.3);transform:translateY(-1px);}
+.n-blog-btn{color:rgba(168,85,247,.95)!important;border-color:rgba(168,85,247,.5)!important;background:rgba(168,85,247,.08)!important;animation:blogPulse 2.5s ease-in-out infinite;}
+@keyframes blogPulse{0%,100%{box-shadow:0 0 4px rgba(168,85,247,.2);}50%{box-shadow:0 0 12px rgba(168,85,247,.5);}}
+.n-blog-btn:hover{color:#fff!important;border-color:var(--P)!important;box-shadow:0 0 20px rgba(168,85,247,.55)!important;background:rgba(168,85,247,.18)!important;transform:translateY(-2px)!important;animation:none!important;}
+.n-shell-btn{color:rgba(0,212,255,.95)!important;border-color:rgba(0,212,255,.45)!important;background:rgba(0,212,255,.07)!important;animation:shellPulse 2.5s .8s ease-in-out infinite;}
+@keyframes shellPulse{0%,100%{box-shadow:0 0 4px rgba(0,212,255,.2);}50%{box-shadow:0 0 12px rgba(0,212,255,.45);}}
+.n-shell-btn:hover{color:#fff!important;border-color:var(--C)!important;box-shadow:0 0 20px rgba(0,212,255,.5)!important;background:rgba(0,212,255,.15)!important;transform:translateY(-2px)!important;animation:none!important;}
+.h-blog-cta:hover{color:#fff!important;border-color:var(--P)!important;background:rgba(168,85,247,.18)!important;box-shadow:0 0 24px rgba(168,85,247,.4)!important;transform:translateY(-2px)!important;}
+.h-blog-cta:hover span:last-child{transform:translate(3px,-3px);}
+.h-blog-cta{
+  display:inline-flex;align-items:center;gap:.55rem;
+  margin-bottom:1.5rem;padding:.55rem 1.4rem;
+  font-family:var(--F);font-size:.62rem;letter-spacing:3px;text-transform:uppercase;
+  color:rgba(168,85,247,.9);border:1px solid rgba(168,85,247,.4);
+  background:rgba(168,85,247,.07);
+  clip-path:polygon(5px 0,100% 0,calc(100% - 5px) 100%,0 100%);
+  transition:all .3s;position:relative;overflow:hidden;
+  opacity:0;animation:fu .6s .57s both, blogCTAPulse 2.5s 1s ease-in-out infinite;
+}
+@keyframes blogCTAPulse{0%,100%{box-shadow:0 0 5px rgba(168,85,247,.2);}50%{box-shadow:0 0 18px rgba(168,85,247,.5);}}
+.h-blog-cta::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(168,85,247,.15),transparent);transform:translateX(-100%);transition:transform .5s;}
+.h-blog-cta:hover::before{transform:translateX(100%);}
 /* Online presence buttons */
 .op-grid{display:flex;flex-wrap:wrap;gap:.55rem;margin-top:.2rem;}
 .op-btn{display:inline-flex;align-items:center;gap:.45rem;padding:.35rem .9rem;font-size:.6rem;font-family:var(--F);letter-spacing:2px;text-transform:uppercase;border:1px solid rgba(0,255,65,.22);color:rgba(255,255,255,.85);background:rgba(0,255,65,.03);text-decoration:none;position:relative;overflow:hidden;transition:all .3s;clip-path:polygon(4px 0,100% 0,calc(100% - 4px) 100%,0 100%);}
@@ -116,8 +144,9 @@ nav{position:fixed;top:0;left:0;right:0;z-index:800;height:58px;display:flex;ali
 .blog-view-all:hover{background:rgba(168,85,247,.1);border-color:var(--P);box-shadow:0 0 20px rgba(168,85,247,.2);transform:translateY(-2px);}
 
 /* DL button in nav */
-.n-dl{font-size:.44rem;letter-spacing:1.5px;color:#000!important;background:var(--G);border:none!important;padding:.22rem .7rem;font-family:var(--F);transition:box-shadow .3s!important;}
-.n-dl:hover{box-shadow:0 0 14px rgba(0,255,65,.5)!important;color:#000!important;}
+.n-dl{font-size:.56rem!important;letter-spacing:2px!important;color:#000!important;background:linear-gradient(90deg,var(--G),#00cc30)!important;border:none!important;padding:.32rem .82rem!important;font-family:var(--F);font-weight:700;box-shadow:0 0 8px rgba(0,255,65,.3);animation:resumePulse 2.5s 1.6s ease-in-out infinite;}
+@keyframes resumePulse{0%,100%{box-shadow:0 0 6px rgba(0,255,65,.3);}50%{box-shadow:0 0 18px rgba(0,255,65,.6);}}
+.n-dl:hover{box-shadow:0 0 24px rgba(0,255,65,.7)!important;transform:translateY(-2px)!important;animation:none!important;color:#000!important;}
 
 /* APP */
 #APP{position:relative;z-index:10;}
@@ -371,8 +400,9 @@ body.CK #curOuter{width:20px;height:20px;border-color:rgba(0,255,65,.3);}
   /* Nav */
   nav{padding:0 .9rem;height:52px;}
   .n-ul{display:none;}
-  .n-ext{gap:.3rem;}
-  .n-ext a{font-size:.42rem;padding:.18rem .4rem;}
+  .n-ext{gap:.25rem;}
+  .n-ext a{font-size:.4rem;padding:.16rem .35rem;letter-spacing:1px;}
+  .n-ext .n-dl{font-size:.4rem!important;padding:.16rem .45rem!important;}
 
   /* Hero */
   #HERO{padding:70px 1rem 2rem;flex-direction:column;gap:1rem;min-height:auto;}
@@ -475,11 +505,11 @@ body.CK #curOuter{width:20px;height:20px;border-color:rgba(0,255,65,.3);}
     <li><a href="#EXP">missions</a></li><li><a href="#CERTS">creds</a></li><li><a href="#RPROJ">projects</a></li>
   </ul>
   <div class="n-ext">
-    <a href="#BLOG" style="color:rgba(168,85,247,.7);border-color:rgba(168,85,247,.25);">📝 Blog</a>
-    <a href="#TERMINAL" style="color:rgba(0,255,65,.7);border-color:rgba(0,255,65,.2);">⌨ Shell</a>
+    <a href="#BLOG" class="n-blog-btn">📝 Blog</a>
+    <a href="#TERMINAL" class="n-shell-btn">⌨ Shell</a>
     <a href="https://github.com/nishu2402" target="_blank">GitHub</a>
     <a href="https://www.linkedin.com/in/nisarg-chasmawala" target="_blank">LinkedIn</a>
-    <a href="Nisarg_s_resume.pdf" target="_blank" class="n-dl">⬇ Resume</a>
+    <a href="Nisarg_resume.pdf" target="_blank" class="n-dl">⬇ Resume</a>
   </div>
 </nav>
 
@@ -493,6 +523,10 @@ body.CK #curOuter{width:20px;height:20px;border-color:rgba(0,255,65,.3);}
     <div class="h-name"><span class="hn1" data-t="NISARG">NISARG</span><span class="hn2">CHASMAWALA</span></div>
     <div class="h-role" id="hRole"></div>
     <p class="h-bio">Award-winning Offensive Security Engineer &amp; elite Penetration Tester. CPENT · CEH Master (91.2%) · CHFI (90.7%) · ISO 27001 Lead Auditor. Bridging red-team exploit development with AI/ML threat intelligence research. Identified CVSS 10.0 RCE vulnerabilities. Architecting Python-based security automation pipelines at Birmingham City University, England, UK.</p>
+    <!-- Blog CTA after bio -->
+    <a href="https://nishu2402.github.io/blog/index.html" target="_blank" class="h-blog-cta">
+      <span style="font-size:.85rem;">📝</span> SECURITY BLOG <span style="opacity:.5;font-size:.8em;transition:transform .3s;">↗</span>
+    </a>
     <div class="h-kpis">
       <div class="kpi"><div class="kpi-n" id="KP0">0</div><div class="kpi-l">Certifications</div></div>
       <div class="ksep"></div>
@@ -512,7 +546,7 @@ body.CK #curOuter{width:20px;height:20px;border-color:rgba(0,255,65,.3);}
       <a href="#CONTACT" class="btn btn-p">⚡ Contact Me</a>
       <a href="#RPROJ" class="btn btn-g">View Projects</a>
       <a href="https://github.com/nishu2402" target="_blank" class="btn btn-c">{ GitHub }</a>
-      <a href="Nisarg_s_resume.pdf" target="_blank" class="btn btn-dl">⬇ Resume</a>
+      <a href="Nisarg_resume.pdf" target="_blank" class="btn btn-dl">⬇ Resume</a>
     </div>
   </div>
   <div class="hero-r"><canvas id="orbitCv" width="420" height="420"></canvas></div>
@@ -1041,7 +1075,7 @@ var CMDS={
 
   github:function(){window.open('https://github.com/nishu2402','_blank');return['<span class="to">Opening github.com/nishu2402...</span>'];},
 
-  resume:function(){window.open('Nisarg_s_resume.pdf','_blank');return['<span class="to">⬇ Opening Nisarg\'s_resume.pdf...</span>','<span class="td2">Upload Nisarg_s_resume.pdf to your GitHub repo root beside index.html</span>'];},
+  resume:function(){window.open('Nisarg_resume.pdf','_blank');return['<span class="to">⬇ Opening Nisarg_resume.pdf...</span>','<span class="td2">Upload Nisarg_resume.pdf to your GitHub repo root beside index.html</span>'];},
 
   exploit:function(){return['<span class="te">INITIATING HEAVEN EXPLOIT CHAIN — 2026...</span>','<span class="te">[!] TARGET: YOUR_HIRING_DECISION · England, UK</span>','<span class="te">[!] CVE-2026-HEAVEN: 6 projects · 14 certs · R²=0.9999</span>','<span class="tw">[>] PAYLOAD: nisarg_chasmawala_talent.exe loading...</span>','<span class="to">[+] Root access. You are now hiring HEAVEN. 😄</span>','<span class="to">[+] nisargkc@gmail.com · +44 7554 469437</span>'];},
 
