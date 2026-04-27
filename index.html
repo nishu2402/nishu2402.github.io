@@ -90,12 +90,30 @@ nav{position:fixed;top:0;left:0;right:0;z-index:800;height:58px;display:flex;ali
 .n-logo .al::after{content:'';position:absolute;bottom:-2px;left:0;right:0;height:1px;background:var(--G);transform:scaleX(0);transition:transform .4s;}
 .n-logo:hover .al::after{transform:scaleX(1);}
 .n-logo .d2{color:var(--R);}
-.n-ul{display:flex;gap:1rem;list-style:none;flex-wrap:wrap;}
-.n-ul a{font-size:.48rem;letter-spacing:2px;text-transform:uppercase;color:rgba(0,255,65,.45);border-bottom:1px solid transparent;transition:color .25s,border-color .25s;}
+.n-ul{display:flex;gap:.7rem;list-style:none;flex-wrap:nowrap;}
+.n-ul a{font-size:.44rem;letter-spacing:1.5px;text-transform:uppercase;color:rgba(0,255,65,.45);border-bottom:1px solid transparent;transition:color .25s,border-color .25s;white-space:nowrap;}
 .n-ul a:hover{color:var(--G);border-color:rgba(0,255,65,.3);}
-.n-ext{display:flex;gap:.45rem;flex-shrink:0;}
-.n-ext a{font-size:.46rem;letter-spacing:1.5px;color:rgba(0,255,65,.4);border:1px solid rgba(0,255,65,.15);padding:.2rem .55rem;transition:all .3s;white-space:nowrap;}
+.n-ext{display:flex;gap:.4rem;flex-shrink:0;}
+.n-ext a{font-size:.44rem;letter-spacing:1.2px;color:rgba(0,255,65,.4);border:1px solid rgba(0,255,65,.15);padding:.18rem .5rem;transition:all .3s;white-space:nowrap;}
 .n-ext a:hover{color:var(--C);border-color:rgba(0,212,255,.4);}
+/* Online presence buttons */
+.op-grid{display:flex;flex-wrap:wrap;gap:.55rem;margin-top:.2rem;}
+.op-btn{display:inline-flex;align-items:center;gap:.45rem;padding:.35rem .9rem;font-size:.6rem;font-family:var(--F);letter-spacing:2px;text-transform:uppercase;border:1px solid rgba(0,255,65,.22);color:rgba(255,255,255,.85);background:rgba(0,255,65,.03);text-decoration:none;position:relative;overflow:hidden;transition:all .3s;clip-path:polygon(4px 0,100% 0,calc(100% - 4px) 100%,0 100%);}
+.op-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(0,255,65,.1),transparent);transform:translateX(-100%);transition:transform .4s;}
+.op-btn:hover::before{transform:translateX(100%);}
+.op-btn:hover{border-color:var(--G);color:var(--G);background:rgba(0,255,65,.06);transform:translateY(-2px);}
+.op-btn.c{border-color:rgba(0,212,255,.22);color:rgba(0,212,255,.8);}
+.op-btn.c:hover{border-color:var(--C);color:var(--C);background:rgba(0,212,255,.06);}
+.op-btn.p{border-color:rgba(168,85,247,.22);color:rgba(168,85,247,.8);}
+.op-btn.p:hover{border-color:var(--P);color:var(--P);background:rgba(168,85,247,.06);}
+.op-btn .op-icon{font-size:.8rem;}
+.op-btn .op-arrow{margin-left:.2rem;opacity:.5;font-size:.6rem;}
+/* Blog category tabs */
+.blog-cats{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.5rem;}
+.blog-cat-btn{font-size:.5rem;letter-spacing:2px;padding:.22rem .7rem;border:1px solid rgba(168,85,247,.2);color:rgba(168,85,247,.6);background:transparent;font-family:var(--F);text-transform:uppercase;transition:all .3s;}
+.blog-cat-btn.active,.blog-cat-btn:hover{border-color:var(--P);color:var(--P);background:rgba(168,85,247,.06);}
+.blog-view-all{display:inline-flex;align-items:center;gap:.5rem;margin-top:1.5rem;padding:.5rem 1.4rem;font-size:.58rem;letter-spacing:3px;text-transform:uppercase;font-family:var(--F);border:1px solid rgba(168,85,247,.3);color:var(--P);background:rgba(168,85,247,.04);transition:all .3s;clip-path:polygon(6px 0,100% 0,calc(100% - 6px) 100%,0 100%);}
+.blog-view-all:hover{background:rgba(168,85,247,.1);border-color:var(--P);box-shadow:0 0 20px rgba(168,85,247,.2);transform:translateY(-2px);}
 
 /* DL button in nav */
 .n-dl{font-size:.44rem;letter-spacing:1.5px;color:#000!important;background:var(--G);border:none!important;padding:.22rem .7rem;font-family:var(--F);transition:box-shadow .3s!important;}
@@ -455,12 +473,13 @@ body.CK #curOuter{width:20px;height:20px;border-color:rgba(0,255,65,.3);}
   <ul class="n-ul">
     <li><a href="#HERO">init</a></li><li><a href="#ABOUT">about</a></li><li><a href="#SKILLS">skills</a></li>
     <li><a href="#EXP">missions</a></li><li><a href="#CERTS">creds</a></li><li><a href="#RPROJ">projects</a></li>
-    <li><a href="#BLOG">blog</a></li><li><a href="#TERMINAL">shell</a></li><li><a href="#CONTACT">contact</a></li>
   </ul>
   <div class="n-ext">
+    <a href="#BLOG" style="color:rgba(168,85,247,.7);border-color:rgba(168,85,247,.25);">📝 Blog</a>
+    <a href="#TERMINAL" style="color:rgba(0,255,65,.7);border-color:rgba(0,255,65,.2);">⌨ Shell</a>
     <a href="https://github.com/nishu2402" target="_blank">GitHub</a>
     <a href="https://www.linkedin.com/in/nisarg-chasmawala" target="_blank">LinkedIn</a>
-    <a href="1777254528296_Nisarg_s_resume.pdf" download="Nisarg's_resume.pdf" class="n-dl">⬇ Resume</a>
+    <a href="Nisarg_s_resume.pdf" target="_blank" class="n-dl">⬇ Resume</a>
   </div>
 </nav>
 
@@ -493,7 +512,7 @@ body.CK #curOuter{width:20px;height:20px;border-color:rgba(0,255,65,.3);}
       <a href="#CONTACT" class="btn btn-p">⚡ Contact Me</a>
       <a href="#RPROJ" class="btn btn-g">View Projects</a>
       <a href="https://github.com/nishu2402" target="_blank" class="btn btn-c">{ GitHub }</a>
-      <a href="1777254528296_Nisarg_s_resume.pdf" download="Nisarg's_resume.pdf" class="btn btn-dl">⬇ Resume</a>
+      <a href="Nisarg_s_resume.pdf" target="_blank" class="btn btn-dl">⬇ Resume</a>
     </div>
   </div>
   <div class="hero-r"><canvas id="orbitCv" width="420" height="420"></canvas></div>
@@ -517,7 +536,13 @@ body.CK #curOuter{width:20px;height:20px;border-color:rgba(0,255,65,.3);}
       <div class="acard rv" style="margin-top:.8rem;"><div class="acard-l">// LANGUAGES</div><div class="acard-t">English (TOEFL 91) · Hindi · Gujarati — Native or Bilingual</div></div>
       <div class="acard rv" style="margin-top:.8rem;"><div class="acard-l">// PLATFORMS</div><div class="acard-t">Kali Linux · Parrot OS · Ubuntu · Debian · macOS · Windows 11 · iOS · Android</div></div>
       <div class="acard rv" style="margin-top:.8rem;"><div class="acard-l">// ONLINE PRESENCE</div>
-      <div class="acard-t">Portfolio: <a href="https://nishu2402.github.io" target="_blank" style="color:var(--C);">nishu2402.github.io</a><br>Blog: <a href="https://nishu2402.github.io/blog" target="_blank" style="color:var(--C);">nishu2402.github.io/blog</a><br>Kaggle: <a href="https://kaggle.com/nisargshroff2402" target="_blank" style="color:var(--C);">kaggle.com/nisargshroff2402</a></div></div>
+      <div class="op-grid">
+        <a href="https://nishu2402.github.io" target="_blank" class="op-btn"><span class="op-icon">🌐</span>PORTFOLIO<span class="op-arrow">↗</span></a>
+        <a href="https://nishu2402.github.io/blog/index.html" target="_blank" class="op-btn c"><span class="op-icon">📝</span>SECURITY BLOG<span class="op-arrow">↗</span></a>
+        <a href="https://github.com/nishu2402" target="_blank" class="op-btn"><span class="op-icon">⎋</span>GITHUB<span class="op-arrow">↗</span></a>
+        <a href="https://www.linkedin.com/in/nisarg-chasmawala" target="_blank" class="op-btn c"><span class="op-icon">💼</span>LINKEDIN<span class="op-arrow">↗</span></a>
+        <a href="https://kaggle.com/nisargshroff2402" target="_blank" class="op-btn p"><span class="op-icon">📊</span>KAGGLE<span class="op-arrow">↗</span></a>
+      </div></div>
     </div>
   </div>
 </div></section>
@@ -580,16 +605,24 @@ body.CK #curOuter{width:20px;height:20px;border-color:rgba(0,255,65,.3);}
 <section id="BLOG"><div class="wm">HEAVEN</div><div class="w">
   <div class="sh rv"><div class="sh-acc">&gt;_ ACCESSING: intel_dispatch.blog... LIVE</div><div class="sh-num">// 09 — INTEL DISPATCH</div><div class="sh-t" data-sc="SECURITY BLOG">SECURITY BLOG<span class="echo">SECURITY BLOG</span></div><div class="sh-bar"></div></div>
 
-  <!-- Featured / pinned post -->
+  <!-- Featured pinned -->
   <div class="blog-featured rv">
     <div class="blog-cat">// PLATFORM OVERVIEW</div>
     <div class="blog-title" style="margin-bottom:.7rem;">HEAVEN's Security Intelligence Hub</div>
     <div class="blog-meta"><span>nishu2402.github.io/blog</span><span>·</span><span>Ongoing · 2024–2026</span></div>
-    <div class="blog-excerpt">A technical knowledge-sharing platform built for the offensive security community. Covers hands-on penetration testing techniques, real-world networking concepts, in-depth reviews of cybersecurity hardware and software tools, and practical guides on ethical hacking methodology. Every post reflects active research, lab work, and field experience — no theory without proof of concept.</div>
-    <a href="https://nishu2402.github.io/blog/index.html" target="_blank" class="blog-rm" style="margin-top:.5rem;">Visit Blog</a>
+    <div class="blog-excerpt">A technical knowledge-sharing platform for the offensive security community. Covers hands-on penetration testing techniques, real-world networking concepts, in-depth reviews of cybersecurity hardware and software tools, and practical guides on ethical hacking methodology. Every post reflects active research, lab work, and field experience — no theory without proof of concept.</div>
+    <a href="https://nishu2402.github.io/blog/index.html" target="_blank" class="blog-rm" style="margin-top:.5rem;">Visit Full Blog Index →</a>
   </div>
 
+  <!-- Category tabs label -->
+  <div style="font-size:.48rem;color:rgba(168,85,247,.5);letter-spacing:3px;margin-bottom:1rem;">// FEATURED POSTS — CLICK TO READ</div>
+
   <div class="blog-grid rv" id="BLOG_GRID"></div>
+
+  <!-- View All -->
+  <div style="text-align:center;margin-top:1.5rem;" class="rv">
+    <a href="https://nishu2402.github.io/blog/index.html" target="_blank" class="blog-view-all">⚡ VIEW ALL BLOG POSTS ↗</a>
+  </div>
 </div></section>
 <div class="DV"></div>
 
@@ -840,9 +873,21 @@ skObs.observe(document.getElementById('SBARS'));
 {type:'Project Management · Agile-PRINCE2',title:'IT Project Management: Autonomous AI Pentesting System — MSc BCU',metric:'Hybrid Agile-PRINCE2 · Monday.com · 5-Phase WBS · 7-Week',desc:'7-week Hybrid Agile-PRINCE2 plan (Monday.com, 5-phase WBS) for autonomous AI-driven pentesting system with GDPR/EU AI Act compliance guardrails.',tags:['Agile-PRINCE2','Monday.com','WBS','Risk Management','EU AI Act']}
 ].forEach(function(p,i){var el=document.createElement('div');el.className='pc rv';el.style.transitionDelay=(i*.07)+'s';el.innerHTML='<div class="pc-head"><div class="pc-type">'+p.type+'</div><div class="pc-title">'+p.title+'</div></div><div class="pc-body"><div class="pc-metric">'+p.metric+'</div><div class="pc-desc">'+p.desc+'</div><div class="pc-tags">'+p.tags.map(function(t){return'<span class="pc-tag">'+t+'</span>';}).join('')+'</div></div>';document.getElementById('APROJ_GRID').appendChild(el);rvObs.observe(el);});
 
-/* ── DATA: BLOG ─────────────────────────────────── */
-[{cat:'Offensive Security',title:'Privilege Escalation Playbook: From Shell to Root',date:'2026',tags:['Pentest','Linux','PrivEsc'],excerpt:"A hands-on deep-dive into privilege escalation techniques on Linux and Windows environments — SUID abuse, weak cron jobs, credential harvesting, and kernel exploits. Includes real lab walkthroughs and custom Python automation scripts for repeatable testing.",badge:'FEATURED'},{cat:'Networking & Forensics',title:'Wireshark Masterclass: Hunting Lateral Movement in PCAP Files',date:'2026',tags:['Wireshark','DFIR','Network'],excerpt:'Step-by-step guide to identifying lateral movement, credential dumping, and C2 beacons inside packet captures. Covers protocol analysis, IOC extraction, and building custom Wireshark display filters for threat hunting.',badge:'LAB'},{cat:'AI/ML Security',title:'Training XGBoost on CVE Data: CVSS Score Prediction Pipeline',date:'2025',tags:['XGBoost','NVD','Python','AI'],excerpt:'Behind the scenes of the AI-Driven Vulnerability Severity Predictor. Walks through NVD data ingestion, feature engineering with Lasso/ElasticNet, model training, and achieving R²=0.9988 on 337,705 CVE records.',badge:'RESEARCH'},{cat:'Tools & Hardware',title:'Building a Portable Pentest Lab with Raspberry Pi + Kali',date:'2025',tags:['Kali','Hardware','Lab'],excerpt:'How to build a sub-$60 portable penetration testing kit using Raspberry Pi 4, Kali Linux, and a USB wireless adapter. Includes Kismet, Nmap scripting, and a Bash-based recon automation toolkit.',badge:'GUIDE'}
-].forEach(function(b,i){var el=document.createElement('div');el.className='blog-card rv';el.style.transitionDelay=(i*.08)+'s';el.innerHTML='<div class="blog-badge">'+b.badge+'</div><div class="blog-head"><div class="blog-cat">'+b.cat+'</div><div class="blog-title">'+b.title+'</div></div><div class="blog-body"><div class="blog-meta"><span>HEAVEN</span><span>·</span><span>'+b.date+'</span></div><div class="blog-excerpt">'+b.excerpt+'</div><div class="blog-tags">'+b.tags.map(function(t){return'<span class="blog-tag">'+t+'</span>';}).join('')+'</div><a href="https://nishu2402.github.io/blog/index.html" target="_blank" class="blog-rm">Read More</a></div>';document.getElementById('BLOG_GRID').appendChild(el);rvObs.observe(el);});
+/* ── DATA: BLOG (real posts) ────────────────────── */
+[
+  {cat:'🔬 Research',title:'AI & Autonomous Penetration Testing',badge:'RESEARCH',date:'2025-26',tags:['AI','DRL','LLMs','Autonomous'],excerpt:"Deep-dive into integrating Deep Reinforcement Learning and LLMs into autonomous offensive security frameworks. Evaluates MAS vs single-agent success rates, proposes Neuro-Symbolic AI + HITL governance, EU AI Act compliance.",url:'https://nishu2402.github.io/blog/My%20researches/ai_pentest_research_blog.html'},
+  {cat:'🏆 Certifications',title:'How I Scored 91% on CEH v12 in 15 Minutes',badge:'CERT',date:'2024',tags:['CEH','EC-Council','Exam'],excerpt:'First-hand account of passing CEH v12 with 91.2% — preparation strategy, exam structure breakdown, key topics, and the mindset that compressed the exam into 15 minutes.',url:'https://nishu2402.github.io/blog/Professional%20certifications%20blogs/ceh_v12_blog_post.html'},
+  {cat:'🏆 Certifications',title:'CEH Practical: 180/200 in 2 Hours',badge:'CERT',date:'2024',tags:['CEH Practical','Pentest','Hands-on'],excerpt:'Practical walkthrough of the CEH Practical exam — tools used, flags captured, methodology applied, and how to achieve a near-perfect score in a real hands-on lab environment.',url:'https://nishu2402.github.io/blog/Professional%20certifications%20blogs/ceh_practical_blog_post.html'},
+  {cat:'📡 Penetration Testing',title:'Network Penetration Testing Methodology — External',badge:'GUIDE',date:'2024',tags:['Network','Pentest','External'],excerpt:'End-to-end external network penetration testing methodology: recon, enumeration, exploitation, and post-exploitation. Covers tools, CVSS scoring, and report structure.',url:'https://nishu2402.github.io/blog/Educational%20topic%20blogs/external-network-penetration-testing.html'},
+  {cat:'📡 Penetration Testing',title:'Active Directory Penetration Testing',badge:'GUIDE',date:'2024',tags:['Active Directory','Kerberos','Pentest'],excerpt:'Complete AD pentest methodology — BloodHound enumeration, Kerberoasting, Pass-the-Hash, DCSync, and privilege escalation paths through domain environments.',url:'https://nishu2402.github.io/blog/Educational%20topic%20blogs/active-directory-pentest.html'},
+  {cat:'🌐 Web & Cloud',title:'Web Application Penetration Testing Methodology',badge:'GUIDE',date:'2024',tags:['OWASP','Web','Burp Suite'],excerpt:'OWASP Top 10 driven web application penetration testing — injection, broken auth, IDOR, SSRF, XXE, and more. Includes Burp Suite workflow and report templates.',url:'https://nishu2402.github.io/blog/Educational%20topic%20blogs/web-application-penetration-testing.html'},
+  {cat:'🛠️ Software Tools',title:'Mastering Metasploit Framework',badge:'TOOL',date:'2024',tags:['Metasploit','Exploit','MSF'],excerpt:'Comprehensive guide to the Metasploit Framework — modules, payloads, post-exploitation, pivoting, and custom exploit development for real-world engagements.',url:'https://nishu2402.github.io/blog/Cybersecurity%20software%20tools/metasploit-framework.html'},
+  {cat:'🛠️ Software Tools',title:'Mastering Nmap',badge:'TOOL',date:'2024',tags:['Nmap','Recon','Scanning'],excerpt:'From basic host discovery to advanced NSE scripting — a complete Nmap guide covering stealth scans, OS detection, service enumeration, and firewall evasion techniques.',url:'https://nishu2402.github.io/blog/Cybersecurity%20software%20tools/nmap-blog.html'},
+  {cat:'💻 Scripting',title:'Python Scripting in Cybersecurity',badge:'CODE',date:'2024',tags:['Python','Scripting','Automation'],excerpt:'Python for offensive security — writing custom exploits, automation scripts, network scanners, credential harvesters, and integrating with security APIs.',url:'https://nishu2402.github.io/blog/Scripting%20languages%20in%20cyber%20security/python-scripting-blog.html'},
+  {cat:'📡 Penetration Testing',title:'IoT Penetration Testing Methodology',badge:'GUIDE',date:'2024',tags:['IoT','Firmware','Hardware'],excerpt:'Attacking IoT ecosystems — firmware extraction and analysis, protocol fuzzing (MQTT, CoAP), hardware debugging (JTAG/UART), and common vulnerability patterns.',url:'https://nishu2402.github.io/blog/Educational%20topic%20blogs/iot-penetration-testing.html'},
+  {cat:'📡 Penetration Testing',title:'Social Engineering Penetration Testing',badge:'GUIDE',date:'2024',tags:['Social Engineering','Phishing','OSINT'],excerpt:'Social engineering engagement methodology — pretexting, phishing simulation, vishing, physical intrusion, and building compelling attack narratives with OSINT.',url:'https://nishu2402.github.io/blog/Educational%20topic%20blogs/social-engineering-penetration-testing.html'},
+  {cat:'🔍 OSINT',title:'Open Source Intelligence (OSINT)',badge:'GUIDE',date:'2024',tags:['OSINT','Recon','Maltego'],excerpt:'Structured OSINT methodology for penetration testing — target profiling, social media intelligence, domain/IP investigation, and automation with Maltego and custom scripts.',url:'https://nishu2402.github.io/blog/Educational%20topic%20blogs/open-source-intelligence.html'},
+].forEach(function(b,i){var el=document.createElement('div');el.className='blog-card rv';el.style.transitionDelay=(i*.06)+'s';el.innerHTML='<div class="blog-badge">'+b.badge+'</div><div class="blog-head"><div class="blog-cat">'+b.cat+'</div><div class="blog-title">'+b.title+'</div></div><div class="blog-body"><div class="blog-meta"><span>HEAVEN</span><span>·</span><span>'+b.date+'</span></div><div class="blog-excerpt">'+b.excerpt+'</div><div class="blog-tags">'+b.tags.map(function(t){return'<span class="blog-tag">'+t+'</span>';}).join('')+'</div><a href="'+b.url+'" target="_blank" class="blog-rm">Read More</a></div>';document.getElementById('BLOG_GRID').appendChild(el);rvObs.observe(el);});
 
 /* ── TERMINAL — UPGRADED WITH PRANKS ────────────── */
 var TOUT=document.getElementById('TOUT'),TIN=document.getElementById('TIN');
@@ -996,7 +1041,7 @@ var CMDS={
 
   github:function(){window.open('https://github.com/nishu2402','_blank');return['<span class="to">Opening github.com/nishu2402...</span>'];},
 
-  resume:function(){var a=document.createElement('a');a.href='1777254528296_Nisarg_s_resume.pdf';a.download="Nisarg's_resume.pdf";a.click();return['<span class="to">⬇ Downloading Nisarg\'s_resume.pdf...</span>','<span class="td2">If download did not start, use the button in the hero section.</span>'];},
+  resume:function(){window.open('Nisarg_s_resume.pdf','_blank');return['<span class="to">⬇ Opening Nisarg\'s_resume.pdf...</span>','<span class="td2">Upload Nisarg_s_resume.pdf to your GitHub repo root beside index.html</span>'];},
 
   exploit:function(){return['<span class="te">INITIATING HEAVEN EXPLOIT CHAIN — 2026...</span>','<span class="te">[!] TARGET: YOUR_HIRING_DECISION · England, UK</span>','<span class="te">[!] CVE-2026-HEAVEN: 6 projects · 14 certs · R²=0.9999</span>','<span class="tw">[>] PAYLOAD: nisarg_chasmawala_talent.exe loading...</span>','<span class="to">[+] Root access. You are now hiring HEAVEN. 😄</span>','<span class="to">[+] nisargkc@gmail.com · +44 7554 469437</span>'];},
 
