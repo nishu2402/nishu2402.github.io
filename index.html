@@ -152,8 +152,23 @@ nav{position:fixed;top:0;left:0;right:0;z-index:800;height:58px;display:flex;ali
 #APP{position:relative;z-index:10;}
 section{position:relative;z-index:10;padding:5rem 1.5rem;}
 .w{max-width:1160px;margin:0 auto;width:100%;}
+/* Fix text overlap: isolate each section's stacking context */
+section>*{position:relative;z-index:1;}
 .DV{height:1px;background:linear-gradient(90deg,transparent,rgba(0,255,65,.12),rgba(0,212,255,.05),transparent);position:relative;z-index:5;}
-.wm{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--H);font-size:clamp(4rem,12vw,12rem);font-weight:900;color:rgba(0,255,65,.015);letter-spacing:10px;pointer-events:none;user-select:none;overflow:hidden;}
+.wm{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--H);font-size:clamp(4rem,12vw,12rem);font-weight:900;color:rgba(0,255,65,.015);letter-spacing:10px;pointer-events:none;user-select:none;overflow:hidden;z-index:0!important;}
+/* Hackathon cards */
+.hack-card{background:rgba(255,159,10,.03);border:1px solid rgba(255,159,10,.2);padding:1.5rem;position:relative;overflow:hidden;transition:all .4s;margin-bottom:1rem;}
+.hack-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--A),var(--G));transform:scaleX(0);transition:transform .5s;transform-origin:left;}
+.hack-card:hover::before{transform:scaleX(1);}
+.hack-card:hover{border-color:rgba(255,159,10,.4);box-shadow:0 0 30px rgba(255,159,10,.08);transform:translateX(4px);}
+.hack-place{display:inline-flex;align-items:center;gap:.6rem;font-family:var(--H);font-size:.9rem;font-weight:900;color:var(--A);text-shadow:0 0 14px rgba(255,159,10,.4);margin-bottom:.5rem;}
+.hack-trophy{font-size:1.4rem;animation:trophyBob 2s ease-in-out infinite;}
+@keyframes trophyBob{0%,100%{transform:translateY(0);}50%{transform:translateY(-4px);}}
+.hack-event{font-size:.72rem;color:rgba(255,255,255,.85);font-weight:500;margin-bottom:.3rem;}
+.hack-org{font-size:.6rem;color:var(--A);letter-spacing:2px;text-transform:uppercase;margin-bottom:.75rem;opacity:.7;}
+.hack-ul{list-style:none;display:flex;flex-direction:column;gap:.28rem;}
+.hack-ul li{font-size:.65rem;color:rgba(255,255,255,.7);padding-left:1.1rem;position:relative;line-height:1.75;}
+.hack-ul li::before{content:'▸';position:absolute;left:0;color:var(--A);font-size:.56rem;top:.2rem;}
 
 /* Section header */
 .sh{margin-bottom:2.5rem;}
@@ -503,6 +518,7 @@ body.CK #curOuter{width:20px;height:20px;border-color:rgba(0,255,65,.3);}
   <ul class="n-ul">
     <li><a href="#HERO">init</a></li><li><a href="#ABOUT">about</a></li><li><a href="#SKILLS">skills</a></li>
     <li><a href="#EXP">missions</a></li><li><a href="#CERTS">creds</a></li><li><a href="#RPROJ">projects</a></li>
+    <li><a href="#HACKATHONS">wins</a></li>
   </ul>
   <div class="n-ext">
     <a href="#BLOG" class="n-blog-btn">📝 Blog</a>
@@ -559,7 +575,10 @@ body.CK #curOuter{width:20px;height:20px;border-color:rgba(0,255,65,.3);}
   <div class="sh rv"><div class="sh-acc">&gt;_ ACCESSING: operator_profile.json... DECRYPTED</div><div class="sh-num">// 01 — ABOUT</div><div class="sh-t" data-sc="OPERATOR PROFILE">OPERATOR PROFILE<span class="echo">OPERATOR PROFILE</span></div><div class="sh-bar"></div></div>
   <div class="about-grid">
     <div class="acard rv-l"><div class="acard-l">// CLASSIFIED SUMMARY</div>
-    <div class="acard-t">Award-winning Offensive Security Engineer and elite Penetration Tester (CPENT, CEH Master 91.2%, CHFI 90.7%, ISO 27001 Lead Auditor) — placing among the highest-scoring EC-Council certified professionals globally. MSc Cyber Security candidate at BCU, bridging red-team exploit development with AI/ML threat intelligence research. Experienced across full-scope penetration testing, digital forensics, cloud IAM security, and network engineering. Identified CVSS 10.0 RCE vulnerabilities and architected Python-based security automation pipelines.</div></div>
+    <div class="acard-t">I'm Nisarg Chasmawala — a Penetration Tester and Offensive Security Engineer based in England, UK, currently pursuing an MSc in Cyber Security at Birmingham City University. My journey into security started from the ground up: network cabling and infrastructure at internships, then progressing into vulnerability assessment and full-scope penetration testing at SYSAP Technologies, and now independently building AI-powered security research tools.<br><br>
+On the offensive side, I work across the full attack lifecycle — external and internal network penetration testing, web application and REST API security (OWASP Top 10, CVSS v3.1), Active Directory exploitation, social engineering, OSINT, and digital forensics. I've identified <strong style="color:var(--R)">CVSS 10.0 RCE vulnerabilities</strong> across Redis, Openfire, and Gitea environments in live academic engagements — not just theoretical work.<br><br>
+I hold 14 professional certifications including <strong style="color:var(--G)">CEH Master (91.2%)</strong>, <strong style="color:var(--G)">CHFI (90.7%)</strong>, <strong style="color:var(--G)">CPENT</strong>, and <strong style="color:var(--G)">ISO/IEC 27001:2022 Lead Auditor</strong>. I also won <strong style="color:var(--A)">1st Place</strong> at the BCU Cyber Security Society Hackathon (STEAMhouse, UK) with my Aegis-IAM Dashboard — a live privilege escalation risk analysis tool built under competition constraints.<br><br>
+Outside pure offensive work, I engineer AI/ML security systems. My projects include an IoT anomaly detection pipeline at <strong style="color:var(--C)">R²=0.9999</strong>, a DDoS NIDS at <strong style="color:var(--C)">1.0000 precision</strong>, and a CVSS vulnerability severity predictor across 337,705 NVD CVE records. My MSc dissertation evaluates Deep Reinforcement Learning and LLMs in autonomous penetration testing — an area I genuinely believe will define the next decade of offensive security.</div></div>
     <div>
       <div class="sgrid rv-r">
         <div class="sbox"><div class="sbn">14</div><div class="sbl">Certifications</div></div>
@@ -635,9 +654,16 @@ body.CK #curOuter{width:20px;height:20px;border-color:rgba(0,255,65,.3);}
 </div></section>
 <div class="DV"></div>
 
+<!-- HACKATHONS -->
+<section id="HACKATHONS"><div class="w">
+  <div class="sh rv"><div class="sh-acc">&gt;_ ACCESSING: hackathon_victories.log... DECRYPTED</div><div class="sh-num">// 09 — VICTORIES</div><div class="sh-t" data-sc="HACKATHONS">HACKATHONS<span class="echo">HACKATHONS</span></div><div class="sh-bar"></div></div>
+  <div id="HACK_CARDS"></div>
+</div></section>
+<div class="DV"></div>
+
 <!-- BLOG -->
 <section id="BLOG"><div class="wm">HEAVEN</div><div class="w">
-  <div class="sh rv"><div class="sh-acc">&gt;_ ACCESSING: intel_dispatch.blog... LIVE</div><div class="sh-num">// 09 — INTEL DISPATCH</div><div class="sh-t" data-sc="SECURITY BLOG">SECURITY BLOG<span class="echo">SECURITY BLOG</span></div><div class="sh-bar"></div></div>
+  <div class="sh rv"><div class="sh-acc">&gt;_ ACCESSING: intel_dispatch.blog... LIVE</div><div class="sh-num">// 10 — INTEL DISPATCH</div><div class="sh-t" data-sc="SECURITY BLOG">SECURITY BLOG<span class="echo">SECURITY BLOG</span></div><div class="sh-bar"></div></div>
 
   <!-- Featured pinned -->
   <div class="blog-featured rv">
@@ -662,7 +688,7 @@ body.CK #curOuter{width:20px;height:20px;border-color:rgba(0,255,65,.3);}
 
 <!-- TERMINAL -->
 <section id="TERMINAL"><div class="w">
-  <div class="sh rv"><div class="sh-acc">&gt;_ INITIALISING: offensive_shell.v3.0... READY</div><div class="sh-num">// 10 — INTERACTIVE SHELL</div><div class="sh-t" data-sc="LIVE TERMINAL">LIVE TERMINAL<span class="echo">LIVE TERMINAL</span></div><div class="sh-bar"></div></div>
+  <div class="sh rv"><div class="sh-acc">&gt;_ INITIALISING: offensive_shell.v3.0... READY</div><div class="sh-num">// 11 — INTERACTIVE SHELL</div><div class="sh-t" data-sc="LIVE TERMINAL">LIVE TERMINAL<span class="echo">LIVE TERMINAL</span></div><div class="sh-bar"></div></div>
   <div class="term rv">
     <div class="tbar"><div class="td td-r"></div><div class="td td-y"></div><div class="td td-g"></div>
       <span class="tttl">heaven@kali:~$ — offensive-shell v3.0 — England, UK — 2026</span>
@@ -675,7 +701,7 @@ body.CK #curOuter{width:20px;height:20px;border-color:rgba(0,255,65,.3);}
 
 <!-- CONTACT -->
 <section id="CONTACT"><div class="wm">HEAVEN</div><div class="w">
-  <div class="sh rv"><div class="sh-acc">&gt;_ ACCESSING: operator_contact.secure... DECRYPTED</div><div class="sh-num">// 11 — ESTABLISH CONNECTION</div><div class="sh-t" data-sc="CONTACT">CONTACT<span class="echo">CONTACT</span></div><div class="sh-bar"></div></div>
+  <div class="sh rv"><div class="sh-acc">&gt;_ ACCESSING: operator_contact.secure... DECRYPTED</div><div class="sh-num">// 12 — ESTABLISH CONNECTION</div><div class="sh-t" data-sc="CONTACT">CONTACT<span class="echo">CONTACT</span></div><div class="sh-bar"></div></div>
   <div class="con-grid">
     <div class="term rv-l">
       <div class="tbar"><div class="td td-r"></div><div class="td td-y"></div><div class="td td-g"></div><span class="tttl">cat /root/heaven/operator.profile</span></div>
@@ -687,8 +713,9 @@ body.CK #curOuter{width:20px;height:20px;border-color:rgba(0,255,65,.3);}
         <div><span class="tw">CLEARANCE</span>=<span class="to">"CEH_MASTER | ISO_27001 | CPENT | CHFI"</span></div>
         <div><span class="tw">BASE</span>=<span class="to">"England, UK"</span></div>
         <div><span class="tw">EDU</span>=<span class="to">"MSc Cyber Security, BCU (Expected 2027)"</span></div>
-        <div><span class="tw">GOAL_1</span>=<span class="to">"OSCP · CISSP · AI Security Research"</span></div>
-        <div><span class="tw">GOAL_2</span>=<span class="to">"Global Cybersecurity Adviser"</span></div>
+        <div><span class="tw">GOAL_1</span>=<span class="to">"Secure pentest placement / full-time red-team role"</span></div>
+        <div><span class="tw">GOAL_2</span>=<span class="to">"Architect AI-driven autonomous pentesting frameworks"</span></div>
+        <div><span class="tw">GOAL_3</span>=<span class="to">"Global Cybersecurity Adviser · shape intl. policy"</span></div>
         <div><span class="tw">STATUS</span>=<span class="to" style="color:var(--G);text-shadow:0 0 8px var(--G);">"ACTIVELY_SEEKING_OPPORTUNITIES"</span></div>
       </div>
     </div>
@@ -891,9 +918,9 @@ skObs.observe(document.getElementById('SBARS'));
 ].forEach(function(c){var el=document.createElement('div');el.className='cert';el.innerHTML='<div class="cert-in"><div class="cf"><div class="c-yr">'+c.y+'</div><div class="c-nm">'+c.n+'</div><div class="c-is">'+c.is+'</div></div><div class="cb"><div class="c-ic">'+c.ic+'</div><div class="c-sc">'+c.sc+'</div><div class="c-id">'+c.is+'</div></div></div>';document.getElementById('CERTS_GRID').appendChild(el);});
 
 /* ── DATA: REAL PROJECTS (6 — new resume) ──────── */
-[{type:'Cloud Security · IAM Risk Intelligence',title:'Aegis-IAM Dashboard',cl:'CLASSIFIED',metric:'AWS IAM · NetworkX Graph Engine · MITRE ATT&CK',desc:'Python IAM risk-analysis platform parsing AWS JSON exports; auto-detects over-privileged identities, SoD violations, and assume-role escalation paths via NetworkX graph engine; integrated MITRE ATT&CK tagging and OWASP-compliant remediation pipeline.',tags:['Python','AWS IAM','NetworkX','MITRE ATT&CK','OWASP'],gh:'https://github.com/nishu2402/Aegis-IAM-Dashboard-Cyber-Security-HUD-.git'},
+[{type:'Cloud Security · IAM Risk Intelligence',title:'Aegis-IAM Dashboard',cl:'CLASSIFIED',metric:'AWS IAM · NetworkX Graph Engine · MITRE ATT&CK',desc:'Python IAM risk-analysis platform parsing AWS JSON exports; auto-detects over-privileged identities, SoD violations, and assume-role escalation paths via NetworkX graph engine; integrated MITRE ATT&CK tagging and OWASP-compliant remediation pipeline.',tags:['Python','AWS IAM','NetworkX','MITRE ATT&CK','OWASP'],gh:'https://github.com/nishu2402/Cyber-Security-Aegis-IAM-Dashboard.git'},
 {type:'ML & Deep Learning · NVD CVE Prediction',title:'AI-Driven Vulnerability Severity Predictor',cl:'CLASSIFIED',metric:'R²=0.9988 · CV R²=0.9990 · MAE=0.0400 · 337,705 CVEs',desc:'Processed 337,705 NVD CVE records (Lasso, ElasticNet, Mutual Information → 13 predictors); trained Extra Trees, Gradient Boosting, LSTM, GRU — R²=0.9988, MAE=0.0400, CV R²=0.9990 for production-ready CVSS Base Score prediction.',tags:['Python','Scikit-Learn','TensorFlow','Extra Trees','Gradient Boosting','LSTM','NVD'],gh:'https://github.com/nishu2402/NVD-Cybersecurity-CVSS-Prediction.git'},
-{type:'ML & Telemetry · IoT Network Flow',title:'Predictive IoT Network Flow Analysis',cl:'CLASSIFIED',metric:'R²=0.9999 · MAE=0.0010 · 87% Dimensionality Reduction · 117K+ Records',desc:'24 model configurations on RT-IoT2022 (117K+ records); Gradient Boosting achieved R²=0.9999 / MAE=0.0010; Extra Trees maintained R²=0.9996 after 87% dimensionality reduction — production-ready IoT anomaly detection.',tags:['Python','TensorFlow','Scikit-Learn','Gradient Boosting','Extra Trees','RT-IoT2022'],gh:'https://github.com/nishu2402'},
+{type:'ML & Telemetry · IoT Network Flow',title:'Predictive IoT Network Flow Analysis',cl:'CLASSIFIED',metric:'R²=0.9999 · MAE=0.0010 · 87% Dimensionality Reduction · 117K+ Records',desc:'24 model configurations on RT-IoT2022 (117K+ records); Gradient Boosting achieved R²=0.9999 / MAE=0.0010; Extra Trees maintained R²=0.9996 after 87% dimensionality reduction — production-ready IoT anomaly detection.',tags:['Python','TensorFlow','Scikit-Learn','Gradient Boosting','Extra Trees','RT-IoT2022'],gh:'https://github.com/nishu2402/IoT-Network-Telemetry-Predictor.git'},
 {type:'Mobile Security · Machine Learning',title:'Android Malware Detection System',cl:'CLASSIFIED',metric:'F1-Score 98.47% · Near-Perfect ROC-AUC · Drebin 15K+ Samples',desc:'Static-analysis APK pipeline on Drebin (15K+ samples); L1 Regularisation + Chi-Square feature extraction; XGBoost F1-Score 98.47% and near-perfect ROC-AUC.',tags:['Python','XGBoost','Scikit-Learn','Drebin','Static Analysis','L1 Reg'],gh:'https://github.com/nishu2402/android-malware-detection-ml.git'},
 {type:'ML & Network Defence · DDoS Detection',title:'AI-Powered DDoS Detection System',cl:'CLASSIFIED',metric:'1.0000 Precision · 99.99% Accuracy · 225K+ Records',desc:'NIDS on 225K+ CIC-DDoS2019 records via 1D-CNN, MLP, ensemble; XGBoost achieved 1.0000 precision and 99.99% accuracy — zero false-positive analyst alerts.',tags:['Python','TensorFlow','XGBoost','1D-CNN','MLP','CIC-DDoS2019'],gh:'https://github.com/nishu2402/intelligent-ddos-detection-system.git'},
 {type:'AI Threat Assessment · Adaptive CVSS',title:'Adaptive Vulnerability Risk Scoring Framework',cl:'CLASSIFIED',metric:'Dynamic 0–10 · Context-Aware · XGBoost + RF + KNN + DT',desc:'Dynamic context-aware 0–10 risk scoring over static CVSS; engineered TCP/UDP feature pipelines; validated XGBoost, RF, Decision Tree, KNN regressors via MSE, RMSE, MAE, R².',tags:['Python','XGBoost','Random Forest','KNN','One-Hot Encoding','CVSS'],gh:'https://github.com/nishu2402/adaptive-vulnerability-risk-scoring.git'}
@@ -906,6 +933,25 @@ skObs.observe(document.getElementById('SBARS'));
 {type:'AI Research · DRL · LLMs',title:'AI & Autonomous Penetration Testing Frameworks — MSc BCU',metric:'DRL · LLMs · MAS · EU AI Act · Neuro-Symbolic AI',desc:"Evaluated DRL and LLMs in autonomous offensive security; compared MAS vs single-agent success-rate metrics on zero-day targets; proposed Neuro-Symbolic AI + HITL governance framework compliant with EU AI Act and GDPR.",tags:['DRL','LLMs','Multi-Agent Systems','Neuro-Symbolic AI','EU AI Act','GDPR']},
 {type:'Project Management · Agile-PRINCE2',title:'IT Project Management: Autonomous AI Pentesting System — MSc BCU',metric:'Hybrid Agile-PRINCE2 · Monday.com · 5-Phase WBS · 7-Week',desc:'7-week Hybrid Agile-PRINCE2 plan (Monday.com, 5-phase WBS) for autonomous AI-driven pentesting system with GDPR/EU AI Act compliance guardrails.',tags:['Agile-PRINCE2','Monday.com','WBS','Risk Management','EU AI Act']}
 ].forEach(function(p,i){var el=document.createElement('div');el.className='pc rv';el.style.transitionDelay=(i*.07)+'s';el.innerHTML='<div class="pc-head"><div class="pc-type">'+p.type+'</div><div class="pc-title">'+p.title+'</div></div><div class="pc-body"><div class="pc-metric">'+p.metric+'</div><div class="pc-desc">'+p.desc+'</div><div class="pc-tags">'+p.tags.map(function(t){return'<span class="pc-tag">'+t+'</span>';}).join('')+'</div></div>';document.getElementById('APROJ_GRID').appendChild(el);rvObs.observe(el);});
+
+/* ── DATA: HACKATHONS ───────────────────────────── */
+(function(){
+  var hacks=[{
+    place:'🏆 1st Place Winner',
+    event:'Cyber Security Society Hackathon',
+    org:'BCU · STEAMhouse, Birmingham, UK',
+    bullets:[
+      'Secured 1st Place by rapidly prototyping a working MVP of an enterprise-grade IAM risk analysis platform under strict time constraints.',
+      'Engineered a graph-based detection engine to model access relationships, automating discovery of complex privilege escalation chains and "toxic" role combinations.',
+      'Project: Aegis-IAM Dashboard | Privilege Escalation & Risk Analysis Platform — Python · AWS IAM · NetworkX · MITRE ATT&CK',
+    ]
+  }];
+  hacks.forEach(function(h,i){
+    var el=document.createElement('div');el.className='hack-card rv';el.style.transitionDelay=(i*.08)+'s';
+    el.innerHTML='<div class="hack-place"><span class="hack-trophy">🏆</span>'+h.place+'</div><div class="hack-event">'+h.event+'</div><div class="hack-org">'+h.org+'</div><ul class="hack-ul">'+h.bullets.map(function(b){return'<li>'+b+'</li>';}).join('')+'</ul>';
+    document.getElementById('HACK_CARDS').appendChild(el);rvObs.observe(el);
+  });
+})();
 
 /* ── DATA: BLOG (real posts) ────────────────────── */
 [
