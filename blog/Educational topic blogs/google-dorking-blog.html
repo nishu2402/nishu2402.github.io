@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Google Dorking &amp; Google Hacking | Nisarg Chasmawala</title>
+<meta name="description" content="Google Dorking and Google Hacking - the definitive OSINT guide by Nisarg Chasmawala (Shroff), Offensive Security Engineer.">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--g:#00ff41;--c:#00e5ff;--p:#bf00ff;--r:#ff003c;--o:#ffd700;--bg:#030509;--t1:#d4ffe0;--t2:#7aad82;--t3:#2e4a32;--mono:'Share Tech Mono',monospace;--dsp:'Orbitron',sans-serif;--body:'Rajdhani',sans-serif;--glow:0 0 20px rgba(0,255,65,.4),0 0 60px rgba(0,255,65,.15);--cglow:0 0 20px rgba(0,229,255,.4),0 0 60px rgba(0,229,255,.1);--pglow:0 0 20px rgba(191,0,255,.4),0 0 60px rgba(191,0,255,.1)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;overflow-x:hidden}
+body{background:var(--bg);color:var(--t1);font-family:var(--body);font-size:17px;line-height:1.8;overflow-x:hidden;cursor:none}
+#bg-particle{position:fixed;inset:0;z-index:0;pointer-events:none}
+#bg-hex{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.35}
+#bg-scan{position:fixed;inset:0;z-index:9999;pointer-events:none;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,255,65,.009) 2px,rgba(0,255,65,.009) 4px)}
+#bg-vignette{position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse at 50% 50%,transparent 50%,rgba(3,5,9,.85) 100%)}
+#cur{position:fixed;width:10px;height:10px;border-radius:50%;background:var(--g);box-shadow:var(--glow);pointer-events:none;z-index:99999;transform:translate(-50%,-50%);transition:width .1s,height .1s}
+#cur2{position:fixed;width:30px;height:30px;border-radius:50%;border:1px solid rgba(0,255,65,.5);pointer-events:none;z-index:99998;transform:translate(-50%,-50%)}
+#cur3{position:fixed;width:50px;height:50px;border-radius:50%;border:1px solid rgba(0,255,65,.2);pointer-events:none;z-index:99997;transform:translate(-50%,-50%)}
+#prog{position:fixed;top:0;left:0;height:2px;background:linear-gradient(to right,var(--g),var(--c),var(--p));box-shadow:0 0 10px var(--g);z-index:10000;width:0%}
+.topbar{position:fixed;top:0;left:0;right:0;height:58px;background:rgba(3,5,9,.88);border-bottom:1px solid rgba(0,255,65,.12);backdrop-filter:blur(20px);z-index:1000;display:flex;align-items:center;justify-content:space-between;padding:0 32px}
+.tb-left{display:flex;flex-direction:column;gap:2px}
+.tb-name{font-family:var(--dsp);font-size:13px;font-weight:900;color:var(--t1);letter-spacing:3px}
+.tb-roles{font-family:var(--mono);font-size:9px;overflow:hidden;white-space:nowrap}
+.tb-inner{display:inline-block;color:var(--c);animation:ticker 18s linear infinite}
+@keyframes ticker{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
+.tb-status{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;color:var(--g)}
+.tb-dot{width:7px;height:7px;border-radius:50%;background:var(--g);box-shadow:0 0 10px var(--g);animation:tdot 1.2s ease-in-out infinite}
+@keyframes tdot{0%,100%{opacity:1}50%{opacity:.3}}
+.toc{position:fixed;right:20px;top:50%;transform:translateY(-50%);z-index:200;display:flex;flex-direction:column;gap:9px}
+.toc-i{display:flex;align-items:center;gap:8px;cursor:pointer}
+.toc-d{width:6px;height:6px;border-radius:50%;border:1px solid var(--t3);transition:all .25s;flex-shrink:0}
+.toc-i.active .toc-d,.toc-i:hover .toc-d{background:var(--g);border-color:var(--g);box-shadow:0 0 10px var(--g)}
+.toc-l{font-family:var(--mono);font-size:10px;color:var(--t3);opacity:0;transform:translateX(6px);transition:all .2s;white-space:nowrap}
+.toc-i:hover .toc-l,.toc-i.active .toc-l{opacity:1;transform:none;color:var(--g)}
+@media(max-width:1000px){.toc{display:none}}
+.wrap{position:relative;z-index:10;max-width:980px;margin:0 auto;padding:0 28px}
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:100px 0 60px;position:relative}
+.hero-canvas-wrap{position:absolute;right:-60px;top:50%;transform:translateY(-52%);width:420px;height:420px;pointer-events:none}
+#hero-geo{width:100%;height:100%}
+.hero-content{max-width:520px;position:relative;z-index:2}
+.hero-tag{font-family:var(--mono);font-size:11px;letter-spacing:4px;color:var(--c);text-transform:uppercase;margin-bottom:18px;opacity:0;animation:fup .6s ease forwards .3s;display:flex;align-items:center;gap:12px}
+.hero-tag::before{content:'';width:40px;height:1px;background:linear-gradient(to right,transparent,var(--c))}
+.hero-tag::after{content:'';flex:1;max-width:100px;height:1px;background:linear-gradient(to right,var(--c),transparent)}
+.hero-title{font-family:var(--dsp);font-size:clamp(15px,3vw,38px);font-weight:900;line-height:1.05;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;opacity:0;animation:fup .7s ease forwards .5s}
+.ht-line1{display:block;color:var(--g);text-shadow:0 0 40px rgba(0,255,65,.6)}
+.ht-sub{display:block;font-size:.43em;letter-spacing:4px;color:rgba(200,255,220,.5);font-weight:400;margin-top:10px}
+.gw{position:relative;display:inline-block}
+.gw::before,.gw::after{content:attr(data-t);position:absolute;top:0;left:0;width:100%;font-family:var(--dsp);font-weight:900;font-size:inherit;letter-spacing:inherit;text-transform:uppercase}
+.gw::before{color:var(--c);animation:ga 5s infinite;clip-path:polygon(0 0,100% 0,100% 33%,0 33%)}
+.gw::after{color:var(--r);animation:gb 5s infinite;clip-path:polygon(0 66%,100% 66%,100% 100%,0 100%)}
+@keyframes ga{0%,85%,100%{transform:none;opacity:0}87%{transform:translate(-5px,2px);opacity:.9}93%{transform:none;opacity:0}}
+@keyframes gb{0%,87%,100%{transform:none;opacity:0}89%{transform:translate(5px,3px);opacity:.8}95%{transform:none;opacity:0}}
+.hero-desc{font-size:17px;font-weight:300;color:var(--t2);max-width:560px;line-height:1.75;margin-bottom:36px;opacity:0;animation:fup .8s ease forwards .8s;margin-top:20px}
+.hero-meta{display:flex;gap:24px;flex-wrap:wrap;opacity:0;animation:fup .8s ease forwards 1s}
+.m-item{display:flex;flex-direction:column;gap:3px}
+.m-lbl{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--t3);text-transform:uppercase}
+.m-val{font-family:var(--mono);font-size:12px;color:var(--c)}
+.hero-scroll-hint{position:absolute;bottom:24px;left:0;display:flex;align-items:center;gap:12px;opacity:0;animation:fin 1s ease forwards 1.8s}
+.hs-line{width:60px;height:1px;background:linear-gradient(to right,var(--g),transparent)}
+.hs-txt{font-family:var(--mono);font-size:9px;letter-spacing:3px;color:var(--t3)}
+.hs-pulse{width:6px;height:6px;border-radius:50%;background:var(--g);box-shadow:0 0 8px var(--g);animation:tdot 1.5s ease-in-out infinite}
+.sec{margin-bottom:100px}
+.sec-hd{display:flex;align-items:center;gap:14px;margin-bottom:40px}
+.sec-n{font-family:var(--mono);font-size:10px;color:var(--p);letter-spacing:2px;min-width:44px}
+.sec-ln{flex:1;height:1px;background:linear-gradient(to right,rgba(0,229,255,.35),transparent)}
+.sec-t{font-family:var(--dsp);font-size:clamp(14px,2.4vw,21px);font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--c);text-shadow:var(--cglow)}
+.tw-cursor{display:inline-block;width:2px;height:1em;background:var(--c);margin-left:4px;animation:blink 1s step-end infinite;vertical-align:middle}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.sec-ai .sec-t{color:#bf00ff;text-shadow:var(--pglow)}
+.sec-ai .sec-n{color:var(--c)}
+.sec-ai .sec-ln{background:linear-gradient(to right,rgba(191,0,255,.35),transparent)}
+.sec-ai .tw-cursor{background:#bf00ff}
+.panel{background:rgba(0,255,65,.025);border:1px solid rgba(0,255,65,.12);border-radius:4px;padding:32px;margin-bottom:22px;position:relative;overflow:hidden;transition:border-color .3s,box-shadow .3s,transform .3s}
+.panel::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:linear-gradient(to bottom,var(--g),transparent);opacity:0;transition:opacity .3s}
+.panel:hover{border-color:rgba(0,229,255,.4);box-shadow:0 0 50px rgba(0,229,255,.07),0 20px 60px rgba(0,0,0,.3);transform:translateY(-3px)}
+.panel:hover::before{opacity:1}
+.panel p{color:var(--t2);margin-bottom:12px}
+.panel p:last-child{margin-bottom:0}
+.panel-t{font-family:var(--dsp);font-size:12px;font-weight:700;letter-spacing:3px;color:var(--g);text-transform:uppercase;margin-bottom:18px;display:flex;align-items:center;gap:12px}
+.panel-t::after{content:'';flex:1;height:1px;background:linear-gradient(to right,rgba(0,255,65,.2),transparent)}
+.panel-ai{background:rgba(191,0,255,.03);border-color:rgba(191,0,255,.18)}
+.panel-ai:hover{border-color:rgba(191,0,255,.45)}
+.panel-ai .panel-t{color:#bf00ff}
+.panel-ai .panel-t::after{background:linear-gradient(to right,rgba(191,0,255,.2),transparent)}
+.panel-ai::before{background:linear-gradient(to bottom,#bf00ff,transparent)}
+.ai-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px;margin:20px 0}
+.ai-card{background:rgba(191,0,255,.04);border:1px solid rgba(191,0,255,.18);border-radius:4px;padding:22px;position:relative;overflow:hidden;transition:all .3s}
+.ai-card::after{content:'';position:absolute;top:0;right:0;width:0;height:0;border-top:26px solid rgba(191,0,255,.25);border-left:26px solid transparent}
+.ai-card:hover{border-color:rgba(191,0,255,.5);box-shadow:var(--pglow),0 16px 40px rgba(0,0,0,.25);transform:translateY(-3px)}
+.ai-ico{font-size:24px;margin-bottom:10px;display:block}
+.ai-name{font-family:var(--dsp);font-size:11px;font-weight:700;letter-spacing:2px;color:#bf00ff;text-transform:uppercase;margin-bottom:10px}
+.ai-desc{font-size:14px;color:var(--t2);line-height:1.65;font-weight:300}
+.alert{border-radius:4px;padding:16px 20px;margin:20px 0;display:flex;gap:14px;align-items:flex-start}
+.al-w{background:rgba(255,215,0,.04);border:1px solid rgba(255,215,0,.18);border-left:3px solid var(--o)}
+.al-p{background:rgba(191,0,255,.04);border:1px solid rgba(191,0,255,.18);border-left:3px solid #bf00ff}
+.al-i{background:rgba(0,229,255,.04);border:1px solid rgba(0,229,255,.14);border-left:3px solid var(--c)}
+.al-ic{font-family:var(--mono);font-size:13px;flex-shrink:0;margin-top:2px}
+.al-w .al-ic{color:var(--o)}.al-p .al-ic{color:#bf00ff}.al-i .al-ic{color:var(--c)}
+.al-tx{font-size:14px;color:var(--t2);line-height:1.6}
+.ptbl{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12px;margin:16px 0}
+.ptbl th{text-align:left;padding:11px 14px;color:var(--c);border-bottom:1px solid rgba(0,229,255,.3);letter-spacing:2px;font-size:10px;text-transform:uppercase}
+.ptbl td{padding:10px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05);vertical-align:top}
+.ptbl tr:hover td{background:rgba(0,255,65,.02)}
+.ptbl td:first-child{color:var(--g);font-weight:700}
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;margin:20px 0}
+.tc{background:rgba(0,229,255,.03);border:1px solid rgba(0,229,255,.1);border-radius:4px;padding:18px;transition:all .25s;position:relative;overflow:hidden}
+.tc::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(to right,var(--c),transparent);transform:scaleX(0);transform-origin:left;transition:transform .3s}
+.tc:hover{border-color:rgba(0,229,255,.4);background:rgba(0,229,255,.06);box-shadow:var(--cglow);transform:translateY(-3px)}
+.tc:hover::after{transform:scaleX(1)}
+.tcname{font-family:var(--mono);font-size:12px;color:var(--c);margin-bottom:4px}
+.tctag{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--o);text-transform:uppercase;margin-bottom:6px;display:block}
+.tcdesc{font-size:12px;color:var(--t3);line-height:1.45}
+.dork-card{background:rgba(0,0,0,.5);border:1px solid rgba(0,255,65,.14);border-radius:4px;padding:18px;margin-bottom:12px;transition:all .3s}
+.dork-card:hover{border-color:rgba(0,229,255,.4);transform:translateX(4px)}
+.dork-expr{font-family:var(--mono);font-size:13px;color:var(--g);background:rgba(0,255,65,.06);border:1px solid rgba(0,255,65,.18);border-radius:3px;padding:8px 14px;display:block;margin-bottom:8px;line-height:1.7;word-break:break-all}
+.dork-desc{font-size:13px;color:var(--t2);line-height:1.55}
+.dork-tag{font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--o);text-transform:uppercase;margin-top:6px;display:inline-block}
+.op-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin:20px 0}
+.op-card{background:rgba(0,0,0,.45);border:1px solid rgba(0,229,255,.12);border-radius:4px;padding:18px;transition:all .3s;position:relative;overflow:hidden}
+.op-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,var(--c),transparent);opacity:.5}
+.op-card:hover{border-color:rgba(0,229,255,.4);transform:translateY(-3px);box-shadow:var(--cglow)}
+.op-kw{font-family:var(--mono);font-size:14px;color:var(--g);font-weight:700;margin-bottom:4px}
+.op-syn{font-family:var(--mono);font-size:10px;color:var(--o);margin-bottom:8px;letter-spacing:1px}
+.op-desc{font-size:13px;color:var(--t2);line-height:1.5}
+.cb{background:rgba(0,0,0,.7);border:1px solid rgba(0,255,65,.1);border-left:3px solid var(--g);border-radius:0 4px 4px 0;padding:22px 26px;margin:16px 0;position:relative;overflow-x:auto;cursor:pointer;transition:all .3s}
+.cb::before{content:attr(data-l);position:absolute;top:0;right:0;font-family:var(--mono);font-size:9px;letter-spacing:2px;color:var(--g);background:rgba(0,255,65,.07);padding:3px 12px;border-bottom-left-radius:4px;text-transform:uppercase}
+.cb:hover{border-color:rgba(0,255,65,.35)}
+.cb.cb-ai{border-left-color:#bf00ff}.cb.cb-ai::before{color:#bf00ff;background:rgba(191,0,255,.07)}
+.cb code{font-family:var(--mono);font-size:13px;color:var(--g);white-space:pre;display:block;line-height:1.9}
+.cta{background:linear-gradient(135deg,rgba(0,255,65,.04),rgba(191,0,255,.04));border:1px solid rgba(0,229,255,.3);border-radius:4px;padding:60px 50px;text-align:center;position:relative;overflow:hidden;margin-top:80px}
+.cta::before{content:'DORK';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:var(--dsp);font-size:200px;font-weight:900;color:rgba(0,255,65,.018);pointer-events:none;letter-spacing:20px}
+.cta-t{font-family:var(--dsp);font-size:20px;font-weight:700;letter-spacing:4px;color:var(--g);text-transform:uppercase;margin-bottom:16px;text-shadow:var(--glow)}
+.cta-p{color:var(--t2);font-size:16px;max-width:540px;margin:0 auto 32px;line-height:1.75}
+.cta-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+.btn{font-family:var(--mono);font-size:11px;letter-spacing:3px;text-transform:uppercase;padding:13px 30px;border-radius:2px;text-decoration:none;display:inline-block;transition:all .25s}
+.btn-p{border:1px solid var(--g);color:var(--g);background:rgba(0,255,65,.06)}
+.btn-p:hover{background:var(--g);color:var(--bg);box-shadow:var(--glow)}
+.btn-s{border:1px solid var(--c);color:var(--c);background:rgba(0,229,255,.05)}
+.btn-s:hover{background:var(--c);color:var(--bg);box-shadow:var(--cglow)}
+.footer{border-top:1px solid rgba(0,255,65,.1);padding:32px 0;margin-top:60px;display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:20px}
+.f-l{font-family:var(--mono);font-size:11px;color:var(--t3);letter-spacing:1.5px;line-height:2}
+.f-alias{color:var(--g);font-size:10px;letter-spacing:3px;text-shadow:0 0 8px var(--g)}
+.f-r{font-family:var(--mono);font-size:11px;color:var(--t3);text-align:right;line-height:2}
+.f-r a{color:var(--g);text-decoration:none}
+.f-r a:hover{text-shadow:var(--glow)}
+.div{height:1px;background:linear-gradient(to right,transparent,rgba(0,255,65,.15),transparent);margin:60px 0;position:relative}
+.div::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:6px;height:6px;border-radius:50%;background:var(--g);box-shadow:0 0 12px var(--g)}
+.div-ai{background:linear-gradient(to right,transparent,rgba(191,0,255,.22),transparent)}
+.div-ai::after{background:#bf00ff;box-shadow:0 0 12px #bf00ff}
+@keyframes fup{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+@keyframes fin{from{opacity:0}to{opacity:1}}
+.rv{opacity:0;transform:translateY(30px);transition:opacity .8s,transform .8s}
+.rv-l{opacity:0;transform:translateX(-30px);transition:opacity .8s,transform .8s}
+.rv.on,.rv-l.on{opacity:1;transform:none}
+@media(max-width:700px){.ai-grid,.tgrid,.op-grid{grid-template-columns:1fr}.hero-canvas-wrap{display:none}.cta{padding:36px 20px}}
+</style>
+</head>
+<body>
+<canvas id="bg-particle"></canvas>
+<canvas id="bg-hex"></canvas>
+<div id="bg-vignette"></div>
+<div id="bg-scan"></div>
+<div id="cur"></div><div id="cur2"></div><div id="cur3"></div>
+<div id="prog"></div>
+<nav class="topbar">
+  <div class="tb-left">
+    <span class="tb-name">NISARG CHASMAWALA (SHROFF)</span>
+    <div class="tb-roles"><span class="tb-inner">Penetration Tester &nbsp;|&nbsp; OSINT Researcher &nbsp;|&nbsp; Vulnerability Assessment &nbsp;|&nbsp; Offensive Security Engineer &nbsp;|&nbsp; Cybersecurity Researcher &nbsp;|&nbsp; Digital Forensics</span></div>
+  </div>
+  <div class="tb-status"><span class="tb-dot"></span>SYS ONLINE</div>
+</nav>
+<nav class="toc" id="toc">
+  <div class="toc-i active" onclick="goTo('#hero')" data-s="hero"><div class="toc-d"></div><span class="toc-l">INTRO</span></div>
+  <div class="toc-i" onclick="goTo('#operators')" data-s="operators"><div class="toc-d"></div><span class="toc-l">OPERATORS</span></div>
+  <div class="toc-i" onclick="goTo('#recon')" data-s="recon"><div class="toc-d"></div><span class="toc-l">RECON DORKS</span></div>
+  <div class="toc-i" onclick="goTo('#sensitive')" data-s="sensitive"><div class="toc-d"></div><span class="toc-l">SENSITIVE DATA</span></div>
+  <div class="toc-i" onclick="goTo('#vulns')" data-s="vulns"><div class="toc-d"></div><span class="toc-l">VULNS</span></div>
+  <div class="toc-i" onclick="goTo('#tools')" data-s="tools"><div class="toc-d"></div><span class="toc-l">TOOLS</span></div>
+  <div class="toc-i" onclick="goTo('#workflow')" data-s="workflow"><div class="toc-d"></div><span class="toc-l">WORKFLOW</span></div>
+  <div class="toc-i" onclick="goTo('#ai')" data-s="ai"><div class="toc-d"></div><span class="toc-l">AI INTEGRATION</span></div>
+</nav>
+<div class="wrap">
+
+<section class="hero" id="hero">
+  <div class="hero-canvas-wrap"><canvas id="hero-geo"></canvas></div>
+  <div class="hero-content">
+  <div class="hero-tag">NISARG CHASMAWALA &nbsp;//&nbsp; ALIAS: HEAVEN</div>
+  <h1 class="hero-title">
+    <div class="gw" data-t="GOOGLE DORKING"><span class="ht-line1">GOOGLE DORKING</span></div>
+    <span class="ht-sub">OSINT &middot; RECON &middot; EXPOSED DATA &middot; AI INTEGRATION</span>
+  </h1>
+  <p class="hero-desc">The definitive Google Dorking and Google Hacking field guide for security professionals. From core search operators and advanced syntax to reconnaissance dorks, sensitive file discovery, login panel exposure, vulnerability identification, automated dorking tools, and full AI-powered OSINT pipelines. Google indexes more sensitive data than most organisations realise -- this guide shows exactly how attackers find it and how defenders can audit their own exposure.</p>
+  <div class="hero-meta">
+    <div class="m-item"><span class="m-lbl">Author</span><span class="m-val">Nisarg Chasmawala (Shroff)</span></div>
+    <div class="m-item"><span class="m-lbl">Alias</span><span class="m-val">HEAVEN</span></div>
+    <div class="m-item"><span class="m-lbl">Category</span><span class="m-val">OSINT &middot; Recon &middot; AI</span></div>
+    <div class="m-item"><span class="m-lbl">Certs</span><span class="m-val">CEH Master &middot; CPENT &middot; CHFI</span></div>
+  </div>
+  </div>
+  <div class="hero-scroll-hint"><div class="hs-line"></div><span class="hs-txt">SCROLL TO BEGIN</span><div class="hs-pulse"></div></div>
+</section>
+<div class="div"></div>
+
+<!-- 01 OPERATORS -->
+<section class="sec rv" id="operators">
+  <div class="sec-hd"><span class="sec-n">01 //</span><h2 class="sec-t">Google Search Operators -- Core Syntax<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel rv-l">
+    <p><strong style="color:var(--t1)">Google Dorking</strong> (also called Google Hacking) uses advanced Google search operators to find information that is publicly indexed but not intended to be easily discoverable. First documented by Johnny Long in the Google Hacking Database (GHDB), dorking leverages the gap between what organisations inadvertently expose to search engine crawlers and what they believe is private. The technique requires no tools, no exploits, and no special access -- just precise knowledge of how Google's search syntax works.</p>
+    <p>Google indexes everything it can reach. Misconfigured servers, forgotten staging environments, publicly accessible admin panels, exposed database exports, and documents containing credentials are routinely indexed because the server never sent a <code style="font-family:var(--mono);color:var(--c)">Disallow</code> directive in <code style="font-family:var(--mono);color:var(--c)">robots.txt</code>, or because the file was temporarily public and Google cached it before it was restricted.</p>
+  </div>
+  <div class="op-grid rv">
+    <div class="op-card"><div class="op-kw">site:</div><div class="op-syn">site:domain.com [query]</div><div class="op-desc">Restrict results to a specific domain or subdomain. The most fundamental recon operator -- maps the entire indexed footprint of a target organisation.</div></div>
+    <div class="op-card"><div class="op-kw">filetype:</div><div class="op-syn">filetype:pdf site:target.com</div><div class="op-desc">Filter results by file extension. Works with pdf, doc, docx, xls, xlsx, ppt, sql, log, txt, xml, json, bak, env, and many others.</div></div>
+    <div class="op-card"><div class="op-kw">intitle:</div><div class="op-syn">intitle:"index of"</div><div class="op-desc">Match text in the page title. Used to find directory listings, admin panels, login pages, and application-specific interfaces.</div></div>
+    <div class="op-card"><div class="op-kw">inurl:</div><div class="op-syn">inurl:admin inurl:login</div><div class="op-desc">Match text in the URL path. Finds admin interfaces, login portals, configuration pages, and API endpoints by their URL patterns.</div></div>
+    <div class="op-card"><div class="op-kw">intext:</div><div class="op-syn">intext:"password" filetype:log</div><div class="op-desc">Match text in the page body. Used to find documents containing specific strings -- credentials, API keys, error messages, and sensitive content.</div></div>
+    <div class="op-card"><div class="op-kw">cache:</div><div class="op-syn">cache:target.com/page</div><div class="op-desc">View Google's cached version of a page. Useful when a target has removed sensitive content -- the cache may still contain the original indexed version.</div></div>
+    <div class="op-card"><div class="op-kw">related:</div><div class="op-syn">related:target.com</div><div class="op-desc">Find websites Google considers similar or related to the target -- reveals sister companies, subsidiaries, partner organisations, and shared infrastructure.</div></div>
+    <div class="op-card"><div class="op-kw">link: / info:</div><div class="op-syn">info:target.com</div><div class="op-desc">Retrieve information Google has about a specific URL -- cached version, similar pages, pages linking to it. Useful for initial recon of a specific page.</div></div>
+    <div class="op-card"><div class="op-kw">OR / AND / -</div><div class="op-syn">term1 OR term2 -exclude</div><div class="op-desc">Boolean operators: OR expands results, AND (default) requires both terms, minus (-) excludes. Chain with other operators for precise compound queries.</div></div>
+    <div class="op-card"><div class="op-kw">" " (exact)</div><div class="op-syn">"exact phrase here"</div><div class="op-desc">Exact phrase matching. Forces Google to return only results containing the complete phrase -- critical for finding specific strings like error messages or default banners.</div></div>
+    <div class="op-card"><div class="op-kw">* (wildcard)</div><div class="op-syn">"password * 2024"</div><div class="op-desc">Wildcard -- matches any word in that position within an exact phrase. Useful when part of a pattern is unknown or varies across targets.</div></div>
+    <div class="op-card"><div class="op-kw">before: / after:</div><div class="op-syn">site:target.com after:2023-01-01</div><div class="op-desc">Filter results by indexing date. Find recently exposed files, new pages on a target, or trace when sensitive content first appeared in search results.</div></div>
+  </div>
+  <div class="panel rv">
+    <div class="panel-t">Operator Combination Logic</div>
+    <table class="ptbl">
+      <thead><tr><th>Pattern</th><th>Example</th><th>What It Finds</th></tr></thead>
+      <tbody>
+        <tr><td>site + filetype</td><td>site:target.com filetype:sql</td><td>SQL dumps indexed on the target domain</td></tr>
+        <tr><td>site + inurl</td><td>site:target.com inurl:admin</td><td>Admin paths on the target specifically</td></tr>
+        <tr><td>intitle + inurl</td><td>intitle:"index of" inurl:backup</td><td>Open directory listings in backup paths</td></tr>
+        <tr><td>intext + filetype</td><td>intext:"BEGIN RSA" filetype:pem</td><td>Private keys in PEM files indexed anywhere</td></tr>
+        <tr><td>site + intext</td><td>site:target.com intext:"api_key"</td><td>Pages on target containing API key strings</td></tr>
+        <tr><td>site + -www</td><td>site:target.com -site:www.target.com</td><td>All subdomains excluding main www (subdomain enumeration)</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+<div class="div"></div>
+
+<!-- 02 RECON -->
+<section class="sec rv" id="recon">
+  <div class="sec-hd"><span class="sec-n">02 //</span><h2 class="sec-t">Reconnaissance Dorks -- Target Mapping<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel rv-l">
+    <p>Reconnaissance dorking maps the indexed surface of a target organisation without making a single request to the target's servers. All queries go to Google -- the target never sees your IP address, no IDS rule fires, no WAF logs the request. This passive recon phase identifies subdomains, exposed directories, login portals, technology stack, employee information, and infrastructure details that inform all subsequent active testing phases.</p>
+  </div>
+  <div class="alert al-i rv">
+    <span class="al-ic">[ * ]</span>
+    <p class="al-tx"><strong>Passive by nature -- not illegal.</strong> Google dorking queries search a public index. No connection is made to the target. However, accessing exposed content you discover (downloading files, logging into found panels) may cross legal boundaries without authorisation. Use for asset discovery and exposure assessment in authorised engagements only.</p>
+  </div>
+  <div class="dork-card rv">
+    <span class="dork-expr">site:target.com -site:www.target.com</span>
+    <div class="dork-desc">Enumerate all subdomains indexed by Google for a target domain, excluding the main www site. Reveals development environments (dev.target.com), staging servers (staging.target.com), internal tools (jira.target.com, jenkins.target.com), and forgotten subdomains that may not appear in DNS brute force results because they are rarely queried.</div>
+    <span class="dork-tag">Subdomain Enumeration</span>
+  </div>
+  <div class="dork-card rv">
+    <span class="dork-expr">site:target.com intitle:"index of" "parent directory"</span>
+    <div class="dork-desc">Finds open directory listings on the target -- Apache and Nginx servers with autoindex enabled that expose their file structure. Open directories commonly contain backup archives, log files, configuration files, source code dumps, and uploaded files that were never intended to be publicly accessible.</div>
+    <span class="dork-tag">Open Directory Listing</span>
+  </div>
+  <div class="dork-card rv">
+    <span class="dork-expr">site:target.com inurl:wp-admin OR inurl:administrator OR inurl:login OR inurl:signin</span>
+    <div class="dork-desc">Discovers all login portals and admin interfaces on the target indexed by Google. Identifies the CMS (WordPress wp-admin, Joomla administrator, Drupal user/login), custom admin panels, and authentication pages -- the entry points for credential attacks and unauthorised access attempts in authorised engagements.</div>
+    <span class="dork-tag">Login Panel Discovery</span>
+  </div>
+  <div class="dork-card rv">
+    <span class="dork-expr">site:target.com ext:php inurl:?id= OR inurl:?page= OR inurl:?file=</span>
+    <div class="dork-desc">Identifies PHP pages with URL parameters that accept user input -- the classic indicators of potential SQL injection, LFI (Local File Inclusion), and RFI (Remote File Inclusion) attack surfaces. Finding parameterised URLs via dorking is faster than crawling the entire site and surfaces the highest-risk input points first.</div>
+    <span class="dork-tag">Input Parameter Discovery</span>
+  </div>
+  <div class="dork-card rv">
+    <span class="dork-expr">site:target.com filetype:pdf OR filetype:docx OR filetype:xlsx</span>
+    <div class="dork-desc">Retrieves all indexed documents from the target domain. Office and PDF documents frequently contain metadata (author names, internal server paths, software version strings, Active Directory usernames), internal project information, client data, financial figures, and sometimes embedded credentials in spreadsheets or configuration documents.</div>
+    <span class="dork-tag">Document &amp; Metadata Harvest</span>
+  </div>
+  <div class="dork-card rv">
+    <span class="dork-expr">site:target.com intext:"Powered by" OR intext:"Running on" OR intext:"Apache" OR intext:"nginx"</span>
+    <div class="dork-desc">Technology stack fingerprinting via indexed pages. Default server banners, CMS footer strings, framework acknowledgements, and error pages often reveal the exact versions of web servers, databases, frameworks, and CMS platforms -- enabling precise vulnerability lookup against known CVEs for those versions.</div>
+    <span class="dork-tag">Technology Fingerprinting</span>
+  </div>
+  <div class="cb rv" data-l="Systematic Recon Dork Sequence -- Target Mapping">
+    <code><span style="color:var(--t3)"># PHASE 1: Subdomain and infrastructure enumeration</span>
+site:TARGET.COM -site:www.TARGET.COM
+site:*.TARGET.COM
+site:TARGET.COM inurl:dev OR inurl:staging OR inurl:test OR inurl:uat
+site:TARGET.COM inurl:api OR inurl:v1 OR inurl:v2 OR inurl:graphql
+
+<span style="color:var(--t3)"># PHASE 2: Open directories and file exposure</span>
+site:TARGET.COM intitle:"index of"
+site:TARGET.COM intitle:"index of" inurl:backup
+site:TARGET.COM intitle:"index of" inurl:upload
+site:TARGET.COM intitle:"index of" "*.sql" OR "*.bak" OR "*.zip"
+
+<span style="color:var(--t3)"># PHASE 3: Technology and version fingerprinting</span>
+site:TARGET.COM ext:php OR ext:asp OR ext:aspx OR ext:jsp
+site:TARGET.COM intext:"Powered by WordPress" intitle:"WordPress"
+site:TARGET.COM inurl:struts OR inurl:servlet OR inurl:spring
+site:TARGET.COM "X-Powered-By" intext:"PHP" OR intext:"ASP.NET"
+
+<span style="color:var(--t3)"># PHASE 4: Login and admin panel enumeration</span>
+site:TARGET.COM inurl:admin OR inurl:administrator
+site:TARGET.COM inurl:login OR inurl:signin OR inurl:auth
+site:TARGET.COM intitle:"Admin Panel" OR intitle:"Control Panel"
+site:TARGET.COM inurl:phpmyadmin OR inurl:adminer
+
+<span style="color:var(--t3)"># PHASE 5: Document and metadata harvest</span>
+site:TARGET.COM filetype:pdf
+site:TARGET.COM filetype:xlsx OR filetype:csv
+site:TARGET.COM filetype:ppt OR filetype:pptx</code>
+  </div>
+</section>
+<div class="div"></div>
+
+<!-- 03 SENSITIVE DATA -->
+<section class="sec rv" id="sensitive">
+  <div class="sec-hd"><span class="sec-n">03 //</span><h2 class="sec-t">Sensitive Data Exposure Dorks<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel rv-l">
+    <p>The most critical class of Google dorks finds <strong style="color:var(--c)">sensitive data that should never be publicly indexed</strong> -- credentials, API keys, private keys, database exports, configuration files, and internal documents. These exposures occur when developers accidentally commit secrets to public repositories, when configuration files are uploaded to web roots, when database exports are left in public directories, or when staging environments are indexed before access controls are applied. The GHDB (Google Hacking Database) at exploit-db.com/google-hacking-database catalogues thousands of these dork patterns.</p>
+  </div>
+  <div class="dork-card rv">
+    <span class="dork-expr">intitle:"index of" ".env" OR "env" filetype:env</span>
+    <div class="dork-desc">Finds exposed .env files -- the most dangerous single class of Google dork. Laravel, Django, Next.js, and virtually every modern web framework uses .env files to store database credentials, API keys, JWT secrets, AWS credentials, and mail server passwords. A single exposed .env file typically yields complete application compromise: database access, cloud account takeover, and third-party service access in a single file.</div>
+    <span class="dork-tag">CRITICAL -- Environment Files</span>
+  </div>
+  <div class="dork-card rv">
+    <span class="dork-expr">intitle:"index of" "id_rsa" OR "id_dsa" OR filetype:pem intext:"BEGIN RSA PRIVATE KEY"</span>
+    <div class="dork-desc">Searches for exposed private SSH keys and SSL/TLS certificate private keys. SSH private keys in open directories or accidentally committed to accessible paths grant direct server access to any system configured to accept that key. SSL private keys in exposed PEM files enable decryption of historical HTTPS traffic captured via MITM and certificate impersonation attacks.</div>
+    <span class="dork-tag">CRITICAL -- Private Keys</span>
+  </div>
+  <div class="dork-card rv">
+    <span class="dork-expr">site:target.com intext:"password" filetype:log OR filetype:txt OR filetype:cfg</span>
+    <div class="dork-desc">Finds log files, text files, and configuration files containing the word "password" on the target domain. Application logs frequently record authentication errors (including the attempted password), configuration files store database passwords in plaintext, and error reports include credential strings from failed connection attempts. These files are often left world-readable on misconfigured web servers.</div>
+    <span class="dork-tag">Credentials in Files</span>
+  </div>
+  <div class="dork-card rv">
+    <span class="dork-expr">site:target.com filetype:sql intext:"INSERT INTO" OR intext:"CREATE TABLE"</span>
+    <div class="dork-desc">Discovers exposed SQL database dumps. Database administrators routinely export SQL dumps for backups, migrations, and development environments and occasionally leave them in web-accessible directories. These files contain the complete database structure and all data -- including user tables with hashed (or sometimes plaintext) passwords, personal information, financial records, and application configuration data.</div>
+    <span class="dork-tag">Database Dumps</span>
+  </div>
+  <div class="dork-card rv">
+    <span class="dork-expr">site:target.com filetype:xml inurl:config OR inurl:configuration OR inurl:settings</span>
+    <div class="dork-desc">Finds XML configuration files -- web.config (ASP.NET), applicationContext.xml (Spring), struts.xml, and similar framework configuration files. These files commonly contain database connection strings with embedded credentials, SMTP server authentication, LDAP bind credentials, and encryption keys used by the application. ASP.NET web.config exposure is particularly impactful as it frequently contains machine keys used for session token forging.</div>
+    <span class="dork-tag">Config Files</span>
+  </div>
+  <div class="dork-card rv">
+    <span class="dork-expr">site:github.com OR site:gitlab.com "target.com" "api_key" OR "secret_key" OR "password"</span>
+    <div class="dork-desc">Searches public code repositories for secrets associated with a target organisation. Developers frequently hardcode API keys, database credentials, and tokens directly in source code and push them to public repositories. This single dork pattern is responsible for a disproportionate share of all cloud account compromises -- AWS access keys discovered in GitHub repositories are found and abused within seconds of being pushed by automated scanners.</div>
+    <span class="dork-tag">Code Repository Leaks</span>
+  </div>
+  <div class="cb rv" data-l="Sensitive Data Exposure -- Critical Dork Library">
+    <code><span style="color:var(--t3)"># CREDENTIALS AND SECRETS</span>
+intext:"DB_PASSWORD" OR intext:"DB_USER" filetype:env
+intext:"AWS_ACCESS_KEY_ID" OR intext:"AWS_SECRET_ACCESS_KEY"
+intext:"api_key" OR intext:"apikey" OR intext:"api-key" filetype:json
+intitle:"index of" ".git" inurl:config
+filetype:yaml intext:"password:" OR intext:"secret:"
+
+<span style="color:var(--t3)"># PRIVATE KEYS AND CERTIFICATES</span>
+intext:"BEGIN CERTIFICATE" filetype:pem
+intext:"BEGIN RSA PRIVATE KEY" OR intext:"BEGIN OPENSSH PRIVATE KEY"
+intitle:"index of" "server.key" OR "private.key"
+
+<span style="color:var(--t3)"># DATABASE EXPOSURE</span>
+filetype:sql intext:"INSERT INTO `users`"
+filetype:sql intext:"-- phpMyAdmin SQL Dump"
+intitle:"phpmyadmin" inurl:phpmyadmin
+intitle:"Adminer" inurl:adminer.php
+
+<span style="color:var(--t3)"># CONFIGURATION FILES</span>
+filetype:conf inurl:nginx.conf OR inurl:apache.conf
+filetype:xml intext:"connectionString" intext:"password"
+filetype:ini intext:"password" OR intext:"passwd"
+intitle:"index of" "wp-config.php"
+
+<span style="color:var(--t3)"># BACKUP AND ARCHIVE FILES</span>
+site:target.com ext:bak OR ext:old OR ext:orig OR ext:backup
+site:target.com intitle:"index of" "*.zip" OR "*.tar.gz" OR "*.7z"
+site:target.com filetype:log intext:"error" OR intext:"exception"
+
+<span style="color:var(--t3)"># CLOUD STORAGE BUCKETS (public)</span>
+site:s3.amazonaws.com "target"
+site:storage.googleapis.com "target"
+site:blob.core.windows.net "target"</code>
+  </div>
+</section>
+<div class="div"></div>
+
+<!-- 04 VULNS -->
+<section class="sec rv" id="vulns">
+  <div class="sec-hd"><span class="sec-n">04 //</span><h2 class="sec-t">Vulnerability Discovery Dorks<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel rv-l">
+    <p>Advanced dorks identify specific vulnerability indicators -- application error messages that reveal software versions and debug information, exposed management interfaces that should not be internet-accessible, unpatched CMS installations identifiable by their default pages, misconfigured cloud services, and web applications exhibiting behaviour characteristic of SQL injection or XSS vulnerabilities. These dorks form the passive vulnerability discovery phase before any active scanning begins in an authorised engagement.</p>
+  </div>
+  <div class="dork-card rv">
+    <span class="dork-expr">intext:"SQL syntax" OR intext:"mysql_fetch" OR intext:"ORA-01756" OR intext:"ODBC Error"</span>
+    <div class="dork-desc">Finds pages displaying raw database error messages -- the definitive indicator of potential SQL injection. Verbose SQL errors reveal the database type (MySQL, Oracle, MSSQL, PostgreSQL), table and column names from failed queries, the database version, and sometimes the complete query string. These errors occur when unsanitised user input breaks the SQL syntax and the error is reflected back in the HTTP response.</div>
+    <span class="dork-tag">SQL Error / Injection Indicator</span>
+  </div>
+  <div class="dork-card rv">
+    <span class="dork-expr">inurl:"wp-content/plugins" site:target.com filetype:txt intext:"Version"</span>
+    <div class="dork-desc">Enumerates WordPress plugin versions via publicly accessible readme.txt files that plugins include by default. These files explicitly state the plugin name and version number, enabling precise lookup against the WPScan vulnerability database for known CVEs against that specific plugin version. Cross-reference discovered versions against CVEs in the WordPress vulnerability database (wpscan.com) and exploit-db.com.</div>
+    <span class="dork-tag">WordPress Plugin Exposure</span>
+  </div>
+  <div class="dork-card rv">
+    <span class="dork-expr">intitle:"phpinfo()" intext:"PHP Version" site:target.com</span>
+    <div class="dork-desc">Finds exposed phpinfo() output pages -- one of the most information-rich discoveries possible. phpinfo() reveals: exact PHP version (cross-reference CVEs), all loaded PHP extensions and their versions, server path (DOCUMENT_ROOT, SERVER_SOFTWARE), environment variables (which may contain credentials), file upload settings, disable_functions list, and the contents of php.ini. This single page provides complete server fingerprinting.</div>
+    <span class="dork-tag">phpinfo() Exposure</span>
+  </div>
+  <div class="dork-card rv">
+    <span class="dork-expr">intitle:"Dashboard" inurl:dashboard site:target.com -login</span>
+    <div class="dork-desc">Discovers exposed admin dashboards accessible without authentication. Jenkins, Grafana, Kibana, Kubernetes dashboards, and many other platforms have historically been deployed with no authentication by default or with authentication disabled for internal network use -- and are then inadvertently exposed to the internet. Finding an unauthenticated Jenkins dashboard typically means full RCE via the Groovy script console.</div>
+    <span class="dork-tag">Unauthenticated Dashboards</span>
+  </div>
+  <div class="dork-card rv">
+    <span class="dork-expr">site:target.com inurl:".git" OR inurl:"/.git/HEAD" OR intitle:"index of /.git"</span>
+    <div class="dork-desc">Finds exposed .git directories on web servers. When a Git repository is deployed to a web root without blocking access to the .git folder, the entire repository history is downloadable -- including all commits, branches, and crucially all previously committed secrets that may have been removed in later commits. The tool gitdumper (or git-dumper) can reconstruct the entire repository from an exposed .git directory.</div>
+    <span class="dork-tag">Git Repository Exposure</span>
+  </div>
+  <div class="cb rv" data-l="Vulnerability Discovery Dork Playbook">
+    <code><span style="color:var(--t3)"># EXPOSED MANAGEMENT INTERFACES</span>
+intitle:"Grafana" inurl:3000 site:target.com
+intitle:"Jenkins" inurl:8080 site:target.com
+intitle:"Kibana" inurl:5601 site:target.com
+intitle:"Kubernetes Dashboard" site:target.com
+intitle:"phpMyAdmin" inurl:phpmyadmin
+intitle:"MongoDB" inurl:28017
+intitle:"Elasticsearch" inurl:9200
+
+<span style="color:var(--t3)"># ERROR MESSAGES AND DEBUG INFO</span>
+site:target.com intext:"Warning: mysql_connect()"
+site:target.com intext:"Fatal error:" intext:"PHP"
+site:target.com "Microsoft VBScript runtime" "error"
+site:target.com intext:"Stack trace:" intext:"Exception"
+site:target.com intitle:"500 Internal Server Error"
+
+<span style="color:var(--t3)"># DEFAULT PAGES (unpatched installs)</span>
+intitle:"Welcome to nginx!"
+intitle:"Apache2 Ubuntu Default Page"
+intitle:"IIS Windows Server" site:target.com
+intitle:"Welcome to CentOS" site:target.com
+
+<span style="color:var(--t3)"># CAMERA / IOT / SCADA EXPOSURE</span>
+intitle:"webcamXP" inurl:8080
+inurl:ViewerFrame?Mode=Motion
+intitle:"SCADA" inurl:login
+intitle:"DVR Login" inurl:dvr
+
+<span style="color:var(--t3)"># FILE UPLOAD AND INCLUDE VECTORS</span>
+site:target.com inurl:upload.php OR inurl:fileupload
+site:target.com inurl:"?page=" OR inurl:"?include="
+site:target.com inurl:"?file=" ext:php</code>
+  </div>
+</section>
+<div class="div"></div>
+
+<!-- 05 TOOLS -->
+<section class="sec rv" id="tools">
+  <div class="sec-hd"><span class="sec-n">05 //</span><h2 class="sec-t">Dorking Tools &amp; Automation<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel rv-l">
+    <p>Manual Google dorking is effective but slow -- running 50+ dork queries against a target one at a time is tedious and rate-limited. Dedicated dorking tools automate query execution, parse results, remove duplicates, and categorise findings by risk level. The professional dorking toolkit combines Google's own API, GHDB query libraries, and custom automation scripts to reduce a full target dorking run from hours of manual work to minutes of automated scanning.</p>
+  </div>
+  <div class="tgrid rv">
+    <div class="tc"><div class="tcname">GHDB</div><span class="tctag">Database</span><div class="tcdesc">Google Hacking Database at exploit-db.com/google-hacking-database -- the canonical reference with 8,000+ categorised dork queries maintained by Offensive Security</div></div>
+    <div class="tc"><div class="tcname">GoogleDorker</div><span class="tctag">Python Tool</span><div class="tcdesc">github.com/six2dez/dorks_hunter -- automated target-specific dorking with GHDB integration and HTML report output</div></div>
+    <div class="tc"><div class="tcname">DorkScout</div><span class="tctag">Go Tool</span><div class="tcdesc">High-performance concurrent dorking tool with proxy rotation support and multiple search engine backends including Google, Bing, and DuckDuckGo</div></div>
+    <div class="tc"><div class="tcname">Pagodo</div><span class="tctag">Python Tool</span><div class="tcdesc">Automates running GHDB dorks against targets. Reads dorks from GHDB export, submits to Google, collects results. Supports proxy rotation to avoid rate limiting.</div></div>
+    <div class="tc"><div class="tcname">theHarvester</div><span class="tctag">Multi-Source</span><div class="tcdesc">Classic OSINT tool combining Google, Bing, LinkedIn, Hunter.io, and others for email, subdomain, and host discovery with dorking capabilities built in</div></div>
+    <div class="tc"><div class="tcname">Shodan</div><span class="tctag">IoT Search</span><div class="tcdesc">Internet-of-Things search engine -- the "Google for exposed services". Searches device banners, certificates, and open ports. Complements Google dorking for infrastructure discovery.</div></div>
+  </div>
+  <div class="cb rv" data-l="Pagodo + Custom Dork Automation">
+    <code><span style="color:var(--t3)"># PAGODO -- automated GHDB dorking
+# github.com/opsdisk/pagodo
+# pip install pagodo</span>
+
+<span style="color:var(--c)">python3 pagodo.py</span> <span style="color:var(--o)">-d</span> target.com <span style="color:var(--o)">-g</span> dorks.txt \
+  <span style="color:var(--o)">-l 50 -s -e 35.0 -j 1.5</span>
+<span style="color:var(--t3)"># -d = target domain
+# -g = dorks file (from GHDB export)
+# -l = max results per dork
+# -s = save to file
+# -e = delay between queries (seconds)
+# -j = jitter (randomise delay)</span>
+
+<span style="color:var(--t3)"># DOWNLOAD GHDB DORKS DATABASE</span>
+<span style="color:var(--c)">python3 pagodo.py</span> <span style="color:var(--o)">-p</span>           <span style="color:var(--t3)"># populate local GHDB cache</span>
+<span style="color:var(--c)">cat ghdb_dorks.txt | wc -l</span>     <span style="color:var(--t3)"># confirm dork count (8000+)</span>
+
+<span style="color:var(--t3)"># DORKS HUNTER -- target-specific scan</span>
+<span style="color:var(--c)">git clone</span> https://github.com/six2dez/dorks_hunter.git
+<span style="color:var(--c)">cd dorks_hunter && pip3 install -r requirements.txt</span>
+<span style="color:var(--c)">python3 dorks_hunter.py</span> <span style="color:var(--o)">-d</span> target.com
+
+<span style="color:var(--t3)"># GOOGLE CUSTOM SEARCH API (no rate limit blocks)</span>
+<span style="color:var(--t3)"># Create API key: console.cloud.google.com
+# Create Custom Search Engine: programmablesearchengine.google.com</span>
+<span style="color:var(--c)">curl</span> <span style="color:#ff79c6">"https://www.googleapis.com/customsearch/v1?key=API_KEY&cx=CX_ID&q=site:target.com+filetype:sql"</span>
+
+<span style="color:var(--t3)"># SHODAN DORKING (complements Google)</span>
+<span style="color:var(--c)">shodan search</span> <span style="color:#ff79c6">"org:TargetCorp http.title:admin"</span>
+<span style="color:var(--c)">shodan search</span> <span style="color:#ff79c6">"hostname:target.com port:8080"</span>
+<span style="color:var(--c)">shodan search</span> <span style="color:#ff79c6">"ssl.cert.subject.cn:target.com port:443"</span>
+<span style="color:var(--c)">shodan host</span> TARGET_IP          <span style="color:var(--t3)"># full port/service profile for IP</span></code>
+  </div>
+</section>
+<div class="div"></div>
+
+<!-- 06 WORKFLOW -->
+<section class="sec rv" id="workflow">
+  <div class="sec-hd"><span class="sec-n">06 //</span><h2 class="sec-t">Professional Dorking Methodology<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel rv-l">
+    <p>Effective Google dorking follows a structured methodology rather than random query execution. The professional workflow moves through five phases: <strong style="color:var(--c)">scope mapping</strong> (what does Google know about this target?), <strong style="color:var(--c)">infrastructure discovery</strong> (subdomains, technologies, entry points), <strong style="color:var(--c)">sensitive data enumeration</strong> (credentials, keys, internal documents), <strong style="color:var(--c)">vulnerability identification</strong> (error pages, exposed management interfaces, outdated software), and <strong style="color:var(--c)">findings documentation</strong> (evidence capture, risk rating, remediation).</p>
+  </div>
+  <div class="cb rv" data-l="Complete Professional Dorking Workflow">
+    <code><span style="color:var(--t3)"># ── PHASE 1: SCOPE MAPPING ────────────────────────────
+# Establish what Google has indexed for the target</span>
+site:TARGET.COM                              <span style="color:var(--t3)"># total indexed pages</span>
+site:TARGET.COM -www                        <span style="color:var(--t3)"># subdomains only</span>
+related:TARGET.COM                          <span style="color:var(--t3)"># related domains/partners</span>
+"@TARGET.COM" -site:TARGET.COM             <span style="color:var(--t3)"># email pattern in other sites</span>
+"TARGET Corp" filetype:pdf site:linkedin.com  <span style="color:var(--t3)"># employee info</span>
+
+<span style="color:var(--t3)"># ── PHASE 2: INFRASTRUCTURE DISCOVERY ────────────────</span>
+site:TARGET.COM inurl:dev OR staging OR test OR uat OR qa
+site:TARGET.COM inurl:jenkins OR jira OR confluence OR gitlab
+site:TARGET.COM inurl:api OR inurl:v1 OR inurl:v2 OR inurl:graphql
+site:TARGET.COM filetype:xml -html -htm -php -asp inurl:sitemap
+
+<span style="color:var(--t3)"># ── PHASE 3: SENSITIVE FILE HUNT ─────────────────────</span>
+site:TARGET.COM filetype:env OR filetype:cfg OR filetype:conf
+site:TARGET.COM filetype:sql OR filetype:bak OR filetype:old
+site:TARGET.COM filetype:log intext:"error" OR intext:"password"
+site:TARGET.COM intext:"DB_PASS" OR intext:"MYSQL_PWD"
+site:github.com "TARGET.COM" "api_key" OR "password" OR "secret"
+
+<span style="color:var(--t3)"># ── PHASE 4: VULNERABILITY INDICATORS ────────────────</span>
+site:TARGET.COM inurl:?id= OR inurl:?page= OR inurl:?cat=
+site:TARGET.COM intext:"Warning: mysql_" OR intext:"ORA-0"
+site:TARGET.COM inurl:phpmyadmin OR inurl:adminer OR inurl:dbadmin
+site:TARGET.COM intitle:"phpinfo()" "PHP Version"
+site:TARGET.COM inurl:.git/HEAD OR intitle:"index of /.git"
+
+<span style="color:var(--t3)"># ── PHASE 5: EVIDENCE AND DOCUMENTATION ──────────────
+# For each finding:
+# 1. Screenshot the full Google result with URL visible
+# 2. Record the exact dork query used
+# 3. Access only what is within scope and authorised
+# 4. Document: URL, file type, sensitivity classification, risk rating
+# 5. Check Google cache date to understand exposure timeline
+# 6. Request removal: google.com/webmasters/tools/removals
+# 7. Recommend robots.txt additions and access control fixes</span>
+
+<span style="color:var(--t3)"># RISK CLASSIFICATION QUICK GUIDE:
+# CRITICAL: Credentials, private keys, database dumps, .env files
+# HIGH:     Admin panels, git repos, phpinfo, SQL errors
+# MEDIUM:   Open directories, backup files, version disclosure
+# LOW:      Technology fingerprinting, staff names, document metadata</span></code>
+  </div>
+  <div class="panel rv">
+    <div class="panel-t">Defensive Countermeasures -- Reduce Your Dork Attack Surface</div>
+    <table class="ptbl">
+      <thead><tr><th>Exposure Type</th><th>Root Cause</th><th>Remediation</th></tr></thead>
+      <tbody>
+        <tr><td>Indexed .env files</td><td>Web root deployment, no .htaccess deny</td><td>Add .env to robots.txt Disallow + deny from all in .htaccess</td></tr>
+        <tr><td>Open directories</td><td>Autoindex enabled in server config</td><td>Options -Indexes in Apache / autoindex off in Nginx</td></tr>
+        <tr><td>Exposed .git dirs</td><td>Repository deployed to web root</td><td>Block /.git in web server config; use CI/CD deployment pipelines</td></tr>
+        <tr><td>Indexed admin panels</td><td>No IP restriction on admin paths</td><td>IP allowlist on /admin paths + add to robots.txt</td></tr>
+        <tr><td>SQL dumps in web root</td><td>Developer convenience, forgotten files</td><td>Automated scan of web root for unexpected files; remove and request Google removal</td></tr>
+        <tr><td>Leaked keys in GitHub</td><td>Hardcoded secrets in committed code</td><td>Pre-commit hooks (git-secrets, detect-secrets) + rotate all exposed keys immediately</td></tr>
+        <tr><td>phpinfo() pages</td><td>Debug code left in production</td><td>Remove phpinfo() calls in production; block access to .php?phpinfo</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+<div class="div div-ai"></div>
+
+<!-- 07 AI INTEGRATION -->
+<section class="sec rv sec-ai" id="ai">
+  <div class="sec-hd"><span class="sec-n">07 //</span><h2 class="sec-t">AI Integration in Google Dorking Operations<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="panel panel-ai rv-l">
+    <p>AI transforms Google dorking from a manual skill-dependent process into an intelligent automated intelligence gathering pipeline. LLMs understand the structure and semantics of Google search operators deeply enough to generate highly targeted dork queries from plain-English requirements, analyse discovered content for hidden intelligence value, correlate findings across dozens of sources into coherent attack surface maps, and produce professional OSINT reports at a speed and depth that manual analysis cannot match. The AI-dorking combination produces reconnaissance coverage in minutes that would take days manually.</p>
+  </div>
+  <div class="alert al-p rv">
+    <span class="al-ic">[ AI ]</span>
+    <p class="al-tx">Security researchers using AI-assisted dorking workflows report 70% faster OSINT reconnaissance phases. AI generates 50+ targeted dork queries for a specific target in seconds, analyses discovered documents for embedded sensitive data, correlates subdomains and technologies into an attack surface model, and produces a prioritised finding list -- all before a single active scan is run against the target.</p>
+  </div>
+  <div class="ai-grid rv">
+    <div class="ai-card"><span class="ai-ico">&#9999;&#65039;</span><div class="ai-name">Custom Dork Generation</div><div class="ai-desc">AI generates highly targeted, organisation-specific dork queries from plain-English reconnaissance requirements -- "generate Google dorks to find exposed configuration files, login portals, and employee documents for a UK financial services firm using Azure cloud infrastructure." Produces 30-50 precision queries targeting the exact technologies, file types, and exposure patterns most likely to yield results for that specific target profile, far beyond what generic GHDB queries provide.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128202;</span><div class="ai-name">Discovered Content Analysis</div><div class="ai-desc">AI analyses discovered documents, configuration files, and page content for intelligence value that human review might miss -- extracting employee names and roles from document metadata, identifying internal hostnames from SQL dumps, parsing configuration files to identify all referenced services and credentials, and correlating information across multiple discovered files to build a comprehensive target intelligence picture from fragmented data points.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128270;</span><div class="ai-name">Attack Surface Mapping</div><div class="ai-desc">AI correlates dorking discoveries into a structured attack surface model -- mapping subdomains to technologies, identifying which exposed services have known CVEs, prioritising entry points by exploitability and access value, and generating a visual attack surface narrative that explains how discovered exposures connect into potential attack chains. Converts a list of raw dork findings into an actionable penetration testing roadmap.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128196;</span><div class="ai-name">OSINT Report Generation</div><div class="ai-desc">AI converts raw Google dorking findings into professional penetration test report sections -- structured finding entries with risk ratings, evidence (screenshot references, dork queries used), business impact statements, and specific remediation guidance. Produces the complete OSINT reconnaissance appendix for a penetration test report from structured finding data, formatted appropriately for both technical and management audiences.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128308;</span><div class="ai-name">Defensive Exposure Audit</div><div class="ai-desc">AI generates a comprehensive defensive dorking audit plan -- the complete set of queries an attacker would run against your organisation, prioritised by likelihood of yielding sensitive results. Security teams run these queries against their own infrastructure to identify exposures before attackers do. AI updates the query set based on discovered technologies and infrastructure, making the defensive audit as targeted as an offensive reconnaissance operation.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128123;</span><div class="ai-name">Real-Time Dork Interpretation</div><div class="ai-desc">AI interprets complex dork results in real time during active reconnaissance -- "this SQL error message reveals the database is MySQL 5.7.38, the table name is wp_users, and the query structure suggests the login parameter is injectable. Here are the next dorks to run and the SQLMap command to validate." Provides expert analyst reasoning and next-step recommendations from raw discovered data without requiring senior security expertise.</div></div>
+  </div>
+  <div class="panel panel-ai rv" style="margin-top:28px">
+    <div class="panel-t">AI Tools for Google Dorking Operations</div>
+    <table class="ptbl">
+      <thead><tr>
+        <th style="color:#bf00ff;border-bottom-color:rgba(191,0,255,.25)">Tool</th>
+        <th style="color:#bf00ff;border-bottom-color:rgba(191,0,255,.25)">Capability</th>
+        <th style="color:#bf00ff;border-bottom-color:rgba(191,0,255,.25)">Dorking Use Case</th>
+      </tr></thead>
+      <tbody>
+        <tr><td style="color:var(--g)">GPT-4 / Claude</td><td style="color:var(--t2)">Dork generation, content analysis, reporting</td><td style="color:var(--t2)">Generate targeted queries; analyse discovered files; write OSINT findings</td></tr>
+        <tr><td style="color:var(--g)">Python + OpenAI</td><td style="color:var(--t2)">Automated dork pipeline with AI analysis</td><td style="color:var(--t2)">Run Google API queries; feed results to GPT for automated intelligence extraction</td></tr>
+        <tr><td style="color:var(--g)">Perplexity AI</td><td style="color:var(--t2)">AI-native web search with citations</td><td style="color:var(--t2)">Natural-language OSINT queries with real-time web search and source attribution</td></tr>
+        <tr><td style="color:var(--g)">Maltego + AI</td><td style="color:var(--t2)">Graph-based OSINT correlation</td><td style="color:var(--t2)">Visual entity relationship mapping of dorking discoveries across domains and people</td></tr>
+        <tr><td style="color:var(--g)">SpiderFoot + AI</td><td style="color:var(--t2)">Automated OSINT aggregation</td><td style="color:var(--t2)">Orchestrate multiple OSINT sources including Google; feed results to AI for analysis</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="cb cb-ai rv" data-l="AI Pipeline -- Targeted Dork Generator from Target Profile">
+    <code><span style="color:#bd93f9">#!/usr/bin/env python3</span>
+<span style="color:var(--t3)"># Generate targeted Google dork queries from a target profile using GPT
+# Then execute via Google Custom Search API and analyse results
+# Usage: python3 ai_dork.py "TargetCorp" "target.com" "UK financial services, Azure"</span>
+
+<span style="color:#bd93f9">import</span> openai, requests, json, sys
+
+GOOGLE_API = <span style="color:#ff79c6">"YOUR_GOOGLE_API_KEY"</span>
+GOOGLE_CX  = <span style="color:#ff79c6">"YOUR_CUSTOM_SEARCH_ID"</span>
+
+<span style="color:#8be9fd">def</span> <span style="color:var(--c)">generate_dorks</span>(org, domain, profile):
+    prompt = (
+        <span style="color:#ff79c6">"You are an expert OSINT analyst performing an authorised penetration test. "
+        "Generate 25 precise Google dork queries for the target below. "
+        "Focus on: exposed credentials/keys, open directories, admin panels, "
+        "sensitive documents, technology fingerprinting, and subdomain discovery. "
+        "Format: one dork per line, no numbering, no explanation.\n\n"
+        f"Organisation: {org}\nDomain: {domain}\nProfile: {profile}"</span>
+    )
+    r = openai.OpenAI().chat.completions.create(
+        model=<span style="color:#ff79c6">"gpt-4o"</span>,
+        messages=[{<span style="color:#ff79c6">"role"</span>:<span style="color:#ff79c6">"user"</span>,<span style="color:#ff79c6">"content"</span>:prompt}],
+        temperature=0.3
+    )
+    <span style="color:#bd93f9">return</span> [d.strip() <span style="color:#bd93f9">for</span> d <span style="color:#bd93f9">in</span> r.choices[0].message.content.splitlines() <span style="color:#bd93f9">if</span> d.strip()]
+
+<span style="color:#8be9fd">def</span> <span style="color:var(--c)">google_search</span>(query, num=5):
+    url = <span style="color:#ff79c6">"https://www.googleapis.com/customsearch/v1"</span>
+    params = {<span style="color:#ff79c6">"key"</span>:GOOGLE_API,<span style="color:#ff79c6">"cx"</span>:GOOGLE_CX,<span style="color:#ff79c6">"q"</span>:query,<span style="color:#ff79c6">"num"</span>:num}
+    r = requests.get(url, params=params, timeout=10)
+    items = r.json().get(<span style="color:#ff79c6">"items"</span>, [])
+    <span style="color:#bd93f9">return</span> [{<span style="color:#ff79c6">"title"</span>:i[<span style="color:#ff79c6">"title"</span>],<span style="color:#ff79c6">"url"</span>:i[<span style="color:#ff79c6">"link"</span>],<span style="color:#ff79c6">"snippet"</span>:i.get(<span style="color:#ff79c6">"snippet"</span>,<span style="color:#ff79c6">""</span>)} <span style="color:#bd93f9">for</span> i <span style="color:#bd93f9">in</span> items]
+
+<span style="color:#8be9fd">def</span> <span style="color:var(--c)">ai_analyse_results</span>(results, org):
+    prompt = (
+        <span style="color:#ff79c6">"You are a senior OSINT analyst. Analyse these Google dorking results for a "
+        f"penetration test against {org}. For each result identify:\n"
+        "1. SENSITIVITY: what sensitive data or access is exposed?\n"
+        "2. RISK RATING: Critical/High/Medium/Low\n"
+        "3. ATTACK VECTOR: how could an attacker exploit this?\n"
+        "4. NEXT DORKS: follow-up queries to investigate further\n\n"
+        "Results:\n"</span> + json.dumps(results, indent=2)
+    )
+    r = openai.OpenAI().chat.completions.create(
+        model=<span style="color:#ff79c6">"gpt-4o"</span>,
+        messages=[{<span style="color:#ff79c6">"role"</span>:<span style="color:#ff79c6">"user"</span>,<span style="color:#ff79c6">"content"</span>:prompt}]
+    )
+    <span style="color:#bd93f9">return</span> r.choices[0].message.content
+
+org    = sys.argv[1] <span style="color:#bd93f9">if</span> len(sys.argv)>1 <span style="color:#bd93f9">else</span> <span style="color:#ff79c6">"TargetCorp"</span>
+domain = sys.argv[2] <span style="color:#bd93f9">if</span> len(sys.argv)>2 <span style="color:#bd93f9">else</span> <span style="color:#ff79c6">"target.com"</span>
+profile= sys.argv[3] <span style="color:#bd93f9">if</span> len(sys.argv)>3 <span style="color:#bd93f9">else</span> <span style="color:#ff79c6">"technology company"</span>
+
+dorks = generate_dorks(org, domain, profile)
+print(<span style="color:#ff79c6">f"[*] Generated {len(dorks)} dorks for {domain}"</span>)
+
+all_results = []
+<span style="color:#bd93f9">for</span> dork <span style="color:#bd93f9">in</span> dorks[:10]:  <span style="color:var(--t3)"># run first 10 (API quota)</span>
+    res = google_search(dork)
+    <span style="color:#bd93f9">if</span> res:
+        all_results.append({<span style="color:#ff79c6">"dork"</span>:dork,<span style="color:#ff79c6">"results"</span>:res})
+        print(<span style="color:#ff79c6">f"  [+] {dork[:60]} → {len(res)} results"</span>)
+
+print(<span style="color:#ff79c6">"\n[*] AI Analysis:\n"</span>)
+print(ai_analyse_results(all_results, org))</code>
+  </div>
+  <div class="cb cb-ai rv" data-l="AI -- Defensive Exposure Audit Generator">
+    <code><span style="color:#bd93f9">#!/usr/bin/env python3</span>
+<span style="color:var(--t3)"># Generate a defensive dorking audit -- what attackers would search for YOUR org
+# Run these queries against your own domain to find exposures before attackers do
+# Usage: python3 defensive_audit.py "yourcompany.com" "tech stack details"</span>
+
+<span style="color:#bd93f9">import</span> openai, sys
+
+<span style="color:#8be9fd">def</span> <span style="color:var(--c)">defensive_audit</span>(domain, stack):
+    prompt = (
+        <span style="color:#ff79c6">"You are a red team specialist creating a defensive exposure audit for a "
+        "security team. Generate a comprehensive checklist of Google dork queries "
+        "that attackers would use against this domain. Organise by category:\n"
+        "- Credential/Key Exposure\n- Open Directories\n- Admin Panels\n"
+        "- Database Exposure\n- Source Code / Git\n- Configuration Files\n"
+        "- Error Pages / Debug Info\n- Cloud Storage\n\n"
+        "For each query explain what it finds and the risk if discovered by an attacker. "
+        f"Domain: {domain}\nTech Stack: {stack}"</span>
+    )
+    r = openai.OpenAI().chat.completions.create(
+        model=<span style="color:#ff79c6">"gpt-4o"</span>,
+        messages=[{<span style="color:#ff79c6">"role"</span>:<span style="color:#ff79c6">"user"</span>,<span style="color:#ff79c6">"content"</span>:prompt}]
+    )
+    <span style="color:#bd93f9">return</span> r.choices[0].message.content
+
+domain = sys.argv[1] <span style="color:#bd93f9">if</span> len(sys.argv)>1 <span style="color:#bd93f9">else</span> <span style="color:#ff79c6">"yourcompany.com"</span>
+stack  = sys.argv[2] <span style="color:#bd93f9">if</span> len(sys.argv)>2 <span style="color:#bd93f9">else</span> <span style="color:#ff79c6">"WordPress, AWS, PHP, MySQL"</span>
+print(<span style="color:#ff79c6">f"[*] Generating defensive audit for {domain}\n"</span>)
+print(defensive_audit(domain, stack))</code>
+  </div>
+</section>
+
+<div class="cta rv">
+  <div class="cta-t">// Google knows more about your target than your target does. //</div>
+  <p class="cta-p">Google dorking is the most underestimated technique in offensive security -- free, passive, and devastatingly effective. Every exposed .env file, every open directory, every accidentally indexed database dump was put there by someone who did not realise Google was watching. Master the operators, learn the patterns, automate with AI, and run the defensive audit against your own infrastructure before attackers do. The data is already public. The only question is who finds it first.</p>
+  <div class="cta-btns">
+    <a href="https://github.com/nishu2402" class="btn btn-p" target="_blank" rel="noopener">GitHub -- nishu2402</a>
+    <a href="https://nishu2402.github.io" class="btn btn-s" target="_blank" rel="noopener">View Portfolio</a>
+  </div>
+</div>
+<footer class="footer">
+  <div class="f-l">Nisarg Chasmawala (Shroff)<br><span class="f-alias">// HEAVEN</span></div>
+  <div class="f-r">Offensive Security Engineer &middot; MSc Cyber Security, BCU<br>CEH Master &middot; CPENT &middot; CHFI &middot; ISO 27001 Lead Auditor<br><a href="https://github.com/nishu2402" target="_blank" rel="noopener">github.com/nishu2402</a></div>
+</footer>
+</div>
+<script>
+var cur=document.getElementById('cur'),cur2=document.getElementById('cur2'),cur3=document.getElementById('cur3');
+var mx=0,my=0;
+document.addEventListener('mousemove',function(e){mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
+(function loop(){cur2.style.left=mx+'px';cur2.style.top=my+'px';cur3.style.left=mx+'px';cur3.style.top=my+'px';requestAnimationFrame(loop);})();
+document.querySelectorAll('a,.btn,.ai-card,.panel,.cb,.tc,.dork-card,.op-card').forEach(function(el){
+  el.addEventListener('mouseenter',function(){cur.style.width='18px';cur.style.height='18px';cur.style.background='rgba(0,255,65,.25)';});
+  el.addEventListener('mouseleave',function(){cur.style.width='10px';cur.style.height='10px';cur.style.background='var(--g)';});
+});
+window.addEventListener('scroll',function(){document.getElementById('prog').style.width=((window.scrollY/(document.body.scrollHeight-window.innerHeight))*100)+'%';});
+(function(){
+  var c=document.getElementById('bg-particle'),ctx=c.getContext('2d');
+  var W,H,mX=innerWidth/2,mY=innerHeight/2,N=200,MAX=140,P=[];
+  function Pt(){this.reset(true);}
+  Pt.prototype.reset=function(i){this.x=Math.random()*W;this.y=i?Math.random()*H:H+10;this.z=Math.random()*3+.5;this.vx=(Math.random()-.5)*.4;this.vy=(Math.random()-.5)*.4-.1;this.life=Math.random()*300+200;this.maxLife=this.life;this.r=Math.random()*1.5+.5;var r=Math.random();this.color=r<.7?'0,255,65':r<.9?'0,229,255':'191,0,255';};
+  Pt.prototype.update=function(){var dx=this.x-mX,dy=this.y-mY,d=Math.sqrt(dx*dx+dy*dy);if(d<120){var f=(120-d)/120;this.vx+=dx/d*f*.6;this.vy+=dy/d*f*.6;}this.vx*=.98;this.vy*=.98;this.x+=this.vx;this.y+=this.vy;this.life--;if(this.life<=0||this.x<-50||this.x>W+50||this.y<-50||this.y>H+50)this.reset(false);};
+  Pt.prototype.draw=function(){var a=(this.life/this.maxLife)*.7*this.z;ctx.beginPath();ctx.arc(this.x,this.y,this.r*this.z,0,Math.PI*2);ctx.fillStyle='rgba('+this.color+','+a+')';ctx.fill();};
+  function resize(){W=c.width=innerWidth;H=c.height=innerHeight;}
+  function lines(){for(var i=0;i<P.length;i++){for(var j=i+1;j<P.length;j++){var a=P[i],b=P[j],dx=a.x-b.x,dy=a.y-b.y,d=Math.sqrt(dx*dx+dy*dy);if(d<MAX){var al=(1-d/MAX)*.18,g=ctx.createLinearGradient(a.x,a.y,b.x,b.y);g.addColorStop(0,'rgba('+a.color+','+al+')');g.addColorStop(1,'rgba('+b.color+','+al+')');ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.strokeStyle=g;ctx.lineWidth=(a.z+b.z)/2*.5;ctx.stroke();}}}}
+  function animate(){ctx.clearRect(0,0,W,H);var g=ctx.createRadialGradient(mX,mY,0,mX,mY,80);g.addColorStop(0,'rgba(0,255,65,0)');g.addColorStop(.7,'rgba(0,255,65,0.04)');g.addColorStop(1,'rgba(0,255,65,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(mX,mY,80,0,Math.PI*2);ctx.fill();lines();P.forEach(function(p){p.update();p.draw();});requestAnimationFrame(animate);}
+  resize();window.addEventListener('resize',resize);document.addEventListener('mousemove',function(e){mX=e.clientX;mY=e.clientY;});
+  for(var i=0;i<N;i++)P.push(new Pt());animate();
+})();
+(function(){
+  var c=document.getElementById('bg-hex'),ctx=c.getContext('2d');
+  var W,H,t=0,S=40;
+  function resize(){W=c.width=innerWidth;H=c.height=innerHeight;}
+  function hex(cx,cy,s){ctx.beginPath();for(var i=0;i<6;i++){var a=Math.PI/180*(60*i-30);if(i===0)ctx.moveTo(cx+s*Math.cos(a),cy+s*Math.sin(a));else ctx.lineTo(cx+s*Math.cos(a),cy+s*Math.sin(a));}ctx.closePath();}
+  function draw(){ctx.clearRect(0,0,W,H);t+=.008;var sy=window.scrollY,cols=Math.ceil(W/(S*1.732))+2,rows=Math.ceil(H/(S*1.5))+2;for(var r=-1;r<rows;r++){for(var col=-1;col<cols;col++){var cx=col*S*1.732+(r%2)*S*.866,cy=r*S*1.5-(sy*.03)%(S*1.5),w=Math.sin(t+col*.3+r*.2)*.5+.5;hex(cx,cy,S-2);ctx.strokeStyle='rgba(0,255,65,'+(0.02+w*0.07)+')';ctx.lineWidth=.6;ctx.stroke();if(w>.92){hex(cx,cy,S-2);ctx.fillStyle='rgba(0,255,65,'+(0.02+w*0.03)+')';ctx.fill();}}}requestAnimationFrame(draw);}
+  resize();window.addEventListener('resize',resize);draw();
+})();
+// HERO: SEARCH QUERY LATTICE
+// A central glowing Google search bar node radiates outward --
+// dork query strings orbit as text streams, with result nodes appearing at edges
+(function(){
+  var c=document.getElementById('hero-geo');if(!c)return;
+  var ctx=c.getContext('2d'),SZ=420;c.width=SZ;c.height=SZ;
+  var t=0,mrx=0,mry=0;
+  document.addEventListener('mousemove',function(e){mrx=(e.clientY/innerHeight-.5)*.1;mry=(e.clientX/innerWidth-.5)*.1;});
+  var CX=SZ/2,CY=SZ/2;
+
+  // Dork query strings radiating outward
+  var queries=[
+    {txt:'site:*.com filetype:env',  angle:0,          r:95,  col:'0,255,65'},
+    {txt:'intitle:"index of"',        angle:0.7,        r:110, col:'0,229,255'},
+    {txt:'inurl:admin login',         angle:1.4,        r:100, col:'255,200,80'},
+    {txt:'intext:"DB_PASSWORD"',      angle:2.1,        r:115, col:'255,80,80'},
+    {txt:'filetype:sql dump',         angle:2.8,        r:95,  col:'191,0,255'},
+    {txt:'inurl:".git/HEAD"',         angle:3.5,        r:108, col:'0,255,65'},
+    {txt:'site:github.com apikey',    angle:4.2,        r:100, col:'0,229,255'},
+    {txt:'intitle:"phpinfo()"',       angle:4.9,        r:112, col:'255,200,80'},
+    {txt:'inurl:phpmyadmin',          angle:5.6,        r:98,  col:'255,80,80'},
+  ];
+
+  // Result nodes -- findings at the outer ring
+  var results=[
+    {angle:0.35, r:165, col:'255,80,80',   lbl:'LEAKED .env'},
+    {angle:1.1,  r:170, col:'0,229,255',   lbl:'OPEN DIR'},
+    {angle:1.85, r:160, col:'255,200,80',  lbl:'ADMIN PANEL'},
+    {angle:2.6,  r:168, col:'255,80,80',   lbl:'SQL DUMP'},
+    {angle:3.3,  r:162, col:'191,0,255',   lbl:'GIT REPO'},
+    {angle:4.05, r:172, col:'0,255,65',    lbl:'phpinfo()'},
+    {angle:4.8,  r:165, col:'0,229,255',   lbl:'DB ADMIN'},
+  ];
+
+  function draw(){
+    ctx.clearRect(0,0,SZ,SZ);
+    t+=0.016;
+    ctx.save();ctx.translate(mrx*12,mry*10);
+
+    // Outer search result ring
+    ctx.beginPath();ctx.arc(CX,CY,165,0,Math.PI*2);
+    ctx.strokeStyle='rgba(0,255,65,0.07)';ctx.lineWidth=1;ctx.stroke();
+    ctx.beginPath();ctx.arc(CX,CY,100,0,Math.PI*2);
+    ctx.strokeStyle='rgba(0,229,255,0.06)';ctx.lineWidth=1;ctx.stroke();
+
+    // Radial lines
+    for(var i=0;i<9;i++){
+      var a=i*(Math.PI*2/9)+t*0.12;
+      ctx.beginPath();ctx.moveTo(CX,CY);
+      ctx.lineTo(CX+190*Math.cos(a),CY+190*Math.sin(a));
+      ctx.strokeStyle='rgba(0,255,65,0.04)';ctx.lineWidth=1;ctx.stroke();
+    }
+
+    // Orbiting dork query strings
+    queries.forEach(function(q,i){
+      var a=q.angle+t*(i%2===0?0.25:-0.2);
+      var px=CX+q.r*Math.cos(a),py=CY+q.r*Math.sin(a);
+      var pulse=Math.sin(t*2+i)*.3+.7;
+
+      // Glow dot
+      var ng=ctx.createRadialGradient(px,py,0,px,py,12);
+      ng.addColorStop(0,'rgba('+q.col+','+pulse*0.4+')');ng.addColorStop(1,'rgba('+q.col+',0)');
+      ctx.fillStyle=ng;ctx.beginPath();ctx.arc(px,py,12,0,Math.PI*2);ctx.fill();
+      ctx.beginPath();ctx.arc(px,py,4,0,Math.PI*2);
+      ctx.fillStyle='rgba('+q.col+','+pulse+')';ctx.fill();
+
+      // Query text label
+      ctx.font='bold 8px Share Tech Mono';
+      ctx.fillStyle='rgba('+q.col+','+pulse*0.75+')';
+      ctx.textAlign=px<CX?'right':'left';ctx.textBaseline='middle';
+      var lx=px+(px<CX?-10:10);
+      ctx.fillText(q.txt,lx,py);
+    });
+
+    // Result nodes at outer ring
+    results.forEach(function(r,i){
+      var a=r.angle+t*0.08;
+      var px=CX+r.r*Math.cos(a),py=CY+r.r*Math.sin(a);
+      var pulse=Math.abs(Math.sin(t*1.5+i));
+
+      // Result box glow
+      var ng=ctx.createRadialGradient(px,py,0,px,py,18);
+      ng.addColorStop(0,'rgba('+r.col+','+pulse*0.35+')');ng.addColorStop(1,'rgba('+r.col+',0)');
+      ctx.fillStyle=ng;ctx.beginPath();ctx.arc(px,py,18,0,Math.PI*2);ctx.fill();
+      ctx.beginPath();ctx.arc(px,py,6,0,Math.PI*2);
+      ctx.fillStyle='rgba(3,5,9,0.9)';ctx.fill();
+      ctx.strokeStyle='rgba('+r.col+','+pulse*0.9+')';ctx.lineWidth=1.5;ctx.stroke();
+
+      // Label
+      ctx.font='bold 7px Orbitron,sans-serif';
+      ctx.fillStyle='rgba('+r.col+','+pulse*0.9+')';
+      ctx.textAlign='center';ctx.textBaseline='bottom';
+      ctx.fillText(r.lbl,px,py-9);
+    });
+
+    // Central search bar node
+    var cp=Math.sin(t*1.8)*.3+.7;
+    // Search bar rectangle
+    var bw=90,bh=26,bx=CX-bw/2,by=CY-bh/2;
+    ctx.fillStyle='rgba(3,5,9,0.95)';
+    ctx.strokeStyle='rgba(0,255,65,'+cp+')';
+    ctx.lineWidth=2;
+    ctx.beginPath();ctx.roundRect(bx,by,bw,bh,4);ctx.fill();ctx.stroke();
+
+    // Search icon + text
+    ctx.font='bold 9px Orbitron,sans-serif';
+    ctx.fillStyle='rgba(0,255,65,'+cp+')';
+    ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText('SEARCH',CX-2,CY-1);
+
+    // Blinking cursor in search bar
+    if(Math.floor(t*3)%2===0){
+      ctx.fillStyle='rgba(0,255,65,0.9)';
+      ctx.fillRect(CX+30,CY-8,1.5,16);
+    }
+
+    // Glow halo
+    var cg=ctx.createRadialGradient(CX,CY,0,CX,CY,50);
+    cg.addColorStop(0,'rgba(0,255,65,'+(0.1+cp*0.08)+')');
+    cg.addColorStop(1,'rgba(0,255,65,0)');
+    ctx.fillStyle=cg;ctx.beginPath();ctx.arc(CX,CY,50,0,Math.PI*2);ctx.fill();
+
+    ctx.restore();
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+// Scroll reveal
+var rv=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('on');});},{threshold:.08});
+document.querySelectorAll('.rv,.rv-l').forEach(function(el){rv.observe(el);});
+// TOC -- scroll-based (NO IntersectionObserver threshold bug)
+var sIds=['hero','operators','recon','sensitive','vulns','tools','workflow','ai'];
+var tItems=document.querySelectorAll('.toc-i');
+function updateTOC(){
+  var sy=window.scrollY+120,cur='hero';
+  sIds.forEach(function(id){var el=document.getElementById(id);if(el&&el.offsetTop<=sy)cur=id;});
+  tItems.forEach(function(ti){ti.classList.toggle('active',ti.dataset.s===cur);});
+}
+window.addEventListener('scroll',updateTOC,{passive:true});
+updateTOC();
+function goTo(h){document.querySelector(h).scrollIntoView({behavior:'smooth'});}
+// Click-to-copy code blocks
+document.querySelectorAll('.cb').forEach(function(b){
+  b.title='Click to copy';
+  b.addEventListener('click',function(){
+    navigator.clipboard.writeText(b.querySelector('code').innerText).catch(function(){});
+    var o=b.getAttribute('data-l');b.setAttribute('data-l',o+' \u2713 COPIED');
+    setTimeout(function(){b.setAttribute('data-l',o);},2000);
+  });
+});
+</script>
+</body>
+</html>
