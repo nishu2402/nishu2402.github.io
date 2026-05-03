@@ -272,8 +272,9 @@ section>*{position:relative;z-index:1;}
 .tool::before{content:'';position:absolute;inset:0;background:rgba(0,255,65,.07);transform:scaleX(0);transform-origin:left;transition:transform .3s;}
 .tool:hover::before{transform:scaleX(1);}.tool:hover{border-color:var(--G);color:var(--G);transform:translateY(-2px);}
 .tool i{font-style:normal;font-size:.85rem;}
-.tool-dot{width:10px;height:10px;border-radius:2px;display:inline-block;flex-shrink:0;transition:all .3s;}
-.tool:hover .tool-dot{transform:scale(1.3) rotate(45deg);}
+.tool-logo{display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;width:18px;height:18px;}
+.tool-logo svg{width:18px;height:18px;display:block;}
+.tool:hover .tool-logo{transform:scale(1.15);transition:transform .3s;}
 
 /* TIMELINE */
 .tl{position:relative;padding-left:2.4rem;}
@@ -313,7 +314,7 @@ section>*{position:relative;z-index:1;}
 /* CERTS */
 .certs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:.72rem;}
 .cert{height:138px;perspective:1000px;}
-.c-logo{position:absolute;top:.65rem;right:.7rem;width:30px;height:30px;display:block;filter:drop-shadow(0 0 4px rgba(255,255,255,.15));}
+.c-logo{position:absolute;top:.55rem;right:.65rem;width:36px;height:36px;display:block;filter:drop-shadow(0 0 6px rgba(0,0,0,.4));}
 .cert-in{width:100%;height:100%;transform-style:preserve-3d;transition:transform .62s cubic-bezier(.4,0,.2,1);}
 .cert:hover .cert-in{transform:rotateY(180deg);}
 .cf,.cb{position:absolute;inset:0;backface-visibility:hidden;padding:1rem 1.2rem;display:flex;flex-direction:column;justify-content:center;}
@@ -492,9 +493,10 @@ body.CK #curOuter{width:20px;height:20px;border-color:rgba(0,255,65,.3);}
   /* Nav */
   nav{padding:0 .9rem;height:52px;}
   .n-ul{display:none;}
-  .n-ext{gap:.25rem;}
-  .n-ext a{font-size:.4rem;padding:.16rem .35rem;letter-spacing:1px;}
-  .n-ext .n-dl{font-size:.4rem!important;padding:.16rem .45rem!important;}
+  .n-ext{gap:.3rem;}
+  .n-ext a{font-size:.5rem;padding:.28rem .55rem;letter-spacing:.5px;gap:.25rem;}
+  .nav-ico{width:11px;height:11px;}
+  .n-ext .n-dl{font-size:.5rem!important;padding:.28rem .55rem!important;}
 
   /* Hero */
   #HERO{padding:70px 1rem 2rem;flex-direction:column;gap:1rem;min-height:auto;}
@@ -502,9 +504,9 @@ body.CK #curOuter{width:20px;height:20px;border-color:rgba(0,255,65,.3);}
   .hero-r{display:none;}
   .h-kpis{gap:.9rem;}
   .kpi-n{font-size:1.5rem;}
-  .h-bio{font-size:.66rem;}
+  .h-bio{font-size:.78rem;}
   .h-cta{flex-wrap:wrap;gap:.5rem;}
-  .btn{font-size:.56rem;padding:.6rem 1rem;}
+  .btn{font-size:.6rem;padding:.6rem 1rem;}
 
   /* Sections */
   section{padding:3.5rem 1rem;}
@@ -512,17 +514,52 @@ body.CK #curOuter{width:20px;height:20px;border-color:rgba(0,255,65,.3);}
   .sk-layout{grid-template-columns:1fr;gap:1.5rem;}
   .sk-layout .rv-r{display:none;}
   .con-grid{grid-template-columns:1fr;gap:1.5rem;}
-  .proj-grid,.blog-grid{grid-template-columns:1fr;}
-  .certs-grid{grid-template-columns:repeat(auto-fill,minmax(180px,1fr));}
+  .proj-grid,.blog-grid{grid-template-columns:1fr;gap:1.2rem;}
+  .certs-grid{grid-template-columns:1fr;gap:.9rem;}
   .edu-grid{grid-template-columns:1fr;}
   .sims-grid{grid-template-columns:1fr;}
   .sgrid{grid-template-columns:1fr 1fr;}
 
-  /* Text size increases for readability */
-  .sh-t{font-size:clamp(1.3rem,6vw,2.2rem);}
-  .tl-role{font-size:.8rem;}
-  .tl-ul li{font-size:.66rem;}
-  .acard-t{font-size:.68rem;}
+  /* Bigger fonts for readability on mobile */
+  .sh-t{font-size:clamp(1.5rem,7vw,2.4rem);}
+  .sh-acc{font-size:.68rem;letter-spacing:1.5px;white-space:normal;}
+  .sh-num{font-size:.66rem;letter-spacing:3px;}
+  .tl-role{font-size:.92rem;}
+  .tl-ul li{font-size:.74rem;line-height:1.7;}
+  .tl-co{font-size:.72rem;}
+  .acard-t{font-size:.78rem;line-height:1.85;color:rgba(255,255,255,.92);}
+  .acard-l{font-size:.6rem;}
+  .pc-title,.blog-title{font-size:.92rem;}
+  .pc-desc,.blog-excerpt{font-size:.72rem;line-height:1.7;color:rgba(255,255,255,.85);}
+  .pc-metric{font-size:.68rem;}
+  .pc-tag,.blog-tag{font-size:.58rem;}
+  .pc-gh,.blog-rm,.hack-gh{font-size:.66rem;padding:.3rem .7rem;}
+  .ci-val{font-size:.78rem;color:rgba(255,255,255,.95);}
+  .ci-lbl{font-size:.55rem;}
+  .ci-ic{width:38px;height:38px;}
+  .ci-ic svg{width:18px;height:18px;}
+  .sim-co{font-size:.78rem;}
+  .sim-t{font-size:.7rem;line-height:1.65;color:rgba(255,255,255,.88);}
+  .edu-deg{font-size:.85rem;}
+  .edu-inst{font-size:.7rem;}
+  .c-nm{font-size:.74rem;}
+  .c-yr{font-size:.6rem;}
+  .c-logo{width:30px;height:30px;top:.5rem;right:.5rem;}
+  .tool{font-size:.66rem;padding:.32rem .7rem;gap:.35rem;}
+  .tool-logo,.tool-logo svg{width:14px;height:14px;}
+  .tools-lbl{font-size:.6rem;}
+  .hack-place{font-size:.95rem;}
+  .hack-trophy{font-size:1.5rem;}
+  .hack-event{font-size:.78rem;}
+  .hack-org{font-size:.6rem;}
+  .hack-proj{font-size:.66rem;padding:.5rem .65rem;}
+  .hack-ul li{font-size:.7rem;line-height:1.7;}
+  .hack-tag{font-size:.55rem;}
+  .sbar-l{font-size:.72rem;}
+  .sbn{font-size:1.5rem;}
+  .sbl{font-size:.55rem;}
+  .op-btn{font-size:.62rem;padding:.5rem .85rem;}
+  .op-btn .op-icon svg{width:12px;height:12px;}
 
   /* Terminal */
   #TOUT{height:220px;font-size:.62rem;}
@@ -538,6 +575,19 @@ body.CK #curOuter{width:20px;height:20px;border-color:rgba(0,255,65,.3);}
 
   /* 3D — reduce for perf */
   #bg3d{opacity:.6;}
+
+  /* CLASSIFIED badge — smaller on mobile */
+  .pc-cl{font-size:.46rem;padding:.12rem .4rem;bottom:.4rem;right:.6rem;}
+  .pc-head{padding:1rem 1.2rem 1.9rem;}
+
+  /* FX overlay — adjust for small screens */
+  .fx-corner{width:40px;height:40px;}
+  .fx-corner.tl,.fx-corner.tr{top:18px;}
+  .fx-corner.tl,.fx-corner.bl{left:18px;}
+  .fx-corner.tr,.fx-corner.br{right:18px;}
+  .fx-corner.bl,.fx-corner.br{bottom:18px;}
+  .fx-warn-banner{padding:.55rem 1rem;font-size:.55rem;letter-spacing:2px;}
+  .fx-skip{bottom:18px;right:18px;font-size:.6rem;}
 }
 
 @media(max-width:480px){
@@ -982,16 +1032,30 @@ document.querySelectorAll('.sh-t[data-sc]').forEach(function(el){scObs.observe(e
 ].forEach(function(s,i){var el=document.createElement('div');el.className='sbar rv';el.style.transitionDelay=(i*.04)+'s';el.innerHTML='<div class="sbar-l"><span>'+s.n+'</span><span class="sbar-p">'+s.v+'%</span></div><div class="sbar-track"><div class="sbar-ticks"></div><div class="sbar-fill" data-w="'+s.v+'"></div></div>';document.getElementById('SBARS').appendChild(el);rvObs.observe(el);});
 skObs.observe(document.getElementById('SBARS'));
 [
-{n:'Nmap',c:'#2563eb'},{n:'Metasploit',c:'#1f1f1f',bg:'#fff'},{n:'Burp Suite',c:'#ff6633'},{n:'Wireshark',c:'#1679a7'},
-{n:'Nessus/OpenVAS',c:'#00a4a6'},{n:'SQLmap',c:'#dc2626'},{n:'Hydra/John',c:'#facc15'},{n:'Maltego/OSINT',c:'#22c55e'},
-{n:'Aircrack-ng',c:'#0ea5e9'},{n:'Ghidra',c:'#e11d48'},{n:'Snort',c:'#f97316'},{n:'FTK/Autopsy',c:'#a855f7'},
-{n:'Magnet AXIOM',c:'#06b6d4'},{n:'Nikto/Acunetix',c:'#10b981'},{n:'Python',c:'#3776ab'},{n:'TensorFlow',c:'#ff6f00'},
-{n:'Scikit-Learn',c:'#f7931e'},{n:'NetworkX',c:'#1e40af'},{n:'AWS IAM',c:'#ff9900'},{n:'XGBoost',c:'#0066cc'},
-{n:'Extra Trees',c:'#16a34a'},{n:'Gradient Boosting',c:'#7c3aed'}
+{n:'Nmap',c:'#2563eb',l:'<svg viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2.2"><circle cx="11" cy="11" r="6"/><line x1="16" y1="16" x2="21" y2="21" stroke-linecap="round"/></svg>'},
+{n:'Metasploit',c:'#0a0a0a',l:'<svg viewBox="0 0 24 24" fill="#1f1f1f"><circle cx="12" cy="12" r="11" stroke="#666" stroke-width=".5"/><path d="M9 8c0 0-1 4-1 6c0 1.5 1.5 2 2 2c-.5-1 0-3 0-4c1 0 2 1 2 3c1-1 1-3 1-4c1 0 2 1 2 3c.5-.5 1-1.5 1-3c0-2-2-4-3.5-4C12 7 9 8 9 8z" fill="#fff"/></svg>'},
+{n:'Burp Suite',c:'#ff6633',l:'<svg viewBox="0 0 24 24" fill="#ff6633"><path d="M12 2C8 6 6 10 6 14c0 4 3 8 6 8s6-4 6-8c0-4-2-8-6-12zm0 18c-2 0-4-2-4-5c0-2 2-5 4-7c2 2 4 5 4 7c0 3-2 5-4 5z"/></svg>'},
+{n:'Wireshark',c:'#1679a7',l:'<svg viewBox="0 0 24 24" fill="#1679a7"><path d="M2 12c0-3 4-6 10-6s10 3 10 6s-4 6-10 6S2 15 2 12zm10 3c1.5 0 3-1.3 3-3s-1.5-3-3-3s-3 1.3-3 3s1.5 3 3 3z"/><circle cx="12" cy="12" r="1.5" fill="#fff"/></svg>'},
+{n:'Nessus/OpenVAS',c:'#00a4a6',l:'<svg viewBox="0 0 24 24" fill="none" stroke="#00a4a6" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>'},
+{n:'SQLmap',c:'#dc2626',l:'<svg viewBox="0 0 24 24" fill="#dc2626"><ellipse cx="12" cy="5" rx="8" ry="2.5"/><path d="M4 5v6c0 1.4 3.6 2.5 8 2.5s8-1.1 8-2.5V5M4 11v6c0 1.4 3.6 2.5 8 2.5s8-1.1 8-2.5v-6"/></svg>'},
+{n:'Hydra/John',c:'#facc15',l:'<svg viewBox="0 0 24 24" fill="#facc15"><path d="M21 7c-1-1-2.5-1-3.5 0L9 15.5L8 14.5L16.5 6c1-1 2.5-1 3.5 0s1 2.5 0 3.5z"/><circle cx="6" cy="18" r="3" fill="none" stroke="#facc15" stroke-width="2"/></svg>'},
+{n:'Maltego/OSINT',c:'#22c55e',l:'<svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><circle cx="12" cy="6" r="2"/><circle cx="6" cy="14" r="2"/><circle cx="18" cy="14" r="2"/><circle cx="12" cy="20" r="2"/><line x1="12" y1="8" x2="6" y2="12"/><line x1="12" y1="8" x2="18" y2="12"/><line x1="6" y1="16" x2="12" y2="18"/><line x1="18" y1="16" x2="12" y2="18"/></svg>'},
+{n:'Aircrack-ng',c:'#0ea5e9',l:'<svg viewBox="0 0 24 24" fill="none" stroke="#0ea5e9" stroke-width="2.2" stroke-linecap="round"><path d="M2 12a14 14 0 0 1 20 0"/><path d="M5 15a10 10 0 0 1 14 0"/><path d="M8 18a6 6 0 0 1 8 0"/><circle cx="12" cy="20" r="1.5" fill="#0ea5e9"/></svg>'},
+{n:'Ghidra',c:'#e11d48',l:'<svg viewBox="0 0 24 24" fill="#e11d48"><path d="M12 2c4 0 7 3 7 7c0 5-7 13-7 13s-7-8-7-13c0-4 3-7 7-7zm0 4a3 3 0 1 0 0 6a3 3 0 0 0 0-6z"/></svg>'},
+{n:'Snort',c:'#f97316',l:'<svg viewBox="0 0 24 24" fill="#f97316"><path d="M12 2L3 8l9 6l9-6zM3 14l9 6l9-6M3 11l9 6l9-6"/></svg>'},
+{n:'FTK/Autopsy',c:'#a855f7',l:'<svg viewBox="0 0 24 24" fill="none" stroke="#a855f7" stroke-width="2"><circle cx="11" cy="11" r="6"/><path d="M11 7v8M7 11h8" stroke-linecap="round"/><line x1="16" y1="16" x2="21" y2="21" stroke-linecap="round"/></svg>'},
+{n:'Magnet AXIOM',c:'#06b6d4',l:'<svg viewBox="0 0 24 24" fill="#06b6d4"><path d="M5 4h6v9c0 .5-.5 1-1 1H8c-.5 0-1-.5-1-1V8H5zM13 4h6v4h-2v5c0 .5-.5 1-1 1h-2c-.5 0-1-.5-1-1zM5 16h14v4H5z"/></svg>'},
+{n:'Nikto/Acunetix',c:'#10b981',l:'<svg viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 3 4 6 4 9s-1.5 6-4 9M12 3c-2.5 3-4 6-4 9s1.5 6 4 9"/></svg>'},
+{n:'Python',c:'#3776ab',l:'<svg viewBox="0 0 24 24"><path d="M12 2C7 2 7 4 7 4v3h5v1H4S2 8 2 12s2 4 2 4h2v-3c0-1.5 1.5-3 3-3h7c1.5 0 3-1 3-3V4s0-2-5-2zm-2 2a1 1 0 1 1 0 2a1 1 0 0 1 0-2z" fill="#3776ab"/><path d="M12 22c5 0 5-2 5-2v-3h-5v-1h8s2 0 2-4s-2-4-2-4h-2v3c0 1.5-1.5 3-3 3H8c-1.5 0-3 1-3 3v5s0 2 5 2zm2-2a1 1 0 1 1 0-2a1 1 0 0 1 0 2z" fill="#ffd43b"/></svg>'},
+{n:'TensorFlow',c:'#ff6f00',l:'<svg viewBox="0 0 24 24" fill="#ff6f00"><path d="M12 2L3 7v10l9 5l9-5V7zm0 3l6 3v8l-6 3l-6-3V8zm-1 4v6h2v-6h2l-3-2l-3 2z"/></svg>'},
+{n:'Scikit-Learn',c:'#f7931e',l:'<svg viewBox="0 0 24 24" fill="#f7931e"><circle cx="6" cy="18" r="3"/><circle cx="12" cy="6" r="3" fill="#3499cd"/><circle cx="18" cy="14" r="3"/></svg>'},
+{n:'NetworkX',c:'#1e40af',l:'<svg viewBox="0 0 24 24" fill="none" stroke="#1e40af" stroke-width="2"><circle cx="12" cy="4" r="2" fill="#1e40af"/><circle cx="4" cy="12" r="2" fill="#1e40af"/><circle cx="20" cy="12" r="2" fill="#1e40af"/><circle cx="8" cy="20" r="2" fill="#1e40af"/><circle cx="16" cy="20" r="2" fill="#1e40af"/><line x1="12" y1="6" x2="4" y2="10"/><line x1="12" y1="6" x2="20" y2="10"/><line x1="4" y1="14" x2="8" y2="18"/><line x1="20" y1="14" x2="16" y2="18"/><line x1="8" y1="20" x2="16" y2="20"/></svg>'},
+{n:'AWS IAM',c:'#ff9900',l:'<svg viewBox="0 0 24 24" fill="#ff9900"><path d="M12 2L3 6v6c0 5 4 9 9 10c5-1 9-5 9-10V6z"/><path d="M9 12l2 2l4-4" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>'},
+{n:'XGBoost',c:'#0066cc',l:'<svg viewBox="0 0 24 24" fill="#0066cc"><path d="M3 17l4-4l4 3l5-7l5 5v6H3z"/><polyline points="3,17 7,13 11,16 16,9 21,14" fill="none" stroke="#fff" stroke-width="1.5"/></svg>'},
+{n:'Extra Trees',c:'#16a34a',l:'<svg viewBox="0 0 24 24" fill="#16a34a"><path d="M12 2l-4 6h2l-3 5h2l-2 4h10l-2-4h2l-3-5h2zm-1 13h2v6h-2z"/></svg>'},
+{n:'Gradient Boosting',c:'#7c3aed',l:'<svg viewBox="0 0 24 24"><defs><linearGradient id="gbg" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#7c3aed"/><stop offset="1" stop-color="#ec4899"/></linearGradient></defs><path d="M3 21V11h3v10zm5 0V7h3v14zm5 0V3h3v18zm5 0v-7h3v7z" fill="url(#gbg)"/></svg>'}
 ].forEach(function(t){var el=document.createElement('div');el.className='tool';
-  /* Square logo dot in brand color */
-  var dot='<span class="tool-dot" style="background:'+t.c+';box-shadow:0 0 8px '+t.c+'aa;"></span>';
-  el.innerHTML=dot+'<span>'+t.n+'</span>';
+  el.innerHTML='<span class="tool-logo">'+t.l+'</span><span>'+t.n+'</span>';
   document.getElementById('TOOLS').appendChild(el);
 });
 
@@ -1051,12 +1115,24 @@ t:'Shields Up Simulation (2025) — Cyber defence, attack scenario evaluation.'}
 {y:'2026',n:'CCPP — Certified C++ Practitioner',is:'RED TEAM LEADERS',sc:'Certified',ic:'💻'},
 {y:'2026',n:'Foundations of Log Analysis for Cyber Defense',is:'RED TEAM LEADERS',sc:'Certified',ic:'📊'}
 ].forEach(function(c){var el=document.createElement('div');el.className='cert';
-  /* Logo SVG mark per issuer (no duplicate text label) */
+  /* Official-style brand logo SVG marks per issuer */
   var logo='';
-  if(c.is==='EC-COUNCIL'){logo='<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" class="c-logo"><circle cx="16" cy="16" r="14" fill="#ff6b35"/><path d="M10 12 L22 12 M10 16 L20 16 M10 20 L22 20" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/></svg>';}
-  else if(c.is==='MASTERMIND'){logo='<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" class="c-logo"><rect width="32" height="32" rx="4" fill="#a855f7"/><path d="M8 22 L8 10 L13 16 L18 10 L18 22 M22 10 L22 22 M22 16 L26 16" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round"/></svg>';}
-  else if(c.is==='RED TEAM LEADERS'){logo='<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" class="c-logo"><path d="M16 2 L28 8 L28 18 C28 24 16 30 16 30 C16 30 4 24 4 18 L4 8 Z" fill="#ff2d55"/><path d="M11 16 L15 20 L22 12" stroke="#fff" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>';}
-  else if(c.is==='ETS'){logo='<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" class="c-logo"><circle cx="16" cy="16" r="14" fill="#00d4ff"/><text x="16" y="20" font-family="Arial Black,sans-serif" font-size="11" font-weight="900" fill="#000" text-anchor="middle">ETS</text></svg>';}
+  if(c.is==='EC-COUNCIL'){
+    /* EC-Council: official mark uses orange/red with stylized letter — using shield with E|C composition */
+    logo='<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" class="c-logo"><defs><linearGradient id="ecg'+c.y+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff7a3d"/><stop offset="1" stop-color="#e74c3c"/></linearGradient></defs><path d="M20 2 L36 8 L36 22 C36 30 20 38 20 38 C20 38 4 30 4 22 L4 8 Z" fill="url(#ecg'+c.y+')"/><text x="20" y="19" font-family="Arial Black,sans-serif" font-size="11" font-weight="900" fill="#fff" text-anchor="middle">EC</text><text x="20" y="29" font-family="Arial Black,sans-serif" font-size="7" font-weight="700" fill="#fff" text-anchor="middle" letter-spacing="1">COUNCIL</text></svg>';
+  }
+  else if(c.is==='MASTERMIND'){
+    /* MasterMind: bold M wordmark on purple gradient tile */
+    logo='<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" class="c-logo"><defs><linearGradient id="mmg'+c.y+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#c084fc"/><stop offset="1" stop-color="#7c3aed"/></linearGradient></defs><rect width="40" height="40" rx="6" fill="url(#mmg'+c.y+')"/><path d="M8 30 L8 12 L14 12 L20 22 L26 12 L32 12 L32 30 L28 30 L28 19 L22 28 L18 28 L12 19 L12 30 Z" fill="#fff"/></svg>';
+  }
+  else if(c.is==='RED TEAM LEADERS'){
+    /* Red Team Leaders: red shield with crosshair */
+    logo='<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" class="c-logo"><defs><linearGradient id="rtg'+c.y+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff3838"/><stop offset="1" stop-color="#c20000"/></linearGradient></defs><path d="M20 2 L36 8 L36 22 C36 30 20 38 20 38 C20 38 4 30 4 22 L4 8 Z" fill="url(#rtg'+c.y+')"/><circle cx="20" cy="20" r="7" fill="none" stroke="#fff" stroke-width="2"/><line x1="20" y1="11" x2="20" y2="15" stroke="#fff" stroke-width="2"/><line x1="20" y1="25" x2="20" y2="29" stroke="#fff" stroke-width="2"/><line x1="11" y1="20" x2="15" y2="20" stroke="#fff" stroke-width="2"/><line x1="25" y1="20" x2="29" y2="20" stroke="#fff" stroke-width="2"/><circle cx="20" cy="20" r="2" fill="#fff"/></svg>';
+  }
+  else if(c.is==='ETS'){
+    /* ETS: blue oval wordmark */
+    logo='<svg viewBox="0 0 50 40" xmlns="http://www.w3.org/2000/svg" class="c-logo" style="width:38px;"><ellipse cx="25" cy="20" rx="22" ry="16" fill="#003a70"/><text x="25" y="26" font-family="Arial Black,sans-serif" font-size="14" font-weight="900" fill="#fff" text-anchor="middle" letter-spacing="1">ETS</text></svg>';
+  }
   el.innerHTML='<div class="cert-in"><div class="cf">'+logo+'<div class="c-yr">'+c.y+'</div><div class="c-nm">'+c.n+'</div></div><div class="cb"><div class="c-ic">'+c.ic+'</div><div class="c-sc">'+c.sc+'</div><div class="c-id">'+c.is+'</div></div></div>';document.getElementById('CERTS_GRID').appendChild(el);});
 
 /* ── DATA: REAL PROJECTS — strictly from resume ── */
@@ -1818,6 +1894,400 @@ function fxHack(){
 }
 
 
+/* ── FULL-SCREEN: HEAVEN (jaw-dropping intro · holds until ESC) ─ */
+function fxHeaven(){
+  FX.banner.textContent='⚡ HEAVEN PROTOCOL ACTIVE — PRESS [ESC] TO EXIT ⚡';
+  FX.banner.style.display='block';
+  FX.banner.style.background='rgba(0,255,65,.12)';FX.banner.style.borderBottom='2px solid var(--G)';FX.banner.style.color='var(--G)';
+  document.querySelectorAll('.fx-corner').forEach(function(c){c.style.borderColor='var(--G)';});
+
+  FX.text.innerHTML=
+    '<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:5vh 3vw;text-align:center;">'+
+      '<div style="font-family:var(--F);font-size:.8rem;color:rgba(0,255,65,.6);letter-spacing:6px;margin-bottom:1.2rem;">// OFFENSIVE OPERATOR · ENGLAND, UK //</div>'+
+      /* Massive HEAVEN with letter-by-letter glitch */
+      '<div id="fxHeavenName" style="font-family:var(--H);font-size:clamp(3.5rem,14vw,12rem);font-weight:900;color:var(--G);letter-spacing:clamp(.4rem,2vw,1.8rem);line-height:1;text-shadow:0 0 60px var(--G),0 0 120px rgba(0,255,65,.5);"></div>'+
+      '<div style="font-family:var(--F);font-size:clamp(.85rem,1.6vw,1.3rem);color:rgba(255,255,255,.92);margin-top:1rem;letter-spacing:4px;">NISARG CHASMAWALA</div>'+
+      /* 4-stat grid */
+      '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1.5rem;margin-top:2.5rem;width:min(720px,90vw);">'+
+        '<div><div style="font-family:var(--H);font-size:clamp(1.4rem,3.5vw,2.4rem);color:var(--G);text-shadow:0 0 16px var(--G);">14</div><div style="font-size:.62rem;color:rgba(0,255,65,.6);letter-spacing:2px;margin-top:.3rem;">CERTIFICATIONS</div></div>'+
+        '<div><div style="font-family:var(--H);font-size:clamp(1.4rem,3.5vw,2.4rem);color:var(--C);text-shadow:0 0 16px var(--C);">6</div><div style="font-size:.62rem;color:rgba(0,212,255,.6);letter-spacing:2px;margin-top:.3rem;">LIVE PROJECTS</div></div>'+
+        '<div><div style="font-family:var(--H);font-size:clamp(1.4rem,3.5vw,2.4rem);color:var(--A);text-shadow:0 0 16px var(--A);">10/10</div><div style="font-size:.62rem;color:rgba(255,159,10,.6);letter-spacing:2px;margin-top:.3rem;">CVSS RCE</div></div>'+
+        '<div><div style="font-family:var(--H);font-size:clamp(1.4rem,3.5vw,2.4rem);color:var(--P);text-shadow:0 0 16px var(--P);">R²=.9999</div><div style="font-size:.62rem;color:rgba(168,85,247,.6);letter-spacing:2px;margin-top:.3rem;">ML PRECISION</div></div>'+
+      '</div>'+
+      /* Live ID stream */
+      '<div id="fxHeavenStream" style="margin-top:2.5rem;font-family:var(--F);font-size:.78rem;color:rgba(0,255,65,.7);letter-spacing:1.5px;min-height:1.5em;"></div>'+
+      '<div style="margin-top:1.5rem;font-size:.7rem;color:rgba(255,255,255,.45);letter-spacing:3px;">"In cyberspace, the quieter you become, the more you hear."</div>'+
+    '</div>';
+
+  /* Scramble-build the HEAVEN letters */
+  var nameEl=document.getElementById('fxHeavenName');
+  var target='HEAVEN';
+  var current=['','','','','',''];
+  var charset='!@#$%^&*<>?/{}[]ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  var lockedAt=[0,0,0,0,0,0];
+  var startTime=Date.now();
+  var scrambleInt=setInterval(function(){
+    if(!FX.active){clearInterval(scrambleInt);return;}
+    var elapsed=(Date.now()-startTime)/1000;
+    var html='';
+    for(var i=0;i<target.length;i++){
+      if(lockedAt[i]===0&&elapsed>=i*.18+.2){lockedAt[i]=1;current[i]=target.charAt(i);}
+      else if(lockedAt[i]===0)current[i]=charset.charAt(Math.floor(Math.random()*charset.length));
+      html+='<span style="display:inline-block;'+(lockedAt[i]?'':'color:var(--R);text-shadow:0 0 30px var(--R);')+'">'+current[i]+'</span>';
+    }
+    nameEl.innerHTML=html;
+    if(elapsed>1.6){clearInterval(scrambleInt);nameEl.innerHTML=target;}
+  },45);
+
+  /* Streaming statuses */
+  var streams=['> initializing operator profile...','> verifying CEH MASTER credential ✓','> verifying CPENT clearance ✓','> verifying CHFI · 90.7% ✓','> verifying ISO 27001:2022 LA ✓','> 6 live ML/security projects loaded ✓','> SHELL ready · awaiting commands','> nisargkc@gmail.com · +44 7554 469437','> ENGLAND, UK · ACTIVELY SEEKING — 2026','> [ESC] to exit · or close & explore portfolio'];
+  var sIdx=0;
+  var streamEl=document.getElementById('fxHeavenStream');
+  setTimeout(function(){
+    var sInt=setInterval(function(){
+      if(!FX.active){clearInterval(sInt);return;}
+      streamEl.textContent=streams[sIdx%streams.length];
+      sIdx++;
+    },1100);
+  },1800);
+
+  /* Background — deep matrix rain (slower, bigger) */
+  var cols=Math.floor(innerWidth/20);
+  var drops=[];for(var i=0;i<cols;i++)drops.push(Math.random()*-300);
+  var chars='アイウエオカキクケコサシスセソHEAVEN0123456789';
+
+  /* Persistent run — only ESC exits (use 9999s as effective infinite) */
+  FX.run(9999,function(t,d){
+    FX.ctx.fillStyle='rgba(0,0,0,.06)';FX.ctx.fillRect(0,0,innerWidth,innerHeight);
+    FX.ctx.font='17px JetBrains Mono';
+    for(var i=0;i<cols;i++){
+      var ch=chars[Math.floor(Math.random()*chars.length)];
+      FX.ctx.fillStyle=Math.random()>.98?'rgba(255,255,255,.95)':'rgba(0,255,65,'+(Math.random()*.5+.25)+')';
+      FX.ctx.fillText(ch,i*20,drops[i]);
+      drops[i]=drops[i]>innerHeight&&Math.random()>.98?0:drops[i]+15;
+    }
+  });
+}
+
+/* ── FULL-SCREEN: TRACEROUTE (network hop visualization) ─ */
+function fxTraceroute(){
+  FX.banner.textContent='🌐 NETWORK TRACE IN PROGRESS — ROUTE TO HEAVEN.EXE 🌐';
+  FX.banner.style.display='block';
+  document.querySelectorAll('.fx-corner').forEach(function(c){c.style.borderColor='var(--C)';});
+
+  FX.text.innerHTML=
+    '<div style="position:absolute;top:13vh;left:5vw;right:5vw;display:flex;flex-direction:column;align-items:center;gap:1.5rem;">'+
+      '<div style="font-family:var(--H);font-size:clamp(1.6rem,4vw,2.8rem);color:var(--C);letter-spacing:6px;text-shadow:0 0 25px var(--C);">▸ TRACEROUTE TO HEAVEN ◂</div>'+
+      '<div style="font-size:.75rem;color:rgba(255,255,255,.6);letter-spacing:3px;">// 30-HOP MAX · ICMP/UDP · LIVE //</div>'+
+      /* Hop chain SVG */
+      '<svg id="fxTraceSvg" viewBox="0 0 800 200" style="width:min(900px,95vw);height:auto;"><g id="fxTraceChain"></g></svg>'+
+      /* Hop log */
+      '<div id="fxTraceLog" style="width:min(900px,95vw);background:rgba(0,8,15,.85);border:1px solid rgba(0,212,255,.3);padding:1rem 1.5rem;height:32vh;overflow:hidden;font-family:var(--F);font-size:.78rem;line-height:1.95;text-align:left;"></div>'+
+    '</div>';
+
+  var hops=[
+    {ip:'192.168.1.1',name:'your_router',ms:'2.4 ms',col:'#00ff41'},
+    {ip:'10.0.0.1',name:'ISP_gateway',ms:'8.1 ms',col:'#00ff41'},
+    {ip:'213.46.xxx.xxx',name:'internet_backbone',ms:'15.3 ms',col:'#00d4ff'},
+    {ip:'* * *',name:'darknet_node_01',ms:'timeout',col:'#f59e0b'},
+    {ip:'[ENCRYPTED]',name:'HEAVEN_PROXY',ms:'<1 ms',col:'#a855f7'},
+    {ip:'nishu2402.github.io',name:'portfolio',ms:'3.2 ms',col:'#00d4ff'},
+    {ip:'england.uk',name:'HEAVEN.exe',ms:'<1 ms ← YOU FOUND ME',col:'#00ff41'}
+  ];
+  var chainG=document.getElementById('fxTraceChain');
+  var logEl=document.getElementById('fxTraceLog');
+  var startX=50,gap=110,nodeY=100;
+
+  var hIdx=0;
+  function spawnHop(){
+    if(hIdx>=hops.length||!FX.active)return;
+    var h=hops[hIdx],x=startX+hIdx*gap;
+    /* SVG node */
+    var c=document.createElementNS('http://www.w3.org/2000/svg','circle');
+    c.setAttribute('cx',x);c.setAttribute('cy',nodeY);c.setAttribute('r',0);
+    c.setAttribute('fill',h.col);
+    c.innerHTML='<animate attributeName="r" from="0" to="14" dur=".4s" fill="freeze"/>';
+    chainG.appendChild(c);
+    /* Connecting line */
+    if(hIdx>0){
+      var ln=document.createElementNS('http://www.w3.org/2000/svg','line');
+      ln.setAttribute('x1',x-gap+14);ln.setAttribute('y1',nodeY);ln.setAttribute('x2',x-gap+14);ln.setAttribute('y2',nodeY);
+      ln.setAttribute('stroke',h.col);ln.setAttribute('stroke-width','2');
+      ln.innerHTML='<animate attributeName="x2" from="'+(x-gap+14)+'" to="'+(x-14)+'" dur=".4s" fill="freeze"/>';
+      chainG.appendChild(ln);
+    }
+    /* Label */
+    var lbl=document.createElementNS('http://www.w3.org/2000/svg','text');
+    lbl.setAttribute('x',x);lbl.setAttribute('y',nodeY-22);
+    lbl.setAttribute('font-family','JetBrains Mono');lbl.setAttribute('font-size','9');
+    lbl.setAttribute('fill',h.col);lbl.setAttribute('text-anchor','middle');
+    lbl.textContent=h.name;
+    chainG.appendChild(lbl);
+    /* Hop number */
+    var num=document.createElementNS('http://www.w3.org/2000/svg','text');
+    num.setAttribute('x',x);num.setAttribute('y',nodeY+30);
+    num.setAttribute('font-family','Orbitron');num.setAttribute('font-size','11');num.setAttribute('font-weight','700');
+    num.setAttribute('fill',h.col);num.setAttribute('text-anchor','middle');
+    num.textContent='hop '+(hIdx+1);
+    chainG.appendChild(num);
+    /* Log line */
+    var line=document.createElement('div');
+    line.style.color=h.col;
+    line.innerHTML=' '+(hIdx+1)+'  <span style="opacity:.85;">'+h.ip+'</span> ('+h.name+')   <span style="opacity:.6;">'+h.ms+'</span>';
+    logEl.appendChild(line);
+    while(logEl.children.length>11)logEl.removeChild(logEl.children[0]);
+    hIdx++;
+  }
+  var hInt=setInterval(function(){if(!FX.active||hIdx>=hops.length){clearInterval(hInt);}else spawnHop();},620);
+
+  FX.run(5,function(t,d){
+    FX.ctx.fillStyle='rgba(0,4,8,.18)';FX.ctx.fillRect(0,0,innerWidth,innerHeight);
+    /* Floating data packets */
+    for(var i=0;i<10;i++){FX.ctx.fillStyle='rgba(0,212,255,'+(Math.random()*.5+.2)+')';FX.ctx.fillRect(Math.random()*innerWidth,Math.random()*innerHeight,Math.random()*3+1,Math.random()*3+1);}
+  });
+}
+
+/* ── FULL-SCREEN: DECODE (decryption / cipher cracking) ─ */
+function fxDecode(){
+  FX.banner.textContent='🔐 INTERCEPTED TRANSMISSION — DECRYPTING 🔐';
+  FX.banner.style.display='block';
+  FX.banner.style.background='rgba(168,85,247,.12)';FX.banner.style.borderBottom='2px solid var(--P)';FX.banner.style.color='var(--P)';
+  document.querySelectorAll('.fx-corner').forEach(function(c){c.style.borderColor='var(--P)';});
+
+  FX.text.innerHTML=
+    '<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:5vh 5vw;text-align:center;">'+
+      '<div style="font-family:var(--H);font-size:clamp(1.6rem,4vw,2.8rem);color:var(--P);letter-spacing:6px;text-shadow:0 0 25px var(--P);margin-bottom:.5rem;">▸ CIPHER BREAKER ◂</div>'+
+      '<div style="font-size:.78rem;color:rgba(255,255,255,.7);letter-spacing:3px;margin-bottom:2rem;">// ROT13 → BASE64 → AES-256 → ??? //</div>'+
+      /* Cipher stages */
+      '<div style="background:rgba(15,0,25,.85);border:1px solid rgba(168,85,247,.4);padding:1.4rem 2rem;width:min(800px,92vw);text-align:left;font-family:var(--F);">'+
+        '<div style="font-size:.65rem;color:rgba(168,85,247,.6);letter-spacing:3px;margin-bottom:.4rem;">CIPHERTEXT (HEX):</div>'+
+        '<div id="fxCipherIn" style="font-size:.85rem;color:#888;word-break:break-all;line-height:1.7;letter-spacing:1px;"></div>'+
+        '<div style="font-size:.65rem;color:rgba(168,85,247,.6);letter-spacing:3px;margin:1.2rem 0 .4rem;">DECRYPTING (LIVE):</div>'+
+        '<div id="fxCipherOut" style="font-size:1rem;color:var(--G);min-height:1.5em;letter-spacing:2px;font-weight:600;text-shadow:0 0 12px rgba(0,255,65,.4);"></div>'+
+      '</div>'+
+      '<div style="margin-top:1.5rem;display:flex;gap:1.5rem;flex-wrap:wrap;justify-content:center;">'+
+        '<div><div style="font-size:.65rem;color:rgba(168,85,247,.7);letter-spacing:3px;">ALGORITHM</div><div id="fxCipherAlgo" style="font-family:var(--H);font-size:1rem;color:var(--P);">CAESAR</div></div>'+
+        '<div><div style="font-size:.65rem;color:rgba(168,85,247,.7);letter-spacing:3px;">PROGRESS</div><div id="fxCipherProg" style="font-family:var(--H);font-size:1rem;color:var(--C);">0%</div></div>'+
+        '<div><div style="font-size:.65rem;color:rgba(168,85,247,.7);letter-spacing:3px;">KEY ENTROPY</div><div id="fxCipherKey" style="font-family:var(--H);font-size:1rem;color:var(--A);">128 bit</div></div>'+
+      '</div>';
+
+  var inEl=document.getElementById('fxCipherIn');
+  var outEl=document.getElementById('fxCipherOut');
+  var algoEl=document.getElementById('fxCipherAlgo');
+  var progEl=document.getElementById('fxCipherProg');
+  var keyEl=document.getElementById('fxCipherKey');
+  /* Generate hex stream */
+  var hexChars='0123456789abcdef';
+  var hexLen=120;
+  function regenHex(){var s='';for(var i=0;i<hexLen;i++){s+=hexChars.charAt(Math.floor(Math.random()*16));if(i%2===1)s+=' ';}return s;}
+  inEl.textContent=regenHex();
+  var hexInt=setInterval(function(){if(!FX.active){clearInterval(hexInt);return;}inEl.textContent=regenHex();},120);
+
+  var algos=['CAESAR','ROT13','BASE64','AES-128','AES-256','RSA-4096','HEAVEN-X'];
+  var aIdx=0;
+  var aInt=setInterval(function(){if(!FX.active){clearInterval(aInt);return;}algoEl.textContent=algos[aIdx%algos.length];aIdx++;},500);
+
+  /* Out text — scramble then resolve */
+  var target='HIRE NISARG CHASMAWALA — HEAVEN — ENGLAND, UK';
+  var charset='!@#$%^&*<>?/{}[]ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  var startTime=Date.now();
+  var revealMap=[];for(var i=0;i<target.length;i++)revealMap.push(0);
+  var outInt=setInterval(function(){
+    if(!FX.active){clearInterval(outInt);return;}
+    var elapsed=(Date.now()-startTime)/1000;
+    var t='';
+    for(var i=0;i<target.length;i++){
+      if(target.charAt(i)===' '){t+=' ';continue;}
+      if(revealMap[i]===0&&elapsed>=i*.06+1){revealMap[i]=1;}
+      t+=revealMap[i]?target.charAt(i):charset.charAt(Math.floor(Math.random()*charset.length));
+    }
+    outEl.textContent=t;
+  },50);
+
+  FX.run(6,function(t,d){
+    FX.ctx.fillStyle='rgba(8,0,15,.16)';FX.ctx.fillRect(0,0,innerWidth,innerHeight);
+    /* Random hex digits floating purple */
+    FX.ctx.font='14px JetBrains Mono';
+    for(var i=0;i<14;i++){
+      FX.ctx.fillStyle='rgba(168,85,247,'+(Math.random()*.4+.2)+')';
+      FX.ctx.fillText(hexChars.charAt(Math.floor(Math.random()*16))+hexChars.charAt(Math.floor(Math.random()*16)),Math.random()*innerWidth,Math.random()*innerHeight);
+    }
+    var p=Math.min(t/d*100,100);progEl.textContent=Math.round(p)+'%';
+    keyEl.textContent=Math.floor(128+p*40)+' bit';
+  });
+}
+
+/* ── FULL-SCREEN: SCAN (radial nmap-style port scan) ─ */
+function fxScan(){
+  FX.banner.textContent='🛰 NMAP SCAN ENGAGED — STEALTH SYN — HEAVEN 🛰';
+  FX.banner.style.display='block';
+  document.querySelectorAll('.fx-corner').forEach(function(c){c.style.borderColor='var(--G)';});
+
+  FX.text.innerHTML=
+    '<div style="position:absolute;top:13vh;left:5vw;right:5vw;display:flex;gap:2rem;align-items:flex-start;flex-wrap:wrap;">'+
+      /* Left: radar */
+      '<div style="flex:1;min-width:340px;text-align:center;">'+
+        '<div style="font-family:var(--H);font-size:1rem;color:var(--G);letter-spacing:5px;margin-bottom:1rem;">▸ RADAR SWEEP</div>'+
+        '<svg viewBox="0 0 400 400" style="width:min(400px,80vw);max-width:100%;">'+
+          '<circle cx="200" cy="200" r="180" fill="rgba(0,255,65,.02)" stroke="rgba(0,255,65,.3)" stroke-width="1"/>'+
+          '<circle cx="200" cy="200" r="135" fill="none" stroke="rgba(0,255,65,.2)" stroke-width="1"/>'+
+          '<circle cx="200" cy="200" r="90" fill="none" stroke="rgba(0,255,65,.15)" stroke-width="1"/>'+
+          '<circle cx="200" cy="200" r="45" fill="none" stroke="rgba(0,255,65,.1)" stroke-width="1"/>'+
+          '<line x1="200" y1="20" x2="200" y2="380" stroke="rgba(0,255,65,.15)" stroke-width="1"/>'+
+          '<line x1="20" y1="200" x2="380" y2="200" stroke="rgba(0,255,65,.15)" stroke-width="1"/>'+
+          /* Radar sweep arm */
+          '<line x1="200" y1="200" x2="200" y2="20" stroke="#00ff41" stroke-width="2"><animateTransform attributeName="transform" type="rotate" from="0 200 200" to="360 200 200" dur="2.5s" repeatCount="indefinite"/></line>'+
+          /* Sweep cone gradient */
+          '<defs><linearGradient id="fxSweepGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="rgba(0,255,65,.4)"/><stop offset="1" stop-color="rgba(0,255,65,0)"/></linearGradient></defs>'+
+          '<path d="M200,200 L200,20 A180,180 0 0 1 350,140 Z" fill="url(#fxSweepGrad)"><animateTransform attributeName="transform" type="rotate" from="0 200 200" to="360 200 200" dur="2.5s" repeatCount="indefinite"/></path>'+
+          '<g id="fxScanDots"></g>'+
+          '<circle cx="200" cy="200" r="5" fill="#00ff41"><animate attributeName="r" values="5;8;5" dur="1s" repeatCount="indefinite"/></circle>'+
+        '</svg>'+
+      '</div>'+
+      /* Right: port log */
+      '<div style="flex:1;min-width:300px;">'+
+        '<div style="font-family:var(--H);font-size:1rem;color:var(--G);letter-spacing:5px;margin-bottom:1rem;">▸ PORTS DISCOVERED</div>'+
+        '<div style="background:rgba(0,8,2,.85);border:1px solid rgba(0,255,65,.3);padding:1rem 1.5rem;font-family:var(--F);font-size:.8rem;line-height:1.85;">'+
+          '<div style="color:var(--A);font-weight:600;margin-bottom:.6rem;">PORT       STATE      SERVICE     VERSION</div>'+
+          '<div id="fxPortList"></div>'+
+        '</div>'+
+        '<div style="margin-top:1.2rem;display:flex;gap:1.5rem;flex-wrap:wrap;">'+
+          '<div><div style="font-size:.65rem;color:rgba(0,255,65,.65);letter-spacing:2px;">SCANNED</div><div id="fxScanCount" style="font-family:var(--H);font-size:1.4rem;color:var(--G);">0</div></div>'+
+          '<div><div style="font-size:.65rem;color:rgba(0,255,65,.65);letter-spacing:2px;">OPEN</div><div id="fxScanOpen" style="font-family:var(--H);font-size:1.4rem;color:var(--C);">0</div></div>'+
+          '<div><div style="font-size:.65rem;color:rgba(0,255,65,.65);letter-spacing:2px;">CVEs</div><div id="fxScanCves" style="font-family:var(--H);font-size:1.4rem;color:var(--R);">0</div></div>'+
+        '</div>'+
+      '</div>'+
+    '</div>';
+
+  var ports=[
+    {p:'22/tcp',s:'open',sv:'ssh',v:'OpenSSH 9.3p1',col:'#00ff41'},
+    {p:'80/tcp',s:'open',sv:'http',v:'nginx 1.25.4',col:'#00ff41'},
+    {p:'443/tcp',s:'open',sv:'https',v:'nginx 1.25.4',col:'#00ff41'},
+    {p:'8080/tcp',s:'open',sv:'http-alt',v:'Python/3.12',col:'#00ff41'},
+    {p:'3306/tcp',s:'filtered',sv:'mysql',v:'-',col:'#f59e0b'},
+    {p:'5432/tcp',s:'closed',sv:'postgres',v:'-',col:'rgba(255,255,255,.5)'},
+    {p:'21/tcp',s:'closed',sv:'ftp',v:'-',col:'rgba(255,255,255,.5)'},
+    {p:'445/tcp',s:'open',sv:'smb',v:'Samba 4.x · CVE-listed',col:'#ff2d55'}
+  ];
+  var dotsG=document.getElementById('fxScanDots');
+  var portListEl=document.getElementById('fxPortList');
+  var countEl=document.getElementById('fxScanCount');
+  var openEl=document.getElementById('fxScanOpen');
+  var cvesEl=document.getElementById('fxScanCves');
+  var scanned=0,opened=0,cves=0;
+  var pIdx=0;
+  function spawnPort(){
+    if(pIdx>=ports.length||!FX.active)return;
+    var p=ports[pIdx];
+    /* SVG dot at random position on radar */
+    var ang=Math.random()*Math.PI*2;
+    var rad=40+Math.random()*140;
+    var x=200+Math.cos(ang)*rad,y=200+Math.sin(ang)*rad;
+    var d=document.createElementNS('http://www.w3.org/2000/svg','circle');
+    d.setAttribute('cx',x);d.setAttribute('cy',y);d.setAttribute('r',5);
+    d.setAttribute('fill',p.col);
+    d.innerHTML='<animate attributeName="opacity" values="0;1;.6" dur=".4s" fill="freeze"/><animate attributeName="r" values="0;9;5" dur=".4s" fill="freeze"/>';
+    dotsG.appendChild(d);
+    /* Log line */
+    var line=document.createElement('div');
+    line.style.color=p.col;
+    line.innerHTML=p.p.padEnd(11)+p.s.padEnd(11)+p.sv.padEnd(12)+p.v;
+    portListEl.appendChild(line);
+    scanned+=Math.floor(Math.random()*8000+2000);
+    if(p.s==='open'){opened++;if(p.v.indexOf('CVE')>=0)cves++;}
+    countEl.textContent=scanned.toLocaleString();
+    openEl.textContent=opened;
+    cvesEl.textContent=cves;
+    pIdx++;
+  }
+  var pInt=setInterval(function(){if(!FX.active||pIdx>=ports.length){clearInterval(pInt);}else spawnPort();},500);
+
+  FX.run(5,function(t,d){
+    FX.ctx.fillStyle='rgba(0,4,2,.18)';FX.ctx.fillRect(0,0,innerWidth,innerHeight);
+    /* Scan grid background */
+    FX.ctx.strokeStyle='rgba(0,255,65,.05)';FX.ctx.lineWidth=.5;
+    var gs=60,off=(t*15)%gs;
+    for(var x=-off;x<innerWidth;x+=gs){FX.ctx.beginPath();FX.ctx.moveTo(x,0);FX.ctx.lineTo(x,innerHeight);FX.ctx.stroke();}
+  });
+}
+
+/* ── FULL-SCREEN: EXPLOIT (payload chain delivery) ─ */
+function fxExploit(){
+  FX.banner.textContent='💥 EXPLOIT CHAIN ENGAGED — TARGET: HIRING_DECISION 💥';
+  FX.banner.style.display='block';
+  document.querySelectorAll('.fx-corner').forEach(function(c){c.style.borderColor='var(--R)';});
+
+  FX.text.innerHTML=
+    '<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:5vh 5vw;text-align:center;">'+
+      '<div style="font-family:var(--H);font-size:clamp(1.5rem,4vw,2.6rem);color:var(--R);letter-spacing:6px;text-shadow:0 0 25px var(--R);margin-bottom:.5rem;">▸ EXPLOIT CHAIN ◂</div>'+
+      '<div style="font-size:.75rem;color:rgba(255,255,255,.65);letter-spacing:3px;margin-bottom:2rem;">// CVE-2026-HEAVEN · CVSS 10.0 · ZERO-DAY //</div>'+
+      /* Chain stages — 5 boxes */
+      '<div id="fxChain" style="display:flex;align-items:center;gap:.8rem;flex-wrap:wrap;justify-content:center;width:min(960px,95vw);"></div>'+
+      /* Status terminal */
+      '<div id="fxExpLog" style="margin-top:2rem;width:min(800px,95vw);background:rgba(15,0,5,.85);border:1px solid rgba(255,45,85,.35);padding:1.2rem 1.6rem;font-family:var(--F);font-size:.8rem;line-height:1.85;text-align:left;height:24vh;overflow:hidden;"></div>'+
+      '<div style="margin-top:1.2rem;font-family:var(--H);font-size:clamp(1.2rem,3vw,1.8rem);color:var(--G);letter-spacing:5px;text-shadow:0 0 18px var(--G);" id="fxExpFinal"></div>';
+
+  var stages=[
+    {n:'1. RECON',c:'#f59e0b'},{n:'2. SCAN',c:'#00d4ff'},{n:'3. CVE',c:'#ff2d55'},{n:'4. PAYLOAD',c:'#ff6633'},{n:'5. ROOT',c:'#00ff41'}
+  ];
+  var chainEl=document.getElementById('fxChain');
+  stages.forEach(function(s,i){
+    if(i>0){var arrow=document.createElement('span');arrow.style.cssText='font-size:1.4rem;color:rgba(255,255,255,.4);';arrow.textContent='→';chainEl.appendChild(arrow);}
+    var box=document.createElement('div');box.id='fxStage'+i;
+    box.style.cssText='border:1.5px solid rgba(255,255,255,.2);padding:.7rem 1.1rem;font-family:var(--H);font-size:.8rem;letter-spacing:2px;color:rgba(255,255,255,.45);transition:all .4s;min-width:90px;';
+    box.textContent=s.n;
+    chainEl.appendChild(box);
+  });
+
+  var logs=[
+    '[RECON] OSINT enumeration · target identified',
+    '[RECON] LinkedIn scraped · 847 connections',
+    '[SCAN] Stealth SYN scan: 4 open ports detected',
+    '[SCAN] Service fingerprint complete',
+    '[CVE] Loaded: CVE-2026-HEAVEN — talent overflow',
+    '[CVE] CVSS 10.0 — RCE via overlooked candidate',
+    '[PAYLOAD] Compiling: nisarg_chasmawala_talent.exe',
+    '[PAYLOAD] Encoding: AES-256 + RSA-4096',
+    '[INJECT] Payload delivered via career-overflow',
+    '[ESCALATE] Privilege escalation: USER → ADMIN',
+    '[ESCALATE] ADMIN → ROOT obtained',
+    '[ROOT] # whoami',
+    '[ROOT] heaven',
+    '[CLEAN] Clearing audit trail · DONE',
+    '[BACKDOOR] Persistent: nisargkc@gmail.com',
+    '[!!] You are now hiring HEAVEN. 😄'
+  ];
+  var logEl=document.getElementById('fxExpLog');
+  var lIdx=0;
+  var lInt=setInterval(function(){
+    if(!FX.active||lIdx>=logs.length){clearInterval(lInt);return;}
+    var l=document.createElement('div');
+    var c=logs[lIdx].indexOf('[!!')>=0?'#00ff41':logs[lIdx].indexOf('[CVE]')>=0?'#ff2d55':logs[lIdx].indexOf('[ROOT]')>=0?'#00ff41':logs[lIdx].indexOf('[PAYLOAD]')>=0?'#ff6633':logs[lIdx].indexOf('[SCAN]')>=0?'#00d4ff':logs[lIdx].indexOf('[ESCALATE]')>=0?'#a855f7':'#f59e0b';
+    l.style.color=c;l.textContent=logs[lIdx];logEl.appendChild(l);
+    while(logEl.children.length>10)logEl.removeChild(logEl.children[0]);
+    lIdx++;
+  },300);
+
+  /* Stage activation */
+  var stageInts=[];
+  stages.forEach(function(s,i){
+    setTimeout(function(){
+      if(!FX.active)return;
+      var box=document.getElementById('fxStage'+i);
+      if(!box)return;
+      box.style.borderColor=s.c;box.style.color=s.c;box.style.boxShadow='0 0 18px '+s.c+'66';box.style.background=s.c+'15';
+    },i*900);
+  });
+
+  setTimeout(function(){if(FX.active){document.getElementById('fxExpFinal').textContent='::: HIRE NISARG CHASMAWALA :::';}},4500);
+
+  FX.run(5.5,function(t,d){
+    FX.ctx.fillStyle='rgba(8,0,4,.18)';FX.ctx.fillRect(0,0,innerWidth,innerHeight);
+    /* Red sparks */
+    for(var i=0;i<20;i++){FX.ctx.fillStyle='rgba(255,45,85,'+(Math.random()*.4+.2)+')';FX.ctx.fillRect(Math.random()*innerWidth,Math.random()*innerHeight,Math.random()*3+1,Math.random()*3+1);}
+  });
+}
+
 var CMDS={
   help:function(){return[
     '<span class="tw">┌── HEAVEN OFFENSIVE SHELL v3.0 ─────────────────┐</span>',
@@ -1849,15 +2319,8 @@ var CMDS={
     '<span class="to">  clear     </span><span class="td2">→ clear terminal</span>',
     '<span class="tw">└────────────────────────────────────────────────┘</span>'];},
 
-  heaven:function(){return[
-    '<span class="tw">╔══════════════════════════════════════════╗</span>',
-    '<span class="tw">║</span>   <span class="to" style="letter-spacing:8px;">H E A V E N</span>   <span class="tw">║</span>',
-    '<span class="tw">╚══════════════════════════════════════════╝</span>',
-    '<span class="to">ALIAS    : HEAVEN</span>','<span class="to">NAME     : Nisarg Chasmawala</span>',
-    '<span class="to">BASE     : England, UK</span>',
-    '<span class="to">CLEARANCE: CEH MASTER | CPENT | CHFI | ISO 27001 LA</span>',
-    '<span class="to">MOTTO    : "In cyberspace, the quieter you become, the more you hear."</span>',
-    '<span class="tw">STATUS   : ONLINE · SEEKING · 2026</span>'];},
+  /* ─ FULL-SCREEN HEAVEN INTRO (jaw-dropping · ESC to exit) ─ */
+  heaven:function(){fxHeaven();return['<span class="to">[FX] HEAVEN protocol activating... [ESC] to exit</span>'];},
 
   whoami:function(){return[
     '<span class="to">uid=0(heaven) gid=0(root) groups=0(root)</span>',
@@ -1872,36 +2335,12 @@ var CMDS={
   hack:function(){fxHack();return['<span class="te">[FX] Initiating cinematic hack sequence... [ESC] to skip</span>'];},
 
   /* ─ PRANK: TRACEROUTE ─ */
-  traceroute:function(){
-    setTimeout(function(){
-      var hops=[
-        '<span class="td2">traceroute to heaven.exe (0.0.0.HEAVEN), 30 hops max</span>',
-        '<span class="to"> 1  192.168.1.1 (your_router)          2.4 ms</span>',
-        '<span class="to"> 2  10.0.0.1 (ISP_gateway)             8.1 ms</span>',
-        '<span class="to"> 3  213.46.xxx.xxx (internet_backbone)  15.3 ms</span>',
-        '<span class="tw"> 4  * * * (darknet_node_01)            timeout</span>',
-        '<span class="te"> 5  [ENCRYPTED RELAY — HEAVEN PROXY]    &lt;1 ms</span>',
-        '<span class="to"> 6  nishu2402.github.io (portfolio)     3.2 ms</span>',
-        '<span class="te"> 7  england.uk.heaven.exe               &lt;1 ms  ← YOU ARE HERE</span>',
-        '<span class="td2">Route complete. You found HEAVEN. Now hire him. 😄</span>',
-      ];
-      twDelay(hops,100);
-    },50);return null;},
+  /* ─ FULL-SCREEN PRANK: TRACEROUTE ─ */
+  traceroute:function(){fxTraceroute();return['<span class="tc">[FX] Tracing route to heaven.exe... [ESC] to skip</span>'];},
 
-  /* ─ PRANK: DECODE ─ */
-  decode:function(){
-    setTimeout(function(){
-      twDelay([
-        '<span class="tw">[DECRYPT] Intercepted transmission detected...</span>',
-        '<span class="te">>>> 4e 69 73 61 72 67 20 43 68 61 73 6d 61 77 61 6c 61</span>',
-        '<span class="td2">[CIPHER]  Running Caesar → ROT13 → Base64 → AES-256...</span>',
-        '<span class="to">[RESULT]  Decoded message:</span>',
-        '<span class="to" style="font-family:Orbitron;letter-spacing:3px;color:#00ff41;">"HIRE NISARG CHASMAWALA — HEAVEN — ENGLAND, UK"</span>',
-        '<span class="td2">[INFO]    Message integrity: 100% · Source: the universe 🌌</span>',
-      ],120);
-    },50);return null;},
+  /* ─ FULL-SCREEN PRANK: DECODE ─ */
+  decode:function(){fxDecode();return['<span class="to">[FX] Decrypting intercepted transmission... [ESC] to skip</span>'];},
 
-  /* ─ PRANK: DDOS ─ */
   /* ─ FULL-SCREEN PRANK: BREACH ─ */
   breach:function(){fxBreach();return['<span class="te">[FX] Initiating full-screen system breach... [ESC] to skip</span>'];},
 
@@ -1932,7 +2371,7 @@ var CMDS={
 
   blog:function(){window.open('https://nishu2402.github.io/blog/index.html','_blank');return['<span class="to">Opening intel dispatch: nishu2402.github.io/blog</span>'];},
 
-  scan:function(){return['<span class="tw">Starting Nmap 7.95 — HEAVEN Recon — England, UK...</span>','<span class="to">PORT      STATE  SERVICE   VERSION</span>','<span class="to">22/tcp    open   ssh       OpenSSH 9.3p1</span>','<span class="to">80/tcp    open   http      nginx 1.25.4</span>','<span class="to">443/tcp   open   https     nginx 1.25.4</span>','<span class="to">8080/tcp  open   http-alt  Python/3.12</span>','<span class="tw">4 open ports · 0 CVEs · 2026</span>'];},
+  scan:function(){fxScan();return['<span class="to">[FX] Initiating Nmap radial scan... [ESC] to skip</span>'];},
 
   contact:function(){return['<span class="tw">CONTACT — HEAVEN:</span>','<span class="to">Email   : nisargkc@gmail.com</span>','<span class="to">Phone   : +44 7554 469437</span>','<span class="to">Location: England, UK</span>','<span class="to">LinkedIn: linkedin.com/in/nisarg-chasmawala</span>','<span class="to">GitHub  : github.com/nishu2402</span>','<span class="to">Blog    : nishu2402.github.io/blog</span>'];},
 
@@ -1942,7 +2381,7 @@ var CMDS={
 
   resume:function(){window.open('Nisarg_resume.pdf','_blank');return['<span class="to">⬇ Opening Nisarg_resume.pdf...</span>','<span class="td2">Upload Nisarg_resume.pdf to your GitHub repo root beside index.html</span>'];},
 
-  exploit:function(){return['<span class="te">INITIATING HEAVEN EXPLOIT CHAIN — 2026...</span>','<span class="te">[!] TARGET: YOUR_HIRING_DECISION · England, UK</span>','<span class="te">[!] CVE-2026-HEAVEN: 6 projects · 14 certs · R²=0.9999</span>','<span class="tw">[>] PAYLOAD: nisarg_chasmawala_talent.exe loading...</span>','<span class="to">[+] Root access. You are now hiring HEAVEN. 😄</span>','<span class="to">[+] nisargkc@gmail.com · +44 7554 469437</span>'];},
+  exploit:function(){fxExploit();return['<span class="te">[FX] Engaging exploit chain... [ESC] to skip</span>'];},
 
   clear:function(){TOUT.innerHTML='';bootTerm();return null;}
 };
