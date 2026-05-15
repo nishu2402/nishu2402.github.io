@@ -131,19 +131,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:800;height:58px;display:flex;ali
 @keyframes blogCTAPulse{0%,100%{box-shadow:0 0 5px rgba(168,85,247,.2);}50%{box-shadow:0 0 18px rgba(168,85,247,.5);}}
 .h-blog-cta::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(168,85,247,.15),transparent);transform:translateX(-100%);transition:transform .5s;}
 .h-blog-cta:hover::before{transform:translateX(100%);}
-/* Online presence buttons */
-.op-grid{display:flex;flex-wrap:wrap;gap:.55rem;margin-top:.2rem;}
-.op-btn{display:inline-flex;align-items:center;gap:.45rem;padding:.35rem .9rem;font-size:.6rem;font-family:var(--F);letter-spacing:2px;text-transform:uppercase;border:1px solid rgba(0,255,65,.22);color:rgba(255,255,255,.85);background:rgba(0,255,65,.03);text-decoration:none;position:relative;overflow:hidden;transition:all .3s;clip-path:polygon(4px 0,100% 0,calc(100% - 4px) 100%,0 100%);}
-.op-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(0,255,65,.1),transparent);transform:translateX(-100%);transition:transform .4s;}
-.op-btn:hover::before{transform:translateX(100%);}
-.op-btn:hover{border-color:var(--G);color:var(--G);background:rgba(0,255,65,.06);transform:translateY(-2px);}
-.op-btn.c{border-color:rgba(0,212,255,.22);color:rgba(0,212,255,.8);}
-.op-btn.c:hover{border-color:var(--C);color:var(--C);background:rgba(0,212,255,.06);}
-.op-btn.p{border-color:rgba(168,85,247,.22);color:rgba(168,85,247,.8);}
-.op-btn.p:hover{border-color:var(--P);color:var(--P);background:rgba(168,85,247,.06);}
-.op-btn .op-icon{font-size:.8rem;display:inline-flex;align-items:center;}
-.op-btn .op-icon svg{width:14px;height:14px;display:block;}
-.op-btn .op-arrow{margin-left:.2rem;opacity:.5;font-size:.6rem;}
 /* Blog category tabs */
 .blog-cats{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.5rem;}
 .blog-cat-btn{font-size:.5rem;letter-spacing:2px;padding:.22rem .7rem;border:1px solid rgba(168,85,247,.2);color:rgba(168,85,247,.6);background:transparent;font-family:var(--F);text-transform:uppercase;transition:all .3s;}
@@ -271,14 +258,15 @@ section>*{position:relative;z-index:1;}
 .sbar-fill::after{content:'';position:absolute;right:-1px;top:-4px;width:8px;height:8px;border-radius:50%;background:var(--G);box-shadow:0 0 10px var(--G),0 0 22px rgba(0,255,65,.3);}
 .tools-wrap{margin-top:2.5rem;}
 .tools-lbl{font-size:.62rem;color:rgba(0,255,65,.65);letter-spacing:3px;text-transform:uppercase;margin-bottom:.95rem;font-weight:600;}
-.tools-flex{display:flex;flex-wrap:wrap;gap:.42rem;}
-.tool{display:inline-flex;align-items:center;gap:.4rem;padding:.32rem .85rem;font-size:.7rem;color:rgba(255,255,255,.88);border:1px solid rgba(0,255,65,.18);background:rgba(0,20,8,.6);transition:all .28s;position:relative;overflow:hidden;font-weight:500;}
-.tool::before{content:'';position:absolute;inset:0;background:rgba(0,255,65,.07);transform:scaleX(0);transform-origin:left;transition:transform .3s;}
-.tool:hover::before{transform:scaleX(1);}.tool:hover{border-color:var(--G);color:var(--G);transform:translateY(-2px);}
+.tools-flex{display:flex;flex-wrap:wrap;gap:.5rem;}
+.tool{display:inline-flex;align-items:center;gap:.45rem;padding:.4rem .9rem;font-size:.7rem;color:rgba(255,255,255,.92);border:1px solid rgba(0,255,65,.22);background:rgba(0,20,8,.6);transition:all .35s cubic-bezier(.2,.9,.3,1);position:relative;overflow:hidden;font-weight:500;text-decoration:none;cursor:pointer;}
+.tool::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(0,255,65,.18),transparent);transform:translateX(-100%);transition:transform .5s;}
+.tool:hover::before{transform:translateX(100%);}
+.tool:hover{border-color:var(--G);color:var(--G);transform:translateY(-3px) scale(1.04);box-shadow:0 0 16px rgba(0,255,65,.45),inset 0 0 10px rgba(0,255,65,.08);text-shadow:0 0 6px rgba(0,255,65,.7);}
 .tool i{font-style:normal;font-size:.85rem;}
 .tool-logo{display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;width:18px;height:18px;}
-.tool-logo svg{width:18px;height:18px;display:block;}
-.tool:hover .tool-logo{transform:scale(1.15);transition:transform .3s;}
+.tool-logo svg,.tool-logo img{width:18px;height:18px;display:block;object-fit:contain;}
+.tool:hover .tool-logo{transform:scale(1.22) rotate(-4deg);filter:drop-shadow(0 0 6px currentColor);transition:transform .3s,filter .3s;}
 
 /* TIMELINE */
 .tl{position:relative;padding-left:2.4rem;}
@@ -484,6 +472,49 @@ footer p{font-size:.65rem;color:rgba(255,255,255,.42);letter-spacing:2px;line-he
 @keyframes fxBannerBlink{from{background:rgba(255,45,85,.1);}to{background:rgba(255,45,85,.3);}}
 .fx-skip{position:absolute;bottom:30px;right:30px;font-size:.7rem;color:rgba(255,255,255,.5);letter-spacing:2px;pointer-events:auto;cursor:pointer;}
 
+
+/* Platform grid — row-wise ─────────────────────────── */
+.platform-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.6rem;margin-top:.5rem;}
+.plat-item{display:flex;flex-direction:row;align-items:center;gap:.7rem;padding:.6rem .85rem;border:1px solid rgba(0,255,65,.18);background:rgba(0,255,65,.025);transition:all .35s cubic-bezier(.2,.9,.3,1);text-decoration:none;cursor:pointer;position:relative;overflow:hidden;clip-path:polygon(6px 0,100% 0,calc(100% - 6px) 100%,0 100%);}
+.plat-item::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(0,255,65,.12),transparent);transform:translateX(-100%);transition:transform .55s;}
+.plat-item:hover::before{transform:translateX(100%);}
+.plat-item:hover{border-color:var(--G);background:rgba(0,255,65,.07);transform:translateY(-2px);box-shadow:0 0 18px rgba(0,255,65,.25),inset 0 0 12px rgba(0,255,65,.04);}
+.plat-ico{width:24px;height:24px;display:block;transition:all .35s;flex-shrink:0;object-fit:contain;}
+.plat-item:hover .plat-ico{filter:drop-shadow(0 0 8px currentColor);transform:scale(1.18) rotate(-3deg);}
+.plat-item span{font-size:.62rem;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.82);font-weight:500;}
+.plat-item:hover span{color:var(--G);}
+
+/* Language grid — row-wise ─────────────────────────── */
+.lang-grid{display:flex;flex-direction:column;gap:.55rem;margin-top:.5rem;}
+.lang-item{display:flex;justify-content:space-between;align-items:center;padding:.5rem .95rem;border-left:2px solid rgba(0,255,65,.35);background:rgba(0,255,65,.035);transition:all .3s;position:relative;overflow:hidden;}
+.lang-item::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(0,255,65,.08),transparent);transform:translateX(-100%);transition:transform .55s;}
+.lang-item:hover::before{transform:translateX(100%);}
+.lang-item:hover{border-left-color:var(--G);background:rgba(0,255,65,.06);transform:translateX(3px);box-shadow:0 0 14px rgba(0,255,65,.12);}
+.lang-name{font-size:.8rem;color:rgba(255,255,255,.95);font-weight:600;letter-spacing:.5px;}
+.lang-lvl{font-size:.62rem;color:rgba(0,255,65,.7);letter-spacing:1.5px;text-transform:uppercase;font-weight:500;}
+
+/* Alive tech tags — enhanced ──────────────── */
+.blog-tag,.hack-tag,.pc-tag{transition:all .35s cubic-bezier(.2,.9,.3,1)!important;cursor:default;position:relative;overflow:hidden;}
+.blog-tag::before,.hack-tag::before,.pc-tag::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,currentColor,transparent);opacity:0;transform:translateX(-100%);transition:transform .5s,opacity .3s;}
+.blog-tag:hover::before,.hack-tag:hover::before,.pc-tag:hover::before{opacity:.18;transform:translateX(100%);}
+.blog-tag:hover{background:rgba(168,85,247,.22)!important;border-color:var(--P)!important;color:#fff!important;box-shadow:0 0 14px rgba(168,85,247,.55),inset 0 0 8px rgba(168,85,247,.15)!important;transform:translateY(-3px) scale(1.05)!important;text-shadow:0 0 6px rgba(168,85,247,.9);}
+.hack-tag:hover{background:rgba(255,159,10,.22)!important;border-color:var(--A)!important;color:#fff!important;box-shadow:0 0 14px rgba(255,159,10,.55),inset 0 0 8px rgba(255,159,10,.15)!important;transform:translateY(-3px) scale(1.05)!important;text-shadow:0 0 6px rgba(255,159,10,.9);}
+.pc-tag:hover{background:rgba(0,212,255,.22)!important;border-color:var(--C)!important;color:#fff!important;box-shadow:0 0 14px rgba(0,212,255,.5),inset 0 0 8px rgba(0,212,255,.15)!important;transform:translateY(-3px) scale(1.05)!important;text-shadow:0 0 6px rgba(0,212,255,.9);}
+
+/* Online presence — row-wise stacked rows ──────────────── */
+.op-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:.55rem;margin-top:.2rem;}
+.op-btn{display:inline-flex;align-items:center;gap:.55rem;padding:.5rem 1rem;font-size:.62rem;font-family:var(--F);letter-spacing:2px;text-transform:uppercase;border:1px solid rgba(0,255,65,.22);color:rgba(255,255,255,.85);background:rgba(0,255,65,.03);text-decoration:none;position:relative;overflow:hidden;transition:all .35s cubic-bezier(.2,.9,.3,1);clip-path:polygon(5px 0,100% 0,calc(100% - 5px) 100%,0 100%);font-weight:500;}
+.op-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(0,255,65,.14),transparent);transform:translateX(-100%);transition:transform .45s;}
+.op-btn:hover::before{transform:translateX(100%);}
+.op-btn:hover{border-color:var(--G);color:var(--G);background:rgba(0,255,65,.08);transform:translateY(-3px);box-shadow:0 0 16px rgba(0,255,65,.3);}
+.op-btn.c{border-color:rgba(0,212,255,.22);color:rgba(0,212,255,.85);}
+.op-btn.c:hover{border-color:var(--C);color:var(--C);background:rgba(0,212,255,.08);box-shadow:0 0 16px rgba(0,212,255,.3);}
+.op-btn.p{border-color:rgba(168,85,247,.22);color:rgba(168,85,247,.85);}
+.op-btn.p:hover{border-color:var(--P);color:var(--P);background:rgba(168,85,247,.08);box-shadow:0 0 16px rgba(168,85,247,.3);}
+.op-btn .op-icon{font-size:.8rem;display:inline-flex;align-items:center;flex-shrink:0;}
+.op-btn .op-icon svg{width:14px;height:14px;display:block;}
+.op-btn .op-arrow{margin-left:auto;opacity:.55;font-size:.7rem;transition:transform .3s;}
+.op-btn:hover .op-arrow{transform:translate(3px,-2px);opacity:1;}
 /* CURSOR */
 #trailCv{position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:2147483640;}
 #curOuter{position:fixed;width:42px;height:42px;border-radius:50%;border:1px solid rgba(0,255,65,.7);pointer-events:none;z-index:2147483644;transform:translate(-50%,-50%);transition:border-color .2s,width .15s,height .15s;will-change:left,top;}
@@ -592,6 +623,10 @@ body.CK #curOuter{width:20px;height:20px;border-color:rgba(0,255,65,.3);}
   .fx-corner.bl,.fx-corner.br{bottom:18px;}
   .fx-warn-banner{padding:.55rem 1rem;font-size:.55rem;letter-spacing:2px;}
   .fx-skip{bottom:18px;right:18px;font-size:.6rem;}
+  .platform-grid{grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:.5rem;}
+  .plat-ico{width:22px;height:22px;}
+  .plat-item{padding:.55rem .35rem;}
+  .lang-item{padding:.35rem .65rem;}
 }
 
 @media(max-width:480px){
@@ -679,7 +714,7 @@ body.CK #curOuter{width:20px;height:20px;border-color:rgba(0,255,65,.3);}
     <div class="h-alias"><em>//</em> CODENAME: HEAVEN · NISARG CHASMAWALA · ENGLAND, UK <em>//</em></div>
     <div class="h-name"><span class="hn1" data-t="NISARG">NISARG</span><span class="hn2">CHASMAWALA</span></div>
     <div class="h-role" id="hRole"></div>
-    <p class="h-bio">Award-winning Offensive Security Engineer &amp; elite Penetration Tester. CPENT · CEH Master (91.2%) · CHFI (90.7%) · ISO 27001 Lead Auditor. Bridging red-team exploit development with AI/ML threat intelligence research. Identified CVSS 10.0 RCE vulnerabilities. Architecting Python-based security automation pipelines at Birmingham City University, England, UK.</p>
+    <p class="h-bio"><strong style="color:var(--R);">Elite Offensive Security Engineer · Penetration Tester · Red Team Operator</strong> — <strong style="color:var(--G);">CPENT</strong> · <strong style="color:var(--G);">CEH Master</strong> · <strong style="color:var(--G);">CHFI</strong> · <strong style="color:var(--G);">ISO 27001 LA</strong>. <strong style="color:var(--C);">Indian-origin international postgraduate</strong> currently <strong style="color:var(--C);">UK-based</strong>, pursuing MSc Cyber Security at Birmingham City University (England). I breach complex enterprise infrastructures, cloud estates, and Active Directory environments — then architect <strong style="color:var(--C);">GenAI-Augmented offensive tooling</strong> to weaponise the next engagement faster. CPENT-trained across external/internal infrastructure testing, network exploitation, web &amp; API attack chains, and post-exploitation pivoting. I chain <strong style="color:var(--R);">CVSS 10.0 RCEs</strong> in live environments and leverage LLMs as a force multiplier to rapidly deploy custom exploits, recon engines, and risk-intelligence pipelines — engineered from England, UK.</p>
     <!-- Blog CTA after bio -->
     <a href="https://nishu2402.github.io/blog/index.html" target="_blank" class="h-blog-cta">
       <span style="font-size:.85rem;">📝</span> SECURITY BLOG <span style="opacity:.5;font-size:.8em;transition:transform .3s;">↗</span>
@@ -687,17 +722,18 @@ body.CK #curOuter{width:20px;height:20px;border-color:rgba(0,255,65,.3);}
     <div class="h-kpis">
       <div class="kpi"><div class="kpi-n" id="KP0">0</div><div class="kpi-l">Certifications</div></div>
       <div class="ksep"></div>
-      <div class="kpi"><div class="kpi-n r" id="KP1">0<span class="s">%</span></div><div class="kpi-l">Peak F1-Score</div></div>
+      <div class="kpi"><div class="kpi-n r" id="KP1">0<span class="s">/10</span></div><div class="kpi-l">CVSS Max RCE</div></div>
       <div class="ksep"></div>
-      <div class="kpi"><div class="kpi-n c" id="KP2">0<span class="s">%</span></div><div class="kpi-l">DDoS Accuracy</div></div>
+      <div class="kpi"><div class="kpi-n c" id="KP2">0<span class="s">%</span></div><div class="kpi-l">DDoS Detection</div></div>
       <div class="ksep"></div>
       <div class="kpi"><div class="kpi-n" id="KP3">0</div><div class="kpi-l">Live Projects</div></div>
     </div>
     <div class="h-badges">
-      <span class="hb">CEH MASTER</span><span class="hb">CHFI 90.7%</span><span class="hb">CPENT</span>
-      <span class="hb">ISO 27001 LA</span><span class="hb">EHE 96%</span><span class="hb">CRTOM</span>
-      <span class="hb r">AI/ML SECURITY</span><span class="hb r">DRL · LLMs</span>
-      <span class="hb c">MSc CYBER SEC</span><span class="hb p">RED TEAM OPS</span>
+      <span class="hb">CEH MASTER · 91.2%</span><span class="hb">CPENT</span><span class="hb">CHFI · 90.7%</span>
+      <span class="hb">ISO 27001:2022 LA</span><span class="hb">CEH PRACTICAL · 180/200</span>
+      <span class="hb r">CVSS 10.0 RCE OPS</span><span class="hb r">RED TEAM OPS</span>
+      <span class="hb c">GenAI-AUGMENTED TOOLING</span><span class="hb c">MSc CYBER SEC · BCU</span>
+      <span class="hb p">INDIAN-ORIGIN · UK BASED</span>
     </div>
     <div class="h-cta">
       <a href="#CONTACT" class="btn btn-p">⚡ Contact Me</a>
@@ -716,19 +752,36 @@ body.CK #curOuter{width:20px;height:20px;border-color:rgba(0,255,65,.3);}
   <div class="sh rv"><div class="sh-acc">&gt;_ ACCESSING: operator_profile.json... DECRYPTED</div><div class="sh-num">// 01 — ABOUT</div><div class="sh-t" data-sc="OPERATOR PROFILE">OPERATOR PROFILE<span class="echo">OPERATOR PROFILE</span></div><div class="sh-bar"></div></div>
   <div class="about-grid">
     <div class="acard rv-l"><div class="acard-l">// CLASSIFIED SUMMARY</div>
-    <div class="acard-t">I'm Nisarg Chasmawala — a Penetration Tester and Offensive Security Engineer based in England, UK, currently pursuing an MSc in Cyber Security at Birmingham City University. My journey into security started from the ground up: network cabling and infrastructure at internships, then progressing into vulnerability assessment and full-scope penetration testing at SYSAP Technologies, and now independently building AI-powered security research tools.<br><br>
-On the offensive side, I work across the full attack lifecycle — external and internal network penetration testing, web application and REST API security (OWASP Top 10, CVSS v3.1), Active Directory exploitation, social engineering, OSINT, and digital forensics. I've identified <strong style="color:var(--R)">CVSS 10.0 RCE vulnerabilities</strong> across Redis, Openfire, and Gitea environments in live academic engagements — not just theoretical work.<br><br>
-I hold 14 professional certifications including <strong style="color:var(--G)">CEH Master (91.2%)</strong>, <strong style="color:var(--G)">CHFI (90.7%)</strong>, <strong style="color:var(--G)">CPENT</strong>, and <strong style="color:var(--G)">ISO/IEC 27001:2022 Lead Auditor</strong>. I also won <strong style="color:var(--A)">1st Place</strong> at the BCU Cyber Security Society Hackathon (STEAMhouse, UK) with my Aegis-IAM Dashboard — a live privilege escalation risk analysis tool built under competition constraints.<br><br>
-Outside pure offensive work, I engineer AI/ML security systems. My projects include an IoT anomaly detection pipeline at <strong style="color:var(--C)">R²=0.9999</strong>, a DDoS NIDS at <strong style="color:var(--C)">1.0000 precision</strong>, and a CVSS vulnerability severity predictor across 337,705 NVD CVE records. My MSc dissertation evaluates Deep Reinforcement Learning and LLMs in autonomous penetration testing — an area I genuinely believe will define the next decade of offensive security.</div></div>
+    <div class="acard-t">I'm <strong style="color:var(--G);">Nisarg Chasmawala</strong> — codename <strong style="color:var(--R);">HEAVEN</strong> — an Elite Offensive Security Engineer, Penetration Tester, and Red Team Operator. <strong style="color:var(--C);">Indian-origin (Surat, Gujarat)</strong>, now <strong style="color:var(--C);">UK-based as an international postgraduate student</strong>, currently pursuing an MSc in Cyber Security with Professional Placement at <strong>Birmingham City University, England, UK</strong> (expected March 2027). I don't just run scans — I architect the offensive tooling that runs them autonomously.<br><br>
+<strong style="color:var(--C);">// OFFENSIVE TRADECRAFT</strong> — CPENT-certified across the full attack chain: external/internal infrastructure penetration testing, network exploitation, Active Directory abuse, web &amp; REST API attacks, cloud (AWS IAM) privilege escalation, OSINT, and digital forensics. In live MSc engagements I chained <strong style="color:var(--R);">CVSS 10.0 RCE</strong> exploits against <strong style="color:var(--R);">Redis</strong>, <strong style="color:var(--R);">Openfire</strong>, and <strong style="color:var(--R);">Gitea</strong> — pivoting from replication abuse and admin console exploitation through Git Hooks weaponisation to obtain system-level access.<br><br>
+<strong style="color:var(--C);">// GenAI-AUGMENTED TOOLING</strong> — I leverage Large Language Models and Generative AI as a force multiplier to architect, script, and rapidly deploy custom offensive tools. My flagship — <strong style="color:var(--R);">HEAVEN</strong> — is a production-grade autonomous penetration testing framework featuring a 31-module testing engine, deterministic false-positive suppression, an ExtraTreesRegressor ML model (R²=0.9925) for real-time CVSS v3.1 prioritisation, MITRE ATT&amp;CK / Cyber Kill Chain / OWASP mapping, and a 23-table PostgreSQL backend. Alongside it, <strong style="color:var(--R);">HEAVEN-GeoIntel</strong> — a zero-API Next.js 14 OSINT platform processing 1,000+ breach databases, 400+ NPA codes, and 110+ targeted pivots entirely offline with absolute OPSEC.<br><br>
+<strong style="color:var(--C);">// CLEARANCE</strong> — <strong style="color:var(--G);">CEH Master (91.2%)</strong> · <strong style="color:var(--G);">CPENT</strong> · <strong style="color:var(--G);">CHFI (90.7%)</strong> · <strong style="color:var(--G);">ISO 27001:2022 LA</strong> · <strong style="color:var(--G);">CRTOM</strong> · <strong style="color:var(--G);">CTIGA</strong> · 14 total certifications · 8 live offensive/ML deployments on GitHub. 🏆 1st Place — BCU Cyber Security Society Hackathon (STEAMhouse, UK).</div></div>
     <div>
       <div class="sgrid rv-r">
         <div class="sbox"><div class="sbn">14</div><div class="sbl">Certifications</div></div>
-        <div class="sbox"><div class="sbn">6</div><div class="sbl">Live Projects</div></div>
+        <div class="sbox"><div class="sbn">8</div><div class="sbl">Live Projects</div></div>
         <div class="sbox"><div class="sbn" style="font-size:1rem;">R²=<span style="font-size:.85rem">0.9999</span></div><div class="sbl">IoT R² Score</div></div>
         <div class="sbox"><div class="sbn">10</div><div class="sbl">CVSS Max</div></div>
       </div>
-      <div class="acard rv" style="margin-top:.8rem;"><div class="acard-l">// LANGUAGES</div><div class="acard-t">English (TOEFL 91) · Hindi · Gujarati — Native or Bilingual</div></div>
-      <div class="acard rv" style="margin-top:.8rem;"><div class="acard-l">// PLATFORMS</div><div class="acard-t">Kali Linux · Parrot OS · Ubuntu · Debian · macOS · Windows 11 · iOS · Android</div></div>
+      <div class="acard rv" style="margin-top:.8rem;"><div class="acard-l">// LANGUAGES</div><div class="acard-t">
+        <div class="lang-grid">
+          <div class="lang-item"><span class="lang-name">English</span><span class="lang-lvl">TOEFL 91/120 · Professional</span></div>
+          <div class="lang-item"><span class="lang-name">Hindi</span><span class="lang-lvl">Native</span></div>
+          <div class="lang-item"><span class="lang-name">Gujarati</span><span class="lang-lvl">Native</span></div>
+        </div>
+      </div></div>
+      <div class="acard rv" style="margin-top:.8rem;"><div class="acard-l">// PLATFORMS &amp; OS</div><div class="acard-t">
+        <div class="platform-grid">
+          <a href="https://www.kali.org" target="_blank" rel="noopener" class="plat-item" title="Kali Linux — Official Site"><img class="plat-ico" src="https://cdn.simpleicons.org/kalilinux/367BF0" alt="Kali Linux logo" loading="lazy"/><span>Kali Linux</span></a>
+          <a href="https://www.parrotsec.org" target="_blank" rel="noopener" class="plat-item" title="Parrot Security OS — Official Site"><img class="plat-ico" src="https://cdn.simpleicons.org/parrotsecurity/15E0CD" alt="Parrot OS logo" loading="lazy"/><span>Parrot OS</span></a>
+          <a href="https://ubuntu.com" target="_blank" rel="noopener" class="plat-item" title="Ubuntu Linux — Official Site"><img class="plat-ico" src="https://cdn.simpleicons.org/ubuntu/E95420" alt="Ubuntu logo" loading="lazy"/><span>Ubuntu</span></a>
+          <a href="https://www.debian.org" target="_blank" rel="noopener" class="plat-item" title="Debian GNU/Linux — Official Site"><img class="plat-ico" src="https://cdn.simpleicons.org/debian/A81D33" alt="Debian logo" loading="lazy"/><span>Debian</span></a>
+          <a href="https://www.apple.com/macos/" target="_blank" rel="noopener" class="plat-item" title="macOS — Apple"><img class="plat-ico" src="https://cdn.simpleicons.org/macos/EEEEEE" alt="macOS logo" loading="lazy"/><span>macOS</span></a>
+          <a href="https://www.microsoft.com/windows" target="_blank" rel="noopener" class="plat-item" title="Microsoft Windows 11"><img class="plat-ico" src="https://cdn.simpleicons.org/windows11/0078D4" alt="Windows 11 logo" loading="lazy"/><span>Windows 11</span></a>
+          <a href="https://www.apple.com/ios/" target="_blank" rel="noopener" class="plat-item" title="iOS — Apple Mobile"><img class="plat-ico" src="https://cdn.simpleicons.org/ios/EEEEEE" alt="iOS logo" loading="lazy"/><span>iOS</span></a>
+          <a href="https://www.android.com" target="_blank" rel="noopener" class="plat-item" title="Android — Official Site"><img class="plat-ico" src="https://cdn.simpleicons.org/android/3DDC84" alt="Android logo" loading="lazy"/><span>Android</span></a>
+        </div>
+      </div></div>
       <div class="acard rv" style="margin-top:.8rem;"><div class="acard-l">// ONLINE PRESENCE</div>
       <div class="op-grid">
         <a href="https://nishu2402.github.io" target="_blank" class="op-btn"><span class="op-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span>PORTFOLIO<span class="op-arrow">↗</span></a>
@@ -747,7 +800,7 @@ Outside pure offensive work, I engineer AI/ML security systems. My projects incl
   <div class="sh rv"><div class="sh-acc">&gt;_ ACCESSING: capability_matrix.db... DECRYPTED</div><div class="sh-num">// 02 — CAPABILITIES</div><div class="sh-t" data-sc="SKILL MATRIX">SKILL MATRIX<span class="echo">SKILL MATRIX</span></div><div class="sh-bar"></div></div>
   <div class="sk-layout">
     <div><div class="sbars rv-l" id="SBARS"></div>
-    <div class="tools-wrap rv-l"><div class="tools-lbl">// OFFENSIVE ARSENAL + AI/ML + FORENSICS STACK</div><div class="tools-flex" id="TOOLS"></div></div></div>
+    <div class="tools-wrap rv-l"><div class="tools-lbl">// OFFENSIVE ARSENAL · AI/ML + FORENSICS STACK · GenAI-AUGMENTED TOOLING</div><div class="tools-flex" id="TOOLS"></div></div></div>
     <div class="rv-r"><canvas id="radarCv" width="460" height="400"></canvas></div>
   </div>
 </div></section>
@@ -810,7 +863,7 @@ Outside pure offensive work, I engineer AI/ML security systems. My projects incl
   <div class="blog-featured rv">
     <div class="blog-cat">// PLATFORM OVERVIEW</div>
     <div class="blog-title" style="margin-bottom:.7rem;">HEAVEN's Security Intelligence Hub</div>
-    <div class="blog-meta"><span>nishu2402.github.io/blog</span><span>·</span><span>Ongoing · 2024–2026</span></div>
+    <div class="blog-meta"><span>nishu2402.github.io/blog</span><span>·</span><span>Security Research · Active Dispatch</span></div>
     <div class="blog-excerpt">A technical knowledge-sharing platform for the offensive security community. Covers hands-on penetration testing techniques, real-world networking concepts, in-depth reviews of cybersecurity hardware and software tools, and practical guides on ethical hacking methodology. Every post reflects active research, lab work, and field experience — no theory without proof of concept.</div>
     <a href="https://nishu2402.github.io/blog/index.html" target="_blank" class="blog-rm" style="margin-top:.5rem;">Visit Full Blog Index →</a>
   </div>
@@ -906,14 +959,14 @@ Outside pure offensive work, I engineer AI/ML security systems. My projects incl
     {t:'[AUTH]    Verifying: CEH MASTER · CPENT · CHFI · ISO 27001',c:'to'},
     {t:'[CRYPT]   Decrypting: N.CHASMAWALA · ENGLAND, UK',c:'td2'},
     {t:'[AI/ML]   Booting DRL + XGBoost + Extra Trees engine...',c:'td2'},
-    {t:'[WARN]    Firewall bypass: port 443 · 6 projects loaded',c:'tw'},
+    {t:'[WARN]    Firewall bypass: port 443 · 8 projects loaded',c:'tw'},
     {t:'[CVE]     CVSS 10.0 RCE chain identified · HEAVEN',c:'te'},
     {t:'[ISO]     ISO 27001:2022 Lead Auditor verified',c:'to'},
     {t:'[BLOG]    intel_dispatch.blog → LIVE',c:'to'},
     {t:'[BOOT]    All systems nominal. Welcome, HEAVEN. 2026',c:'to'},
   ];
   var lT=document.getElementById('lTerm'),lB=document.getElementById('lBar'),lP=document.getElementById('lPct'),lS=document.getElementById('lSt'),lG=document.getElementById('lGranted');
-  var statuses=['INITIALIZING...','LOADING 3D ENGINE...','AUTHENTICATING...','DECRYPTING...','AI/ML BOOT...','SCANNING...','6 PROJECTS LOADED...','LAUNCHING...'];
+  var statuses=['INITIALIZING...','LOADING 3D ENGINE...','AUTHENTICATING...','DECRYPTING...','AI/ML BOOT...','SCANNING...','8 PROJECTS LOADED...','LAUNCHING...'];
   var pct=0,li=0,si=0;
   var lI=setInterval(function(){
     pct+=Math.random()*3+1.2;if(pct>100)pct=100;
@@ -1013,12 +1066,31 @@ setInterval(function(){document.getElementById('hNet').textContent=Math.round(Ma
 var tb=document.getElementById('tBar');for(var i=0;i<10;i++){var ts=document.createElement('div');ts.className='ts2'+(i<2?' on':i===2?' w':'');tb.appendChild(ts);}
 
 /* ── ORBITAL CANVAS ─────────────────────────────── */
-(function(){var cv=document.getElementById('orbitCv');if(!cv)return;var ctx=cv.getContext('2d'),CX=210,CY=210,R=162,labels=['CEH MASTER','CPENT','AI/ML','ISO 27001','CHFI','OSINT','DRL/LLM','FORENSICS'],ang=0;
-(function draw(){requestAnimationFrame(draw);ang+=.007;ctx.clearRect(0,0,420,420);var gr=ctx.createRadialGradient(CX,CY,20,CX,CY,R);gr.addColorStop(0,'rgba(0,255,65,.04)');gr.addColorStop(1,'transparent');ctx.fillStyle=gr;ctx.fillRect(0,0,420,420);for(var r=1;r<=5;r++){ctx.beginPath();ctx.arc(CX,CY,r*31,0,Math.PI*2);ctx.strokeStyle='rgba(0,255,65,'+(0.025+r*.007)+')';ctx.lineWidth=.6;ctx.stroke();}var sy=CY+R*.62*Math.sin(ang*2),sr=R*Math.abs(Math.cos(ang*2));ctx.beginPath();ctx.ellipse(CX,sy,sr,sr*.22,0,0,Math.PI*2);ctx.strokeStyle='rgba(0,255,65,.48)';ctx.lineWidth=1.3;ctx.shadowColor='rgba(0,255,65,.4)';ctx.shadowBlur=7;ctx.stroke();ctx.shadowBlur=0;ctx.beginPath();ctx.arc(CX,CY,R,0,Math.PI*2);ctx.strokeStyle='rgba(0,255,65,.09)';ctx.lineWidth=1;ctx.stroke();[{r:.78,col:'rgba(0,255,65,.95)'},{r:.55,col:'rgba(0,212,255,.9)'},{r:.88,col:'rgba(255,45,85,.9)'},{r:.62,col:'rgba(0,255,65,.8)'},{r:.72,col:'rgba(168,85,247,.85)'}].forEach(function(b,i){var a2=ang+i*(Math.PI*2/5)+i*.7,x=CX+R*b.r*Math.cos(a2),y=CY+R*b.r*.52*Math.sin(a2);ctx.beginPath();ctx.arc(x,y,3.5,0,Math.PI*2);ctx.fillStyle=b.col;ctx.shadowColor=b.col;ctx.shadowBlur=9;ctx.fill();ctx.shadowBlur=0;});ctx.save();ctx.translate(CX,CY);ctx.rotate(ang*1.2);ctx.beginPath();for(var i2=0;i2<6;i2++){var a3=i2*Math.PI/3;ctx.lineTo(Math.cos(a3)*28,Math.sin(a3)*28);}ctx.closePath();ctx.strokeStyle='rgba(0,255,65,.38)';ctx.lineWidth=1;ctx.stroke();ctx.fillStyle='rgba(0,255,65,.05)';ctx.fill();ctx.restore();ctx.fillStyle='rgba(0,255,65,.65)';ctx.font='bold 8px Orbitron,monospace';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('HEAVEN',CX,CY);labels.forEach(function(l,i){var a4=ang*.22+i*(Math.PI*2/labels.length),x=CX+136*Math.cos(a4),y=CY+136*.55*Math.sin(a4),al=.3+Math.sin(ang+i)*.1;ctx.fillStyle=i===2||i===6?'rgba(255,45,85,'+al+')':i===3?'rgba(0,212,255,'+al+')':'rgba(0,255,65,'+al+')';ctx.font='7.5px JetBrains Mono';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(l,x,y);});})();})();
+(function(){var cv=document.getElementById('orbitCv');if(!cv)return;var ctx=cv.getContext('2d');var dpr=Math.min(window.devicePixelRatio||1,2);cv.width=420*dpr;cv.height=420*dpr;cv.style.width='420px';cv.style.height='420px';ctx.scale(dpr,dpr);var CX=210,CY=210,R=162,labels=['CEH MASTER','CPENT','AI/ML','ISO 27001','CHFI','OSINT','DRL/LLM','FORENSICS'],ang=0;
+(function draw(){requestAnimationFrame(draw);ang+=.008;ctx.clearRect(0,0,420,420);
+/* radial glow background */
+var gr=ctx.createRadialGradient(CX,CY,20,CX,CY,R+20);gr.addColorStop(0,'rgba(0,255,65,.12)');gr.addColorStop(.6,'rgba(0,255,65,.04)');gr.addColorStop(1,'transparent');ctx.fillStyle=gr;ctx.fillRect(0,0,420,420);
+/* concentric rings */
+for(var r=1;r<=5;r++){ctx.beginPath();ctx.arc(CX,CY,r*30,0,Math.PI*2);ctx.strokeStyle='rgba(0,255,65,'+(0.15+r*.04)+')';ctx.lineWidth=1.0;ctx.stroke();}
+/* outer pulsing ring */
+var pls=1+Math.sin(ang*3)*.018;ctx.beginPath();ctx.arc(CX,CY,R*pls,0,Math.PI*2);ctx.strokeStyle='rgba(0,255,65,.55)';ctx.lineWidth=1.6;ctx.shadowColor='rgba(0,255,65,.6)';ctx.shadowBlur=10;ctx.stroke();ctx.shadowBlur=0;
+/* sweeping orbit ellipse */
+var sy=CY+R*.6*Math.sin(ang*2),sr=R*Math.abs(Math.cos(ang*2));ctx.beginPath();ctx.ellipse(CX,sy,Math.max(sr,30),Math.max(sr*.24,8),0,0,Math.PI*2);ctx.strokeStyle='rgba(0,255,65,.85)';ctx.lineWidth=2.2;ctx.shadowColor='rgba(0,255,65,.7)';ctx.shadowBlur=12;ctx.stroke();ctx.shadowBlur=0;
+/* secondary cross-orbit */
+ctx.save();ctx.translate(CX,CY);ctx.rotate(ang*.5);ctx.beginPath();ctx.ellipse(0,0,R*.9,R*.32,0,0,Math.PI*2);ctx.strokeStyle='rgba(0,212,255,.4)';ctx.lineWidth=1.3;ctx.shadowColor='rgba(0,212,255,.5)';ctx.shadowBlur=8;ctx.stroke();ctx.restore();ctx.shadowBlur=0;
+/* satellites on orbits */
+[{r:.78,col:'#00ff41',sz:5},{r:.55,col:'#00d4ff',sz:4.5},{r:.88,col:'#ff2d55',sz:5},{r:.62,col:'#00ff41',sz:4},{r:.72,col:'#a855f7',sz:4.5}].forEach(function(b,i){var a2=ang+i*(Math.PI*2/5)+i*.7,x=CX+R*b.r*Math.cos(a2),y=CY+R*b.r*.52*Math.sin(a2);ctx.beginPath();ctx.arc(x,y,b.sz,0,Math.PI*2);ctx.fillStyle=b.col;ctx.shadowColor=b.col;ctx.shadowBlur=16;ctx.fill();ctx.shadowBlur=0;ctx.beginPath();ctx.arc(x,y,b.sz*.4,0,Math.PI*2);ctx.fillStyle='#ffffff';ctx.fill();});
+/* central rotating hex */
+ctx.save();ctx.translate(CX,CY);ctx.rotate(ang*1.4);ctx.beginPath();for(var i2=0;i2<6;i2++){var a3=i2*Math.PI/3;ctx.lineTo(Math.cos(a3)*34,Math.sin(a3)*34);}ctx.closePath();ctx.fillStyle='rgba(0,255,65,.18)';ctx.fill();ctx.strokeStyle='rgba(0,255,65,1)';ctx.lineWidth=2;ctx.shadowColor='rgba(0,255,65,.8)';ctx.shadowBlur=14;ctx.stroke();ctx.restore();ctx.shadowBlur=0;
+/* HEAVEN text */
+ctx.fillStyle='#00ff41';ctx.font='bold 13px Orbitron,monospace';ctx.textAlign='center';ctx.textBaseline='middle';ctx.shadowColor='#00ff41';ctx.shadowBlur=10;ctx.fillText('HEAVEN',CX,CY);ctx.shadowBlur=0;
+/* orbital labels - bright */
+labels.forEach(function(l,i){var a4=ang*.22+i*(Math.PI*2/labels.length),x=CX+138*Math.cos(a4),y=CY+138*.58*Math.sin(a4),pulse=.85+Math.sin(ang*2+i)*.15;var col=i===2||i===6?'#ff2d55':i===3?'#00d4ff':i===7?'#a855f7':'#00ff41';ctx.fillStyle=col;ctx.globalAlpha=pulse;ctx.font='bold 9px JetBrains Mono';ctx.textAlign='center';ctx.textBaseline='middle';ctx.shadowColor=col;ctx.shadowBlur=6;ctx.fillText(l,x,y);ctx.shadowBlur=0;ctx.globalAlpha=1;});
+})();})();
 
 /* ── RADAR ──────────────────────────────────────── */
-(function(){var cv=document.getElementById('radarCv');if(!cv)return;var ctx=cv.getContext('2d'),CX=230,CY=200,R=138,axes=[{l:'PEN TESTING',v:.95},{l:'VULN ASSESS',v:.95},{l:'ETH HACKING',v:.98},{l:'AI/ML SEC',v:.82},{l:'FORENSICS',v:.88},{l:'WEB APP SEC',v:.90},{l:'CRYPTOGRAPHY',v:.85},{l:'RISK ASSESS',v:.90}],N=axes.length,ph=0;
-(function draw(){requestAnimationFrame(draw);ph+=.007;ctx.clearRect(0,0,460,400);for(var i=1;i<=5;i++){ctx.beginPath();axes.forEach(function(a,j){var ang=-Math.PI/2+j*(Math.PI*2/N);ctx.lineTo(CX+R*(i/5)*Math.cos(ang),CY+R*(i/5)*Math.sin(ang));});ctx.closePath();ctx.strokeStyle='rgba(0,255,65,'+(0.06+i*.012)+')';ctx.lineWidth=.6;ctx.stroke();}axes.forEach(function(_,j){var ang=-Math.PI/2+j*(Math.PI*2/N);ctx.beginPath();ctx.moveTo(CX,CY);ctx.lineTo(CX+R*Math.cos(ang),CY+R*Math.sin(ang));ctx.strokeStyle='rgba(0,255,65,.1)';ctx.lineWidth=.6;ctx.stroke();});var pls=.9+Math.sin(ph)*.045;ctx.beginPath();axes.forEach(function(a,j){var ang=-Math.PI/2+j*(Math.PI*2/N);ctx.lineTo(CX+R*a.v*pls*Math.cos(ang),CY+R*a.v*pls*Math.sin(ang));});ctx.closePath();ctx.fillStyle='rgba(0,255,65,.025)';ctx.fill();ctx.strokeStyle='rgba(0,255,65,.7)';ctx.lineWidth=1.4;ctx.shadowColor='rgba(0,255,65,.25)';ctx.shadowBlur=3;ctx.stroke();ctx.shadowBlur=0;ctx.beginPath();axes.forEach(function(a,j){var ang=-Math.PI/2+j*(Math.PI*2/N),v=j===3?.9:j===4?.72:j===6?.78:a.v*.55;ctx.lineTo(CX+R*v*pls*Math.cos(ang),CY+R*v*pls*Math.sin(ang));});ctx.closePath();ctx.fillStyle='rgba(255,45,85,.02)';ctx.fill();ctx.strokeStyle='rgba(255,45,85,.35)';ctx.lineWidth=.8;ctx.stroke();axes.forEach(function(a,j){var ang=-Math.PI/2+j*(Math.PI*2/N),px=CX+R*a.v*pls*Math.cos(ang),py=CY+R*a.v*pls*Math.sin(ang);ctx.beginPath();ctx.arc(px,py,4,0,Math.PI*2);ctx.fillStyle='#00ff41';ctx.shadowColor='#00ff41';ctx.shadowBlur=8;ctx.fill();ctx.shadowBlur=0;var lx=CX+(R+24)*Math.cos(ang),ly=CY+(R+24)*Math.sin(ang);ctx.fillStyle='rgba(0,255,65,.95)';ctx.font='bold 9px JetBrains Mono';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(a.l,lx,ly);});ctx.beginPath();ctx.arc(CX,CY,5,0,Math.PI*2);ctx.fillStyle='rgba(0,255,65,.7)';ctx.fill();})();})();
+(function(){var cv=document.getElementById('radarCv');if(!cv)return;var ctx=cv.getContext('2d');var dpr=Math.min(window.devicePixelRatio||1,2);cv.width=460*dpr;cv.height=400*dpr;cv.style.width='460px';cv.style.height='400px';ctx.scale(dpr,dpr);var CX=230,CY=200,R=138,axes=[{l:'PEN TESTING',v:.95},{l:'VULN ASSESS',v:.95},{l:'ETH HACKING',v:.98},{l:'AI/ML SEC',v:.82},{l:'FORENSICS',v:.88},{l:'WEB APP SEC',v:.90},{l:'CRYPTOGRAPHY',v:.85},{l:'RISK ASSESS',v:.90}],N=axes.length,ph=0;
+(function draw(){requestAnimationFrame(draw);ph+=.008;ctx.clearRect(0,0,460,400);for(var i=1;i<=5;i++){ctx.beginPath();axes.forEach(function(a,j){var ang=-Math.PI/2+j*(Math.PI*2/N);ctx.lineTo(CX+R*(i/5)*Math.cos(ang),CY+R*(i/5)*Math.sin(ang));});ctx.closePath();ctx.strokeStyle='rgba(0,255,65,'+(0.28+i*.05)+')';ctx.lineWidth=1.1;ctx.stroke();}axes.forEach(function(_,j){var ang=-Math.PI/2+j*(Math.PI*2/N);ctx.beginPath();ctx.moveTo(CX,CY);ctx.lineTo(CX+R*Math.cos(ang),CY+R*Math.sin(ang));ctx.strokeStyle='rgba(0,255,65,.5)';ctx.lineWidth=1.4;ctx.stroke();});var pls=.92+Math.sin(ph)*.06;ctx.beginPath();axes.forEach(function(a,j){var ang=-Math.PI/2+j*(Math.PI*2/N);ctx.lineTo(CX+R*a.v*pls*Math.cos(ang),CY+R*a.v*pls*Math.sin(ang));});ctx.closePath();ctx.fillStyle='rgba(0,255,65,.20)';ctx.fill();ctx.strokeStyle='rgba(0,255,65,1)';ctx.lineWidth=3.2;ctx.shadowColor='rgba(0,255,65,.85)';ctx.shadowBlur=14;ctx.stroke();ctx.shadowBlur=0;ctx.beginPath();axes.forEach(function(a,j){var ang=-Math.PI/2+j*(Math.PI*2/N),v=j===3?.9:j===4?.72:j===6?.78:a.v*.55;ctx.lineTo(CX+R*v*pls*Math.cos(ang),CY+R*v*pls*Math.sin(ang));});ctx.closePath();ctx.fillStyle='rgba(255,45,85,.08)';ctx.fill();ctx.strokeStyle='rgba(255,45,85,.75)';ctx.lineWidth=1.6;ctx.shadowColor='rgba(255,45,85,.5)';ctx.shadowBlur=8;ctx.stroke();ctx.shadowBlur=0;axes.forEach(function(a,j){var ang=-Math.PI/2+j*(Math.PI*2/N),px=CX+R*a.v*pls*Math.cos(ang),py=CY+R*a.v*pls*Math.sin(ang);ctx.beginPath();ctx.arc(px,py,5.5,0,Math.PI*2);ctx.fillStyle='#00ff41';ctx.shadowColor='#00ff41';ctx.shadowBlur=16;ctx.fill();ctx.shadowBlur=0;ctx.beginPath();ctx.arc(px,py,2.2,0,Math.PI*2);ctx.fillStyle='#ffffff';ctx.fill();var lx=CX+(R+26)*Math.cos(ang),ly=CY+(R+26)*Math.sin(ang);ctx.fillStyle='#00ff41';ctx.font='bold 10.5px JetBrains Mono';ctx.shadowColor='rgba(0,255,65,.9)';ctx.shadowBlur=10;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(a.l,lx,ly);ctx.shadowBlur=0;});ctx.beginPath();ctx.arc(CX,CY,6.5,0,Math.PI*2);ctx.fillStyle='#00ff41';ctx.shadowColor='#00ff41';ctx.shadowBlur=18;ctx.fill();ctx.shadowBlur=0;ctx.beginPath();ctx.arc(CX,CY,2.8,0,Math.PI*2);ctx.fillStyle='#ffffff';ctx.fill();})();})();
 
 /* ── REVEAL + SCRAMBLE ──────────────────────────── */
 var rvObs=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting){x.target.classList.add('on');rvObs.unobserve(x.target);}});},{threshold:.07});
@@ -1036,29 +1108,41 @@ document.querySelectorAll('.sh-t[data-sc]').forEach(function(el){scObs.observe(e
 ].forEach(function(s,i){var el=document.createElement('div');el.className='sbar rv';el.style.transitionDelay=(i*.04)+'s';el.innerHTML='<div class="sbar-l"><span>'+s.n+'</span><span class="sbar-p">'+s.v+'%</span></div><div class="sbar-track"><div class="sbar-ticks"></div><div class="sbar-fill" data-w="'+s.v+'"></div></div>';document.getElementById('SBARS').appendChild(el);rvObs.observe(el);});
 skObs.observe(document.getElementById('SBARS'));
 [
-{n:'Nmap',c:'#4682B4',l:'<svg viewBox="0 0 24 24" fill="#4682B4"><path d="M12 0C5.37 0 0 5.37 0 12s5.37 12 12 12 12-5.37 12-12S18.63 0 12 0zm-1.5 6l6 3-6 3V6zm-3 1.5v9l7.5-4.5-7.5-4.5z"/></svg>'},
-{n:'Metasploit',c:'#2596be',l:'<svg viewBox="0 0 24 24" fill="#2596be"><path d="M12 0L1.6 6v12L12 24l10.4-6V6L12 0zm0 2.4l8 4.6v9.4l-8 4.6-8-4.6V7zm-2 5v6l2 1.2 2-1.2V7l-2 1-2-1z"/></svg>'},
-{n:'Burp Suite',c:'#FF6633',l:'<svg viewBox="0 0 24 24" fill="#FF6633"><path d="M12 1.5C8 5.5 6 9.5 6 14c0 3.3 2.7 6 6 6s6-2.7 6-6c0-4.5-2-8.5-6-12.5zm0 6c1.5 1.8 2.5 3.8 2.5 6.5 0 1.4-1.1 2.5-2.5 2.5S9.5 15.4 9.5 14c0-2.7 1-4.7 2.5-6.5z"/></svg>'},
-{n:'Wireshark',c:'#1679A7',l:'<svg viewBox="0 0 24 24" fill="#1679A7"><path d="m2.95 0c-1.62 0-2.95 1.32-2.95 2.95v18.1c0 1.63 1.32 2.95 2.95 2.95h18.1c1.62 0 2.95-1.32 2.95-2.95v-18.1c-.00024-1.63-1.32-2.95-2.95-2.95zm0 1.09h18.1c1.04 0 1.85.818 1.85 1.86v14h-5.27c-.335-.796-2.57-6.47.283-10.9a.516.517 0 0 0-.443-.794c-5.24.0827-8.2 3.19-9.74 6.21-1.35 2.64-1.63 4.91-1.69 5.53h-4.95v-14c0-1.04.817-1.86 1.85-1.86zm13.6 5.24c-2.62 5.24.248 11.4.248 11.4a.516.517 0 0 0 .469.301h5.62v3.05c0 1.04-.817 1.86-1.85 1.86h-18.1c-1.04 0-1.85-.818-1.85-1.86v-3.05h5.39a.516.517 0 0 0 .514-.477s.226-2.8 1.66-5.62c1.34-2.62 3.67-5.17 7.91-5.57z"/></svg>'},
-{n:'OpenVAS',c:'#00a4a6',l:'<svg viewBox="0 0 24 24" fill="none" stroke="#00a4a6" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 0 20M12 2a15.3 15.3 0 0 0 0 20M4.93 4.93a15.3 15.3 0 0 1 14.14 0"/></svg>'},
-{n:'SQLmap',c:'#dc2626',l:'<svg viewBox="0 0 24 24" fill="#dc2626"><ellipse cx="12" cy="4.5" rx="8.5" ry="2.5"/><path d="M3.5 4.5v4c0 1.38 3.8 2.5 8.5 2.5s8.5-1.12 8.5-2.5v-4M3.5 8.5v4c0 1.38 3.8 2.5 8.5 2.5s8.5-1.12 8.5-2.5v-4M3.5 12.5v4c0 1.38 3.8 2.5 8.5 2.5s8.5-1.12 8.5-2.5v-4"/></svg>'},
-{n:'Hydra',c:'#FFD700',l:'<svg viewBox="0 0 24 24" fill="none" stroke="#FFD700" stroke-width="2" stroke-linecap="round"><path d="M21 7l-5-5-3 4 2 2-2 2 1 1-6.5 6.5-1-1-3 3 5 5 3-3-1-1L18 12l1 1 4-4-2-2 2-2z"/><circle cx="5.5" cy="18.5" r="2.5" fill="none"/></svg>'},
-{n:'Maltego',c:'#4169E1',l:'<svg viewBox="0 0 24 24" fill="none" stroke="#4169E1" stroke-width="1.8"><circle cx="12" cy="4" r="2.2" fill="#4169E1"/><circle cx="4" cy="14" r="2.2" fill="#4169E1"/><circle cx="20" cy="14" r="2.2" fill="#4169E1"/><circle cx="8" cy="21" r="2.2" fill="#4169E1"/><circle cx="16" cy="21" r="2.2" fill="#4169E1"/><line x1="12" y1="6.2" x2="4.8" y2="11.8"/><line x1="12" y1="6.2" x2="19.2" y2="11.8"/><line x1="4" y1="16.2" x2="7.5" y2="18.8"/><line x1="20" y1="16.2" x2="16.5" y2="18.8"/></svg>'},
-{n:'Aircrack-ng',c:'#0ea5e9',l:'<svg viewBox="0 0 24 24" fill="none" stroke="#0ea5e9" stroke-width="2.2" stroke-linecap="round"><path d="M1.5 8.5a15 15 0 0 1 21 0"/><path d="M4.5 12a10 10 0 0 1 15 0"/><path d="M7.5 15.5a5 5 0 0 1 9 0"/><circle cx="12" cy="19" r="1.5" fill="#0ea5e9"/></svg>'},
-{n:'Ghidra',c:'#CC2222',l:'<svg viewBox="0 0 24 24" fill="#CC2222"><path d="M12 1L2 7.5v9L12 23l10-6.5v-9L12 1zm0 3.2l7 4.5v8.6l-7 4.5-7-4.5V8.7l7-4.5zM10 9v5.5l5 2.5v-5.5L10 9z"/></svg>'},
-{n:'Snort',c:'#FF6600',l:'<svg viewBox="0 0 24 24" fill="#FF6600"><path d="M4 8c5-2 11-2 16 0M4 12c5-2 11-2 16 0M4 16c5-2 11-2 16 0M12 3c-2 2-4 5-4 9s2 7 4 9c2-2 4-5 4-9s-2-7-4-9z"/></svg>'},
-{n:'FTK/Autopsy',c:'#9333ea',l:'<svg viewBox="0 0 24 24" fill="none" stroke="#9333ea" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M11 7v8M7.5 11h7" stroke-linecap="round"/><line x1="16.5" y1="16.5" x2="21" y2="21" stroke-linecap="round" stroke-width="2.5"/></svg>'},
-{n:'Magnet AXIOM',c:'#00aacc',l:'<svg viewBox="0 0 24 24" fill="#00aacc"><path d="M6 3h5v8c0 .55-.45 1-1 1H8c-.55 0-1-.45-1-1V8H6V3zm8 0h5v5h-2v4.5c0 .55-.45 1-1 1h-2c-.55 0-1-.45-1-1V8h-1V3h2zM3 18h18v3H3z"/></svg>'},
-{n:'Nikto',c:'#22c55e',l:'<svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a14.5 14.5 0 0 1 0 20M12 2a14.5 14.5 0 0 0 0 20"/></svg>'},
-{n:'Python',c:'#3776AB',l:'<svg viewBox="0 0 24 24" fill="#3776AB"><path d="M14.25.18l.9.2.73.26.59.3.45.32.34.34.25.34.16.33.1.3.04.26.02.2-.01.13V8.5l-.05.63-.13.55-.21.46-.26.38-.3.31-.33.25-.35.19-.35.14-.33.1-.3.07-.26.04-.21.02H8.77l-.69.05-.59.14-.5.22-.41.27-.33.32-.27.35-.2.36-.15.37-.1.35-.07.32-.04.27-.02.21v3.06H3.17l-.21-.03-.28-.07-.32-.12-.35-.18-.36-.26-.36-.36-.35-.46-.32-.59-.28-.73-.21-.88-.14-1.05-.05-1.23.06-1.22.16-1.04.24-.87.32-.71.36-.57.4-.44.42-.33.42-.24.4-.16.36-.1.32-.05.24-.01h.16l.06.01h8.16v-.83H6.18l-.01-2.75-.02-.37.05-.34.11-.31.17-.28.25-.26.31-.23.38-.2.44-.18.51-.15.58-.12.64-.1.71-.06.77-.04.84-.02 1.27.05zm-6.3 1.98l-.23.33-.08.41.08.41.23.34.33.22.41.09.41-.09.33-.22.23-.34.08-.41-.08-.41-.23-.33-.33-.22-.41-.09-.41.09zm13.09 3.95l.28.06.32.12.35.18.36.27.36.35.35.47.32.59.28.73.21.88.14 1.04.05 1.23-.06 1.23-.16 1.04-.24.86-.32.71-.36.57-.4.45-.42.33-.42.24-.4.16-.36.09-.32.05-.24.02-.16-.01h-8.22v.82h5.84l.01 2.76.02.36-.05.34-.11.31-.17.29-.25.25-.31.24-.38.2-.44.17-.51.15-.58.13-.64.09-.71.07-.77.04-.84.01-1.27-.04-1.07-.14-.9-.2-.73-.25-.59-.3-.45-.33-.34-.34-.25-.34-.16-.33-.1-.3-.04-.25-.02-.2.01-.13v-5.34l.05-.64.13-.54.21-.46.26-.38.3-.32.33-.24.35-.2.35-.14.33-.1.3-.06.26-.04.21-.02.13-.01h5.84l.69-.05.59-.14.5-.21.41-.28.33-.32.27-.35.2-.36.15-.36.1-.35.07-.32.04-.28.02-.21V6.07h2.09l.14.01zm-6.47 14.25l-.23.33-.08.41.08.41.23.33.33.23.41.08.41-.08.33-.23.23-.33.08-.41-.08-.41-.23-.33-.33-.23-.41-.08-.41.08z"/></svg>'},
-{n:'TensorFlow',c:'#FF6F00',l:'<svg viewBox="0 0 24 24" fill="#FF6F00"><path d="M1.292 5.856L11.54 0v24l-4.095-2.378V7.603l-6.168 3.564.015-5.31zm21.43 5.311l-.014-5.31L12.46 0v24l4.095-2.378V14.87l3.092 1.788-.018-4.618-3.074-1.756V7.603l6.168 3.564z"/></svg>'},
-{n:'Scikit-Learn',c:'#F7931E',l:'<svg viewBox="0 0 24 24"><path fill="#F7931E" d="M15.601 5.53c-1.91.035-3.981.91-5.63 2.56-2.93 2.93-2.083 8.53-1.088 9.525.805.804 6.595 1.843 9.526-1.088a9.74 9.74 0 0 0 .584-.643c.043-.292.205-.66.489-1.106a1.848 1.848 0 0 1-.537.176c-.144.265-.37.55-.676.855-.354.335-.607.554-.76.656a.795.795 0 0 1-.437.152c-.35 0-.514-.308-.494-.924-.22.316-.425.549-.612.7a.914.914 0 0 1-.578.224c-.194 0-.36-.09-.496-.273a1.03 1.03 0 0 1-.193-.507 4.016 4.016 0 0 1-.726.583c-.224.132-.47.197-.74.197-.3 0-.543-.096-.727-.288a.978.978 0 0 1-.257-.524v.004c-.3.276-.564.48-.79.611a1.295 1.295 0 0 1-.649.197.693.693 0 0 1-.571-.275c-.145-.183-.218-.43-.218-.739 0-.464.101-1.02.302-1.67.201-.65.445-1.25.733-1.797l.842-.312a.21.21 0 0 1 .06-.013c.063 0 .116.047.157.14.04.095.061.221.061.38 0 .451-.104.888-.312 1.31-.207.422-.532.873-.974 1.352-.018.23-.027.388-.027.474 0 .193.036.345.106.458.071.113.165.169.282.169a.71.71 0 0 0 .382-.13c.132-.084.333-.26.602-.523.028-.418.187-.798.482-1.142.324-.38.685-.569 1.08-.569.206 0 .37.054.494.16a.524.524 0 0 1 .186.417c0 .458-.486.829-1.459 1.114.088.43.32.646.693.646a.807.807 0 0 0 .417-.117c.129-.076.321-.243.575-.497.032-.252.118-.495.259-.728.182-.3.416-.544.701-.73.285-.185.537-.278.756-.278.276 0 .47.127.58.381l.677-.374h.186l-.292.971c-.15.488-.226.823-.226 1.004 0 .19.067.285.202.285.086 0 .181-.045.285-.137.104-.092.25-.232.437-.42v.001c.143-.155.274-.32.392-.494-.19-.084-.285-.21-.285-.375 0-.17.058-.352.174-.545.116-.194.275-.29.479-.29.172 0 .258.088.258.265 0 .139-.05.338-.149.596.367-.04.687-.32.961-.842l.228-.01c1.059-2.438.828-5.075-.83-6.732-1.019-1.02-2.408-1.5-3.895-1.471zm4.725 8.203a8.938 8.938 0 0 1-1.333 2.151 1.09 1.09 0 0 0-.012.147c0 .168.047.309.14.423.092.113.206.17.34.17.296 0 .714-.264 1.254-.787-.001.04-.003.08-.003.121 0 .146.012.368.036.666l.733-.172c0-.2.003-.357.01-.474.01-.157.033-.33.066-.517.02-.11.07-.216.152-.315l.186-.216a5.276 5.276 0 0 1 .378-.397c.062-.055.116-.099.162-.13a.26.26 0 0 1 .123-.046c.055 0 .083.035.083.106 0 .07-.052.236-.156.497-.194.486-.292.848-.292 1.084 0 .175.046.314.136.418a.45.45 0 0 0 .358.155c.365 0 .803-.269 1.313-.808v-.381c-.361.426-.623.64-.784.64-.109 0-.163-.067-.163-.2 0-.1.065-.316.195-.65.19-.486.285-.836.285-1.048a.464.464 0 0 0-.112-.319.36.36 0 0 0-.282-.127c-.165 0-.354.077-.567.233-.213.156-.5.436-.863.84.053-.262.165-.622.335-1.08l-.809.156a6.54 6.54 0 0 0-.399 1.074c-.04.156-.07.316-.092.48a7.447 7.447 0 0 1-.49.45.38.38 0 0 1-.229.08.208.208 0 0 1-.174-.082.352.352 0 0 1-.064-.222c0-.1.019-.214.056-.343.038-.13.12-.373.249-.731l.308-.849zm-17.21-2.927c-.863-.016-1.67.263-2.261.854-1.352 1.352-1.07 3.827.631 5.527 1.7 1.701 4.95 1.21 5.527.632.467-.466 1.07-3.827-.631-5.527-.957-.957-2.158-1.465-3.267-1.486zm12.285.358h.166v.21H15.4zm.427 0h.166v.865l.46-.455h.195l-.364.362.428.684h-.198l-.357-.575-.164.166v.41h-.166zm1.016 0h.166v.21h-.166zm.481.122h.166v.288h.172v.135h-.172v.717c0 .037.006.062.02.075.012.013.037.02.074.02a.23.23 0 0 0 .078-.01v.141a.802.802 0 0 1-.136.014.23.23 0 0 1-.15-.043.15.15 0 0 1-.052-.123v-.79h-.141v-.136h.141zm-3.562.258c.081 0 .15.012.207.038.057.024.1.061.13.11s.045.106.045.173h-.176c-.006-.111-.075-.167-.208-.167a.285.285 0 0 0-.164.041.134.134 0 0 0-.06.117c0 .035.015.065.045.088.03.024.08.044.15.06l.16.039a.47.47 0 0 1 .224.105c.047.046.07.108.07.186a.3.3 0 0 1-.052.175.327.327 0 0 1-.152.116.585.585 0 0 1-.226.041c-.136 0-.24-.03-.309-.088-.069-.059-.105-.149-.109-.269h.176c.004.037.01.065.017.084a.166.166 0 0 0 .034.054c.044.043.112.065.204.065a.31.31 0 0 0 .177-.045.139.139 0 0 0 .067-.119.116.116 0 0 0-.038-.09.287.287 0 0 0-.124-.055l-.156-.038a1.248 1.248 0 0 1-.159-.05.359.359 0 0 1-.098-.061.22.22 0 0 1-.058-.083.32.32 0 0 1-.016-.108c0-.096.036-.174.109-.232a.45.45 0 0 1 .29-.087zm1.035 0a.46.46 0 0 1 .202.043.351.351 0 0 1 .187.212.577.577 0 0 1 .023.126h-.168a.256.256 0 0 0-.078-.168.242.242 0 0 0-.17-.06.248.248 0 0 0-.155.05.306.306 0 0 0-.1.144.662.662 0 0 0-.034.224.58.58 0 0 0 .035.214.299.299 0 0 0 .101.135.261.261 0 0 0 .157.048c.142 0 .227-.084.256-.252h.167a.519.519 0 0 1-.065.22.35.35 0 0 1-.146.138.464.464 0 0 1-.216.048.448.448 0 0 1-.246-.066.441.441 0 0 1-.161-.192.703.703 0 0 1-.057-.293c0-.085.01-.163.032-.233a.522.522 0 0 1 .095-.182.403.403 0 0 1 .15-.117.453.453 0 0 1 .191-.04zm.603.03h.166v1.046H15.4zm1.443 0h.166v1.046h-.166zm-5.05.618c-.08 0-.2.204-.356.611-.155.407-.308.977-.459 1.71.281-.312.509-.662.683-1.05.175-.387.262-.72.262-.999a.455.455 0 0 0-.036-.197c-.025-.05-.056-.075-.093-.075zm4.662 1.797c-.221 0-.431.188-.629.563-.197.376-.296.722-.296 1.038 0 .12.029.216.088.29a.273.273 0 0 0 .223.111c.221 0 .43-.188.625-.565.196-.377.294-.725.294-1.043a.457.457 0 0 0-.083-.29.269.269 0 0 0-.222-.104zm-2.848.007c-.146 0-.285.11-.417.333-.133.222-.2.51-.2.866.566-.159.849-.452.849-.881 0-.212-.077-.318-.232-.318Z"/></svg>'},
-{n:'NetworkX',c:'#2563eb',l:'<svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="3" r="2" fill="#2563eb"/><circle cx="3" cy="13" r="2" fill="#2563eb"/><circle cx="21" cy="13" r="2" fill="#2563eb"/><circle cx="7" cy="21" r="2" fill="#2563eb"/><circle cx="17" cy="21" r="2" fill="#2563eb"/><circle cx="12" cy="13" r="2" fill="#2563eb" opacity=".6"/><line x1="12" y1="5" x2="3.8" y2="11.2" stroke="#2563eb" stroke-width="1.5"/><line x1="12" y1="5" x2="20.2" y2="11.2" stroke="#2563eb" stroke-width="1.5"/><line x1="5" y1="13" x2="7" y2="19" stroke="#2563eb" stroke-width="1.5"/><line x1="19" y1="13" x2="17" y2="19" stroke="#2563eb" stroke-width="1.5"/><line x1="9" y1="21" x2="15" y2="21" stroke="#2563eb" stroke-width="1.5"/></svg>'},
-{n:'AWS IAM',c:'#FF9900',l:'<svg viewBox="0 0 24 24" fill="#FF9900"><path d="M12 1.5L3 6v6c0 5.25 3.84 10.74 9 12 5.16-1.26 9-6.75 9-12V6L12 1.5zm0 2.2l7.2 3.9v5.4c0 4.05-2.97 8.28-7.2 9.42C7.77 21.28 4.8 17.05 4.8 13V7.6L12 3.7zm-1.5 6.3v3l1.5.9 1.5-.9v-3l-1.5-.75-1.5.75z"/></svg>'},
-{n:'XGBoost',c:'#0066cc',l:'<svg viewBox="0 0 24 24" fill="#0066cc"><path d="M3 17l4-4 4 3 5-7 5 5v6H3z"/><polyline fill="none" stroke="#fff" stroke-width="1.5" stroke-linejoin="round" points="3,17 7,13 11,16 16,9 21,14"/></svg>'},
-{n:'Extra Trees',c:'#16a34a',l:'<svg viewBox="0 0 24 24" fill="#16a34a"><path d="M12 2l-3.5 5.5h2L7 14h2l-2.5 4.5h11L15 14h2l-3.5-6.5h2L12 2zm-1 14h2v5h-2z"/></svg>'},
-{n:'Gradient Boosting',c:'#7c3aed',l:'<svg viewBox="0 0 24 24"><defs><linearGradient id="gb2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7c3aed"/><stop offset="1" stop-color="#6d28d9"/></linearGradient></defs><path fill="#7c3aed" d="M3 21V14h3v7z"/><path fill="#a855f7" d="M8 21V9h3v12z"/><path fill="#7c3aed" d="M13 21V4h3v17z"/><path fill="#a855f7" d="M18 21v-5h3v5z"/><polyline fill="none" stroke="#e9d5ff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" points="4.5,14 9.5,9 14.5,4 19.5,16"/></svg>'}
-].forEach(function(t){var el=document.createElement('div');el.className='tool';
+{n:'Nmap',u:'https://nmap.org',l:'<img src="https://cdn.simpleicons.org/nmap/4682B4" alt="Nmap" loading="lazy"/>'},
+{n:'Metasploit',u:'https://www.metasploit.com',l:'<img src="https://cdn.simpleicons.org/metasploit/2596BE" alt="Metasploit" loading="lazy"/>'},
+{n:'Burp Suite',u:'https://portswigger.net/burp',l:'<img src="https://cdn.simpleicons.org/burpsuite/FF6633" alt="Burp Suite" loading="lazy"/>'},
+{n:'Wireshark',u:'https://www.wireshark.org',l:'<img src="https://cdn.simpleicons.org/wireshark/1679A7" alt="Wireshark" loading="lazy"/>'},
+{n:'OpenVAS',u:'https://www.openvas.org',l:'<svg viewBox="0 0 24 24" fill="none" stroke="#00A4A6" stroke-width="1.8" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 0 20M12 2a15.3 15.3 0 0 0 0 20M4.93 4.93a15.3 15.3 0 0 1 14.14 0"/></svg>'},
+{n:'Nessus',u:'https://www.tenable.com/products/nessus',l:'<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10" fill="#00BFB2"/><path d="M9 8.5l3.5 2L9 12.5v3l7-4-7-4v1z" fill="#fff"/></svg>'},
+{n:'SQLmap',u:'https://sqlmap.org',l:'<svg viewBox="0 0 24 24" fill="#DC2626" xmlns="http://www.w3.org/2000/svg"><ellipse cx="12" cy="4.5" rx="8.5" ry="2.5"/><path d="M3.5 4.5v4c0 1.38 3.8 2.5 8.5 2.5s8.5-1.12 8.5-2.5v-4M3.5 8.5v4c0 1.38 3.8 2.5 8.5 2.5s8.5-1.12 8.5-2.5v-4M3.5 12.5v4c0 1.38 3.8 2.5 8.5 2.5s8.5-1.12 8.5-2.5v-4"/></svg>'},
+{n:'John the Ripper',u:'https://www.openwall.com/john/',l:'<svg viewBox="0 0 24 24" fill="#FBBF24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2l-2 4h4l-2-4zm-3 6l-2 4 2 4h6l2-4-2-4H9zm3 11l-2-3h4l-2 3z"/><circle cx="10" cy="12" r="1" fill="#000"/><circle cx="14" cy="12" r="1" fill="#000"/></svg>'},
+{n:'Hydra',u:'https://github.com/vanhauser-thc/thc-hydra',l:'<svg viewBox="0 0 24 24" fill="none" stroke="#FFD700" stroke-width="2" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="3" fill="#FFD700"/><path d="M12 9V3M12 21v-6M9 12H3M21 12h-6M5.6 5.6l4.2 4.2M14.2 14.2l4.2 4.2M18.4 5.6l-4.2 4.2M9.8 14.2l-4.2 4.2"/></svg>'},
+{n:'Maltego',u:'https://www.maltego.com',l:'<svg viewBox="0 0 24 24" fill="none" stroke="#4169E1" stroke-width="1.8" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="4" r="2.2" fill="#4169E1"/><circle cx="4" cy="14" r="2.2" fill="#4169E1"/><circle cx="20" cy="14" r="2.2" fill="#4169E1"/><circle cx="8" cy="21" r="2.2" fill="#4169E1"/><circle cx="16" cy="21" r="2.2" fill="#4169E1"/><line x1="12" y1="6.2" x2="4.8" y2="11.8"/><line x1="12" y1="6.2" x2="19.2" y2="11.8"/><line x1="4" y1="16.2" x2="7.5" y2="18.8"/><line x1="20" y1="16.2" x2="16.5" y2="18.8"/></svg>'},
+{n:'Aircrack-ng',u:'https://www.aircrack-ng.org',l:'<svg viewBox="0 0 24 24" fill="none" stroke="#0EA5E9" stroke-width="2.2" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg"><path d="M1.5 8.5a15 15 0 0 1 21 0"/><path d="M4.5 12a10 10 0 0 1 15 0"/><path d="M7.5 15.5a5 5 0 0 1 9 0"/><circle cx="12" cy="19" r="1.5" fill="#0EA5E9"/></svg>'},
+{n:'Netcat',u:'http://nc110.sourceforge.net',l:'<svg viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><polyline points="4,17 10,11 4,5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>'},
+{n:'Ghidra',u:'https://ghidra-sre.org',l:'<svg viewBox="0 0 24 24" fill="#CC2222" xmlns="http://www.w3.org/2000/svg"><path d="M12 1L2 7.5v9L12 23l10-6.5v-9L12 1zm0 3.2l7 4.5v8.6l-7 4.5-7-4.5V8.7l7-4.5zM10 9v5.5l5 2.5v-5.5L10 9z"/></svg>'},
+{n:'Snort',u:'https://www.snort.org',l:'<svg viewBox="0 0 24 24" fill="#FF6600" xmlns="http://www.w3.org/2000/svg"><path d="M4 8c5-2 11-2 16 0M4 12c5-2 11-2 16 0M4 16c5-2 11-2 16 0M12 3c-2 2-4 5-4 9s2 7 4 9c2-2 4-5 4-9s-2-7-4-9z"/></svg>'},
+{n:'Nikto',u:'https://cirt.net/Nikto2',l:'<svg viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="1.8" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a14.5 14.5 0 0 1 0 20M12 2a14.5 14.5 0 0 0 0 20"/></svg>'},
+{n:'Acunetix',u:'https://www.acunetix.com',l:'<svg viewBox="0 0 24 24" fill="#0099CC" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L2 7v6c0 5.5 4 9.7 10 11 6-1.3 10-5.5 10-11V7L12 2zm0 2.2L20 8v5c0 4.4-3 7.8-8 9-5-1.2-8-4.6-8-9V8l8-3.8zm0 3.3a4 4 0 100 8 4 4 0 000-8z"/></svg>'},
+{n:'Autopsy',u:'https://www.autopsy.com',l:'<svg viewBox="0 0 24 24" fill="none" stroke="#9333EA" stroke-width="2" xmlns="http://www.w3.org/2000/svg"><circle cx="11" cy="11" r="7"/><path d="M11 7v8M7.5 11h7" stroke-linecap="round"/><line x1="16.5" y1="16.5" x2="21" y2="21" stroke-linecap="round" stroke-width="2.5"/></svg>'},
+{n:'FTK Imager',u:'https://www.exterro.com/ftk-imager',l:'<svg viewBox="0 0 24 24" fill="#DC2626" xmlns="http://www.w3.org/2000/svg"><path d="M3 3h18v18H3V3zm2 2v14h14V5H5zm2 2h10v2H7V7zm0 4h10v2H7v-2zm0 4h7v2H7v-2z"/></svg>'},
+{n:'Magnet AXIOM',u:'https://www.magnetforensics.com/products/magnet-axiom',l:'<svg viewBox="0 0 24 24" fill="#00AACC" xmlns="http://www.w3.org/2000/svg"><path d="M6 3h5v8c0 .55-.45 1-1 1H8c-.55 0-1-.45-1-1V8H6V3zm8 0h5v5h-2v4.5c0 .55-.45 1-1 1h-2c-.55 0-1-.45-1-1V8h-1V3h2zM3 18h18v3H3z"/></svg>'},
+{n:'Python (AI-Assisted)',u:'https://www.python.org',l:'<img src="https://cdn.simpleicons.org/python/3776AB" alt="Python" loading="lazy"/>'},
+{n:'TensorFlow',u:'https://www.tensorflow.org',l:'<img src="https://cdn.simpleicons.org/tensorflow/FF6F00" alt="TensorFlow" loading="lazy"/>'},
+{n:'Scikit-Learn',u:'https://scikit-learn.org',l:'<img src="https://cdn.simpleicons.org/scikitlearn/F7931E" alt="scikit-learn" loading="lazy"/>'},
+{n:'PyTorch',u:'https://pytorch.org',l:'<img src="https://cdn.simpleicons.org/pytorch/EE4C2C" alt="PyTorch" loading="lazy"/>'},
+{n:'NetworkX',u:'https://networkx.org',l:'<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="3" r="2" fill="#2563EB"/><circle cx="3" cy="13" r="2" fill="#2563EB"/><circle cx="21" cy="13" r="2" fill="#2563EB"/><circle cx="7" cy="21" r="2" fill="#2563EB"/><circle cx="17" cy="21" r="2" fill="#2563EB"/><circle cx="12" cy="13" r="2" fill="#2563EB" opacity=".6"/><line x1="12" y1="5" x2="3.8" y2="11.2" stroke="#2563EB" stroke-width="1.5"/><line x1="12" y1="5" x2="20.2" y2="11.2" stroke="#2563EB" stroke-width="1.5"/><line x1="5" y1="13" x2="7" y2="19" stroke="#2563EB" stroke-width="1.5"/><line x1="19" y1="13" x2="17" y2="19" stroke="#2563EB" stroke-width="1.5"/><line x1="9" y1="21" x2="15" y2="21" stroke="#2563EB" stroke-width="1.5"/></svg>'},
+{n:'AWS IAM',u:'https://aws.amazon.com/iam/',l:'<img src="https://cdn.simpleicons.org/amazonwebservices/FF9900" alt="AWS" loading="lazy"/>'},
+{n:'XGBoost',u:'https://xgboost.ai',l:'<svg viewBox="0 0 24 24" fill="#0066CC" xmlns="http://www.w3.org/2000/svg"><path d="M3 17l4-4 4 3 5-7 5 5v6H3z"/><polyline fill="none" stroke="#fff" stroke-width="1.5" stroke-linejoin="round" points="3,17 7,13 11,16 16,9 21,14"/></svg>'},
+{n:'Extra Trees',u:'https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.ExtraTreesRegressor.html',l:'<svg viewBox="0 0 24 24" fill="#16A34A" xmlns="http://www.w3.org/2000/svg"><path d="M12 2l-3.5 5.5h2L7 14h2l-2.5 4.5h11L15 14h2l-3.5-6.5h2L12 2zm-1 14h2v5h-2z"/></svg>'},
+{n:'Flask',u:'https://flask.palletsprojects.com',l:'<img src="https://cdn.simpleicons.org/flask/FFFFFF" alt="Flask" loading="lazy"/>'},
+{n:'FastAPI',u:'https://fastapi.tiangolo.com',l:'<img src="https://cdn.simpleicons.org/fastapi/009688" alt="FastAPI" loading="lazy"/>'},
+{n:'React',u:'https://react.dev',l:'<img src="https://cdn.simpleicons.org/react/61DAFB" alt="React" loading="lazy"/>'},
+{n:'PostgreSQL',u:'https://www.postgresql.org',l:'<img src="https://cdn.simpleicons.org/postgresql/4169E1" alt="PostgreSQL" loading="lazy"/>'},
+{n:'Next.js 14',u:'https://nextjs.org',l:'<img src="https://cdn.simpleicons.org/nextdotjs/FFFFFF" alt="Next.js" loading="lazy"/>'},
+{n:'TypeScript',u:'https://www.typescriptlang.org',l:'<img src="https://cdn.simpleicons.org/typescript/3178C6" alt="TypeScript" loading="lazy"/>'},
+{n:'MITRE ATT&CK',u:'https://attack.mitre.org',l:'<svg viewBox="0 0 24 24" fill="#FF0066" xmlns="http://www.w3.org/2000/svg"><path d="M12 1L3 5v6c0 5.5 3.8 10.7 9 12 5.2-1.3 9-6.5 9-12V5l-9-4zm-1 6h2v4h4v2h-4v4h-2v-4H7v-2h4V7z"/></svg>'}
+].forEach(function(t){var el=document.createElement('a');el.className='tool';el.href=t.u;el.target='_blank';el.rel='noopener';el.title=t.n+' \u2014 Official Site';
   el.innerHTML='<span class="tool-logo">'+t.l+'</span><span>'+t.n+'</span>';
   document.getElementById('TOOLS').appendChild(el);
 });
@@ -1136,7 +1220,18 @@ t:'Shields Up Simulation (2025) — Cyber defence, attack scenario evaluation.'}
   el.innerHTML='<div class="cert-in"><div class="cf">'+logo+'<div class="c-yr">'+c.y+'</div><div class="c-nm">'+c.n+'</div></div><div class="cb"><div class="c-ic">'+c.ic+'</div><div class="c-sc">'+c.sc+'</div><div class="c-id">'+c.is+'</div></div></div>';document.getElementById('CERTS_GRID').appendChild(el);});
 
 /* ── DATA: REAL PROJECTS — strictly from resume ── */
-[{type:'Cloud Security · Risk Intelligence Platform',title:'Aegis-IAM Dashboard',cl:'CLASSIFIED',metric:'AWS IAM · NetworkX Graph Engine · MITRE ATT&CK · 38 E2E Security Tests',desc:'Architected a stateless IAM risk analysis platform using Python and Flask, processing complex AWS JSON exports to instantly detect over-privileged cloud identities and separation-of-duties conflicts. Engineered a graph-traversal detection engine via NetworkX to map multi-tiered IAM relationships, automating the discovery and severity-scoring of critical privilege escalation paths. Integrated the MITRE ATT&CK framework to map 57 dangerous IAM verbs across 10 enterprise tactics, visualizing exposure through a live heatmap and a deterministic posture scoring engine. Hardened the application to pass 38 E2E security tests (including XSS, CSRF, and JSON depth-bomb protections) and developed a dynamic remediation pipeline generating instant CLI patch commands.',tags:['Python','Flask','AWS IAM','NetworkX','MITRE ATT&CK','OWASP','Graph Theory'],gh:'https://github.com/nishu2402/Cyber-Security-Aegis-IAM-Dashboard.git'},
+[
+{type:'Autonomous Pentest Framework · Full-Stack Security Platform',title:'HEAVEN — Autonomous Penetration Testing Framework',cl:'CLASSIFIED',metric:'31 Testing Modules · ExtraTreesRegressor R²=0.9925 · MITRE ATT&CK + EPSS · 23-Table PostgreSQL · FastAPI + React',
+desc:'Architected a production-grade autonomous penetration testing platform using GenAI-Augmented Python, FastAPI, and React, designed to automate deep reconnaissance and continuous vulnerability detection for professional engagements. Engineered a deterministic two-stage false-positive suppression engine that establishes baseline noise measurements to automatically discard low-confidence results, ensuring high-accuracy exploit validation across 31 live testing modules. Trained and integrated an ExtraTreesRegressor ML model on NVD data (R²=0.9925) to dynamically predict CVSS v3.1 risk scores and prioritize threats alongside EPSS exploit probabilities. Automated compliance reporting by algorithmically mapping all discovered vulnerabilities to MITRE ATT&CK, Cyber Kill Chain, and OWASP Top 10. Built on a resilient async DAG orchestrator backed by a 23-table PostgreSQL schema for scalable, resumable security scanning.',
+tags:['Python (AI-Assisted)','FastAPI','React','PostgreSQL','Async DAG','MITRE ATT&CK','CVSS v3.1','EPSS','ExtraTreesRegressor','NVD'],
+gh:'https://github.com/nishu2402/HEAVEN-Autonomous-Penetration-Testing.git'},
+
+{type:'Zero-API OSINT Platform · Offensive Reconnaissance · GenAI-Augmented',title:'HEAVEN-GeoIntel — Advanced OSINT & Reconnaissance Platform',cl:'CLASSIFIED',metric:'400+ NPA Codes · 1,000+ Breach DBs · 110+ OSINT Pivots · 64 Google Dorks · Zero External Leakage',
+desc:'Architected a zero-API, full-stack OSINT platform utilizing Next.js 14 and TypeScript to automate stealthy phone and email intelligence gathering for offensive security engagements. Engineered a strictly localized analysis engine capable of processing 400+ NPA area codes and 1,000+ disposable domains completely offline, ensuring absolute operational security (OPSEC) and zero external data leakage during active reconnaissance. Developed a highly resilient, parallelized data fan-out architecture that aggregates threat intelligence from 1,000+ breach databases, dynamically exposing plaintext credentials and password hashes to accelerate red-team credential harvesting. Automated complex threat correlation workflows by algorithmically generating 110+ targeted OSINT pivots and 64 custom Google Dorks, significantly streamlining deep-web identity mapping across social media, S3 leaks, and credential dumps. Implemented a custom token-bucket rate limiter and 24-hour in-memory LRU caching system to sustain rapid reconnaissance speeds while mitigating API abuse.',
+tags:['Next.js 14','TypeScript','OSINT','LRU Cache','Token Bucket','Google Dorks','Breach Intelligence','OPSEC','Credential Harvesting'],
+gh:'https://github.com/nishu2402/HEAVEN-GeoIntel.git'},
+
+{type:'Cloud Security · Risk Intelligence Platform',title:'Aegis-IAM Dashboard',cl:'CLASSIFIED',metric:'AWS IAM · NetworkX Graph Engine · MITRE ATT&CK · 38 E2E Security Tests',desc:'Architected a stateless IAM risk analysis platform using Python and Flask, processing complex AWS JSON exports to instantly detect over-privileged cloud identities and separation-of-duties conflicts. Engineered a graph-traversal detection engine via NetworkX to map multi-tiered IAM relationships, automating the discovery and severity-scoring of critical privilege escalation paths. Integrated the MITRE ATT&CK framework to map 57 dangerous IAM verbs across 10 enterprise tactics, visualizing exposure through a live heatmap and a deterministic posture scoring engine. Hardened the application to pass 38 E2E security tests (including XSS, CSRF, and JSON depth-bomb protections) and developed a dynamic remediation pipeline generating instant CLI patch commands.',tags:['Python','Flask','AWS IAM','NetworkX','MITRE ATT&CK','OWASP','Graph Theory'],gh:'https://github.com/nishu2402/Cyber-Security-Aegis-IAM-Dashboard.git'},
 
 {type:'ML & Deep Learning · Supervised Regression',title:'AI-Driven Vulnerability Severity Predictor',cl:'CLASSIFIED',metric:'R²=0.9988 · CV R²=0.9990 · MAE=0.0400 · 337,705 NVD CVEs',desc:'Architected an automated vulnerability severity scoring system utilizing supervised Machine Learning and Deep Learning to accurately predict continuous CVSS Base Scores (0.0–10.0) for newly disclosed exploits. Orchestrated the extraction and processing of 337,705 historical CVE records from the National Vulnerability Database (NVD), deploying a multi-paradigm feature selection pipeline (Lasso, ElasticNet, Mutual Information) to isolate 13 critical predictors. Designed and trained a robust suite of regression algorithms including advanced tree-based ensembles (Extra Trees, Gradient Boosting) and recurrent neural networks (LSTM, GRU). Achieved a near-perfect R² of 0.9988 and MAE of 0.0400 via an optimized Extra Trees Regressor (CV R²=0.9990).',tags:['Python','Scikit-Learn','TensorFlow','Extra Trees','Gradient Boosting','LSTM','GRU','NVD','CVSS'],gh:'https://github.com/nishu2402/NVD-Cybersecurity-CVSS-Prediction.git'},
 
@@ -1199,7 +1294,7 @@ t:'Shields Up Simulation (2025) — Cyber defence, attack scenario evaluation.'}
   {cat:'📡 Penetration Testing',title:'IoT Penetration Testing Methodology',badge:'GUIDE',date:'2024',tags:['IoT','Firmware','Hardware'],excerpt:'Attacking IoT ecosystems — firmware extraction and analysis, protocol fuzzing (MQTT, CoAP), hardware debugging (JTAG/UART), and common vulnerability patterns.',url:'https://nishu2402.github.io/blog/Educational%20topic%20blogs/iot-penetration-testing.html'},
   {cat:'📡 Penetration Testing',title:'Social Engineering Penetration Testing',badge:'GUIDE',date:'2024',tags:['Social Engineering','Phishing','OSINT'],excerpt:'Social engineering engagement methodology — pretexting, phishing simulation, vishing, physical intrusion, and building compelling attack narratives with OSINT.',url:'https://nishu2402.github.io/blog/Educational%20topic%20blogs/social-engineering-penetration-testing.html'},
   {cat:'🔍 OSINT',title:'Open Source Intelligence (OSINT)',badge:'GUIDE',date:'2024',tags:['OSINT','Recon','Maltego'],excerpt:'Structured OSINT methodology for penetration testing — target profiling, social media intelligence, domain/IP investigation, and automation with Maltego and custom scripts.',url:'https://nishu2402.github.io/blog/Educational%20topic%20blogs/open-source-intelligence.html'},
-].forEach(function(b,i){var el=document.createElement('div');el.className='blog-card rv';el.style.transitionDelay=(i*.06)+'s';el.innerHTML='<div class="blog-badge">'+b.badge+'</div><div class="blog-head"><div class="blog-cat">'+b.cat+'</div><div class="blog-title">'+b.title+'</div></div><div class="blog-body"><div class="blog-meta"><span>HEAVEN</span><span>·</span><span>'+b.date+'</span></div><div class="blog-excerpt">'+b.excerpt+'</div><div class="blog-tags">'+b.tags.map(function(t){return'<span class="blog-tag">'+t+'</span>';}).join('')+'</div><a href="'+b.url+'" target="_blank" class="blog-rm">Read More</a></div>';document.getElementById('BLOG_GRID').appendChild(el);rvObs.observe(el);});
+].forEach(function(b,i){var el=document.createElement('div');el.className='blog-card rv';el.style.transitionDelay=(i*.06)+'s';el.innerHTML='<div class="blog-badge">'+b.badge+'</div><div class="blog-head"><div class="blog-cat">'+b.cat+'</div><div class="blog-title">'+b.title+'</div></div><div class="blog-body"><div class="blog-meta"><span>HEAVEN</span><span>·</span><span>Security Research</span></div><div class="blog-excerpt">'+b.excerpt+'</div><div class="blog-tags">'+b.tags.map(function(t){return'<span class="blog-tag">'+t+'</span>';}).join('')+'</div><a href="'+b.url+'" target="_blank" class="blog-rm">Read More</a></div>';document.getElementById('BLOG_GRID').appendChild(el);rvObs.observe(el);});
 
 /* ── TERMINAL — UPGRADED WITH PRANKS ────────────── */
 var TOUT=document.getElementById('TOUT'),TIN=document.getElementById('TIN');
@@ -1940,7 +2035,7 @@ function fxHeaven(){
   },45);
 
   /* Streaming statuses */
-  var streams=['> initializing operator profile...','> verifying CEH MASTER credential ✓','> verifying CPENT clearance ✓','> verifying CHFI · 90.7% ✓','> verifying ISO 27001:2022 LA ✓','> 6 live ML/security projects loaded ✓','> SHELL ready · awaiting commands','> nisargkc@gmail.com · +44 7554 469437','> ENGLAND, UK · ACTIVELY SEEKING — 2026','> [ESC] to exit · or close & explore portfolio'];
+  var streams=['> initializing operator profile...','> verifying CEH MASTER credential ✓','> verifying CPENT clearance ✓','> verifying CHFI · 90.7% ✓','> verifying ISO 27001:2022 LA ✓','> 8 live ML/security projects loaded ✓','> SHELL ready · awaiting commands','> nisargkc@gmail.com · +44 7554 469437','> ENGLAND, UK · ACTIVELY SEEKING — 2026','> [ESC] to exit · or close & explore portfolio'];
   var sIdx=0;
   var streamEl=document.getElementById('fxHeavenStream');
   setTimeout(function(){
@@ -2308,7 +2403,7 @@ var CMDS={
     '<span class="tw">  ─── INFO ─────────────────────────────────────</span>',
     '<span class="to">  skills    </span><span class="td2">→ capability matrix</span>',
     '<span class="to">  certs     </span><span class="td2">→ 14 clearance credentials</span>',
-    '<span class="to">  projects  </span><span class="td2">→ 6 live deployments</span>',
+    '<span class="to">  projects  </span><span class="td2">→ 8 live deployments</span>',
     '<span class="to">  contact   </span><span class="td2">→ contact info</span>',
     '<span class="to">  status    </span><span class="td2">→ operator status</span>',
     '<span class="to">  blog      </span><span class="td2">→ open intel dispatch blog</span>',
@@ -2319,17 +2414,173 @@ var CMDS={
     '<span class="to">  clear     </span><span class="td2">→ clear terminal</span>',
     '<span class="tw">└────────────────────────────────────────────────┘</span>'];},
 
-  /* ─ FULL-SCREEN HEAVEN INTRO (jaw-dropping · ESC to exit) ─ */
-  heaven:function(){fxHeaven();return['<span class="to">[FX] HEAVEN protocol activating... [ESC] to exit</span>'];},
+  /* ─ FULL-SCREEN HEAVEN INTRO + DETAILED CINEMATIC DOSSIER ─ */
+  heaven:function(){fxHeaven();return[
+    '<span class="te">╔══════════════════════════════════════════════════════════════════════════╗</span>',
+    '<span class="te">║</span>                                                                          <span class="te">║</span>',
+    '<span class="te">║</span>     <span class="to" style="font-size:1.05rem;letter-spacing:10px;font-weight:900;">H E A V E N</span>     <span class="te" style="font-size:.85rem;opacity:.7;">// CLASSIFIED OPERATOR DOSSIER · CLEARANCE: Ω</span>    <span class="te">║</span>',
+    '<span class="te">║</span>                                                                          <span class="te">║</span>',
+    '<span class="te">╚══════════════════════════════════════════════════════════════════════════╝</span>',
+    '',
+    '<span class="td2">// DECRYPTING DOSSIER · AES-256 · QUANTUM-SAFE · KEY VERIFIED</span>',
+    '<span class="td2">// HANDSHAKE COMPLETE · LIVE STREAM OPEN · LINE SECURE</span>',
+    '<span class="td2">// SECURE CHANNEL: nishu2402.github.io · BLOG LIVE · KAGGLE LIVE</span>',
+    '',
+    '<span class="tw">┌─[ § 01 ─ IDENTITY ]──────────────────────────────────────────────────────┐</span>',
+    '<span class="to">  OPERATOR     </span><span class="tc">Nisarg Chasmawala</span>',
+    '<span class="to">  CODENAME     </span><span class="te" style="text-shadow:0 0 8px var(--R);">HEAVEN</span>',
+    '<span class="to">  RANK         </span><span class="tc">Elite Offensive Security Engineer · Penetration Tester · Red Team Operator</span>',
+    '<span class="to">  ORIGIN       </span><span class="tc">Surat, Gujarat, India 🇮🇳  →  England, United Kingdom 🇬🇧</span>',
+    '<span class="to">  BASE         </span><span class="tc">England, United Kingdom (UK-based International Postgraduate)</span>',
+    '<span class="to">  AFFILIATION  </span><span class="tc">MSc Cyber Security w/ Professional Placement · Birmingham City University</span>',
+    '<span class="to">  ENROLLED     </span><span class="tc">Expected Graduation: March 2027 · International Postgraduate Visa Status</span>',
+    '<span class="to">  LANGUAGES    </span><span class="tc">English (Professional · TOEFL 91/120) · Hindi · Gujarati (Native)</span>',
+    '<span class="to">  STATUS       </span><span class="te" style="text-shadow:0 0 8px var(--R);">■ ACTIVE · ACCEPTING ENGAGEMENTS · OFFENSIVE OPS ONLINE</span>',
+    '<span class="tw">└──────────────────────────────────────────────────────────────────────────┘</span>',
+    '',
+    '<span class="tw">┌─[ § 02 ─ EDUCATION · ACADEMIC TRAJECTORY ]───────────────────────────────┐</span>',
+    '<span class="to">  ▸ MSc Cyber Security (w/ Professional Placement)</span>',
+    '<span class="td2">    Birmingham City University · Birmingham, England, UK · (in progress)</span>',
+    '<span class="td2">    Expected Graduation: March 2027</span>',
+    '<span class="td2">    Focus: Offensive Security · AI/ML Security · Digital Forensics · Red Team Ops</span>',
+    '<span class="to">  ▸ B.Eng. Computer Science &amp; Engineering</span>',
+    '<span class="td2">    SN Patel Institute of Technology · GTU · Surat, Gujarat, India</span>',
+    '<span class="td2">    Completed: January 2024 · CGPA 7.86 / 10</span>',
+    '<span class="to">  ▸ Diploma in Computer Engineering</span>',
+    '<span class="td2">    NG Patel Polytechnic · GTU · Surat, Gujarat, India</span>',
+    '<span class="td2">    Completed: January 2021 · CGPA 7.80 / 10</span>',
+    '<span class="tw">└──────────────────────────────────────────────────────────────────────────┘</span>',
+    '',
+    '<span class="tw">┌─[ § 03 ─ CLEARANCE CREDENTIALS · 14 TOTAL ]──────────────────────────────┐</span>',
+    '<span class="td2">  ▸ TIER 1 — APEX OFFENSIVE TRADECRAFT</span>',
+    '<span class="to">    [✓] CPENT        </span><span class="td2">Certified Penetration Tester Pro · EC-Council · ECC6970842153</span>',
+    '<span class="to">    [✓] CEH MASTER   </span><span class="td2">Certified Ethical Hacker Master · EC-Council · ECC1382059467</span>',
+    '<span class="to">    [✓] CEH (CORE)   </span><span class="td2">Certified Ethical Hacker · 91.2% · EC-Council · ECC5081642397</span>',
+    '<span class="to">    [✓] CEH PRACT    </span><span class="td2">CEH Practical · 180/200 · EC-Council · ECC7804965321</span>',
+    '<span class="to">    [✓] CEH v13      </span><span class="td2">Certified Ethical Hacker v13 · EC-Council · 776964</span>',
+    '<span class="td2">  ▸ TIER 2 — FORENSICS · GOVERNANCE · COMPLIANCE</span>',
+    '<span class="to">    [✓] CHFI         </span><span class="td2">Computer Hacking Forensic Investigator · 90.7% · EC-Council</span>',
+    '<span class="to">    [✓] ISO 27001 LA </span><span class="td2">ISO/IEC 27001:2022 Lead Auditor · MasterMind · ttuf1fci7e</span>',
+    '<span class="to">    [✓] EHE          </span><span class="td2">Ethical Hacker Essentials · 96% · EC-Council · ECC8416329075</span>',
+    '<span class="td2">  ▸ TIER 3 — RED TEAM OPS · THREAT INTEL · TRAINING</span>',
+    '<span class="to">    [✓] CRTOM        </span><span class="td2">Certified Red Team Ops Management · Red Team Leaders</span>',
+    '<span class="to">    [✓] CTIGA        </span><span class="td2">Threat Intel &amp; Governance Analyst · Red Team Leaders</span>',
+    '<span class="to">    [✓] CCEP         </span><span class="td2">Cybersecurity Educator Professional · Red Team Leaders</span>',
+    '<span class="to">    [✓] CCPP         </span><span class="td2">Certified C++ Practitioner · Red Team Leaders</span>',
+    '<span class="to">    [✓] LOG ANALYSIS </span><span class="td2">Foundations of Log Analysis for Cyber Defense · Red Team Leaders</span>',
+    '<span class="to">    [✓] TOEFL iBT    </span><span class="td2">ETS · 91/120 · English Professional Working Proficiency</span>',
+    '<span class="tw">└──────────────────────────────────────────────────────────────────────────┘</span>',
+    '',
+    '<span class="tw">┌─[ § 04 ─ OFFENSIVE MINDSET · TRADECRAFT ]────────────────────────────────┐</span>',
+    '<span class="to">  DOCTRINE     </span><span class="tc">"Think like an adversary. Engineer like a defender. Ship like an operator."</span>',
+    '<span class="to">  METHODOLOGY  </span><span class="tc">CPENT-aligned · PTES · NIST SP 800-115 · MITRE ATT&amp;CK · Cyber Kill Chain</span>',
+    '<span class="to">  ATTACK CHAIN </span><span class="tc">Recon → Enum → Exploit → Pivot → Privesc → Persistence → Exfil → Cleanup</span>',
+    '<span class="to">  OPSEC        </span><span class="tc">Zero-API tooling · localized intel · token-bucket rate limits · audit-clean</span>',
+    '<span class="to">  PHILOSOPHY   </span><span class="tc">LLMs as force multiplier — not as the operator</span>',
+    '<span class="td2">  ────────────────────────────────────────────────────────────────────────</span>',
+    '<span class="to">  CORE SURFACES</span>',
+    '<span class="to">    ▸ External &amp; Internal Infrastructure Penetration Testing</span>',
+    '<span class="to">    ▸ Active Directory Exploitation · BloodHound · Kerberoasting · DCSync</span>',
+    '<span class="to">    ▸ Web Application &amp; REST API Attacks · OWASP Top 10 · IDOR · SSRF · XXE</span>',
+    '<span class="to">    ▸ Cloud Penetration Testing · AWS IAM Abuse · Privilege Escalation Chains</span>',
+    '<span class="to">    ▸ Wireless &amp; WPA2 Attacks · Aircrack-ng · Evil Twin · Deauth</span>',
+    '<span class="to">    ▸ OSINT &amp; Reconnaissance · Maltego · Custom Google Dorks · Breach Intel</span>',
+    '<span class="to">    ▸ Mobile · IoT · Firmware Analysis · Static &amp; Dynamic ML Detection</span>',
+    '<span class="to">    ▸ Digital Forensics &amp; DFIR · Autopsy · FTK · Magnet AXIOM · ISO 27037</span>',
+    '<span class="tw">└──────────────────────────────────────────────────────────────────────────┘</span>',
+    '',
+    '<span class="tw">┌─[ § 05 ─ CONFIRMED KILLS · LIVE ENGAGEMENT TROPHIES ]────────────────────┐</span>',
+    '<span class="te">  ▲ CVSS 10.0 RCE   </span><span class="to">Redis Replication Abuse → System-Level Access</span>',
+    '<span class="te">  ▲ CVSS 10.0 RCE   </span><span class="to">Openfire Admin Console Exploitation → Root</span>',
+    '<span class="te">  ▲ CVSS 10.0 RCE   </span><span class="to">Gitea · Git Hooks Weaponisation → Persistent Foothold</span>',
+    '<span class="te">  ▲ Cloud Privesc   </span><span class="to">AWS IAM Toxic Combinations · 57 Dangerous Verbs · 10 ATT&amp;CK Tactics</span>',
+    '<span class="te">  ▲ 1st Place 🏆    </span><span class="to">BCU Cyber Security Society Hackathon · STEAMhouse, UK</span>',
+    '<span class="tw">└──────────────────────────────────────────────────────────────────────────┘</span>',
+    '',
+    '<span class="tw">┌─[ § 06 ─ LIVE WEAPONS SYSTEMS · 8 DEPLOYMENTS · GenAI-AUGMENTED ]────────┐</span>',
+    '<span class="to">  ⚔ [1] HEAVEN            </span><span class="tc">Autonomous Pentest Framework · 31 modules · async DAG</span>',
+    '<span class="td2">                            FastAPI · React · 23-table PostgreSQL · ExtraTrees R²=0.9925</span>',
+    '<span class="td2">                            MITRE ATT&amp;CK · OWASP · EPSS · CVSS v3.1 prioritisation</span>',
+    '<span class="to">  ⚔ [2] HEAVEN-GeoIntel   </span><span class="tc">Zero-API OSINT platform · Next.js 14 · TypeScript · OPSEC-clean</span>',
+    '<span class="td2">                            400+ NPA codes · 1,000+ breach DBs · 110+ pivots · 64 dorks</span>',
+    '<span class="to">  ⚔ [3] Aegis-IAM         </span><span class="tc">Cloud IAM risk analyser · Python · Flask · NetworkX graph engine</span>',
+    '<span class="td2">                            38 E2E security tests · MITRE ATT&amp;CK mapping · auto-remediation</span>',
+    '<span class="to">  ⚔ [4] CVSS-ML Engine    </span><span class="tc">AI Vulnerability Severity Predictor · R²=0.9988 · MAE=0.0400</span>',
+    '<span class="td2">                            337,705 CVE records · NVD · Extra Trees · Gradient Boost · LSTM/GRU</span>',
+    '<span class="to">  ⚔ [5] IoT-Predictor     </span><span class="tc">Predictive IoT Network Flow Analysis · R²=0.9999 · MAE=0.0010</span>',
+    '<span class="td2">                            RT-IoT2022 · 117K records · Gradient Boost + GRU + Transformers</span>',
+    '<span class="to">  ⚔ [6] DDoS-NIDS         </span><span class="tc">AI DDoS Detection · 1.0000 Precision · 99.99% Accuracy</span>',
+    '<span class="td2">                            CIC-DDoS2019 · 225K records · 1D-CNN + MLP + XGBoost</span>',
+    '<span class="to">  ⚔ [7] Droid-Hunter      </span><span class="tc">Android Malware Detection · F1-Score 98.47% · Drebin 15K+</span>',
+    '<span class="td2">                            XGBoost · Random Forest · static permission/API analysis</span>',
+    '<span class="to">  ⚔ [8] Adaptive-CVSS     </span><span class="tc">Adaptive Risk Scoring Framework · context-aware dynamic 0–10</span>',
+    '<span class="td2">                            XGBoost · Random Forest · Decision Tree · KNN · Lim &amp; Muhammad 2024</span>',
+    '<span class="tw">└──────────────────────────────────────────────────────────────────────────┘</span>',
+    '',
+    '<span class="tw">┌─[ § 07 ─ MISSION LOG · OPERATIONAL HISTORY ]─────────────────────────────┐</span>',
+    '<span class="to">  ▸ IT Hardware Support Engineer                   </span><span class="td2">NIVA Techno Transition, Surat · Mar 2025 – Sep 2025</span>',
+    '<span class="to">  ▸ VAPT (Remote · Part-Time)                      </span><span class="td2">SYSAP Technologies, Pune · Feb 2024 – Feb 2025</span>',
+    '<span class="to">  ▸ VAPT Intern                                    </span><span class="td2">SYSAP Technologies, Pune · Jul 2023 – Jan 2024</span>',
+    '<span class="to">  ▸ Network Specialist                             </span><span class="td2">Airlink Communication, Surat · Jan 2023 – Apr 2023</span>',
+    '<span class="to">  ▸ Network Engineer                               </span><span class="td2">NIVA Techno Transition, Surat · Jun 2022 – Jul 2022</span>',
+    '<span class="td2">  ────────────────────────────────────────────────────────────────────────</span>',
+    '<span class="to">  ▸ 7× Virtual Job Simulations · Forage</span>',
+    '<span class="td2">    Deloitte (Cyber) · MasterCard (CTI) · CommBank (Intro Cyber) · Telstra (Tech)</span>',
+    '<span class="td2">    Datacom (Cyber) · TATA (Cyber Security Analyst) · AIG (Shields Up)</span>',
+    '<span class="tw">└──────────────────────────────────────────────────────────────────────────┘</span>',
+    '',
+    '<span class="tw">┌─[ § 08 ─ SKILLS PROFICIENCY MATRIX ]─────────────────────────────────────┐</span>',
+    '<span class="to">  ETHICAL HACKING &amp; EXPLOIT DEV   </span><span class="te">[████████████████████░] 98%</span>',
+    '<span class="to">  PENETRATION TESTING (CPENT)     </span><span class="te">[███████████████████░░] 95%</span>',
+    '<span class="to">  VULNERABILITY ASSESSMENT         </span><span class="te">[███████████████████░░] 95%</span>',
+    '<span class="to">  WEB APP / API SECURITY          </span><span class="te">[██████████████████░░░] 90%</span>',
+    '<span class="to">  RED TEAM OPERATIONS              </span><span class="te">[█████████████████░░░░] 88%</span>',
+    '<span class="to">  DIGITAL FORENSICS / DFIR         </span><span class="te">[█████████████████░░░░] 88%</span>',
+    '<span class="to">  AI/ML SECURITY RESEARCH          </span><span class="te">[████████████████░░░░░] 85%</span>',
+    '<span class="to">  CRYPTOGRAPHY &amp; DATA SECURITY     </span><span class="te">[████████████████░░░░░] 85%</span>',
+    '<span class="to">  CLOUD IAM &amp; DEVSECOPS            </span><span class="te">[████████████████░░░░░] 84%</span>',
+    '<span class="to">  DEEP LEARNING (DRL · LLMs)       </span><span class="te">[███████████████░░░░░░] 80%</span>',
+    '<span class="tw">└──────────────────────────────────────────────────────────────────────────┘</span>',
+    '',
+    '<span class="tw">┌─[ § 09 ─ RESEARCH FRONTIER · ACADEMIC SIGNAL ]───────────────────────────┐</span>',
+    '<span class="to">  ▸ AI &amp; Autonomous Penetration Testing Frameworks (MSc Research)</span>',
+    '<span class="td2">    Deep Reinforcement Learning · LLM-Augmented Recon · MAS vs single-agent</span>',
+    '<span class="td2">    Neuro-Symbolic AI · HITL governance · EU AI Act compliance</span>',
+    '<span class="to">  ▸ Adaptive Vulnerability Risk Scoring (Reproduction of Lim &amp; Muhammad 2024)</span>',
+    '<span class="to">  ▸ Strategic Security Audit — Cyberzone AI Ltd · ISO/IEC 27001:2022 alignment</span>',
+    '<span class="to">  ▸ Digital Forensic Strategy — Missing Person Investigation · ISO 27037</span>',
+    '<span class="to">  ▸ Consolidated Penetration Testing &amp; RCE Assessment · CVSS 10.0 chains</span>',
+    '<span class="td2">  ────────────────────────────────────────────────────────────────────────</span>',
+    '<span class="to">  NEXT ON DOCKET   </span><span class="tc">OSCP · OSWE · CISSP · Offensive Cloud Security · CARTP</span>',
+    '<span class="tw">└──────────────────────────────────────────────────────────────────────────┘</span>',
+    '',
+    '<span class="tw">┌─[ § 10 ─ SECURE COMMS CHANNELS ]─────────────────────────────────────────┐</span>',
+    '<span class="to">  EMAIL        </span><span class="tc">nisargkc@gmail.com</span>',
+    '<span class="to">  PHONE        </span><span class="tc">+44 7554 469437 (UK)</span>',
+    '<span class="to">  GITHUB       </span><span class="tc">github.com/nishu2402</span>',
+    '<span class="to">  LINKEDIN     </span><span class="tc">linkedin.com/in/nisarg-chasmawala</span>',
+    '<span class="to">  PORTFOLIO    </span><span class="tc">nishu2402.github.io</span>',
+    '<span class="to">  BLOG         </span><span class="tc">nishu2402.github.io/blog</span>',
+    '<span class="to">  KAGGLE       </span><span class="tc">kaggle.com/nisargshroff2402</span>',
+    '<span class="tw">└──────────────────────────────────────────────────────────────────────────┘</span>',
+    '',
+    '<span class="te">  "In cyberspace, the quieter you become, the more you hear."</span>',
+    '<span class="td2">  ─────────────────────────────────────────────────────────────</span>',
+    '<span class="to" style="text-shadow:0 0 6px var(--G);">  ▸ DOSSIER COMPLETE · CLEARANCE GRANTED · TRACE TERMINATED</span>',
+    '<span class="td2">  ▸ Press [ESC] to exit the HEAVEN protocol overlay</span>',
+    '',
+  ];},
 
   whoami:function(){return[
-    '<span class="to">uid=0(heaven) gid=0(root) groups=0(root)</span>',
+    '<span class="to">uid=0(heaven) gid=0(root) groups=0(root,redteam,offensive,sysap)</span>',
     '<span class="to">Name    : Nisarg Chasmawala [HEAVEN]</span>',
-    '<span class="to">Role    : Offensive Security Engineer | MSc Student</span>',
-    '<span class="to">Certs   : 14 total — CEH Master, CHFI 90.7%, CPENT, ISO 27001 LA</span>',
-    '<span class="to">Projects: 6 live — R²=0.9999, 98.47% F1, 99.99% DDoS Acc</span>',
-    '<span class="to">Base    : England, UK | Blog: nishu2402.github.io/blog</span>',
-    '<span class="tw">Status  : ACTIVELY SEEKING OPPORTUNITIES — 2026</span>'];},
+    '<span class="to">Origin  : Surat, Gujarat, India 🇮🇳 → Birmingham, England, UK 🇬🇧</span>',
+    '<span class="to">Role    : Offensive Security Engineer · Penetration Tester · Red Team Operator</span>',
+    '<span class="to">Study   : MSc Cyber Security (International Postgraduate) — BCU, England, UK</span>',
+    '<span class="to">Certs   : 14 total — CEH Master 91.2%, CPENT, CHFI 90.7%, ISO 27001:2022 LA</span>',
+    '<span class="to">Projects: 8 live — R²=0.9999, F1=98.47%, DDoS=99.99%, CVSS 10.0 RCE chains</span>',
+    '<span class="to">Comms   : nisargkc@gmail.com · +44 7554 469437 · github.com/nishu2402</span>',
+    '<span class="tw">Status  : ACTIVELY SEEKING OFFENSIVE SECURITY OPPORTUNITIES — 2026</span>'];},
 
   /* ─ FULL-SCREEN PRANK: HACK (cinematic target lock + code stream) ─ */
   hack:function(){fxHack();return['<span class="te">[FX] Initiating cinematic hack sequence... [ESC] to skip</span>'];},
@@ -2367,7 +2618,7 @@ var CMDS={
 
   certs:function(){return['<span class="tw">CLEARANCE (14 total):</span>','<span class="to">✓ CEH MASTER 91.2% · CPENT · CHFI 90.7%</span>','<span class="to">✓ ISO 27001:2022 Lead Auditor — MASTERMIND</span>','<span class="to">✓ EHE 96% · CEH v13 · CRTOM · CTIGA</span>','<span class="to">✓ CCEP · CCPP · Log Analysis</span>','<span class="to">✓ ETS TOEFL iBT 91/120</span>'];},
 
-  projects:function(){return['<span class="tw">6 LIVE DEPLOYMENTS — github.com/nishu2402:</span>','<span class="to">1. Aegis-IAM Dashboard (AWS + NetworkX + MITRE)</span>','<span class="to">2. AI Vulnerability Severity Predictor (R²=0.9988)</span>','<span class="to">3. Predictive IoT Network Flow (R²=0.9999)</span>','<span class="to">4. Android Malware Detection (F1 98.47%)</span>','<span class="to">5. AI DDoS Detection (99.99% Acc)</span>','<span class="to">6. Adaptive CVSS Risk Scoring</span>'];},
+  projects:function(){return['<span class="tw">8 LIVE DEPLOYMENTS — github.com/nishu2402:</span>','<span class="to">1. HEAVEN — Autonomous Pentest Framework (31 modules · R²=0.9925)</span>','<span class="to">2. HEAVEN-GeoIntel — Zero-API OSINT Platform (Next.js 14)</span>','<span class="to">3. Aegis-IAM Dashboard (AWS IAM + NetworkX + MITRE ATT&CK)</span>','<span class="to">4. AI Vulnerability Severity Predictor (R²=0.9988 · 337K CVEs)</span>','<span class="to">5. Predictive IoT Network Flow (R²=0.9999 · MAE=0.0010)</span>','<span class="to">6. Android Malware Detection (F1=98.47% · Drebin 15K)</span>','<span class="to">7. AI DDoS Detection (1.0000 Precision · CIC-DDoS2019)</span>','<span class="to">8. Adaptive CVSS Risk Scoring (Lim & Muhammad 2024 reproduction)</span>'];},
 
   blog:function(){window.open('https://nishu2402.github.io/blog/index.html','_blank');return['<span class="to">Opening intel dispatch: nishu2402.github.io/blog</span>'];},
 
@@ -2375,7 +2626,7 @@ var CMDS={
 
   contact:function(){return['<span class="tw">CONTACT — HEAVEN:</span>','<span class="to">Email   : nisargkc@gmail.com</span>','<span class="to">Phone   : +44 7554 469437</span>','<span class="to">Location: England, UK</span>','<span class="to">LinkedIn: linkedin.com/in/nisarg-chasmawala</span>','<span class="to">GitHub  : github.com/nishu2402</span>','<span class="to">Blog    : nishu2402.github.io/blog</span>'];},
 
-  status:function(){return['<span class="tw">OPERATOR STATUS — 2026:</span>','<span class="to">[■] ACTIVELY SEEKING OPPORTUNITIES</span>','<span class="to">[■] MSc Cyber Security — BCU, England, UK (2027)</span>','<span class="to">[■] 6 live projects · 14 certifications</span>','<span class="to">[■] Blog: nishu2402.github.io/blog (LIVE)</span>','<span class="to">[■] Kaggle: kaggle.com/nisargshroff2402</span>','<span class="to">[■] Next: OSCP · CISSP · AI Security Research</span>'];},
+  status:function(){return['<span class="tw">OPERATOR STATUS — 2026:</span>','<span class="to">[■] ACTIVELY SEEKING OPPORTUNITIES</span>','<span class="to">[■] MSc Cyber Security — BCU, England, UK (2027)</span>','<span class="to">[■] 8 live projects · 14 certifications</span>','<span class="to">[■] Blog: nishu2402.github.io/blog (LIVE)</span>','<span class="to">[■] Kaggle: kaggle.com/nisargshroff2402</span>','<span class="to">[■] Next: OSCP · CISSP · AI Security Research</span>'];},
 
   github:function(){window.open('https://github.com/nishu2402','_blank');return['<span class="to">Opening github.com/nishu2402...</span>'];},
 
@@ -2389,7 +2640,7 @@ var CMDS={
 function bootTerm(){
   ['<span class="tw">╔═══════════════════════════════════════════════════╗</span>',
    '<span class="tw">║</span>  <span class="to">HEAVEN // NISARG CHASMAWALA // SHELL v3.0 — 2026</span>  <span class="tw">║</span>',
-   '<span class="tw">║</span>  <span class="td2">England, UK · 6 projects · 14 certs · Blog LIVE</span>    <span class="tw">║</span>',
+   '<span class="tw">║</span>  <span class="td2">England, UK · 8 projects · 14 certs · Blog LIVE</span>    <span class="tw">║</span>',
    '<span class="tw">╚═══════════════════════════════════════════════════╝</span>',
    '<span class="td2">Type "help" · Full-screen FX: <span class="te">breach</span> · <span class="tc">override</span> · <span class="te">nuke</span> · <span class="tw">ransom</span> · <span class="to">matrix</span> 🎬</span>',''
   ].forEach(function(l,i){setTimeout(function(){var d=document.createElement('div');d.innerHTML=l;TOUT.appendChild(d);},i*65);});
@@ -2425,8 +2676,8 @@ var ri=0,ci=0,del=false,HR=document.getElementById('hRole');
 
 /* ── KPI COUNTERS ───────────────────────────────── */
 function startKPIs(){
-  function cu(id,target,suf){var el=document.getElementById(id);if(!el)return;var c2=0,step=Math.ceil(target/28);var it=setInterval(function(){c2+=step;if(c2>=target){c2=target;clearInterval(it);}if(suf)el.innerHTML=c2+'<span class="s">%</span>';else el.textContent=c2;},55);}
-  cu('KP0',14,false);cu('KP1',98,true);cu('KP2',99,true);cu('KP3',6,false);
+  function cu(id,target,suf){var el=document.getElementById(id);if(!el)return;var c2=0,step=Math.max(1,Math.ceil(target/28));var it=setInterval(function(){c2+=step;if(c2>=target){c2=target;clearInterval(it);}if(suf==='%')el.innerHTML=c2+'<span class="s">%</span>';else if(suf==='/10')el.innerHTML=c2+'<span class="s">/10</span>';else el.textContent=c2;},55);}
+  cu('KP0',14,null);cu('KP1',10,'/10');cu('KP2',99,'%');cu('KP3',8,null);
 }
 
 /* ── 3D TILT ────────────────────────────────────── */
