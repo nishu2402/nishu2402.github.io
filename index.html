@@ -415,15 +415,18 @@ footer p{font-size:.65rem;color:rgba(255,255,255,.42);letter-spacing:2px;line-he
   background:#000;color:var(--G);
   font-family:var(--F);overflow:hidden;
 }
-#FX_OVERLAY.active{display:block;animation:fxFadeIn .3s ease both;}
+#FX_OVERLAY.active{display:block;animation:fxFadeIn .3s ease both;pointer-events:all;}
 #FX_OVERLAY.exit{animation:fxFadeOut .5s ease both;}
 @keyframes fxFadeIn{from{opacity:0;}to{opacity:1;}}
 @keyframes fxFadeOut{from{opacity:1;}to{opacity:0;}}
-#fxCanvas{position:absolute;inset:0;width:100%;height:100%;}
+#fxCanvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;}
 #fxText{
   position:absolute;inset:0;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:5vh 5vw;font-family:var(--F);text-align:center;
+  display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
+  overflow-y:auto;overflow-x:hidden;
+  padding:0;font-family:var(--F);text-align:center;
+  pointer-events:all;
+  scrollbar-width:thin;scrollbar-color:rgba(0,255,65,.4) transparent;
 }
 .fx-headline{
   font-family:var(--H);
@@ -752,7 +755,7 @@ body.CK #curOuter{width:20px;height:20px;border-color:rgba(0,255,65,.3);}
   <div class="sh rv"><div class="sh-acc">&gt;_ ACCESSING: operator_profile.json... DECRYPTED</div><div class="sh-num">// 01 — ABOUT</div><div class="sh-t" data-sc="OPERATOR PROFILE">OPERATOR PROFILE<span class="echo">OPERATOR PROFILE</span></div><div class="sh-bar"></div></div>
   <div class="about-grid">
     <div class="acard rv-l"><div class="acard-l">// CLASSIFIED SUMMARY</div>
-    <div class="acard-t">I'm <strong style="color:var(--G);">Nisarg Chasmawala</strong> — codename <strong style="color:var(--R);">HEAVEN</strong> — an Elite Offensive Security Engineer, Penetration Tester, and Red Team Operator. <strong style="color:var(--C);">Indian-origin (Surat, Gujarat)</strong>, now <strong style="color:var(--C);">UK-based as an international postgraduate student</strong>, currently pursuing an MSc in Cyber Security with Professional Placement at <strong>Birmingham City University, England, UK</strong> (expected March 2027). I don't just run scans — I architect the offensive tooling that runs them autonomously.<br><br>
+    <div class="acard-t">I'm <strong style="color:var(--G);">Nisarg Chasmawala</strong> — codename <strong style="color:var(--R);">HEAVEN</strong> — an Elite Offensive Security Engineer, Penetration Tester, and Red Team Operator. <strong style="color:var(--C);">Indian-origin</strong>, now <strong style="color:var(--C);">UK-based as an international postgraduate student</strong>, currently pursuing an MSc in Cyber Security with Professional Placement at <strong>Birmingham City University, England, UK</strong> (expected March 2027). I don't just run scans — I architect the offensive tooling that runs them autonomously.<br><br>
 <strong style="color:var(--C);">// OFFENSIVE TRADECRAFT</strong> — CPENT-certified across the full attack chain: external/internal infrastructure penetration testing, network exploitation, Active Directory abuse, web &amp; REST API attacks, cloud (AWS IAM) privilege escalation, OSINT, and digital forensics. In live MSc engagements I chained <strong style="color:var(--R);">CVSS 10.0 RCE</strong> exploits against <strong style="color:var(--R);">Redis</strong>, <strong style="color:var(--R);">Openfire</strong>, and <strong style="color:var(--R);">Gitea</strong> — pivoting from replication abuse and admin console exploitation through Git Hooks weaponisation to obtain system-level access.<br><br>
 <strong style="color:var(--C);">// GenAI-AUGMENTED TOOLING</strong> — I leverage Large Language Models and Generative AI as a force multiplier to architect, script, and rapidly deploy custom offensive tools. My flagship — <strong style="color:var(--R);">HEAVEN</strong> — is a production-grade autonomous penetration testing framework featuring a 31-module testing engine, deterministic false-positive suppression, an ExtraTreesRegressor ML model (R²=0.9925) for real-time CVSS v3.1 prioritisation, MITRE ATT&amp;CK / Cyber Kill Chain / OWASP mapping, and a 23-table PostgreSQL backend. Alongside it, <strong style="color:var(--R);">HEAVEN-GeoIntel</strong> — a zero-API Next.js 14 OSINT platform processing 1,000+ breach databases, 400+ NPA codes, and 110+ targeted pivots entirely offline with absolute OPSEC.<br><br>
 <strong style="color:var(--C);">// CLEARANCE</strong> — <strong style="color:var(--G);">CEH Master (91.2%)</strong> · <strong style="color:var(--G);">CPENT</strong> · <strong style="color:var(--G);">CHFI (90.7%)</strong> · <strong style="color:var(--G);">ISO 27001:2022 LA</strong> · <strong style="color:var(--G);">CRTOM</strong> · <strong style="color:var(--G);">CTIGA</strong> · 14 total certifications · 8 live offensive/ML deployments on GitHub. 🏆 1st Place — BCU Cyber Security Society Hackathon (STEAMhouse, UK).</div></div>
@@ -777,7 +780,7 @@ body.CK #curOuter{width:20px;height:20px;border-color:rgba(0,255,65,.3);}
           <a href="https://ubuntu.com" target="_blank" rel="noopener" class="plat-item" title="Ubuntu Linux — Official Site"><img class="plat-ico" src="https://cdn.simpleicons.org/ubuntu/E95420" alt="Ubuntu logo" loading="lazy"/><span>Ubuntu</span></a>
           <a href="https://www.debian.org" target="_blank" rel="noopener" class="plat-item" title="Debian GNU/Linux — Official Site"><img class="plat-ico" src="https://cdn.simpleicons.org/debian/A81D33" alt="Debian logo" loading="lazy"/><span>Debian</span></a>
           <a href="https://www.apple.com/macos/" target="_blank" rel="noopener" class="plat-item" title="macOS — Apple"><img class="plat-ico" src="https://cdn.simpleicons.org/macos/EEEEEE" alt="macOS logo" loading="lazy"/><span>macOS</span></a>
-          <a href="https://www.microsoft.com/windows" target="_blank" rel="noopener" class="plat-item" title="Microsoft Windows 11"><img class="plat-ico" src="https://cdn.simpleicons.org/windows11/0078D4" alt="Windows 11 logo" loading="lazy"/><span>Windows 11</span></a>
+          <a href="https://www.microsoft.com/windows" target="_blank" rel="noopener" class="plat-item" title="Microsoft Windows"><svg viewBox="0 0 88 88" class="plat-ico" xmlns="http://www.w3.org/2000/svg"><path fill="#0078D4" d="M0 12.402l35.687-4.86.016 34.423-35.67.203zm35.67 33.529l.023 34.453L.028 75.48.026 45.7zm4.326-39.025L87.314 0v41.527l-47.318.376zm47.329 39.349l-.011 41.34-47.318-6.678-.066-34.739z"/></svg><span>Windows</span></a>
           <a href="https://www.apple.com/ios/" target="_blank" rel="noopener" class="plat-item" title="iOS — Apple Mobile"><img class="plat-ico" src="https://cdn.simpleicons.org/ios/EEEEEE" alt="iOS logo" loading="lazy"/><span>iOS</span></a>
           <a href="https://www.android.com" target="_blank" rel="noopener" class="plat-item" title="Android — Official Site"><img class="plat-ico" src="https://cdn.simpleicons.org/android/3DDC84" alt="Android logo" loading="lazy"/><span>Android</span></a>
         </div>
@@ -1108,7 +1111,7 @@ document.querySelectorAll('.sh-t[data-sc]').forEach(function(el){scObs.observe(e
 ].forEach(function(s,i){var el=document.createElement('div');el.className='sbar rv';el.style.transitionDelay=(i*.04)+'s';el.innerHTML='<div class="sbar-l"><span>'+s.n+'</span><span class="sbar-p">'+s.v+'%</span></div><div class="sbar-track"><div class="sbar-ticks"></div><div class="sbar-fill" data-w="'+s.v+'"></div></div>';document.getElementById('SBARS').appendChild(el);rvObs.observe(el);});
 skObs.observe(document.getElementById('SBARS'));
 [
-{n:'Nmap',u:'https://nmap.org',l:'<img src="https://cdn.simpleicons.org/nmap/4682B4" alt="Nmap" loading="lazy"/>'},
+{n:'Nmap',u:'https://nmap.org',l:'<svg viewBox="0 0 24 22" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="ng" cx="50%" cy="48%" r="50%"><stop offset="0%" stop-color="#003366"/><stop offset="60%" stop-color="#0055AA"/><stop offset="100%" stop-color="#1E90FF"/></radialGradient><radialGradient id="ni" cx="50%" cy="45%" r="50%"><stop offset="0%" stop-color="#001A33"/><stop offset="100%" stop-color="#0044AA"/></radialGradient></defs><!-- Eye whites --><path d="M12 3C7 3 2 8.5 2 11s5 8 10 8 10-5.5 10-8-5-8-10-8z" fill="url(#ng)" opacity=".9"/><!-- Eye outline --><path d="M12 3C7 3 2 8.5 2 11s5 8 10 8 10-5.5 10-8-5-8-10-8z" fill="none" stroke="#1E90FF" stroke-width="1.2"/><!-- Iris circle --><circle cx="12" cy="11" r="5.8" fill="url(#ni)"/><!-- Globe wireframe - latitude lines --><ellipse cx="12" cy="11" rx="5.8" ry="2" fill="none" stroke="#4099DD" stroke-width=".45" opacity=".8"/><!-- Globe wireframe - horizontal equator --><line x1="6.2" y1="11" x2="17.8" y2="11" stroke="#4099DD" stroke-width=".45" opacity=".8"/><!-- Globe wireframe - longitude ellipses --><ellipse cx="12" cy="11" rx="2.4" ry="5.8" fill="none" stroke="#4099DD" stroke-width=".45" opacity=".7"/><!-- Outer iris ring --><circle cx="12" cy="11" r="5.8" fill="none" stroke="#1E90FF" stroke-width=".7"/><!-- Inner iris ring --><circle cx="12" cy="11" r="3.2" fill="none" stroke="#4BA3E3" stroke-width=".5"/><!-- Pupil --><circle cx="12" cy="11" r="1.6" fill="#000C1A" stroke="#1E90FF" stroke-width=".6"/><!-- Crosshair lines --><line x1="12" y1="8.5" x2="12" y2="9.5" stroke="#5FC8FF" stroke-width=".7"/><line x1="12" y1="12.5" x2="12" y2="13.5" stroke="#5FC8FF" stroke-width=".7"/><line x1="9.5" y1="11" x2="10.5" y2="11" stroke="#5FC8FF" stroke-width=".7"/><line x1="13.5" y1="11" x2="14.5" y2="11" stroke="#5FC8FF" stroke-width=".7"/><!-- Center dot --><circle cx="12" cy="11" r=".6" fill="#5FC8FF"/><!-- NMAP.ORG text --><text x="12" y="20.5" text-anchor="middle" font-family="Arial Black,sans-serif" font-size="3.6" font-weight="900" fill="#1E90FF" letter-spacing=".5">NMAP.ORG</text></svg>'},
 {n:'Metasploit',u:'https://www.metasploit.com',l:'<img src="https://cdn.simpleicons.org/metasploit/2596BE" alt="Metasploit" loading="lazy"/>'},
 {n:'Burp Suite',u:'https://portswigger.net/burp',l:'<img src="https://cdn.simpleicons.org/burpsuite/FF6633" alt="Burp Suite" loading="lazy"/>'},
 {n:'Wireshark',u:'https://www.wireshark.org',l:'<img src="https://cdn.simpleicons.org/wireshark/1679A7" alt="Wireshark" loading="lazy"/>'},
@@ -1125,14 +1128,14 @@ skObs.observe(document.getElementById('SBARS'));
 {n:'Nikto',u:'https://cirt.net/Nikto2',l:'<svg viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="1.8" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a14.5 14.5 0 0 1 0 20M12 2a14.5 14.5 0 0 0 0 20"/></svg>'},
 {n:'Acunetix',u:'https://www.acunetix.com',l:'<svg viewBox="0 0 24 24" fill="#0099CC" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L2 7v6c0 5.5 4 9.7 10 11 6-1.3 10-5.5 10-11V7L12 2zm0 2.2L20 8v5c0 4.4-3 7.8-8 9-5-1.2-8-4.6-8-9V8l8-3.8zm0 3.3a4 4 0 100 8 4 4 0 000-8z"/></svg>'},
 {n:'Autopsy',u:'https://www.autopsy.com',l:'<svg viewBox="0 0 24 24" fill="none" stroke="#9333EA" stroke-width="2" xmlns="http://www.w3.org/2000/svg"><circle cx="11" cy="11" r="7"/><path d="M11 7v8M7.5 11h7" stroke-linecap="round"/><line x1="16.5" y1="16.5" x2="21" y2="21" stroke-linecap="round" stroke-width="2.5"/></svg>'},
-{n:'FTK Imager',u:'https://www.exterro.com/ftk-imager',l:'<svg viewBox="0 0 24 24" fill="#DC2626" xmlns="http://www.w3.org/2000/svg"><path d="M3 3h18v18H3V3zm2 2v14h14V5H5zm2 2h10v2H7V7zm0 4h10v2H7v-2zm0 4h7v2H7v-2z"/></svg>'},
+{n:'FTK Imager',u:'https://www.exterro.com/digital-forensics-software/ftk-imager',l:'<svg viewBox="0 0 24 24" fill="#DC2626" xmlns="http://www.w3.org/2000/svg"><path d="M3 3h18v18H3V3zm2 2v14h14V5H5zm2 2h10v2H7V7zm0 4h10v2H7v-2zm0 4h7v2H7v-2z"/></svg>'},
 {n:'Magnet AXIOM',u:'https://www.magnetforensics.com/products/magnet-axiom',l:'<svg viewBox="0 0 24 24" fill="#00AACC" xmlns="http://www.w3.org/2000/svg"><path d="M6 3h5v8c0 .55-.45 1-1 1H8c-.55 0-1-.45-1-1V8H6V3zm8 0h5v5h-2v4.5c0 .55-.45 1-1 1h-2c-.55 0-1-.45-1-1V8h-1V3h2zM3 18h18v3H3z"/></svg>'},
 {n:'Python (AI-Assisted)',u:'https://www.python.org',l:'<img src="https://cdn.simpleicons.org/python/3776AB" alt="Python" loading="lazy"/>'},
 {n:'TensorFlow',u:'https://www.tensorflow.org',l:'<img src="https://cdn.simpleicons.org/tensorflow/FF6F00" alt="TensorFlow" loading="lazy"/>'},
 {n:'Scikit-Learn',u:'https://scikit-learn.org',l:'<img src="https://cdn.simpleicons.org/scikitlearn/F7931E" alt="scikit-learn" loading="lazy"/>'},
 {n:'PyTorch',u:'https://pytorch.org',l:'<img src="https://cdn.simpleicons.org/pytorch/EE4C2C" alt="PyTorch" loading="lazy"/>'},
 {n:'NetworkX',u:'https://networkx.org',l:'<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="3" r="2" fill="#2563EB"/><circle cx="3" cy="13" r="2" fill="#2563EB"/><circle cx="21" cy="13" r="2" fill="#2563EB"/><circle cx="7" cy="21" r="2" fill="#2563EB"/><circle cx="17" cy="21" r="2" fill="#2563EB"/><circle cx="12" cy="13" r="2" fill="#2563EB" opacity=".6"/><line x1="12" y1="5" x2="3.8" y2="11.2" stroke="#2563EB" stroke-width="1.5"/><line x1="12" y1="5" x2="20.2" y2="11.2" stroke="#2563EB" stroke-width="1.5"/><line x1="5" y1="13" x2="7" y2="19" stroke="#2563EB" stroke-width="1.5"/><line x1="19" y1="13" x2="17" y2="19" stroke="#2563EB" stroke-width="1.5"/><line x1="9" y1="21" x2="15" y2="21" stroke="#2563EB" stroke-width="1.5"/></svg>'},
-{n:'AWS IAM',u:'https://aws.amazon.com/iam/',l:'<img src="https://cdn.simpleicons.org/amazonwebservices/FF9900" alt="AWS" loading="lazy"/>'},
+{n:'AWS IAM',u:'https://aws.amazon.com/iam/',l:'<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="#FF9900" d="M12 1.5C6.2 1.5 1.5 6.2 1.5 12S6.2 22.5 12 22.5 22.5 17.8 22.5 12 17.8 1.5 12 1.5zm0 2C16.7 3.5 20.5 7.3 20.5 12c0 1.7-.5 3.3-1.3 4.6L7.4 4.8C8.7 4 10.3 3.5 12 3.5zm0 17C7.3 20.5 3.5 16.7 3.5 12c0-1.7.5-3.3 1.3-4.6l11.8 11.8c-1.3.8-2.9 1.3-4.6 1.3z"/><path fill="#FF9900" d="M6.5 17.5c1.5 1 3.4 1.5 5.5 1.5s4-.6 5.5-1.5l-2-2c-1 .6-2.2 1-3.5 1s-2.5-.4-3.5-1l-2 2z"/></svg>'},
 {n:'XGBoost',u:'https://xgboost.ai',l:'<svg viewBox="0 0 24 24" fill="#0066CC" xmlns="http://www.w3.org/2000/svg"><path d="M3 17l4-4 4 3 5-7 5 5v6H3z"/><polyline fill="none" stroke="#fff" stroke-width="1.5" stroke-linejoin="round" points="3,17 7,13 11,16 16,9 21,14"/></svg>'},
 {n:'Extra Trees',u:'https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.ExtraTreesRegressor.html',l:'<svg viewBox="0 0 24 24" fill="#16A34A" xmlns="http://www.w3.org/2000/svg"><path d="M12 2l-3.5 5.5h2L7 14h2l-2.5 4.5h11L15 14h2l-3.5-6.5h2L12 2zm-1 14h2v5h-2z"/></svg>'},
 {n:'Flask',u:'https://flask.palletsprojects.com',l:'<img src="https://cdn.simpleicons.org/flask/FFFFFF" alt="Flask" loading="lazy"/>'},
@@ -1156,7 +1159,7 @@ skObs.observe(document.getElementById('SBARS'));
 ].forEach(function(e,i){var el=document.createElement('div');el.className='tl-item rv';el.style.transitionDelay=(i*.09)+'s';el.innerHTML='<div class="tl-dot"><div class="tl-dot-in"></div></div><div class="tl-card"><div class="tl-date">'+e.d+'</div><div class="tl-role">'+e.r+'</div><div class="tl-co">'+e.c+'</div><ul class="tl-ul">'+e.ul.map(function(u){return'<li>'+u+'</li>';}).join('')+'</ul></div>';document.getElementById('EXP_CARDS').appendChild(el);rvObs.observe(el);});
 
 /* ── DATA: EDUCATION ────────────────────────────── */
-[{y:'Expected Mar 2027',d:'MSc Cyber Security with Professional Placement',i:'Birmingham City University · Birmingham, England, UK',g:''},{y:'Jan 2024',d:"B.Eng. Computer Science & Engineering",i:'SN Patel Institute of Technology · GTU, Surat, India',g:'CGPA: 7.86 / 10'},{y:'Jan 2021',d:'Diploma — Computer Engineering',i:'NG Patel Polytechnic · GTU, Surat, India',g:'CGPA: 7.80 / 10'}
+[{y:'Expected Mar 2027',d:'MSc Cyber Security with Professional Placement',i:'Birmingham City University · England, UK',g:''},{y:'Jan 2024',d:"B.Eng. Computer Science & Engineering",i:'SN Patel Institute of Technology · GTU, India',g:'CGPA: 7.86 / 10'},{y:'Jan 2021',d:'Diploma — Computer Engineering',i:'NG Patel Polytechnic · GTU, India',g:'CGPA: 7.80 / 10'}
 ].forEach(function(e){var el=document.createElement('div');el.className='edu-card rv';el.innerHTML='<div class="edu-yr">'+e.y+'</div><div class="edu-deg">'+e.d+'</div><div class="edu-inst">'+e.i+'</div>'+(e.g?'<div class="edu-grade">'+e.g+'</div>':'');document.getElementById('EDU_CARDS').appendChild(el);rvObs.observe(el);});
 
 /* ── DATA: SIMS ─────────────────────────────────── */
@@ -1257,7 +1260,7 @@ gh:'https://github.com/nishu2402/HEAVEN-GeoIntel.git'},
   var hacks=[{
     place:'1st Place Winner',
     event:'Cyber Security Society Hackathon',
-    org:'BCU · STEAMhouse, Birmingham, UK',
+    org:'BCU · STEAMhouse, UK',
     project:'Aegis-IAM Dashboard | Privilege Escalation & Risk Analysis Platform',
     bullets:[
       'Secured 1st Place by rapidly prototyping a working MVP of an enterprise-grade IAM risk analysis platform under strict time constraints.',
@@ -1997,24 +2000,134 @@ function fxHeaven(){
   document.querySelectorAll('.fx-corner').forEach(function(c){c.style.borderColor='var(--G)';});
 
   FX.text.innerHTML=
-    '<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:5vh 3vw;text-align:center;">'+
-      '<div style="font-family:var(--F);font-size:.8rem;color:rgba(0,255,65,.6);letter-spacing:6px;margin-bottom:1.2rem;">// OFFENSIVE OPERATOR · ENGLAND, UK //</div>'+
-      /* Massive HEAVEN with letter-by-letter glitch */
-      '<div id="fxHeavenName" style="font-family:var(--H);font-size:clamp(3.5rem,14vw,12rem);font-weight:900;color:var(--G);letter-spacing:clamp(.4rem,2vw,1.8rem);line-height:1;text-shadow:0 0 60px var(--G),0 0 120px rgba(0,255,65,.5);"></div>'+
-      '<div style="font-family:var(--F);font-size:clamp(.85rem,1.6vw,1.3rem);color:rgba(255,255,255,.92);margin-top:1rem;letter-spacing:4px;">NISARG CHASMAWALA</div>'+
-      /* 4-stat grid */
-      '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1.5rem;margin-top:2.5rem;width:min(720px,90vw);">'+
-        '<div><div style="font-family:var(--H);font-size:clamp(1.4rem,3.5vw,2.4rem);color:var(--G);text-shadow:0 0 16px var(--G);">14</div><div style="font-size:.62rem;color:rgba(0,255,65,.6);letter-spacing:2px;margin-top:.3rem;">CERTIFICATIONS</div></div>'+
-        '<div><div style="font-family:var(--H);font-size:clamp(1.4rem,3.5vw,2.4rem);color:var(--C);text-shadow:0 0 16px var(--C);">6</div><div style="font-size:.62rem;color:rgba(0,212,255,.6);letter-spacing:2px;margin-top:.3rem;">LIVE PROJECTS</div></div>'+
-        '<div><div style="font-family:var(--H);font-size:clamp(1.4rem,3.5vw,2.4rem);color:var(--A);text-shadow:0 0 16px var(--A);">10/10</div><div style="font-size:.62rem;color:rgba(255,159,10,.6);letter-spacing:2px;margin-top:.3rem;">CVSS RCE</div></div>'+
-        '<div><div style="font-family:var(--H);font-size:clamp(1.4rem,3.5vw,2.4rem);color:var(--P);text-shadow:0 0 16px var(--P);">R²=.9999</div><div style="font-size:.62rem;color:rgba(168,85,247,.6);letter-spacing:2px;margin-top:.3rem;">ML PRECISION</div></div>'+
+    '<div style="width:100%;min-height:100%;display:flex;flex-direction:column;align-items:center;padding:5vh 3vw 6vh;gap:0;">'+
+      '<div style="font-family:var(--F);font-size:.75rem;color:rgba(0,255,65,.6);letter-spacing:6px;margin-bottom:1rem;">// OFFENSIVE OPERATOR · ENGLAND, UK //</div>'+
+      '<div id="fxHeavenName" style="font-family:var(--H);font-size:clamp(3rem,12vw,10rem);font-weight:900;color:var(--G);letter-spacing:clamp(.3rem,2vw,1.6rem);line-height:1;text-shadow:0 0 60px var(--G),0 0 120px rgba(0,255,65,.5);"></div>'+
+      '<div style="font-family:var(--F);font-size:clamp(.8rem,1.5vw,1.2rem);color:rgba(255,255,255,.92);margin-top:.8rem;letter-spacing:4px;">NISARG CHASMAWALA</div>'+
+      '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-top:1.8rem;width:min(680px,90vw);">'+
+        '<div style="text-align:center"><div style="font-family:var(--H);font-size:clamp(1.3rem,3vw,2.2rem);color:var(--G);text-shadow:0 0 16px var(--G);">14</div><div style="font-size:.55rem;color:rgba(0,255,65,.6);letter-spacing:2px;margin-top:.3rem;">CERTIFICATIONS</div></div>'+
+        '<div style="text-align:center"><div style="font-family:var(--H);font-size:clamp(1.3rem,3vw,2.2rem);color:var(--C);text-shadow:0 0 16px var(--C);">8</div><div style="font-size:.55rem;color:rgba(0,212,255,.6);letter-spacing:2px;margin-top:.3rem;">LIVE PROJECTS</div></div>'+
+        '<div style="text-align:center"><div style="font-family:var(--H);font-size:clamp(1.3rem,3vw,2.2rem);color:var(--A);text-shadow:0 0 16px var(--A);">10/10</div><div style="font-size:.55rem;color:rgba(255,159,10,.6);letter-spacing:2px;margin-top:.3rem;">CVSS RCE</div></div>'+
+        '<div style="text-align:center"><div style="font-family:var(--H);font-size:clamp(1.3rem,3vw,2.2rem);color:var(--P);text-shadow:0 0 16px var(--P);">R²=.9999</div><div style="font-size:.55rem;color:rgba(168,85,247,.6);letter-spacing:2px;margin-top:.3rem;">ML PRECISION</div></div>'+
       '</div>'+
-      /* Live ID stream */
-      '<div id="fxHeavenStream" style="margin-top:2.5rem;font-family:var(--F);font-size:.78rem;color:rgba(0,255,65,.7);letter-spacing:1.5px;min-height:1.5em;"></div>'+
-      '<div style="margin-top:1.5rem;font-size:.7rem;color:rgba(255,255,255,.45);letter-spacing:3px;">"In cyberspace, the quieter you become, the more you hear."</div>'+
+      '<div id="fxHeavenStream" style="margin-top:1.2rem;font-family:var(--F);font-size:.72rem;color:rgba(0,255,65,.7);letter-spacing:1.5px;min-height:1.2em;"></div>'+
+      /* ─── DOSSIER PANEL ─── */
+      '<div style="width:min(820px,94vw);margin-top:2rem;text-align:left;display:flex;flex-direction:column;gap:.8rem;font-family:var(--F);font-size:.68rem;line-height:1.7;padding-bottom:3rem;">'+
+
+        hxSec('§ 01 — IDENTITY')+
+        hxRow('OPERATOR','Nisarg Chasmawala')+
+        hxRow('CODENAME','<span style="color:var(--R);text-shadow:0 0 8px var(--R);">HEAVEN</span>')+
+        hxRow('RANK','Elite Offensive Security Engineer · Penetration Tester · Red Team Operator')+
+        hxRow('ORIGIN','India 🇮🇳 → UK 🇬🇧')+
+        hxRow('BASE','England, UK (International Postgraduate Student)')+
+        hxRow('AFFILIATION','MSc Cyber Security w/ Professional Placement · Birmingham City University, England, UK')+
+        hxRow('GRADUATION','Expected March 2027')+
+        hxRow('LANGUAGES','English (Professional · TOEFL 91/120) · Hindi · Gujarati (Native)')+
+        hxRow('STATUS','<span style="color:var(--R);text-shadow:0 0 6px var(--R);">■ ACTIVE · ACCEPTING ENGAGEMENTS</span>')+
+
+        hxSec('§ 02 — EDUCATION')+
+        hxEdu('MSc Cyber Security (w/ Professional Placement)','Birmingham City University · England, UK','Expected Mar 2027','')+
+        hxEdu('B.Eng. Computer Science &amp; Engineering','SN Patel Institute of Technology · GTU, India','Jan 2024','CGPA 7.86 / 10')+
+        hxEdu('Diploma in Computer Engineering','NG Patel Polytechnic · GTU, India','Jan 2021','CGPA 7.80 / 10')+
+
+        hxSec('§ 03 — CLEARANCE CREDENTIALS · 14 TOTAL')+
+        hxTier('TIER 1 — APEX OFFENSIVE TRADECRAFT')+
+        hxCert('CPENT','Certified Penetration Tester Pro · EC-Council · ECC6970842153')+
+        hxCert('CEH MASTER','Certified Ethical Hacker Master · 91.2% · EC-Council · ECC1382059467')+
+        hxCert('CEH (CORE)','Certified Ethical Hacker · EC-Council · ECC5081642397')+
+        hxCert('CEH PRACT','CEH Practical · 180/200 · EC-Council · ECC7804965321')+
+        hxCert('CEH v13','Certified Ethical Hacker v13 · EC-Council · 776964')+
+        hxTier('TIER 2 — FORENSICS · GOVERNANCE')+
+        hxCert('CHFI','Computer Hacking Forensic Investigator · 90.7% · EC-Council')+
+        hxCert('ISO 27001 LA','ISO/IEC 27001:2022 Lead Auditor · MasterMind · ttuf1fci7e')+
+        hxCert('EHE','Ethical Hacker Essentials · 96% · EC-Council · ECC8416329075')+
+        hxCert('TOEFL iBT','ETS · 91/120 · English Professional Working Proficiency')+
+        hxTier('TIER 3 — RED TEAM OPS · THREAT INTEL')+
+        hxCert('CRTOM','Certified Red Team Ops Management · Red Team Leaders')+
+        hxCert('CTIGA','Threat Intel &amp; Governance Analyst · Red Team Leaders')+
+        hxCert('CCEP','Cybersecurity Educator Professional · Red Team Leaders')+
+        hxCert('CCPP','Certified C++ Practitioner · Red Team Leaders')+
+        hxCert('LOG ANALYSIS','Foundations of Log Analysis for Cyber Defense · Red Team Leaders')+
+
+        hxSec('§ 04 — OFFENSIVE TRADECRAFT')+
+        hxRow('DOCTRINE','"Think like an adversary. Engineer like a defender. Ship like an operator."')+
+        hxRow('METHODOLOGY','CPENT-aligned · PTES · NIST SP 800-115 · MITRE ATT&amp;CK · Cyber Kill Chain')+
+        hxRow('ATTACK CHAIN','Recon → Enum → Exploit → Pivot → Privesc → Persistence → Exfil → Cleanup')+
+        hxRow('OPSEC','Zero-API tooling · localized intel · token-bucket rate limits · audit-clean')+
+        hxRow('AI STANCE','LLMs as force multiplier — not as the operator')+
+        '<div style="color:rgba(0,255,65,.5);margin:.4rem 0 .2rem;">CORE SURFACES</div>'+
+        hxBullet('External &amp; Internal Infrastructure Penetration Testing')+
+        hxBullet('Active Directory · BloodHound · Kerberoasting · DCSync')+
+        hxBullet('Web App &amp; REST API Attacks · OWASP Top 10 · IDOR · SSRF · XXE')+
+        hxBullet('Cloud Penetration Testing · AWS IAM Abuse · Privilege Escalation')+
+        hxBullet('Wireless &amp; WPA2 · Aircrack-ng · Evil Twin · Deauth')+
+        hxBullet('OSINT &amp; Recon · Maltego · Google Dorks · Breach Intel')+
+        hxBullet('Mobile · IoT · Firmware Analysis · Static &amp; Dynamic ML Detection')+
+        hxBullet('Digital Forensics &amp; DFIR · Autopsy · FTK · Magnet AXIOM · ISO 27037')+
+
+        hxSec('§ 05 — CONFIRMED KILLS')+
+        hxKill('CVSS 10.0 RCE','Redis Replication Abuse → System-Level Access')+
+        hxKill('CVSS 10.0 RCE','Openfire Admin Console Exploitation → Root')+
+        hxKill('CVSS 10.0 RCE','Gitea · Git Hooks Weaponisation → Persistent Foothold')+
+        hxKill('Cloud Privesc','AWS IAM Toxic Combinations · 57 Dangerous Verbs · 10 ATT&amp;CK Tactics')+
+        hxKill('1st Place 🏆','BCU Cyber Security Society Hackathon · STEAMhouse, UK')+
+
+        hxSec('§ 06 — LIVE WEAPONS SYSTEMS · 8 DEPLOYMENTS')+
+        hxWeapon('[1] HEAVEN','Autonomous Pentest Framework · 31 modules · FastAPI · React · 23-table PostgreSQL · ExtraTrees R²=0.9925')+
+        hxWeapon('[2] HEAVEN-GeoIntel','Zero-API OSINT Platform · Next.js 14 · TypeScript · 400+ NPA · 1,000+ breach DBs · 110+ pivots')+
+        hxWeapon('[3] Aegis-IAM','Cloud IAM Risk Analyser · Flask · NetworkX · 38 E2E tests · MITRE ATT&amp;CK mapping')+
+        hxWeapon('[4] CVSS-ML Engine','AI Vulnerability Severity Predictor · R²=0.9988 · 337,705 CVE records · NVD')+
+        hxWeapon('[5] IoT-Predictor','Predictive IoT Network Flow · R²=0.9999 · MAE=0.0010 · RT-IoT2022 · 117K records')+
+        hxWeapon('[6] DDoS-NIDS','AI DDoS Detection · 1.0000 Precision · 99.99% Accuracy · CIC-DDoS2019 · 225K records')+
+        hxWeapon('[7] Droid-Hunter','Android Malware Detection · F1=98.47% · XGBoost · Random Forest · Drebin 15K+')+
+        hxWeapon('[8] Adaptive-CVSS','Adaptive Risk Scoring · XGBoost · Random Forest · KNN · Lim &amp; Muhammad 2024')+
+
+        hxSec('§ 07 — MISSION LOG')+
+        hxJob('Mar 2025 – Sep 2025','IT Hardware Support Engineer','NIVA TECHNO TRANSITION · Surat, India')+
+        hxJob('Feb 2024 – Feb 2025','VAPT (Remote · Part-Time)','SYSAP TECHNOLOGIES · Pune, India')+
+        hxJob('Jul 2023 – Jan 2024','VAPT Intern','SYSAP TECHNOLOGIES · Pune, India')+
+        hxJob('Jan 2023 – Apr 2023','Network Specialist','AIRLINK COMMUNICATION · Surat, India')+
+        hxJob('Jun 2022 – Jul 2022','Network Engineer','NIVA TECHNO TRANSITION · Surat, India')+
+        '<div style="color:rgba(0,255,65,.5);margin:.5rem 0 .2rem;">7× VIRTUAL JOB SIMULATIONS — Forage</div>'+
+        '<div style="color:rgba(0,255,65,.65);">Deloitte · MasterCard · CommBank · Telstra · Datacom · TATA · AIG</div>'+
+
+        hxSec('§ 08 — SKILLS MATRIX')+
+        hxBar('Ethical Hacking &amp; Exploit Dev',98)+
+        hxBar('Penetration Testing (CPENT)',95)+
+        hxBar('Vulnerability Assessment',95)+
+        hxBar('Web App / API Security',90)+
+        hxBar('Red Team Operations',88)+
+        hxBar('Digital Forensics / DFIR',88)+
+        hxBar('AI/ML Security Research',85)+
+        hxBar('Cloud IAM &amp; DevSecOps',84)+
+        hxBar('Deep Learning (DRL · LLMs)',80)+
+
+        hxSec('§ 09 — SECURE COMMS')+
+        hxRow('EMAIL','nisargkc@gmail.com')+
+        hxRow('PHONE','+44 7554 469437 (UK)')+
+        hxRow('GITHUB','github.com/nishu2402')+
+        hxRow('LINKEDIN','linkedin.com/in/nisarg-chasmawala')+
+        hxRow('PORTFOLIO','nishu2402.github.io')+
+        hxRow('KAGGLE','kaggle.com/nisargshroff2402')+
+
+        '<div style="margin-top:1.5rem;color:rgba(255,255,255,.4);letter-spacing:3px;font-size:.65rem;text-align:center;">"In cyberspace, the quieter you become, the more you hear."</div>'+
+        '<div style="margin-top:.8rem;color:rgba(0,255,65,.5);letter-spacing:2px;text-align:center;">▸ DOSSIER COMPLETE · CLEARANCE GRANTED · [ESC] TO CLOSE</div>'+
+      '</div>'+
     '</div>';
 
-  /* Scramble-build the HEAVEN letters */
+  /* helper fns (local scope) */
+  function hxSec(t){return '<div style="border-top:1px solid rgba(0,255,65,.3);border-left:3px solid var(--G);padding:.4rem .8rem;margin-top:.6rem;font-size:.65rem;color:rgba(0,255,65,.9);letter-spacing:2px;background:rgba(0,255,65,.04);">'+t+'</div>';}
+  function hxRow(k,v){return '<div style="display:flex;gap:1rem;padding:.15rem .4rem;"><span style="color:rgba(0,255,65,.55);min-width:110px;flex-shrink:0;">'+k+'</span><span style="color:rgba(255,255,255,.85);">'+v+'</span></div>';}
+  function hxEdu(d,i,y,g){return '<div style="padding:.2rem .4rem .2rem .8rem;border-left:1px solid rgba(0,255,65,.2);"><div style="color:rgba(255,255,255,.9);">'+d+'</div><div style="color:rgba(0,255,65,.55);">'+i+'</div><div style="color:rgba(0,212,255,.65);">'+y+(g?' · '+g:'')+'</div></div>';}
+  function hxTier(t){return '<div style="color:rgba(0,255,65,.45);font-size:.6rem;padding:.2rem .4rem;margin-top:.3rem;">▸ '+t+'</div>';}
+  function hxCert(k,v){return '<div style="display:flex;gap:.8rem;padding:.1rem .4rem .1rem 1.2rem;"><span style="color:var(--G);min-width:90px;flex-shrink:0;">[✓] '+k+'</span><span style="color:rgba(255,255,255,.65);">'+v+'</span></div>';}
+  function hxBullet(t){return '<div style="padding:.1rem .4rem .1rem 1rem;color:rgba(255,255,255,.75);">▸ '+t+'</div>';}
+  function hxKill(k,v){return '<div style="display:flex;gap:.8rem;padding:.15rem .4rem;"><span style="color:var(--R);min-width:110px;flex-shrink:0;text-shadow:0 0 6px var(--R);">▲ '+k+'</span><span style="color:rgba(255,255,255,.8);">'+v+'</span></div>';}
+  function hxWeapon(k,v){return '<div style="padding:.2rem .4rem .2rem .8rem;border-left:2px solid rgba(255,159,10,.3);margin:.15rem 0;"><div style="color:var(--A);">⚔ '+k+'</div><div style="color:rgba(255,255,255,.65);font-size:.63rem;">'+v+'</div></div>';}
+  function hxJob(d,r,c){return '<div style="padding:.2rem .4rem .2rem .8rem;border-left:1px solid rgba(0,212,255,.2);margin:.1rem 0;"><div style="color:rgba(255,255,255,.85);">'+r+'</div><div style="color:rgba(0,212,255,.55);font-size:.63rem;">'+c+' · '+d+'</div></div>';}
+  function hxBar(k,v){var f=Math.round(v/5);var e=20-f;return '<div style="display:flex;align-items:center;gap:.8rem;padding:.1rem .4rem;"><span style="color:rgba(255,255,255,.7);min-width:200px;flex-shrink:0;font-size:.63rem;">'+k+'</span><span style="color:var(--G);font-size:.65rem;letter-spacing:.5px;">'+'█'.repeat(f)+'░'.repeat(e)+' '+v+'%</span></div>';}
+
+  /* Scramble HEAVEN letters */
   var nameEl=document.getElementById('fxHeavenName');
   var target='HEAVEN';
   var current=['','','','','',''];
@@ -2034,8 +2147,8 @@ function fxHeaven(){
     if(elapsed>1.6){clearInterval(scrambleInt);nameEl.innerHTML=target;}
   },45);
 
-  /* Streaming statuses */
-  var streams=['> initializing operator profile...','> verifying CEH MASTER credential ✓','> verifying CPENT clearance ✓','> verifying CHFI · 90.7% ✓','> verifying ISO 27001:2022 LA ✓','> 8 live ML/security projects loaded ✓','> SHELL ready · awaiting commands','> nisargkc@gmail.com · +44 7554 469437','> ENGLAND, UK · ACTIVELY SEEKING — 2026','> [ESC] to exit · or close & explore portfolio'];
+  /* Streaming status line */
+  var streams=['> initializing operator profile...','> verifying CEH MASTER credential ✓','> verifying CPENT clearance ✓','> 8 live ML/security projects loaded ✓','> India 🇮🇳 → UK 🇬🇧 · ACTIVELY SEEKING — 2026','> [ESC] to exit · scroll for full dossier ↓'];
   var sIdx=0;
   var streamEl=document.getElementById('fxHeavenStream');
   setTimeout(function(){
@@ -2046,12 +2159,10 @@ function fxHeaven(){
     },1100);
   },1800);
 
-  /* Background — deep matrix rain (slower, bigger) */
+  /* Matrix rain background */
   var cols=Math.floor(innerWidth/20);
   var drops=[];for(var i=0;i<cols;i++)drops.push(Math.random()*-300);
   var chars='アイウエオカキクケコサシスセソHEAVEN0123456789';
-
-  /* Persistent run — only ESC exits (use 9999s as effective infinite) */
   FX.run(9999,function(t,d){
     FX.ctx.fillStyle='rgba(0,0,0,.06)';FX.ctx.fillRect(0,0,innerWidth,innerHeight);
     FX.ctx.font='17px JetBrains Mono';
@@ -2415,166 +2526,12 @@ var CMDS={
     '<span class="tw">└────────────────────────────────────────────────┘</span>'];},
 
   /* ─ FULL-SCREEN HEAVEN INTRO + DETAILED CINEMATIC DOSSIER ─ */
-  heaven:function(){fxHeaven();return[
-    '<span class="te">╔══════════════════════════════════════════════════════════════════════════╗</span>',
-    '<span class="te">║</span>                                                                          <span class="te">║</span>',
-    '<span class="te">║</span>     <span class="to" style="font-size:1.05rem;letter-spacing:10px;font-weight:900;">H E A V E N</span>     <span class="te" style="font-size:.85rem;opacity:.7;">// CLASSIFIED OPERATOR DOSSIER · CLEARANCE: Ω</span>    <span class="te">║</span>',
-    '<span class="te">║</span>                                                                          <span class="te">║</span>',
-    '<span class="te">╚══════════════════════════════════════════════════════════════════════════╝</span>',
-    '',
-    '<span class="td2">// DECRYPTING DOSSIER · AES-256 · QUANTUM-SAFE · KEY VERIFIED</span>',
-    '<span class="td2">// HANDSHAKE COMPLETE · LIVE STREAM OPEN · LINE SECURE</span>',
-    '<span class="td2">// SECURE CHANNEL: nishu2402.github.io · BLOG LIVE · KAGGLE LIVE</span>',
-    '',
-    '<span class="tw">┌─[ § 01 ─ IDENTITY ]──────────────────────────────────────────────────────┐</span>',
-    '<span class="to">  OPERATOR     </span><span class="tc">Nisarg Chasmawala</span>',
-    '<span class="to">  CODENAME     </span><span class="te" style="text-shadow:0 0 8px var(--R);">HEAVEN</span>',
-    '<span class="to">  RANK         </span><span class="tc">Elite Offensive Security Engineer · Penetration Tester · Red Team Operator</span>',
-    '<span class="to">  ORIGIN       </span><span class="tc">Surat, Gujarat, India 🇮🇳  →  England, United Kingdom 🇬🇧</span>',
-    '<span class="to">  BASE         </span><span class="tc">England, United Kingdom (UK-based International Postgraduate)</span>',
-    '<span class="to">  AFFILIATION  </span><span class="tc">MSc Cyber Security w/ Professional Placement · Birmingham City University</span>',
-    '<span class="to">  ENROLLED     </span><span class="tc">Expected Graduation: March 2027 · International Postgraduate Visa Status</span>',
-    '<span class="to">  LANGUAGES    </span><span class="tc">English (Professional · TOEFL 91/120) · Hindi · Gujarati (Native)</span>',
-    '<span class="to">  STATUS       </span><span class="te" style="text-shadow:0 0 8px var(--R);">■ ACTIVE · ACCEPTING ENGAGEMENTS · OFFENSIVE OPS ONLINE</span>',
-    '<span class="tw">└──────────────────────────────────────────────────────────────────────────┘</span>',
-    '',
-    '<span class="tw">┌─[ § 02 ─ EDUCATION · ACADEMIC TRAJECTORY ]───────────────────────────────┐</span>',
-    '<span class="to">  ▸ MSc Cyber Security (w/ Professional Placement)</span>',
-    '<span class="td2">    Birmingham City University · Birmingham, England, UK · (in progress)</span>',
-    '<span class="td2">    Expected Graduation: March 2027</span>',
-    '<span class="td2">    Focus: Offensive Security · AI/ML Security · Digital Forensics · Red Team Ops</span>',
-    '<span class="to">  ▸ B.Eng. Computer Science &amp; Engineering</span>',
-    '<span class="td2">    SN Patel Institute of Technology · GTU · Surat, Gujarat, India</span>',
-    '<span class="td2">    Completed: January 2024 · CGPA 7.86 / 10</span>',
-    '<span class="to">  ▸ Diploma in Computer Engineering</span>',
-    '<span class="td2">    NG Patel Polytechnic · GTU · Surat, Gujarat, India</span>',
-    '<span class="td2">    Completed: January 2021 · CGPA 7.80 / 10</span>',
-    '<span class="tw">└──────────────────────────────────────────────────────────────────────────┘</span>',
-    '',
-    '<span class="tw">┌─[ § 03 ─ CLEARANCE CREDENTIALS · 14 TOTAL ]──────────────────────────────┐</span>',
-    '<span class="td2">  ▸ TIER 1 — APEX OFFENSIVE TRADECRAFT</span>',
-    '<span class="to">    [✓] CPENT        </span><span class="td2">Certified Penetration Tester Pro · EC-Council · ECC6970842153</span>',
-    '<span class="to">    [✓] CEH MASTER   </span><span class="td2">Certified Ethical Hacker Master · EC-Council · ECC1382059467</span>',
-    '<span class="to">    [✓] CEH (CORE)   </span><span class="td2">Certified Ethical Hacker · 91.2% · EC-Council · ECC5081642397</span>',
-    '<span class="to">    [✓] CEH PRACT    </span><span class="td2">CEH Practical · 180/200 · EC-Council · ECC7804965321</span>',
-    '<span class="to">    [✓] CEH v13      </span><span class="td2">Certified Ethical Hacker v13 · EC-Council · 776964</span>',
-    '<span class="td2">  ▸ TIER 2 — FORENSICS · GOVERNANCE · COMPLIANCE</span>',
-    '<span class="to">    [✓] CHFI         </span><span class="td2">Computer Hacking Forensic Investigator · 90.7% · EC-Council</span>',
-    '<span class="to">    [✓] ISO 27001 LA </span><span class="td2">ISO/IEC 27001:2022 Lead Auditor · MasterMind · ttuf1fci7e</span>',
-    '<span class="to">    [✓] EHE          </span><span class="td2">Ethical Hacker Essentials · 96% · EC-Council · ECC8416329075</span>',
-    '<span class="td2">  ▸ TIER 3 — RED TEAM OPS · THREAT INTEL · TRAINING</span>',
-    '<span class="to">    [✓] CRTOM        </span><span class="td2">Certified Red Team Ops Management · Red Team Leaders</span>',
-    '<span class="to">    [✓] CTIGA        </span><span class="td2">Threat Intel &amp; Governance Analyst · Red Team Leaders</span>',
-    '<span class="to">    [✓] CCEP         </span><span class="td2">Cybersecurity Educator Professional · Red Team Leaders</span>',
-    '<span class="to">    [✓] CCPP         </span><span class="td2">Certified C++ Practitioner · Red Team Leaders</span>',
-    '<span class="to">    [✓] LOG ANALYSIS </span><span class="td2">Foundations of Log Analysis for Cyber Defense · Red Team Leaders</span>',
-    '<span class="to">    [✓] TOEFL iBT    </span><span class="td2">ETS · 91/120 · English Professional Working Proficiency</span>',
-    '<span class="tw">└──────────────────────────────────────────────────────────────────────────┘</span>',
-    '',
-    '<span class="tw">┌─[ § 04 ─ OFFENSIVE MINDSET · TRADECRAFT ]────────────────────────────────┐</span>',
-    '<span class="to">  DOCTRINE     </span><span class="tc">"Think like an adversary. Engineer like a defender. Ship like an operator."</span>',
-    '<span class="to">  METHODOLOGY  </span><span class="tc">CPENT-aligned · PTES · NIST SP 800-115 · MITRE ATT&amp;CK · Cyber Kill Chain</span>',
-    '<span class="to">  ATTACK CHAIN </span><span class="tc">Recon → Enum → Exploit → Pivot → Privesc → Persistence → Exfil → Cleanup</span>',
-    '<span class="to">  OPSEC        </span><span class="tc">Zero-API tooling · localized intel · token-bucket rate limits · audit-clean</span>',
-    '<span class="to">  PHILOSOPHY   </span><span class="tc">LLMs as force multiplier — not as the operator</span>',
-    '<span class="td2">  ────────────────────────────────────────────────────────────────────────</span>',
-    '<span class="to">  CORE SURFACES</span>',
-    '<span class="to">    ▸ External &amp; Internal Infrastructure Penetration Testing</span>',
-    '<span class="to">    ▸ Active Directory Exploitation · BloodHound · Kerberoasting · DCSync</span>',
-    '<span class="to">    ▸ Web Application &amp; REST API Attacks · OWASP Top 10 · IDOR · SSRF · XXE</span>',
-    '<span class="to">    ▸ Cloud Penetration Testing · AWS IAM Abuse · Privilege Escalation Chains</span>',
-    '<span class="to">    ▸ Wireless &amp; WPA2 Attacks · Aircrack-ng · Evil Twin · Deauth</span>',
-    '<span class="to">    ▸ OSINT &amp; Reconnaissance · Maltego · Custom Google Dorks · Breach Intel</span>',
-    '<span class="to">    ▸ Mobile · IoT · Firmware Analysis · Static &amp; Dynamic ML Detection</span>',
-    '<span class="to">    ▸ Digital Forensics &amp; DFIR · Autopsy · FTK · Magnet AXIOM · ISO 27037</span>',
-    '<span class="tw">└──────────────────────────────────────────────────────────────────────────┘</span>',
-    '',
-    '<span class="tw">┌─[ § 05 ─ CONFIRMED KILLS · LIVE ENGAGEMENT TROPHIES ]────────────────────┐</span>',
-    '<span class="te">  ▲ CVSS 10.0 RCE   </span><span class="to">Redis Replication Abuse → System-Level Access</span>',
-    '<span class="te">  ▲ CVSS 10.0 RCE   </span><span class="to">Openfire Admin Console Exploitation → Root</span>',
-    '<span class="te">  ▲ CVSS 10.0 RCE   </span><span class="to">Gitea · Git Hooks Weaponisation → Persistent Foothold</span>',
-    '<span class="te">  ▲ Cloud Privesc   </span><span class="to">AWS IAM Toxic Combinations · 57 Dangerous Verbs · 10 ATT&amp;CK Tactics</span>',
-    '<span class="te">  ▲ 1st Place 🏆    </span><span class="to">BCU Cyber Security Society Hackathon · STEAMhouse, UK</span>',
-    '<span class="tw">└──────────────────────────────────────────────────────────────────────────┘</span>',
-    '',
-    '<span class="tw">┌─[ § 06 ─ LIVE WEAPONS SYSTEMS · 8 DEPLOYMENTS · GenAI-AUGMENTED ]────────┐</span>',
-    '<span class="to">  ⚔ [1] HEAVEN            </span><span class="tc">Autonomous Pentest Framework · 31 modules · async DAG</span>',
-    '<span class="td2">                            FastAPI · React · 23-table PostgreSQL · ExtraTrees R²=0.9925</span>',
-    '<span class="td2">                            MITRE ATT&amp;CK · OWASP · EPSS · CVSS v3.1 prioritisation</span>',
-    '<span class="to">  ⚔ [2] HEAVEN-GeoIntel   </span><span class="tc">Zero-API OSINT platform · Next.js 14 · TypeScript · OPSEC-clean</span>',
-    '<span class="td2">                            400+ NPA codes · 1,000+ breach DBs · 110+ pivots · 64 dorks</span>',
-    '<span class="to">  ⚔ [3] Aegis-IAM         </span><span class="tc">Cloud IAM risk analyser · Python · Flask · NetworkX graph engine</span>',
-    '<span class="td2">                            38 E2E security tests · MITRE ATT&amp;CK mapping · auto-remediation</span>',
-    '<span class="to">  ⚔ [4] CVSS-ML Engine    </span><span class="tc">AI Vulnerability Severity Predictor · R²=0.9988 · MAE=0.0400</span>',
-    '<span class="td2">                            337,705 CVE records · NVD · Extra Trees · Gradient Boost · LSTM/GRU</span>',
-    '<span class="to">  ⚔ [5] IoT-Predictor     </span><span class="tc">Predictive IoT Network Flow Analysis · R²=0.9999 · MAE=0.0010</span>',
-    '<span class="td2">                            RT-IoT2022 · 117K records · Gradient Boost + GRU + Transformers</span>',
-    '<span class="to">  ⚔ [6] DDoS-NIDS         </span><span class="tc">AI DDoS Detection · 1.0000 Precision · 99.99% Accuracy</span>',
-    '<span class="td2">                            CIC-DDoS2019 · 225K records · 1D-CNN + MLP + XGBoost</span>',
-    '<span class="to">  ⚔ [7] Droid-Hunter      </span><span class="tc">Android Malware Detection · F1-Score 98.47% · Drebin 15K+</span>',
-    '<span class="td2">                            XGBoost · Random Forest · static permission/API analysis</span>',
-    '<span class="to">  ⚔ [8] Adaptive-CVSS     </span><span class="tc">Adaptive Risk Scoring Framework · context-aware dynamic 0–10</span>',
-    '<span class="td2">                            XGBoost · Random Forest · Decision Tree · KNN · Lim &amp; Muhammad 2024</span>',
-    '<span class="tw">└──────────────────────────────────────────────────────────────────────────┘</span>',
-    '',
-    '<span class="tw">┌─[ § 07 ─ MISSION LOG · OPERATIONAL HISTORY ]─────────────────────────────┐</span>',
-    '<span class="to">  ▸ IT Hardware Support Engineer                   </span><span class="td2">NIVA Techno Transition, Surat · Mar 2025 – Sep 2025</span>',
-    '<span class="to">  ▸ VAPT (Remote · Part-Time)                      </span><span class="td2">SYSAP Technologies, Pune · Feb 2024 – Feb 2025</span>',
-    '<span class="to">  ▸ VAPT Intern                                    </span><span class="td2">SYSAP Technologies, Pune · Jul 2023 – Jan 2024</span>',
-    '<span class="to">  ▸ Network Specialist                             </span><span class="td2">Airlink Communication, Surat · Jan 2023 – Apr 2023</span>',
-    '<span class="to">  ▸ Network Engineer                               </span><span class="td2">NIVA Techno Transition, Surat · Jun 2022 – Jul 2022</span>',
-    '<span class="td2">  ────────────────────────────────────────────────────────────────────────</span>',
-    '<span class="to">  ▸ 7× Virtual Job Simulations · Forage</span>',
-    '<span class="td2">    Deloitte (Cyber) · MasterCard (CTI) · CommBank (Intro Cyber) · Telstra (Tech)</span>',
-    '<span class="td2">    Datacom (Cyber) · TATA (Cyber Security Analyst) · AIG (Shields Up)</span>',
-    '<span class="tw">└──────────────────────────────────────────────────────────────────────────┘</span>',
-    '',
-    '<span class="tw">┌─[ § 08 ─ SKILLS PROFICIENCY MATRIX ]─────────────────────────────────────┐</span>',
-    '<span class="to">  ETHICAL HACKING &amp; EXPLOIT DEV   </span><span class="te">[████████████████████░] 98%</span>',
-    '<span class="to">  PENETRATION TESTING (CPENT)     </span><span class="te">[███████████████████░░] 95%</span>',
-    '<span class="to">  VULNERABILITY ASSESSMENT         </span><span class="te">[███████████████████░░] 95%</span>',
-    '<span class="to">  WEB APP / API SECURITY          </span><span class="te">[██████████████████░░░] 90%</span>',
-    '<span class="to">  RED TEAM OPERATIONS              </span><span class="te">[█████████████████░░░░] 88%</span>',
-    '<span class="to">  DIGITAL FORENSICS / DFIR         </span><span class="te">[█████████████████░░░░] 88%</span>',
-    '<span class="to">  AI/ML SECURITY RESEARCH          </span><span class="te">[████████████████░░░░░] 85%</span>',
-    '<span class="to">  CRYPTOGRAPHY &amp; DATA SECURITY     </span><span class="te">[████████████████░░░░░] 85%</span>',
-    '<span class="to">  CLOUD IAM &amp; DEVSECOPS            </span><span class="te">[████████████████░░░░░] 84%</span>',
-    '<span class="to">  DEEP LEARNING (DRL · LLMs)       </span><span class="te">[███████████████░░░░░░] 80%</span>',
-    '<span class="tw">└──────────────────────────────────────────────────────────────────────────┘</span>',
-    '',
-    '<span class="tw">┌─[ § 09 ─ RESEARCH FRONTIER · ACADEMIC SIGNAL ]───────────────────────────┐</span>',
-    '<span class="to">  ▸ AI &amp; Autonomous Penetration Testing Frameworks (MSc Research)</span>',
-    '<span class="td2">    Deep Reinforcement Learning · LLM-Augmented Recon · MAS vs single-agent</span>',
-    '<span class="td2">    Neuro-Symbolic AI · HITL governance · EU AI Act compliance</span>',
-    '<span class="to">  ▸ Adaptive Vulnerability Risk Scoring (Reproduction of Lim &amp; Muhammad 2024)</span>',
-    '<span class="to">  ▸ Strategic Security Audit — Cyberzone AI Ltd · ISO/IEC 27001:2022 alignment</span>',
-    '<span class="to">  ▸ Digital Forensic Strategy — Missing Person Investigation · ISO 27037</span>',
-    '<span class="to">  ▸ Consolidated Penetration Testing &amp; RCE Assessment · CVSS 10.0 chains</span>',
-    '<span class="td2">  ────────────────────────────────────────────────────────────────────────</span>',
-    '<span class="to">  NEXT ON DOCKET   </span><span class="tc">OSCP · OSWE · CISSP · Offensive Cloud Security · CARTP</span>',
-    '<span class="tw">└──────────────────────────────────────────────────────────────────────────┘</span>',
-    '',
-    '<span class="tw">┌─[ § 10 ─ SECURE COMMS CHANNELS ]─────────────────────────────────────────┐</span>',
-    '<span class="to">  EMAIL        </span><span class="tc">nisargkc@gmail.com</span>',
-    '<span class="to">  PHONE        </span><span class="tc">+44 7554 469437 (UK)</span>',
-    '<span class="to">  GITHUB       </span><span class="tc">github.com/nishu2402</span>',
-    '<span class="to">  LINKEDIN     </span><span class="tc">linkedin.com/in/nisarg-chasmawala</span>',
-    '<span class="to">  PORTFOLIO    </span><span class="tc">nishu2402.github.io</span>',
-    '<span class="to">  BLOG         </span><span class="tc">nishu2402.github.io/blog</span>',
-    '<span class="to">  KAGGLE       </span><span class="tc">kaggle.com/nisargshroff2402</span>',
-    '<span class="tw">└──────────────────────────────────────────────────────────────────────────┘</span>',
-    '',
-    '<span class="te">  "In cyberspace, the quieter you become, the more you hear."</span>',
-    '<span class="td2">  ─────────────────────────────────────────────────────────────</span>',
-    '<span class="to" style="text-shadow:0 0 6px var(--G);">  ▸ DOSSIER COMPLETE · CLEARANCE GRANTED · TRACE TERMINATED</span>',
-    '<span class="td2">  ▸ Press [ESC] to exit the HEAVEN protocol overlay</span>',
-    '',
-  ];},
+  heaven:function(){fxHeaven();return['<span class="td2">// HEAVEN Protocol launched — scroll through full operator dossier in overlay.</span>','<span class="td2">// All 9 sections: Identity · Education · Clearance · Tradecraft · Kills · Weapons · Mission Log · Skills · Comms.</span>','<span class="td2">// Press [ESC] to close.</span>'];},
 
   whoami:function(){return[
     '<span class="to">uid=0(heaven) gid=0(root) groups=0(root,redteam,offensive,sysap)</span>',
     '<span class="to">Name    : Nisarg Chasmawala [HEAVEN]</span>',
-    '<span class="to">Origin  : Surat, Gujarat, India 🇮🇳 → Birmingham, England, UK 🇬🇧</span>',
+    '<span class="to">Origin  : India 🇮🇳 → UK 🇬🇧</span>',
     '<span class="to">Role    : Offensive Security Engineer · Penetration Tester · Red Team Operator</span>',
     '<span class="to">Study   : MSc Cyber Security (International Postgraduate) — BCU, England, UK</span>',
     '<span class="to">Certs   : 14 total — CEH Master 91.2%, CPENT, CHFI 90.7%, ISO 27001:2022 LA</span>',
