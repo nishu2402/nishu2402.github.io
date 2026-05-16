@@ -3,13 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" sizes="64x64" href="https://nishu2402.github.io/favicon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://nishu2402.github.io/favicon.png">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="shortcut icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="https://nishu2402.github.io/favicon.png">
+<link rel="apple-touch-icon" href="favicon.png">
 <title>Internal Network Penetration Testing | Nisarg Chasmawala</title>
 <meta name="description" content="Internal Network Penetration Testing Methodology + AI Integration — by Nisarg Chasmawala (Shroff), Offensive Security Engineer.">
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
   --g:#00ff41;--c:#00e5ff;--p:#bf00ff;--r:#ff003c;--o:#ffd700;
-  --bg:#030509;--t1:#d4ffe0;--t2:#7aad82;--t3:#2e4a32;
+  --bg:#030509;--t1:#e8fff2;--t2:#a8d8b0;--t3:#6abf7a;
   --mono:'Share Tech Mono',monospace;--dsp:'Orbitron',sans-serif;--body:'Rajdhani',sans-serif;
   --glow:0 0 20px rgba(0,255,65,.4),0 0 60px rgba(0,255,65,.15);
   --cglow:0 0 20px rgba(0,229,255,.4),0 0 60px rgba(0,229,255,.1);
@@ -94,7 +100,7 @@ body{background:var(--bg);color:var(--t1);font-family:var(--body);font-size:17px
 .panel::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.015) 0%,transparent 60%);pointer-events:none}
 .panel:hover{border-color:rgba(0,229,255,.4);box-shadow:0 0 50px rgba(0,229,255,.07),inset 0 0 40px rgba(0,229,255,.025),0 20px 60px rgba(0,0,0,.3);transform:translateY(-3px) translateZ(6px)}
 .panel:hover::before{opacity:1}
-.panel p{color:var(--t2);margin-bottom:12px}
+.panel p{color:var(--t2);margin-bottom:12px;font-size:16px;line-height:1.85}
 .panel p:last-child{margin-bottom:0}
 .panel-t{font-family:var(--dsp);font-size:12px;font-weight:700;letter-spacing:3px;color:var(--g);text-transform:uppercase;margin-bottom:18px;display:flex;align-items:center;gap:12px}
 .panel-t::after{content:'';flex:1;height:1px;background:linear-gradient(to right,rgba(0,255,65,.2),transparent)}
@@ -146,10 +152,10 @@ body{background:var(--bg);color:var(--t1);font-family:var(--body);font-size:17px
 .ai-card:hover::before{opacity:1}
 .ai-ico{font-size:24px;margin-bottom:10px;display:block}
 .ai-name{font-family:var(--dsp);font-size:11px;font-weight:700;letter-spacing:2px;color:var(--p);text-transform:uppercase;margin-bottom:10px}
-.ai-desc{font-size:14px;color:var(--t2);line-height:1.65;font-weight:300}
+.ai-desc{font-size:15px;color:var(--t2);line-height:1.75;font-weight:400}
 
 /* TABLE */
-.ptbl{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12px;margin:16px 0}
+.ptbl{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:13px;margin:16px 0}
 .ptbl th{text-align:left;padding:11px 14px;color:var(--c);border-bottom:1px solid rgba(0,229,255,.3);letter-spacing:2px;font-size:10px;text-transform:uppercase}
 .ptbl td{padding:10px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05);vertical-align:top}
 .ptbl tr:hover td{background:rgba(0,255,65,.02)}
@@ -184,7 +190,7 @@ body{background:var(--bg);color:var(--t1);font-family:var(--body);font-size:17px
 .al-p{background:rgba(191,0,255,.04);border:1px solid rgba(191,0,255,.18);border-left:3px solid var(--p)}
 .al-ic{font-family:var(--mono);font-size:13px;flex-shrink:0;margin-top:2px}
 .al-w .al-ic{color:var(--o)}.al-i .al-ic{color:var(--c)}.al-p .al-ic{color:var(--p)}
-.al-tx{font-size:14px;color:var(--t2);line-height:1.6}
+.al-tx{font-size:15px;color:var(--t2);line-height:1.75;font-weight:500}
 
 /* 3-COL */
 .dgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:22px}
@@ -232,6 +238,12 @@ body{background:var(--bg);color:var(--t1);font-family:var(--body);font-size:17px
 .rv.on,.rv-l.on{opacity:1;transform:none}
 
 @media(max-width:700px){.vgrid,.tgrid,.mgrid,.ai-grid{grid-template-columns:1fr}.hero-canvas-wrap{display:none}.cta{padding:36px 20px}.cta::before{font-size:80px}}
+@media(max-width:768px){body{font-size:16px}.wrap{padding:0 16px}.hero{padding:80px 0 40px}.hero-content{max-width:100%}.hero-title{font-size:clamp(18px,5vw,30px)}.hero-desc{font-size:15px}.topbar{padding:0 16px}.tb-name{font-size:11px;letter-spacing:2px}.panel{padding:20px}.cta-btns{flex-direction:column;align-items:center}.btn{width:100%;max-width:280px;text-align:center}.footer{flex-direction:column;gap:12px}.f-r{text-align:left}.ptbl th,.ptbl td{padding:7px 8px}}
+@media(max-width:480px){body{font-size:15px}.wrap{padding:0 14px}.hero{padding:70px 0 30px}.hero-title{font-size:clamp(18px,6vw,28px)}.hero-desc{font-size:14px;line-height:1.75}.sec-t{font-size:clamp(14px,4.5vw,18px)}.vgrid,.tgrid,.mgrid,.ai-grid{grid-template-columns:1fr}.ptbl{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch;white-space:nowrap}.cb{padding:12px 14px}.cb code{font-size:11px;line-height:1.8}.topbar{height:50px;padding:0 12px}.tb-name{font-size:10px;letter-spacing:1px}.tb-roles{display:none}.div{margin:36px 0}.sec{margin-bottom:60px}.panel{padding:16px;font-size:15px}.ai-card{padding:16px}.ai-desc{font-size:13px}.cta{padding:28px 16px}.f-r{text-align:left}}
+@media(hover:none){.panel:hover,.ai-card:hover{transform:none}}
+
+@media(pointer:coarse){body{cursor:auto!important}#cur,#cur2,#cur3{display:none!important}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 </style>
 </head>
 <body>
@@ -469,6 +481,52 @@ body{background:var(--bg);color:var(--t1);font-family:var(--body);font-size:17px
 <span class="cmt"># Simultaneously run responder with SMB off: responder -I eth0 -wrdvF --lm</span></code>
   </div>
 </section>
+<div class="rv" style="margin:0 0 40px 0"><div style="font-family:var(--mono);font-size:10px;letter-spacing:3px;color:var(--p);margin-bottom:14px">DIAGRAM 01 // INTERNAL NETWORK PENTEST KILL CHAIN</div><div style="overflow-x:auto;-webkit-overflow-scrolling:touch;background:rgba(0,0,0,0.4);border:1px solid rgba(0,229,255,0.12);border-radius:4px;padding:16px"><svg viewBox="0 0 920 210" xmlns="http://www.w3.org/2000/svg" style="width:100%;min-width:580px;max-width:920px;display:block">
+  <defs><marker id="in1" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="rgba(0,229,255,.9)"/></marker>
+  <marker id="in1g" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="rgba(0,255,65,.9)"/></marker></defs>
+  <rect x="8" y="35" width="120" height="80" rx="4" fill="rgba(0,0,0,.82)" stroke="rgba(0,229,255,.85)" stroke-width="1.5"/>
+  <text x="68" y="60" font-family="Share Tech Mono,monospace" font-size="10" fill="#00e5ff" text-anchor="middle" font-weight="700">FOOTHOLD</text>
+  <text x="68" y="74" font-family="Share Tech Mono,monospace" font-size="10" fill="#00e5ff" text-anchor="middle" font-weight="700">ENUM</text>
+  <text x="68" y="92" font-family="Share Tech Mono,monospace" font-size="9" fill="#88e8ff" text-anchor="middle">nmap / nbtscan</text>
+  <text x="68" y="105" font-family="Share Tech Mono,monospace" font-size="9" fill="#88e8ff" text-anchor="middle">BloodHound CE</text>
+  <line x1="129" y1="75" x2="147" y2="75" stroke="rgba(0,229,255,.88)" stroke-width="1.5" marker-end="url(#in1)"/>
+  <rect x="149" y="35" width="120" height="80" rx="4" fill="rgba(0,0,0,.82)" stroke="rgba(255,200,80,.85)" stroke-width="1.5"/>
+  <text x="209" y="60" font-family="Share Tech Mono,monospace" font-size="10" fill="#ffc850" text-anchor="middle" font-weight="700">CRED</text>
+  <text x="209" y="74" font-family="Share Tech Mono,monospace" font-size="10" fill="#ffc850" text-anchor="middle" font-weight="700">HARVEST</text>
+  <text x="209" y="92" font-family="Share Tech Mono,monospace" font-size="9" fill="#ffe088" text-anchor="middle">Responder / NTLM</text>
+  <text x="209" y="105" font-family="Share Tech Mono,monospace" font-size="9" fill="#ffe088" text-anchor="middle">Kerberoast</text>
+  <line x1="270" y1="75" x2="288" y2="75" stroke="rgba(0,229,255,.88)" stroke-width="1.5" marker-end="url(#in1)"/>
+  <rect x="290" y="35" width="120" height="80" rx="4" fill="rgba(0,0,0,.82)" stroke="rgba(255,80,80,.85)" stroke-width="1.5"/>
+  <text x="350" y="60" font-family="Share Tech Mono,monospace" font-size="10" fill="#ff5050" text-anchor="middle" font-weight="700">VULN</text>
+  <text x="350" y="74" font-family="Share Tech Mono,monospace" font-size="10" fill="#ff5050" text-anchor="middle" font-weight="700">EXPLOIT</text>
+  <text x="350" y="92" font-family="Share Tech Mono,monospace" font-size="9" fill="#ff8888" text-anchor="middle">EternalBlue</text>
+  <text x="350" y="105" font-family="Share Tech Mono,monospace" font-size="9" fill="#ff8888" text-anchor="middle">PrintNightmare</text>
+  <line x1="411" y1="75" x2="429" y2="75" stroke="rgba(0,229,255,.88)" stroke-width="1.5" marker-end="url(#in1)"/>
+  <rect x="431" y="35" width="120" height="80" rx="4" fill="rgba(0,0,0,.82)" stroke="rgba(191,0,255,.85)" stroke-width="1.5"/>
+  <text x="491" y="60" font-family="Share Tech Mono,monospace" font-size="10" fill="#bf00ff" text-anchor="middle" font-weight="700">PRIV</text>
+  <text x="491" y="74" font-family="Share Tech Mono,monospace" font-size="10" fill="#bf00ff" text-anchor="middle" font-weight="700">ESCALATE</text>
+  <text x="491" y="92" font-family="Share Tech Mono,monospace" font-size="9" fill="#df88ff" text-anchor="middle">token impersonate</text>
+  <text x="491" y="105" font-family="Share Tech Mono,monospace" font-size="9" fill="#df88ff" text-anchor="middle">SeDebugPriv</text>
+  <line x1="552" y1="75" x2="570" y2="75" stroke="rgba(0,229,255,.88)" stroke-width="1.5" marker-end="url(#in1)"/>
+  <rect x="572" y="35" width="120" height="80" rx="4" fill="rgba(0,0,0,.82)" stroke="rgba(0,229,255,.85)" stroke-width="1.5"/>
+  <text x="632" y="60" font-family="Share Tech Mono,monospace" font-size="10" fill="#00e5ff" text-anchor="middle" font-weight="700">LATERAL</text>
+  <text x="632" y="74" font-family="Share Tech Mono,monospace" font-size="10" fill="#00e5ff" text-anchor="middle" font-weight="700">MOVE</text>
+  <text x="632" y="92" font-family="Share Tech Mono,monospace" font-size="9" fill="#88e8ff" text-anchor="middle">PtH / WMI</text>
+  <text x="632" y="105" font-family="Share Tech Mono,monospace" font-size="9" fill="#88e8ff" text-anchor="middle">PSExec / SMB</text>
+  <line x1="693" y1="75" x2="711" y2="75" stroke="rgba(0,255,65,.9)" stroke-width="2" marker-end="url(#in1g)"/>
+  <rect x="713" y="25" width="200" height="100" rx="4" fill="rgba(0,0,0,.88)" stroke="rgba(0,255,65,.92)" stroke-width="2"/>
+  <text x="813" y="60" font-family="Orbitron,sans-serif" font-size="11" font-weight="900" fill="#00ff41" text-anchor="middle">DOMAIN</text>
+  <text x="813" y="75" font-family="Orbitron,sans-serif" font-size="11" font-weight="900" fill="#00ff41" text-anchor="middle">ADMIN</text>
+  <text x="813" y="95" font-family="Share Tech Mono,monospace" font-size="9" fill="#88ff99" text-anchor="middle">DCSync / dcsync</text>
+  <text x="813" y="108" font-family="Share Tech Mono,monospace" font-size="9" fill="#88ff99" text-anchor="middle">Golden Ticket</text>
+  <text x="68"  y="175" font-family="Share Tech Mono,monospace" font-size="10" fill="rgba(0,229,255,.85)"  text-anchor="middle">STEP 1</text>
+  <text x="209" y="175" font-family="Share Tech Mono,monospace" font-size="10" fill="rgba(255,200,80,.85)" text-anchor="middle">STEP 2</text>
+  <text x="350" y="175" font-family="Share Tech Mono,monospace" font-size="10" fill="rgba(255,80,80,.85)"  text-anchor="middle">STEP 3</text>
+  <text x="491" y="175" font-family="Share Tech Mono,monospace" font-size="10" fill="rgba(191,0,255,.85)"  text-anchor="middle">STEP 4</text>
+  <text x="632" y="175" font-family="Share Tech Mono,monospace" font-size="10" fill="rgba(0,229,255,.85)"  text-anchor="middle">STEP 5</text>
+  <text x="813" y="175" font-family="Share Tech Mono,monospace" font-size="10" fill="rgba(0,255,65,.9)"    text-anchor="middle">OBJECTIVE</text>
+</svg></div></div>
+
 
 <div class="div"></div>
 
@@ -546,6 +604,54 @@ body{background:var(--bg);color:var(--t1);font-family:var(--body);font-size:17px
     </div>
   </div>
 </section>
+<div class="rv" style="margin:0 0 40px 0"><div style="font-family:var(--mono);font-size:10px;letter-spacing:3px;color:var(--p);margin-bottom:14px">DIAGRAM 02 // NTLM RELAY / RESPONDER ATTACK FLOW</div><div style="overflow-x:auto;-webkit-overflow-scrolling:touch;background:rgba(0,0,0,0.4);border:1px solid rgba(0,229,255,0.12);border-radius:4px;padding:16px"><svg viewBox="0 0 920 240" xmlns="http://www.w3.org/2000/svg" style="width:100%;min-width:580px;max-width:920px;display:block">
+  <defs><marker id="in2" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="rgba(0,229,255,.9)"/></marker>
+  <marker id="in2r" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="rgba(255,80,80,.9)"/></marker>
+  <marker id="in2g" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="rgba(0,255,65,.9)"/></marker></defs>
+  <!-- Victim PC -->
+  <rect x="10" y="95" width="130" height="58" rx="4" fill="rgba(0,0,0,.82)" stroke="rgba(255,200,80,.85)" stroke-width="1.5"/>
+  <text x="75" y="118" font-family="Share Tech Mono,monospace" font-size="10" fill="#ffc850" text-anchor="middle" font-weight="700">VICTIM PC</text>
+  <text x="75" y="133" font-family="Share Tech Mono,monospace" font-size="8"  fill="#ffe088" text-anchor="middle">LLMNR/NBT-NS probe</text>
+  <!-- Arrow: probe broadcast -->
+  <line x1="141" y1="124" x2="195" y2="124" stroke="rgba(255,200,80,.82)" stroke-width="1.5" marker-end="url(#in2)"/>
+  <text x="168" y="116" font-family="Share Tech Mono,monospace" font-size="8" fill="#ffe088" text-anchor="middle">broadcast</text>
+  <!-- Attacker / Responder -->
+  <rect x="197" y="85" width="145" height="78" rx="4" fill="rgba(0,0,0,.82)" stroke="rgba(255,80,80,.85)" stroke-width="1.5"/>
+  <text x="269" y="110" font-family="Share Tech Mono,monospace" font-size="10" fill="#ff5050" text-anchor="middle" font-weight="700">ATTACKER</text>
+  <text x="269" y="124" font-family="Share Tech Mono,monospace" font-size="10" fill="#ff5050" text-anchor="middle" font-weight="700">RESPONDER</text>
+  <text x="269" y="142" font-family="Share Tech Mono,monospace" font-size="8"  fill="#ff8888" text-anchor="middle">poisons broadcast</text>
+  <!-- Arrow: fake auth response -->
+  <line x1="343" y1="124" x2="393" y2="124" stroke="rgba(255,80,80,.82)" stroke-width="1.5" marker-end="url(#in2r)"/>
+  <text x="368" y="116" font-family="Share Tech Mono,monospace" font-size="8" fill="#ff8888" text-anchor="middle">NTLM auth</text>
+  <!-- NTLM Hash Capture -->
+  <rect x="395" y="85" width="145" height="78" rx="4" fill="rgba(0,0,0,.82)" stroke="rgba(191,0,255,.85)" stroke-width="1.5"/>
+  <text x="467" y="110" font-family="Share Tech Mono,monospace" font-size="10" fill="#bf00ff" text-anchor="middle" font-weight="700">NTLM HASH</text>
+  <text x="467" y="124" font-family="Share Tech Mono,monospace" font-size="10" fill="#bf00ff" text-anchor="middle" font-weight="700">CAPTURED</text>
+  <text x="467" y="142" font-family="Share Tech Mono,monospace" font-size="8"  fill="#df88ff" text-anchor="middle">NTLMv2 hash</text>
+  <!-- Branch up: crack -->
+  <line x1="541" y1="100" x2="580" y2="65" stroke="rgba(0,229,255,.82)" stroke-width="1.5" marker-end="url(#in2)"/>
+  <text x="570" y="56" font-family="Share Tech Mono,monospace" font-size="8" fill="#88e8ff">crack offline</text>
+  <!-- Branch down: relay -->
+  <line x1="541" y1="148" x2="580" y2="180" stroke="rgba(255,80,80,.82)" stroke-width="1.5" marker-end="url(#in2r)"/>
+  <text x="568" y="200" font-family="Share Tech Mono,monospace" font-size="8" fill="#ff8888">NTLM relay</text>
+  <!-- Crack box -->
+  <rect x="582" y="38" width="145" height="48" rx="4" fill="rgba(0,0,0,.82)" stroke="rgba(0,229,255,.8)" stroke-width="1.5"/>
+  <text x="654" y="59" font-family="Share Tech Mono,monospace" font-size="10" fill="#00e5ff" text-anchor="middle" font-weight="700">HASHCAT</text>
+  <text x="654" y="75" font-family="Share Tech Mono,monospace" font-size="8"  fill="#88e8ff" text-anchor="middle">plaintext password</text>
+  <!-- Relay box -->
+  <rect x="582" y="160" width="145" height="48" rx="4" fill="rgba(0,0,0,.82)" stroke="rgba(255,80,80,.8)" stroke-width="1.5"/>
+  <text x="654" y="180" font-family="Share Tech Mono,monospace" font-size="10" fill="#ff5050" text-anchor="middle" font-weight="700">ntlmrelayx</text>
+  <text x="654" y="196" font-family="Share Tech Mono,monospace" font-size="8"  fill="#ff8888" text-anchor="middle">relay to SMB/LDAP</text>
+  <!-- Both → Compromise -->
+  <line x1="728" y1="62" x2="758" y2="100" stroke="rgba(0,229,255,.8)" stroke-width="1.5" marker-end="url(#in2)"/>
+  <line x1="728" y1="184" x2="758" y2="148" stroke="rgba(255,80,80,.8)" stroke-width="1.5" marker-end="url(#in2r)"/>
+  <rect x="760" y="92" width="150" height="70" rx="4" fill="rgba(0,0,0,.88)" stroke="rgba(0,255,65,.92)" stroke-width="2"/>
+  <text x="835" y="118" font-family="Orbitron,sans-serif" font-size="10" font-weight="900" fill="#00ff41" text-anchor="middle">ACCESS</text>
+  <text x="835" y="133" font-family="Orbitron,sans-serif" font-size="10" font-weight="900" fill="#00ff41" text-anchor="middle">GAINED</text>
+  <text x="835" y="151" font-family="Share Tech Mono,monospace" font-size="9"  fill="#88ff99" text-anchor="middle">shell / DA path</text>
+  <text x="460" y="225" font-family="Share Tech Mono,monospace" font-size="9" fill="rgba(0,229,255,.78)" text-anchor="middle">Defence: disable LLMNR/NBT-NS via GPO, enable SMB signing, LDAP signing + channel binding</text>
+</svg></div></div>
+
 
 <div class="div"></div>
 
@@ -612,6 +718,46 @@ body{background:var(--bg);color:var(--t1);font-family:var(--body);font-size:17px
   <span class="cmd">xargs grep</span> <span class="flag">-l</span> <span class="str">"password\|passwd\|secret"</span> 2>/dev/null</code>
   </div>
 </section>
+<div class="rv" style="margin:0 0 40px 0"><div style="font-family:var(--mono);font-size:10px;letter-spacing:3px;color:var(--p);margin-bottom:14px">DIAGRAM 03 // PRIVILEGE ESCALATION DATA FLOW</div><div style="overflow-x:auto;-webkit-overflow-scrolling:touch;background:rgba(0,0,0,0.4);border:1px solid rgba(0,229,255,0.12);border-radius:4px;padding:16px"><svg viewBox="0 0 920 215" xmlns="http://www.w3.org/2000/svg" style="width:100%;min-width:580px;max-width:920px;display:block">
+  <defs><marker id="in3" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="rgba(0,229,255,.9)"/></marker>
+  <marker id="in3g" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="rgba(0,255,65,.9)"/></marker></defs>
+  <rect x="8" y="60" width="130" height="75" rx="4" fill="rgba(0,0,0,.82)" stroke="rgba(255,80,80,.85)" stroke-width="1.5"/>
+  <text x="73" y="87" font-family="Share Tech Mono,monospace" font-size="10" fill="#ff5050" text-anchor="middle" font-weight="700">LOW PRIV</text>
+  <text x="73" y="101" font-family="Share Tech Mono,monospace" font-size="10" fill="#ff5050" text-anchor="middle" font-weight="700">USER</text>
+  <text x="73" y="120" font-family="Share Tech Mono,monospace" font-size="8"  fill="#ff8888" text-anchor="middle">local / domain user</text>
+  <!-- check privs -->
+  <text x="157" y="82" font-family="Share Tech Mono,monospace" font-size="8" fill="rgba(0,229,255,.82)" text-anchor="start">whoami /priv</text>
+  <line x1="139" y1="98" x2="160" y2="98" stroke="rgba(0,229,255,.88)" stroke-width="1.5" marker-end="url(#in3)"/>
+  <rect x="162" y="60" width="140" height="75" rx="4" fill="rgba(0,0,0,.82)" stroke="rgba(255,200,80,.85)" stroke-width="1.5"/>
+  <text x="232" y="87" font-family="Share Tech Mono,monospace" font-size="10" fill="#ffc850" text-anchor="middle" font-weight="700">CHECK</text>
+  <text x="232" y="101" font-family="Share Tech Mono,monospace" font-size="10" fill="#ffc850" text-anchor="middle" font-weight="700">PRIVILEGES</text>
+  <text x="232" y="120" font-family="Share Tech Mono,monospace" font-size="8"  fill="#ffe088" text-anchor="middle">SeImpersonate?</text>
+  <!-- Token impersonation -->
+  <line x1="303" y1="98" x2="324" y2="98" stroke="rgba(0,229,255,.88)" stroke-width="1.5" marker-end="url(#in3)"/>
+  <rect x="326" y="60" width="145" height="75" rx="4" fill="rgba(0,0,0,.82)" stroke="rgba(191,0,255,.85)" stroke-width="1.5"/>
+  <text x="398" y="87" font-family="Share Tech Mono,monospace" font-size="10" fill="#bf00ff" text-anchor="middle" font-weight="700">TOKEN</text>
+  <text x="398" y="101" font-family="Share Tech Mono,monospace" font-size="10" fill="#bf00ff" text-anchor="middle" font-weight="700">IMPERSONATE</text>
+  <text x="398" y="120" font-family="Share Tech Mono,monospace" font-size="8"  fill="#df88ff" text-anchor="middle">Potato / Rogue</text>
+  <!-- Or -->
+  <line x1="472" y1="98" x2="493" y2="98" stroke="rgba(0,229,255,.88)" stroke-width="1.5" marker-end="url(#in3)"/>
+  <rect x="495" y="60" width="145" height="75" rx="4" fill="rgba(0,0,0,.82)" stroke="rgba(0,229,255,.85)" stroke-width="1.5"/>
+  <text x="567" y="87" font-family="Share Tech Mono,monospace" font-size="10" fill="#00e5ff" text-anchor="middle" font-weight="700">LOCAL CVE</text>
+  <text x="567" y="101" font-family="Share Tech Mono,monospace" font-size="10" fill="#00e5ff" text-anchor="middle" font-weight="700">EXPLOIT</text>
+  <text x="567" y="120" font-family="Share Tech Mono,monospace" font-size="8"  fill="#88e8ff" text-anchor="middle">PrintSpoofer</text>
+  <line x1="641" y1="98" x2="662" y2="98" stroke="rgba(0,255,65,.9)" stroke-width="2" marker-end="url(#in3g)"/>
+  <rect x="664" y="48" width="148" height="98" rx="4" fill="rgba(0,0,0,.88)" stroke="rgba(0,255,65,.92)" stroke-width="2"/>
+  <text x="738" y="82" font-family="Orbitron,sans-serif" font-size="10" font-weight="900" fill="#00ff41" text-anchor="middle">SYSTEM</text>
+  <text x="738" y="97" font-family="Orbitron,sans-serif" font-size="10" font-weight="900" fill="#00ff41" text-anchor="middle">/ ADMIN</text>
+  <text x="738" y="116" font-family="Share Tech Mono,monospace" font-size="9"  fill="#88ff99" text-anchor="middle">NT AUTHORITY</text>
+  <text x="738" y="130" font-family="Share Tech Mono,monospace" font-size="9"  fill="#88ff99" text-anchor="middle">\SYSTEM</text>
+  <text x="73"  y="165" font-family="Share Tech Mono,monospace" font-size="9" fill="rgba(255,80,80,.82)"  text-anchor="middle">start</text>
+  <text x="232" y="165" font-family="Share Tech Mono,monospace" font-size="9" fill="rgba(255,200,80,.82)" text-anchor="middle">enum privs</text>
+  <text x="398" y="165" font-family="Share Tech Mono,monospace" font-size="9" fill="rgba(191,0,255,.82)"  text-anchor="middle">potato attacks</text>
+  <text x="567" y="165" font-family="Share Tech Mono,monospace" font-size="9" fill="rgba(0,229,255,.82)"  text-anchor="middle">local exploits</text>
+  <text x="738" y="165" font-family="Share Tech Mono,monospace" font-size="9" fill="rgba(0,255,65,.88)"   text-anchor="middle">full control</text>
+  <text x="460" y="195" font-family="Share Tech Mono,monospace" font-size="9" fill="rgba(0,229,255,.75)" text-anchor="middle">Tools: winPEAS, LinPEAS, PowerUp, Seatbelt, BeRoot -- automated privesc enumeration on Windows and Linux</text>
+</svg></div></div>
+
 
 <div class="div"></div>
 
@@ -724,97 +870,132 @@ body{background:var(--bg);color:var(--t1);font-family:var(--body);font-size:17px
 
 <!-- 09 AI INTEGRATION -->
 <section class="sec rv sec-ai" id="ai">
-  <div class="sec-hd"><span class="sec-n">09 //</span><h2 class="sec-t">AI Integration in Internal Network Penetration Testing<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
-
+  <div class="sec-hd"><span class="sec-n">10 //</span><h2 class="sec-t">AI Integration in Internal Network Penetration Testing<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
   <div class="panel panel-ai rv-l">
-    <p>Artificial Intelligence is fundamentally transforming what is possible inside an organisation's internal network — both for attackers and defenders. Internal network assessments generate enormous volumes of data: Nmap scan outputs, BloodHound attack graphs, credential dumps, event logs, and lateral movement traces. AI models can process and correlate this data at speeds and scales that are impossible for human analysts alone, surfacing the highest-priority attack paths, generating adaptive payloads that evade EDR behavioural signatures, and producing detection logic that learns from each attack pattern it observes.</p>
-    <p>On the defensive side, the same AI capabilities that make attackers faster and more effective also power the behavioural detection, user and entity behaviour analytics (UEBA), and automated response systems that organisations need to detect internal threats before they reach their most damaging stage. Understanding both sides is essential for any practitioner building or testing internal security controls.</p>
+    <p>AI fundamentally accelerates internal network penetration testing -- compressing hours of manual BloodHound analysis and credential triage into minutes, generating targeted attack chains from network scan data, interpreting complex Windows event logs and NTLM challenge-response captures, and automating the most tedious aspects of post-exploitation enumeration. Internal network tests produce enormous volumes of data (Nessus XML, BloodHound JSON, Responder captures, WMI output) that AI can correlate and reason about at a depth no manual analysis can match in comparable time.</p>
+    <p>The critical shift: AI tools like <strong style="color:var(--c)">Claude</strong> and <strong style="color:var(--c)">ChatGPT</strong> understand Active Directory relationships, Windows privilege model, and Kerberos protocol deeply enough to serve as expert internal pentest advisors -- generating NTLM relay strategies, BloodHound Cypher queries, and post-exploitation command sequences tailored to the specific environment discovered during enumeration.</p>
   </div>
-
   <div class="alert al-p rv">
     <span class="al-ic">[ AI ]</span>
-    <p class="al-tx">AI-assisted attack tools are already deployed in real-world ransomware campaigns — automated network enumeration, credential spraying, and lateral movement scripts accelerate the time from initial access to full domain compromise from days to <strong>under 6 hours</strong> in observed incidents. Internal pen testing must now account for AI-accelerated attacker timelines in its threat modelling.</p>
+    <p class="al-tx">Internal network penetration testers using AI-assisted BloodHound analysis identify the shortest path to Domain Admin in seconds rather than hours of manual Cypher query refinement. AI processes full BloodHound JSON exports, correlates attack paths, ranks them by stealth and exploitability, and generates the exact Impacket and PowerView commands for each step -- replacing the most expert-dependent phase of AD pentesting with guided automation.</p>
   </div>
 
-  <h3 style="font-family:var(--mono);font-size:11px;letter-spacing:3px;color:var(--p);text-transform:uppercase;margin:28px 0 16px;">AI Capabilities — Offensive Internal Testing</h3>
+  <h3 style="font-family:var(--mono);font-size:11px;letter-spacing:3px;color:var(--p);text-transform:uppercase;margin:28px 0 16px">AI-Powered Internal Network Attack Capabilities</h3>
   <div class="ai-grid rv">
-    <div class="ai-card"><span class="ai-ico">🗺</span><div class="ai-name">AI-Driven Attack Path Analysis</div><div class="ai-desc">Graph neural networks trained on BloodHound data identify the optimal path from any user account to Domain Admin — accounting for detection risk at each hop, time-of-day access patterns, and the specific security controls observed during reconnaissance. What takes a human analyst hours of BloodHound query refinement takes an AI seconds.</div></div>
-    <div class="ai-card"><span class="ai-ico">🎯</span><div class="ai-name">Intelligent Target Prioritisation</div><div class="ai-desc">AI models rank discovered hosts by attack value — combining service type, software version, patch level, AD membership, and connectivity to high-value assets — to generate an optimised testing sequence that reaches the highest-impact findings earliest in the engagement window.</div></div>
-    <div class="ai-card"><span class="ai-ico">🧪</span><div class="ai-name">Adaptive Payload Evasion</div><div class="ai-desc">LLMs generate Meterpreter alternatives, custom shellcode loaders, and in-memory execution techniques specifically tuned to evade the EDR signatures observed during reconnaissance — iteratively mutating payloads until they pass detection, enabling assessment of true security posture rather than known-signature detection.</div></div>
-    <div class="ai-card"><span class="ai-ico">🔐</span><div class="ai-name">Credential Intelligence</div><div class="ai-desc">AI analyses captured credential metadata — account naming conventions, password patterns, service account structures — to generate targeted wordlists and predict likely credentials for accounts where hashes are not directly available, dramatically increasing password spray and cracking effectiveness.</div></div>
-    <div class="ai-card"><span class="ai-ico">📝</span><div class="ai-name">Automated Evidence Documentation</div><div class="ai-desc">LLMs process raw command output, screenshots, and session logs during testing — automatically generating structured finding entries with technical detail, business impact assessment, and remediation guidance, maintaining a complete engagement evidence trail with no manual documentation overhead.</div></div>
-    <div class="ai-card"><span class="ai-ico">⚙️</span><div class="ai-name">Autonomous Lateral Movement</div><div class="ai-desc">Experimental AI-driven agent frameworks can autonomously enumerate discovered credentials, test them against discovered services, establish new sessions, and continue expanding access — compressing the lateral movement phase from hours of manual work to fully automated execution under human supervision.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128272;</span><div class="ai-name">BloodHound Attack Path Analysis</div><div class="ai-desc">AI processes BloodHound Community Edition JSON exports to instantly identify the shortest, lowest-detection path from any compromised account to Domain Admin -- ranking paths by exploitability, stealth, and required privileges. Claude and ChatGPT generate the exact BloodHound Cypher queries, Impacket commands, PowerView enumeration steps, and Mimikatz sequences for each attack path, translating complex AD graph data into a step-by-step operational playbook without requiring Cypher expertise.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#9889;</span><div class="ai-name">NTLM Relay Strategy Generation</div><div class="ai-desc">AI analyses discovered network configuration -- SMB signing status from CrackMapExec output, LLMNR/NBT-NS enabled hosts from Responder logs, service accounts and their privileges from BloodHound -- to generate an optimised NTLM relay attack strategy. Produces the exact ntlmrelayx command with target selection, protocol choice (SMB/LDAP/MSSQL), and post-relay actions (sAMAccountName attack, shadow credentials, LAPS dump) tailored to the specific environment.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128200;</span><div class="ai-name">Network Scan Correlation</div><div class="ai-desc">AI processes Nessus XML and Nmap output to produce a consolidated internal network attack plan -- correlating vulnerable services across hosts, identifying critical attack chains (SMB vulnerability on DC = domain compromise), ranking findings by actual exploitability, and generating specific Metasploit module names and manual exploitation steps. Turns 500 hosts of scan data into a prioritised three-target attack list in minutes with environmental-specific exploitation guidance.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128270;</span><div class="ai-name">Privilege Escalation Planning</div><div class="ai-desc">AI analyses winPEAS, LinPEAS, Seatbelt, and PowerUp output to identify privilege escalation paths -- explaining which findings are exploitable, generating the exact commands to exploit each vector (PrintSpoofer, Potato attacks, unquoted service paths, DLL hijacking), assessing detection risk per technique, and suggesting the stealthiest escalation path based on the observed security controls. Replaces expert Windows/Linux internals knowledge with AI-assisted analysis of automated tool output.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128196;</span><div class="ai-name">Automated Report Writing</div><div class="ai-desc">AI converts internal network assessment evidence -- BloodHound attack paths, CrackMapExec session output, Mimikatz loot, Responder NTLMv2 captures, privilege escalation evidence -- into structured penetration test findings with CVSSv4 scores, MITRE ATT&amp;CK TTP mappings (T1187, T1558, T1550), business impact statements, and remediation guidance. Maps findings to Cyber Essentials, ISO 27001, and NIST CSF controls, producing board-ready reports from raw technical evidence.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128301;</span><div class="ai-name">C2 Evasion Strategy</div><div class="ai-desc">AI generates EDR-evasion strategies for post-exploitation activity -- recommending OPSEC-safe alternatives to noisy tools (process injection methods, LOLBin abuse chains, AMSI bypass variants) based on the specific EDR product detected during enumeration. GitHub Copilot and Cursor accelerate development of custom C2 implants and beacon profiles that blend with legitimate network traffic patterns observed in the target environment, reducing detection risk throughout the post-exploitation phase.</div></div>
   </div>
 
-  <h3 style="font-family:var(--mono);font-size:11px;letter-spacing:3px;color:var(--p);text-transform:uppercase;margin:32px 0 16px;">AI Capabilities — Internal Defence &amp; Detection</h3>
+  <h3 style="font-family:var(--mono);font-size:11px;letter-spacing:3px;color:var(--p);text-transform:uppercase;margin:32px 0 16px">AI-Powered Internal Network Defence</h3>
   <div class="ai-grid rv">
-    <div class="ai-card"><span class="ai-ico">👁</span><div class="ai-name">UEBA — User Behaviour Analytics</div><div class="ai-desc">ML models baseline each user's normal access patterns — typical login hours, accessed resources, data volumes, authentication sequences — and alert in real time on any deviation. Lateral movement, credential abuse, and insider threat activity all produce behavioural anomalies that UEBA detects even without any known attack signature.</div></div>
-    <div class="ai-card"><span class="ai-ico">🔍</span><div class="ai-name">AI-Powered Threat Hunting</div><div class="ai-desc">Security analysts use LLMs to query and correlate Windows Event Log data, Sysmon telemetry, and network flow records at scale — asking natural language questions like "show me all hosts that authenticated to a DC within 5 minutes of a new process creation" that would require complex query building manually.</div></div>
-    <div class="ai-card"><span class="ai-ico">🛡</span><div class="ai-name">EDR Behavioural Detection</div><div class="ai-desc">Modern EDR platforms (CrowdStrike Falcon, Microsoft Defender for Endpoint, SentinelOne) use ML models trained on millions of attack sequences to detect PtH, PtT, DCSync, BloodHound collection, and Mimikatz behaviour at the process and memory level — independently of file signatures.</div></div>
-    <div class="ai-card"><span class="ai-ico">🚀</span><div class="ai-name">Automated Incident Response</div><div class="ai-desc">AI-driven SOAR playbooks automatically isolate compromised machines, revoke active sessions, reset flagged credentials, force re-authentication, and capture forensic memory dumps within seconds of detection — collapsing mean time to contain from hours to under a minute for known attack patterns.</div></div>
-    <div class="ai-card"><span class="ai-ico">🧮</span><div class="ai-name">AD Risk Scoring</div><div class="ai-desc">AI continuously analyses the Active Directory environment — tracking misconfigured ACLs, overprivileged accounts, stale delegation settings, and Kerberoastable SPNs — assigning risk scores that update in real time as the AD configuration changes, enabling proactive misconfiguration remediation before pen testers or attackers find them.</div></div>
-    <div class="ai-card"><span class="ai-ico">🔗</span><div class="ai-name">Deception &amp; Honeypot Intelligence</div><div class="ai-desc">AI-managed honeytoken accounts, fake credentials placed in likely exfiltration paths, and synthetic network shares are strategically deployed based on AI analysis of likely attacker behaviour — generating high-fidelity alerts the moment an attacker accesses them during lateral movement.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128065;</span><div class="ai-name">Microsoft Copilot for Security</div><div class="ai-desc">Microsoft's AI layer across Defender for Identity, Sentinel, and Entra translates natural-language investigation questions into KQL queries against internal network telemetry -- "show all Kerberos RC4 downgrade events combined with lateral movement to Tier 0 assets in the last 48 hours" -- and correlates identity, endpoint, and network telemetry for complete internal attack chain reconstruction. Collapses hours of manual SOC investigation into minutes of AI-guided analysis.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128737;&#65039;</span><div class="ai-name">CrowdStrike Charlotte AI</div><div class="ai-desc"><strong style="color:var(--c)">CrowdStrike Charlotte AI</strong> brings conversational AI to Falcon's internal endpoint and network telemetry -- enabling analysts to hunt for internal attack indicators using natural language across the entire environment. Surfaces NTLM relay, Pass-the-Hash, Kerberoasting, and lateral movement behaviour in real time, correlating indicators across endpoints without requiring KQL or telemetry expertise from every analyst.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#127919;</span><div class="ai-name">BloodHound Enterprise</div><div class="ai-desc"><strong style="color:var(--c)">BloodHound Enterprise</strong> uses graph ML to continuously map Active Directory attack paths -- showing defenders exactly what an internal attacker would find, prioritising remediation by attack path frequency and criticality, and tracking which remediations actually reduce the number of DA paths. Security teams see the internal attack surface from an attacker's perspective continuously, not just during annual penetration tests.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#129302;</span><div class="ai-name">Vectra AI / Darktrace</div><div class="ai-desc"><strong style="color:var(--c)">Vectra AI</strong> and <strong style="color:var(--c)">Darktrace</strong> use unsupervised ML to detect internal attack behaviour without signatures -- identifying NTLM relay patterns, lateral movement via SMB, Kerberoasting request volumes, DCSync attempts, and credential dumping from abnormal process trees. Autonomous response capabilities isolate compromised hosts within seconds of detection, dramatically reducing dwell time from the industry average of weeks to minutes.</div></div>
   </div>
 
-  <div class="cb rv cb-ai" data-l="AI-Assisted — BloodHound Data Analysis with GPT">
-    <code><span class="cmt"># AI-augmented BloodHound analysis — process attack paths with LLM</span>
-<span class="kw">import</span> openai, json, subprocess
+  <div class="panel panel-ai rv" style="margin-top:28px">
+    <div class="panel-t">AI Tools for Internal Network Pentesting -- No Version Lock-In</div>
+    <div style="overflow-x:auto;-webkit-overflow-scrolling:touch">
+    <table class="ptbl" style="min-width:580px">
+      <thead><tr>
+        <th style="color:#bf00ff;border-bottom-color:rgba(191,0,255,.25)">Tool / Platform</th>
+        <th style="color:#bf00ff;border-bottom-color:rgba(191,0,255,.25)">AI Capability</th>
+        <th style="color:#bf00ff;border-bottom-color:rgba(191,0,255,.25)">Internal Pentest Use Case</th>
+      </tr></thead>
+      <tbody>
+        <tr><td style="color:var(--g)">Claude (Anthropic)</td><td style="color:var(--t2)">Frontier LLM, long context, code</td><td style="color:var(--t2)">BloodHound analysis, attack path planning, winPEAS triage, full report writing</td></tr>
+        <tr><td style="color:var(--g)">ChatGPT (OpenAI)</td><td style="color:var(--t2)">Frontier LLM, reasoning</td><td style="color:var(--t2)">NTLM relay strategy, privesc planning, Impacket command generation</td></tr>
+        <tr><td style="color:var(--g)">Gemini (Google)</td><td style="color:var(--t2)">Long context + Mandiant intel</td><td style="color:var(--t2)">Threat actor TTP correlation, Windows internals analysis, large AD dataset processing</td></tr>
+        <tr><td style="color:var(--g)">Copilot for Security</td><td style="color:var(--t2)">Microsoft AI across AD stack</td><td style="color:var(--t2)">KQL threat hunting, correlated internal attack timelines, guided remediation</td></tr>
+        <tr><td style="color:var(--g)">CrowdStrike Charlotte AI</td><td style="color:var(--t2)">Conversational AI on Falcon</td><td style="color:var(--t2)">Internal attack hunting, lateral movement detection, guided incident response</td></tr>
+        <tr><td style="color:var(--g)">BloodHound Enterprise</td><td style="color:var(--t2)">Graph ML attack path analysis</td><td style="color:var(--t2)">Continuous DA path mapping, live risk scoring, remediation prioritisation</td></tr>
+        <tr><td style="color:var(--g)">Vectra AI / Darktrace</td><td style="color:var(--t2)">Unsupervised ML network detection</td><td style="color:var(--t2)">NTLM relay detection, lateral movement, DCSync alerts, autonomous containment</td></tr>
+        <tr><td style="color:var(--g)">GitHub Copilot / Cursor</td><td style="color:var(--t2)">AI code completion in IDE</td><td style="color:var(--t2)">Custom Impacket scripts, BloodHound Cypher, C2 beacon development</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
 
-<span class="cmt"># Step 1: Export BloodHound data via Neo4j Cypher query</span>
-<span class="cmt"># Query: MATCH p=shortestPath((u:User)-[*1..]->(g:Group {name:"DOMAIN ADMINS@CORP.LOCAL"})) RETURN p</span>
-<span class="cmt"># Export as JSON, then process:</span>
+  <div class="cb cb-ai rv" data-l="AI -- BloodHound Attack Path Analyser and Command Generator">
+    <code><span style="color:#bd93f9">#!/usr/bin/env python3</span>
+<span style="color:var(--t3))"># Analyse BloodHound data with AI for attack path planning
+# Model-agnostic: set AI_MODEL env var to latest available model
+# pip install openai</span>
 
-attack_paths = json.<span class="fn">loads</span>(<span class="fn">open</span>(<span class="str">'bloodhound_paths.json'</span>).read())
+<span style="color:#bd93f9">import</span> openai, json, os, sys
 
-client = openai.<span class="fn">OpenAI</span>()
-response = client.chat.completions.<span class="fn">create</span>(
-    model=<span class="str">"gpt-4o"</span>,
-    messages=[{<span class="str">"role"</span>:<span class="str">"user"</span>, <span class="str">"content"</span>: <span class="str">f"""
-You are an expert Active Directory penetration tester and red team operator.
-Analyse these BloodHound attack paths from a real internal assessment:
+MODEL = os.getenv(<span style="color:#ff79c6">"AI_MODEL"</span>, <span style="color:#ff79c6">"gpt-4o"</span>)  <span style="color:var(--t3));"># swap to latest model as needed</span>
 
-{json.dumps(attack_paths, indent=2)[:4000]}
+<span style="color:#8be9fd">def</span> <span style="color:var(--c)">load_bh_data</span>(filepath):
+    <span style="color:var(--t3));"># Load BloodHound CE JSON export (users.json, computers.json, etc.)</span>
+    <span style="color:#bd93f9">with</span> open(filepath) <span style="color:#bd93f9">as</span> f:
+        data = json.load(f)
+    <span style="color:#bd93f9">return</span> {
+        <span style="color:#ff79c6">"meta"</span>: data.get(<span style="color:#ff79c6">"meta"</span>, {}),
+        <span style="color:#ff79c6">"nodes_sample"</span>: data.get(<span style="color:#ff79c6">"data"</span>, [])[:50],  <span style="color:var(--t3));"># limit context</span>
+    }
 
-Provide:
-1. The 3 most exploitable attack paths ranked by ease and impact
-2. Specific tools and commands to execute each path
-3. Estimated time to Domain Admin via each path
-4. Detection likelihood for each path (Low/Medium/High)
-5. Remediation priority for each discovered weakness
-"""</span>}]
+prompt_template = (<span style="color:#ff79c6">"You are a senior Active Directory penetration tester. "</span>
+                   <span style="color:#ff79c6">"Analyse this BloodHound data and provide:\n"</span>
+                   <span style="color:#ff79c6">"1. TOP 5 ATTACK PATHS to Domain Admin ranked by ease + stealth\n"</span>
+                   <span style="color:#ff79c6">"2. EXACT COMMANDS: Impacket / PowerView / SharpHound per step\n"</span>
+                   <span style="color:#ff79c6">"3. BLOODHOUND CYPHER QUERIES: to find each attack path in Neo4j\n"</span>
+                   <span style="color:#ff79c6">"4. DETECTION RISK: Low/Medium/High per path\n"</span>
+                   <span style="color:#ff79c6">"5. MITRE ATT&CK TTP IDs for each technique\n\n"</span>
+                   <span style="color:#ff79c6">"BloodHound data:\n"</span>)
+
+filepath = sys.argv[1] <span style="color:#bd93f9">if</span> len(sys.argv) > 1 <span style="color:#bd93f9">else</span> <span style="color:#ff79c6">"users.json"</span>
+data = load_bh_data(filepath)
+r = openai.OpenAI().chat.completions.create(
+    model=MODEL,
+    messages=[{<span style="color:#ff79c6">"role"</span>:<span style="color:#ff79c6">"user"</span>,
+               <span style="color:#ff79c6">"content"</span>: prompt_template + json.dumps(data, indent=2, default=str)[:5000]}]
 )
-<span class="fn">print</span>(response.choices[<span class="num">0</span>].message.content)</code>
+print(r.choices[0].message.content)</code>
   </div>
 
-  <div class="cb rv cb-ai" data-l="AI — Automated Internal PT Finding Generation">
-    <code><span class="cmt"># Generate a complete internal pen test finding from raw evidence</span>
-<span class="kw">import</span> openai, json
+  <div class="cb cb-ai rv" data-l="AI -- Internal Scan Correlator and Attack Plan Generator">
+    <code><span style="color:#bd93f9">#!/usr/bin/env python3</span>
+<span style="color:var(--t3))"># Correlate CrackMapExec + Nmap output with AI for internal attack planning
+# Usage: python3 internal_ai.py 192.168.1.0/24</span>
 
-finding_data = {
-    <span class="str">"title"</span>: <span class="str">"Kerberoastable Service Account with Weak Password"</span>,
-    <span class="str">"account"</span>: <span class="str">"svc_sql@corp.local"</span>,
-    <span class="str">"spn"</span>: <span class="str">"MSSQLSvc/sqlserver01.corp.local:1433"</span>,
-    <span class="str">"cracked_in"</span>: <span class="str">"4 minutes with rockyou.txt"</span>,
-    <span class="str">"password"</span>: <span class="str">"Summer2021!"</span>,
-    <span class="str">"account_privileges"</span>: <span class="str">"Local admin on 12 servers, member of DBA group"</span>
+<span style="color:#bd93f9">import</span> openai, subprocess, json, sys, os
+
+MODEL = os.getenv(<span style="color:#ff79c6">"AI_MODEL"</span>, <span style="color:#ff79c6">"gpt-4o"</span>)
+
+<span style="color:#8be9fd">def</span> <span style="color:var(--c)">run</span>(cmd):
+    <span style="color:#bd93f9">try</span>:
+        <span style="color:#bd93f9">return</span> subprocess.run(cmd, capture_output=<span style="color:#bd93f9">True</span>, text=<span style="color:#bd93f9">True</span>, timeout=120).stdout[:3000]
+    <span style="color:#bd93f9">except</span>: <span style="color:#bd93f9">return</span> <span style="color:#ff79c6">""</span>
+
+target = sys.argv[1] <span style="color:#bd93f9">if</span> len(sys.argv) > 1 <span style="color:#bd93f9">else</span> <span style="color:#ff79c6">"192.168.1.0/24"</span>
+print(<span style="color:#ff79c6">f"[*] Scanning {target}..."</span>)
+
+intel = {
+    <span style="color:#ff79c6">"nmap_smb"</span>    : run([<span style="color:#ff79c6">"nmap"</span>,<span style="color:#ff79c6">"-p"</span>,<span style="color:#ff79c6">"445,139"</span>,<span style="color:#ff79c6">"--script"</span>,<span style="color:#ff79c6">"smb-vuln*,smb-security-mode"</span>,target]),
+    <span style="color:#ff79c6">"cme_smb"</span>     : run([<span style="color:#ff79c6">"cme"</span>,<span style="color:#ff79c6">"smb"</span>,target,<span style="color:#ff79c6">"--gen-relay-list"</span>,<span style="color:#ff79c6">"relay_targets.txt"</span>]),
+    <span style="color:#ff79c6">"nmap_top"</span>    : run([<span style="color:#ff79c6">"nmap"</span>,<span style="color:#ff79c6">"-sV"</span>,<span style="color:#ff79c6">"--top-ports"</span>,<span style="color:#ff79c6">"100"</span>,<span style="color:#ff79c6">"-T4"</span>,target]),
 }
 
-prompt = <span class="str">f"""
-As a senior penetration tester, write a detailed finding for this internal assessment result:
-{json.dumps(finding_data, indent=2)}
+prompt = (<span style="color:#ff79c6">"You are a senior internal network pentester. Analyse this reconnaissance data:\n"</span>
+          <span style="color:#ff79c6">"1. NTLM RELAY TARGETS: hosts without SMB signing (relay candidates)\n"</span>
+          <span style="color:#ff79c6">"2. VULN HOSTS: critical CVEs to exploit immediately\n"</span>
+          <span style="color:#ff79c6">"3. ATTACK PRIORITY: top 5 targets with exact tool commands\n"</span>
+          <span style="color:#ff79c6">"4. RESPONDER STRATEGY: optimal Responder config for this network\n"</span>
+          <span style="color:#ff79c6">"5. MITRE ATT&CK TTPs for each recommended technique\n\n"</span>
+          <span style="color:#ff79c6">f"Scan data:\n{json.dumps(intel, indent=2)[:5000]}"</span>)
 
-Include: Title, CVSSv3 score and vector, Severity, Technical Description, 
-Business Impact, Steps to Reproduce, Proof of Concept output, 
-Remediation (specific and actionable), and References (OWASP, MITRE ATT&CK TTP).
-"""</span>
-
-r = openai.OpenAI().chat.completions.<span class="fn">create</span>(
-    model=<span class="str">"gpt-4o"</span>,
-    messages=[{<span class="str">"role"</span>:<span class="str">"user"</span>,<span class="str">"content"</span>:prompt}]
-)
-<span class="fn">print</span>(r.choices[<span class="num">0</span>].message.content)</code>
+r = openai.OpenAI().chat.completions.create(
+    model=MODEL, messages=[{<span style="color:#ff79c6">"role"</span>:<span style="color:#ff79c6">"user"</span>,<span style="color:#ff79c6">"content"</span>:prompt}])
+print(r.choices[0].message.content)</code>
   </div>
 </section>
+
 
 <div class="div"></div>
 
@@ -891,6 +1072,8 @@ r = openai.OpenAI().chat.completions.<span class="fn">create</span>(
 <script>
 /* ─── CURSOR ─── */
 const cur=document.getElementById('cur'),cur2=document.getElementById('cur2'),cur3=document.getElementById('cur3');
+const isTouch=('ontouchstart' in window)||navigator.maxTouchPoints>0;
+if(isTouch){[cur,cur2,cur3].forEach(el=>{if(el)el.style.display='none'});document.body.style.cursor='auto';}
 let mx=0,my=0;
 document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px'});
 (function loop(){cur2.style.left=mx+'px';cur2.style.top=my+'px';cur3.style.left=mx+'px';cur3.style.top=my+'px';requestAnimationFrame(loop)})();
@@ -1050,8 +1233,9 @@ document.querySelectorAll('.rv,.rv-l').forEach(el=>rv.observe(el));
 /* ═══ TOC TRACKING ═══ */
 const sIds=['hero','what','threats','pre','scan','exploit','privesc','lateral','exfil','ai','defence'];
 const tItems=document.querySelectorAll('.toc-i');
-const so=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)tItems.forEach(t=>t.classList.toggle('active',t.dataset.s===x.target.id))})},{threshold:.25});
-sIds.forEach(id=>{const el=document.getElementById(id);if(el)so.observe(el)});
+function updateTOC(){const sy=window.scrollY+130;let cur='hero';sIds.forEach(id=>{const el=document.getElementById(id);if(el&&el.offsetTop<=sy)cur=id;});tItems.forEach(t=>t.classList.toggle('active',t.dataset.s===cur));}
+window.addEventListener('scroll',updateTOC,{passive:true});
+updateTOC();
 function goTo(h){document.querySelector(h)?.scrollIntoView({behavior:'smooth'})}
 
 /* ═══ CODE COPY ═══ */

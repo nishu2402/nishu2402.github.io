@@ -3,11 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" sizes="64x64" href="https://nishu2402.github.io/favicon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://nishu2402.github.io/favicon.png">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="shortcut icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="https://nishu2402.github.io/favicon.png">
+<link rel="apple-touch-icon" href="favicon.png">
 <title>Google Dorking &amp; Google Hacking | Nisarg Chasmawala</title>
 <meta name="description" content="Google Dorking and Google Hacking - the definitive OSINT guide by Nisarg Chasmawala (Shroff), Offensive Security Engineer.">
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--g:#00ff41;--c:#00e5ff;--p:#bf00ff;--r:#ff003c;--o:#ffd700;--bg:#030509;--t1:#d4ffe0;--t2:#7aad82;--t3:#2e4a32;--mono:'Share Tech Mono',monospace;--dsp:'Orbitron',sans-serif;--body:'Rajdhani',sans-serif;--glow:0 0 20px rgba(0,255,65,.4),0 0 60px rgba(0,255,65,.15);--cglow:0 0 20px rgba(0,229,255,.4),0 0 60px rgba(0,229,255,.1);--pglow:0 0 20px rgba(191,0,255,.4),0 0 60px rgba(191,0,255,.1)}
+:root{--g:#00ff41;--c:#00e5ff;--p:#bf00ff;--r:#ff003c;--o:#ffd700;--bg:#030509;--t1:#e8fff2;--t2:#a8d8b0;--t3:#6abf7a;--mono:'Share Tech Mono',monospace;--dsp:'Orbitron',sans-serif;--body:'Rajdhani',sans-serif;--glow:0 0 20px rgba(0,255,65,.4),0 0 60px rgba(0,255,65,.15);--cglow:0 0 20px rgba(0,229,255,.4),0 0 60px rgba(0,229,255,.1);--pglow:0 0 20px rgba(191,0,255,.4),0 0 60px rgba(191,0,255,.1)}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth;overflow-x:hidden}
 body{background:var(--bg);color:var(--t1);font-family:var(--body);font-size:17px;line-height:1.8;overflow-x:hidden;cursor:none}
@@ -76,7 +82,7 @@ body{background:var(--bg);color:var(--t1);font-family:var(--body);font-size:17px
 .panel::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:linear-gradient(to bottom,var(--g),transparent);opacity:0;transition:opacity .3s}
 .panel:hover{border-color:rgba(0,229,255,.4);box-shadow:0 0 50px rgba(0,229,255,.07),0 20px 60px rgba(0,0,0,.3);transform:translateY(-3px)}
 .panel:hover::before{opacity:1}
-.panel p{color:var(--t2);margin-bottom:12px}
+.panel p{color:var(--t2);margin-bottom:12px;font-size:16px;line-height:1.85}
 .panel p:last-child{margin-bottom:0}
 .panel-t{font-family:var(--dsp);font-size:12px;font-weight:700;letter-spacing:3px;color:var(--g);text-transform:uppercase;margin-bottom:18px;display:flex;align-items:center;gap:12px}
 .panel-t::after{content:'';flex:1;height:1px;background:linear-gradient(to right,rgba(0,255,65,.2),transparent)}
@@ -91,15 +97,15 @@ body{background:var(--bg);color:var(--t1);font-family:var(--body);font-size:17px
 .ai-card:hover{border-color:rgba(191,0,255,.5);box-shadow:var(--pglow),0 16px 40px rgba(0,0,0,.25);transform:translateY(-3px)}
 .ai-ico{font-size:24px;margin-bottom:10px;display:block}
 .ai-name{font-family:var(--dsp);font-size:11px;font-weight:700;letter-spacing:2px;color:#bf00ff;text-transform:uppercase;margin-bottom:10px}
-.ai-desc{font-size:14px;color:var(--t2);line-height:1.65;font-weight:300}
+.ai-desc{font-size:15px;color:var(--t2);line-height:1.75;font-weight:400}
 .alert{border-radius:4px;padding:16px 20px;margin:20px 0;display:flex;gap:14px;align-items:flex-start}
 .al-w{background:rgba(255,215,0,.04);border:1px solid rgba(255,215,0,.18);border-left:3px solid var(--o)}
 .al-p{background:rgba(191,0,255,.04);border:1px solid rgba(191,0,255,.18);border-left:3px solid #bf00ff}
 .al-i{background:rgba(0,229,255,.04);border:1px solid rgba(0,229,255,.14);border-left:3px solid var(--c)}
 .al-ic{font-family:var(--mono);font-size:13px;flex-shrink:0;margin-top:2px}
 .al-w .al-ic{color:var(--o)}.al-p .al-ic{color:#bf00ff}.al-i .al-ic{color:var(--c)}
-.al-tx{font-size:14px;color:var(--t2);line-height:1.6}
-.ptbl{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12px;margin:16px 0}
+.al-tx{font-size:15px;color:var(--t2);line-height:1.75;font-weight:500}
+.ptbl{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:13px;margin:16px 0}
 .ptbl th{text-align:left;padding:11px 14px;color:var(--c);border-bottom:1px solid rgba(0,229,255,.3);letter-spacing:2px;font-size:10px;text-transform:uppercase}
 .ptbl td{padding:10px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05);vertical-align:top}
 .ptbl tr:hover td{background:rgba(0,255,65,.02)}
@@ -155,6 +161,12 @@ body{background:var(--bg);color:var(--t1);font-family:var(--body);font-size:17px
 .rv-l{opacity:0;transform:translateX(-30px);transition:opacity .8s,transform .8s}
 .rv.on,.rv-l.on{opacity:1;transform:none}
 @media(max-width:700px){.ai-grid,.tgrid,.op-grid{grid-template-columns:1fr}.hero-canvas-wrap{display:none}.cta{padding:36px 20px}}
+@media(max-width:768px){body{font-size:16px}.wrap{padding:0 16px}.hero{padding:80px 0 40px}.hero-content{max-width:100%}.hero-title{font-size:clamp(18px,5vw,30px)}.hero-desc{font-size:15px}.topbar{padding:0 16px}.tb-name{font-size:11px;letter-spacing:2px}.panel{padding:20px}.cta-btns{flex-direction:column;align-items:center}.btn{width:100%;max-width:280px;text-align:center}.footer{flex-direction:column;gap:12px}.f-r{text-align:left}.ptbl th,.ptbl td{padding:7px 8px}}
+@media(max-width:480px){body{font-size:15px}.wrap{padding:0 14px}.hero{padding:70px 0 30px}.hero-title{font-size:clamp(18px,6vw,28px)}.hero-desc{font-size:14px;line-height:1.75}.sec-t{font-size:clamp(14px,4.5vw,18px)}.ai-grid,.tgrid,.op-grid{grid-template-columns:1fr}.ptbl{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch;white-space:nowrap}.cb{padding:12px 14px}.cb code{font-size:11px;line-height:1.8}.topbar{height:50px;padding:0 12px}.tb-name{font-size:10px;letter-spacing:1px}.tb-roles{display:none}.div{margin:36px 0}.sec{margin-bottom:60px}.panel{padding:16px;font-size:15px}.ai-card{padding:16px}.ai-desc{font-size:13px}.cta{padding:28px 16px}.f-r{text-align:left}}
+@media(hover:none){.panel:hover,.ai-card:hover,.dork-card:hover,.op-card:hover{transform:none}}
+
+@media(pointer:coarse){body{cursor:auto!important}#cur,#cur2,#cur3{display:none!important}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 </style>
 </head>
 <body>
@@ -239,6 +251,52 @@ body{background:var(--bg);color:var(--t1);font-family:var(--body);font-size:17px
     </table>
   </div>
 </section>
+<div class="rv" style="margin:0 0 40px 0"><div style="font-family:var(--mono);font-size:10px;letter-spacing:3px;color:var(--p);margin-bottom:14px">DIAGRAM 01 // GOOGLE DORKING PROCESS FLOW</div><div style="overflow-x:auto;-webkit-overflow-scrolling:touch;background:rgba(0,0,0,0.4);border:1px solid rgba(0,229,255,0.12);border-radius:4px;padding:16px"><svg viewBox="0 0 920 210" xmlns="http://www.w3.org/2000/svg" style="width:100%;min-width:580px;max-width:920px;display:block">
+  <defs><marker id="dk1" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="rgba(0,229,255,.9)"/></marker>
+  <marker id="dk1g" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="rgba(0,255,65,.9)"/></marker></defs>
+  <rect x="8" y="35" width="120" height="80" rx="4" fill="rgba(0,0,0,.82)" stroke="rgba(0,229,255,.85)" stroke-width="1.5"/>
+  <text x="68" y="60" font-family="Share Tech Mono,monospace" font-size="10" fill="#00e5ff" text-anchor="middle" font-weight="700">DEFINE</text>
+  <text x="68" y="74" font-family="Share Tech Mono,monospace" font-size="10" fill="#00e5ff" text-anchor="middle" font-weight="700">TARGET</text>
+  <text x="68" y="92" font-family="Share Tech Mono,monospace" font-size="9" fill="#88e8ff" text-anchor="middle">domain / org</text>
+  <text x="68" y="105" font-family="Share Tech Mono,monospace" font-size="9" fill="#88e8ff" text-anchor="middle">scope + goals</text>
+  <line x1="129" y1="75" x2="147" y2="75" stroke="rgba(0,229,255,.88)" stroke-width="1.5" marker-end="url(#dk1)"/>
+  <rect x="149" y="35" width="125" height="80" rx="4" fill="rgba(0,0,0,.82)" stroke="rgba(255,200,80,.85)" stroke-width="1.5"/>
+  <text x="211" y="60" font-family="Share Tech Mono,monospace" font-size="10" fill="#ffc850" text-anchor="middle" font-weight="700">BUILD</text>
+  <text x="211" y="74" font-family="Share Tech Mono,monospace" font-size="10" fill="#ffc850" text-anchor="middle" font-weight="700">DORK QUERIES</text>
+  <text x="211" y="92" font-family="Share Tech Mono,monospace" font-size="9" fill="#ffe088" text-anchor="middle">site: filetype:</text>
+  <text x="211" y="105" font-family="Share Tech Mono,monospace" font-size="9" fill="#ffe088" text-anchor="middle">intitle: inurl:</text>
+  <line x1="275" y1="75" x2="293" y2="75" stroke="rgba(0,229,255,.88)" stroke-width="1.5" marker-end="url(#dk1)"/>
+  <rect x="295" y="35" width="125" height="80" rx="4" fill="rgba(0,0,0,.82)" stroke="rgba(191,0,255,.85)" stroke-width="1.5"/>
+  <text x="357" y="60" font-family="Share Tech Mono,monospace" font-size="10" fill="#bf00ff" text-anchor="middle" font-weight="700">EXECUTE</text>
+  <text x="357" y="74" font-family="Share Tech Mono,monospace" font-size="10" fill="#bf00ff" text-anchor="middle" font-weight="700">SEARCH</text>
+  <text x="357" y="92" font-family="Share Tech Mono,monospace" font-size="9" fill="#df88ff" text-anchor="middle">Google / Bing</text>
+  <text x="357" y="105" font-family="Share Tech Mono,monospace" font-size="9" fill="#df88ff" text-anchor="middle">Shodan / Pagodo</text>
+  <line x1="421" y1="75" x2="439" y2="75" stroke="rgba(0,229,255,.88)" stroke-width="1.5" marker-end="url(#dk1)"/>
+  <rect x="441" y="35" width="125" height="80" rx="4" fill="rgba(0,0,0,.82)" stroke="rgba(255,80,80,.85)" stroke-width="1.5"/>
+  <text x="503" y="60" font-family="Share Tech Mono,monospace" font-size="10" fill="#ff5050" text-anchor="middle" font-weight="700">ANALYSE</text>
+  <text x="503" y="74" font-family="Share Tech Mono,monospace" font-size="10" fill="#ff5050" text-anchor="middle" font-weight="700">RESULTS</text>
+  <text x="503" y="92" font-family="Share Tech Mono,monospace" font-size="9" fill="#ff8888" text-anchor="middle">filter / triage</text>
+  <text x="503" y="105" font-family="Share Tech Mono,monospace" font-size="9" fill="#ff8888" text-anchor="middle">validate exposure</text>
+  <line x1="567" y1="75" x2="585" y2="75" stroke="rgba(0,229,255,.88)" stroke-width="1.5" marker-end="url(#dk1)"/>
+  <rect x="587" y="35" width="125" height="80" rx="4" fill="rgba(0,0,0,.82)" stroke="rgba(0,229,255,.85)" stroke-width="1.5"/>
+  <text x="649" y="60" font-family="Share Tech Mono,monospace" font-size="10" fill="#00e5ff" text-anchor="middle" font-weight="700">DOCUMENT</text>
+  <text x="649" y="74" font-family="Share Tech Mono,monospace" font-size="10" fill="#00e5ff" text-anchor="middle" font-weight="700">&amp; REPORT</text>
+  <text x="649" y="92" font-family="Share Tech Mono,monospace" font-size="9" fill="#88e8ff" text-anchor="middle">screenshot + URL</text>
+  <text x="649" y="105" font-family="Share Tech Mono,monospace" font-size="9" fill="#88e8ff" text-anchor="middle">risk rating</text>
+  <line x1="713" y1="75" x2="731" y2="75" stroke="rgba(0,255,65,.9)" stroke-width="2" marker-end="url(#dk1g)"/>
+  <rect x="733" y="25" width="180" height="100" rx="4" fill="rgba(0,0,0,.88)" stroke="rgba(0,255,65,.92)" stroke-width="2"/>
+  <text x="823" y="60" font-family="Orbitron,sans-serif" font-size="11" font-weight="900" fill="#00ff41" text-anchor="middle">EXPOSURE</text>
+  <text x="823" y="75" font-family="Orbitron,sans-serif" font-size="11" font-weight="900" fill="#00ff41" text-anchor="middle">MAPPED</text>
+  <text x="823" y="95" font-family="Share Tech Mono,monospace" font-size="9" fill="#88ff99" text-anchor="middle">attack surface</text>
+  <text x="823" y="108" font-family="Share Tech Mono,monospace" font-size="9" fill="#88ff99" text-anchor="middle">visible to Google</text>
+  <text x="68"  y="175" font-family="Share Tech Mono,monospace" font-size="10" fill="rgba(0,229,255,.85)"  text-anchor="middle">STEP 1</text>
+  <text x="211" y="175" font-family="Share Tech Mono,monospace" font-size="10" fill="rgba(255,200,80,.85)" text-anchor="middle">STEP 2</text>
+  <text x="357" y="175" font-family="Share Tech Mono,monospace" font-size="10" fill="rgba(191,0,255,.85)"  text-anchor="middle">STEP 3</text>
+  <text x="503" y="175" font-family="Share Tech Mono,monospace" font-size="10" fill="rgba(255,80,80,.85)"  text-anchor="middle">STEP 4</text>
+  <text x="649" y="175" font-family="Share Tech Mono,monospace" font-size="10" fill="rgba(0,229,255,.85)"  text-anchor="middle">STEP 5</text>
+  <text x="823" y="175" font-family="Share Tech Mono,monospace" font-size="10" fill="rgba(0,255,65,.9)"    text-anchor="middle">OBJECTIVE</text>
+</svg></div></div>
+
 <div class="div"></div>
 
 <!-- 02 RECON -->
@@ -312,6 +370,48 @@ site:TARGET.COM filetype:xlsx OR filetype:csv
 site:TARGET.COM filetype:ppt OR filetype:pptx</code>
   </div>
 </section>
+<div class="rv" style="margin:0 0 40px 0"><div style="font-family:var(--mono);font-size:10px;letter-spacing:3px;color:var(--p);margin-bottom:14px">DIAGRAM 02 // OPERATOR COMBINATION LOGIC</div><div style="overflow-x:auto;-webkit-overflow-scrolling:touch;background:rgba(0,0,0,0.4);border:1px solid rgba(0,229,255,0.12);border-radius:4px;padding:16px"><svg viewBox="0 0 920 235" xmlns="http://www.w3.org/2000/svg" style="width:100%;min-width:580px;max-width:920px;display:block">
+  <defs><marker id="dk2" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="rgba(0,229,255,.9)"/></marker>
+  <marker id="dk2g" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="rgba(0,255,65,.9)"/></marker></defs>
+  <!-- Central operator hub -->
+  <rect x="355" y="80" width="150" height="70" rx="4" fill="rgba(0,0,0,.88)" stroke="rgba(0,229,255,.88)" stroke-width="2"/>
+  <text x="430" y="108" font-family="Share Tech Mono,monospace" font-size="11" fill="#00e5ff" text-anchor="middle" font-weight="700">OPERATOR</text>
+  <text x="430" y="124" font-family="Share Tech Mono,monospace" font-size="11" fill="#00e5ff" text-anchor="middle" font-weight="700">COMBINATION</text>
+  <text x="430" y="140" font-family="Share Tech Mono,monospace" font-size="8"  fill="#88e8ff" text-anchor="middle">site: + filetype: + intext:</text>
+  <!-- Spoke 1: site: -->
+  <line x1="355" y1="95" x2="235" y2="50" stroke="rgba(255,200,80,.82)" stroke-width="1.5" marker-end="url(#dk2)"/>
+  <rect x="100" y="18" width="130" height="48" rx="4" fill="rgba(0,0,0,.82)" stroke="rgba(255,200,80,.82)" stroke-width="1.5"/>
+  <text x="165" y="38" font-family="Share Tech Mono,monospace" font-size="10" fill="#ffc850" text-anchor="middle" font-weight="700">site:target.com</text>
+  <text x="165" y="55" font-family="Share Tech Mono,monospace" font-size="8"  fill="#ffe088" text-anchor="middle">restrict to domain</text>
+  <!-- Spoke 2: filetype: -->
+  <line x1="355" y1="105" x2="225" y2="110" stroke="rgba(191,0,255,.82)" stroke-width="1.5" marker-end="url(#dk2)"/>
+  <rect x="80" y="86" width="140" height="48" rx="4" fill="rgba(0,0,0,.82)" stroke="rgba(191,0,255,.82)" stroke-width="1.5"/>
+  <text x="150" y="106" font-family="Share Tech Mono,monospace" font-size="10" fill="#bf00ff" text-anchor="middle" font-weight="700">filetype:sql</text>
+  <text x="150" y="122" font-family="Share Tech Mono,monospace" font-size="8"  fill="#df88ff" text-anchor="middle">pdf env log bak</text>
+  <!-- Spoke 3: intitle: -->
+  <line x1="355" y1="130" x2="220" y2="168" stroke="rgba(0,255,65,.82)" stroke-width="1.5" marker-end="url(#dk2)"/>
+  <rect x="70" y="148" width="145" height="48" rx="4" fill="rgba(0,0,0,.82)" stroke="rgba(0,255,65,.82)" stroke-width="1.5"/>
+  <text x="142" y="168" font-family="Share Tech Mono,monospace" font-size="10" fill="#00ff41" text-anchor="middle" font-weight="700">intitle:"index of"</text>
+  <text x="142" y="184" font-family="Share Tech Mono,monospace" font-size="8"  fill="#88ff99" text-anchor="middle">open dir listing</text>
+  <!-- Spoke 4: inurl: -->
+  <line x1="505" y1="95" x2="630" y2="50" stroke="rgba(255,80,80,.82)" stroke-width="1.5" marker-end="url(#dk2)"/>
+  <rect x="632" y="18" width="145" height="48" rx="4" fill="rgba(0,0,0,.82)" stroke="rgba(255,80,80,.82)" stroke-width="1.5"/>
+  <text x="704" y="38" font-family="Share Tech Mono,monospace" font-size="10" fill="#ff5050" text-anchor="middle" font-weight="700">inurl:admin</text>
+  <text x="704" y="55" font-family="Share Tech Mono,monospace" font-size="8"  fill="#ff8888" text-anchor="middle">login / config / .git</text>
+  <!-- Spoke 5: intext: -->
+  <line x1="505" y1="115" x2="652" y2="115" stroke="rgba(0,229,255,.82)" stroke-width="1.5" marker-end="url(#dk2)"/>
+  <rect x="654" y="91" width="165" height="48" rx="4" fill="rgba(0,0,0,.82)" stroke="rgba(0,229,255,.82)" stroke-width="1.5"/>
+  <text x="736" y="111" font-family="Share Tech Mono,monospace" font-size="10" fill="#00e5ff" text-anchor="middle" font-weight="700">intext:"password"</text>
+  <text x="736" y="127" font-family="Share Tech Mono,monospace" font-size="8"  fill="#88e8ff" text-anchor="middle">DB_PASS api_key</text>
+  <!-- Spoke 6: cache: -->
+  <line x1="505" y1="135" x2="638" y2="172" stroke="rgba(255,215,0,.82)" stroke-width="1.5" marker-end="url(#dk2)"/>
+  <rect x="640" y="152" width="130" height="48" rx="4" fill="rgba(0,0,0,.82)" stroke="rgba(255,215,0,.82)" stroke-width="1.5"/>
+  <text x="705" y="172" font-family="Share Tech Mono,monospace" font-size="10" fill="#ffd700" text-anchor="middle" font-weight="700">cache:url</text>
+  <text x="705" y="188" font-family="Share Tech Mono,monospace" font-size="8"  fill="rgba(255,215,0,.78)" text-anchor="middle">deleted content</text>
+  <!-- Bottom labels -->
+  <text x="460" y="220" font-family="Share Tech Mono,monospace" font-size="9" fill="rgba(0,229,255,.78)" text-anchor="middle">Combine operators: site:target.com filetype:env intext:"DB_PASSWORD" → finds exposed .env with credentials</text>
+</svg></div></div>
+
 <div class="div"></div>
 
 <!-- 03 SENSITIVE DATA -->
@@ -386,6 +486,45 @@ site:storage.googleapis.com "target"
 site:blob.core.windows.net "target"</code>
   </div>
 </section>
+<div class="rv" style="margin:0 0 40px 0"><div style="font-family:var(--mono);font-size:10px;letter-spacing:3px;color:var(--p);margin-bottom:14px">DIAGRAM 03 // SENSITIVE DATA EXPOSURE FLOW</div><div style="overflow-x:auto;-webkit-overflow-scrolling:touch;background:rgba(0,0,0,0.4);border:1px solid rgba(0,229,255,0.12);border-radius:4px;padding:16px"><svg viewBox="0 0 920 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;min-width:580px;max-width:920px;display:block">
+  <defs><marker id="dk3" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="rgba(0,229,255,.9)"/></marker>
+  <marker id="dk3g" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="rgba(0,255,65,.9)"/></marker></defs>
+  <rect x="8" y="60" width="130" height="72" rx="4" fill="rgba(0,0,0,.82)" stroke="rgba(255,200,80,.85)" stroke-width="1.5"/>
+  <text x="73" y="87" font-family="Share Tech Mono,monospace" font-size="10" fill="#ffc850" text-anchor="middle" font-weight="700">MISCONFIGURED</text>
+  <text x="73" y="101" font-family="Share Tech Mono,monospace" font-size="10" fill="#ffc850" text-anchor="middle" font-weight="700">SERVER</text>
+  <text x="73" y="120" font-family="Share Tech Mono,monospace" font-size="8"  fill="#ffe088" text-anchor="middle">no robots.txt / ACL</text>
+  <line x1="139" y1="96" x2="159" y2="96" stroke="rgba(0,229,255,.88)" stroke-width="1.5" marker-end="url(#dk3)"/>
+  <rect x="161" y="60" width="130" height="72" rx="4" fill="rgba(0,0,0,.82)" stroke="rgba(191,0,255,.85)" stroke-width="1.5"/>
+  <text x="226" y="87" font-family="Share Tech Mono,monospace" font-size="10" fill="#bf00ff" text-anchor="middle" font-weight="700">GOOGLE</text>
+  <text x="226" y="101" font-family="Share Tech Mono,monospace" font-size="10" fill="#bf00ff" text-anchor="middle" font-weight="700">CRAWLER</text>
+  <text x="226" y="120" font-family="Share Tech Mono,monospace" font-size="8"  fill="#df88ff" text-anchor="middle">indexes everything</text>
+  <line x1="292" y1="96" x2="312" y2="96" stroke="rgba(0,229,255,.88)" stroke-width="1.5" marker-end="url(#dk3)"/>
+  <rect x="314" y="60" width="130" height="72" rx="4" fill="rgba(0,0,0,.82)" stroke="rgba(0,229,255,.85)" stroke-width="1.5"/>
+  <text x="379" y="87" font-family="Share Tech Mono,monospace" font-size="10" fill="#00e5ff" text-anchor="middle" font-weight="700">PUBLIC</text>
+  <text x="379" y="101" font-family="Share Tech Mono,monospace" font-size="10" fill="#00e5ff" text-anchor="middle" font-weight="700">INDEX</text>
+  <text x="379" y="120" font-family="Share Tech Mono,monospace" font-size="8"  fill="#88e8ff" text-anchor="middle">.env SQL bak keys</text>
+  <line x1="445" y1="96" x2="465" y2="96" stroke="rgba(0,229,255,.88)" stroke-width="1.5" marker-end="url(#dk3)"/>
+  <rect x="467" y="60" width="130" height="72" rx="4" fill="rgba(0,0,0,.82)" stroke="rgba(255,80,80,.85)" stroke-width="1.5"/>
+  <text x="532" y="87" font-family="Share Tech Mono,monospace" font-size="10" fill="#ff5050" text-anchor="middle" font-weight="700">ATTACKER</text>
+  <text x="532" y="101" font-family="Share Tech Mono,monospace" font-size="10" fill="#ff5050" text-anchor="middle" font-weight="700">DORKS</text>
+  <text x="532" y="120" font-family="Share Tech Mono,monospace" font-size="8"  fill="#ff8888" text-anchor="middle">targeted queries</text>
+  <line x1="598" y1="96" x2="618" y2="96" stroke="rgba(0,255,65,.9)" stroke-width="2" marker-end="url(#dk3g)"/>
+  <rect x="620" y="50" width="148" height="92" rx="4" fill="rgba(0,0,0,.88)" stroke="rgba(0,255,65,.92)" stroke-width="2"/>
+  <text x="694" y="84" font-family="Orbitron,sans-serif" font-size="10" font-weight="900" fill="#00ff41" text-anchor="middle">EXPOSED</text>
+  <text x="694" y="99" font-family="Orbitron,sans-serif" font-size="10" font-weight="900" fill="#00ff41" text-anchor="middle">DATA</text>
+  <text x="694" y="118" font-family="Share Tech Mono,monospace" font-size="9"  fill="#88ff99" text-anchor="middle">credentials / keys</text>
+  <text x="694" y="131" font-family="Share Tech Mono,monospace" font-size="9"  fill="#88ff99" text-anchor="middle">PII / DB dumps</text>
+  <!-- Defensive note box -->
+  <rect x="778" y="58" width="135" height="82" rx="4" fill="rgba(0,0,0,.72)" stroke="rgba(255,200,80,.65)" stroke-width="1"/>
+  <text x="845" y="79" font-family="Share Tech Mono,monospace" font-size="8"  fill="rgba(255,200,80,.9)" text-anchor="middle" font-weight="700">DEFENCE:</text>
+  <text x="845" y="93" font-family="Share Tech Mono,monospace" font-size="8"  fill="rgba(255,200,80,.78)" text-anchor="middle">robots.txt</text>
+  <text x="845" y="107" font-family="Share Tech Mono,monospace" font-size="8"  fill="rgba(255,200,80,.78)" text-anchor="middle">access controls</text>
+  <text x="845" y="121" font-family="Share Tech Mono,monospace" font-size="8"  fill="rgba(255,200,80,.78)" text-anchor="middle">Google Search</text>
+  <text x="845" y="131" font-family="Share Tech Mono,monospace" font-size="8"  fill="rgba(255,200,80,.78)" text-anchor="middle">Console removal</text>
+  <text x="400" y="182" font-family="Share Tech Mono,monospace" font-size="9" fill="rgba(0,229,255,.78)" text-anchor="middle">Passive attack -- attacker never contacts your server. Target IP never appears in your logs.</text>
+  <text x="400" y="197" font-family="Share Tech Mono,monospace" font-size="9" fill="rgba(0,229,255,.62)" text-anchor="middle">Common finds: .env files, DB credentials, private keys, SQL dumps, git repos, admin panels</text>
+</svg></div></div>
+
 <div class="div"></div>
 
 <!-- 04 VULNS -->
@@ -578,137 +717,142 @@ site:TARGET.COM inurl:.git/HEAD OR intitle:"index of /.git"
 
 <!-- 07 AI INTEGRATION -->
 <section class="sec rv sec-ai" id="ai">
-  <div class="sec-hd"><span class="sec-n">07 //</span><h2 class="sec-t">AI Integration in Google Dorking Operations<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
+  <div class="sec-hd"><span class="sec-n">08 //</span><h2 class="sec-t">AI Integration in Google Dorking &amp; OSINT<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
   <div class="panel panel-ai rv-l">
-    <p>AI transforms Google dorking from a manual skill-dependent process into an intelligent automated intelligence gathering pipeline. LLMs understand the structure and semantics of Google search operators deeply enough to generate highly targeted dork queries from plain-English requirements, analyse discovered content for hidden intelligence value, correlate findings across dozens of sources into coherent attack surface maps, and produce professional OSINT reports at a speed and depth that manual analysis cannot match. The AI-dorking combination produces reconnaissance coverage in minutes that would take days manually.</p>
+    <p>AI transforms Google dorking from a manual skill-dependent process into an intelligent automated intelligence-gathering pipeline. Frontier LLMs understand Google search operator syntax deeply enough to generate highly targeted dork queries from plain-English requirements, analyse discovered content for hidden intelligence value, correlate findings across dozens of sources into coherent attack surface maps, and produce professional OSINT reports at a speed and depth that manual analysis cannot match.</p>
+    <p>The most impactful shift: AI security tools are moving from query assistants to autonomous OSINT agents -- generating queries, executing them via the Google Custom Search API, interpreting results, generating follow-up queries based on discoveries, and producing final reports entirely automatically. What previously took a skilled analyst a full day of dorking now takes an AI pipeline under an hour with greater coverage.</p>
   </div>
   <div class="alert al-p rv">
     <span class="al-ic">[ AI ]</span>
-    <p class="al-tx">Security researchers using AI-assisted dorking workflows report 70% faster OSINT reconnaissance phases. AI generates 50+ targeted dork queries for a specific target in seconds, analyses discovered documents for embedded sensitive data, correlates subdomains and technologies into an attack surface model, and produces a prioritised finding list -- all before a single active scan is run against the target.</p>
+    <p class="al-tx">Security researchers using AI-assisted dorking workflows report generating 50+ targeted dork queries for a specific target in seconds, with AI adapting the query strategy based on initial discoveries. AI interprets ambiguous results, identifies high-value findings that human review might miss, and correlates information across multiple sources into a comprehensive exposure assessment -- all before a single active scan touches the target.</p>
   </div>
+
+  <h3 style="font-family:var(--mono);font-size:11px;letter-spacing:3px;color:var(--p);text-transform:uppercase;margin:28px 0 16px">AI-Powered Dorking Capabilities</h3>
   <div class="ai-grid rv">
-    <div class="ai-card"><span class="ai-ico">&#9999;&#65039;</span><div class="ai-name">Custom Dork Generation</div><div class="ai-desc">AI generates highly targeted, organisation-specific dork queries from plain-English reconnaissance requirements -- "generate Google dorks to find exposed configuration files, login portals, and employee documents for a UK financial services firm using Azure cloud infrastructure." Produces 30-50 precision queries targeting the exact technologies, file types, and exposure patterns most likely to yield results for that specific target profile, far beyond what generic GHDB queries provide.</div></div>
-    <div class="ai-card"><span class="ai-ico">&#128202;</span><div class="ai-name">Discovered Content Analysis</div><div class="ai-desc">AI analyses discovered documents, configuration files, and page content for intelligence value that human review might miss -- extracting employee names and roles from document metadata, identifying internal hostnames from SQL dumps, parsing configuration files to identify all referenced services and credentials, and correlating information across multiple discovered files to build a comprehensive target intelligence picture from fragmented data points.</div></div>
-    <div class="ai-card"><span class="ai-ico">&#128270;</span><div class="ai-name">Attack Surface Mapping</div><div class="ai-desc">AI correlates dorking discoveries into a structured attack surface model -- mapping subdomains to technologies, identifying which exposed services have known CVEs, prioritising entry points by exploitability and access value, and generating a visual attack surface narrative that explains how discovered exposures connect into potential attack chains. Converts a list of raw dork findings into an actionable penetration testing roadmap.</div></div>
-    <div class="ai-card"><span class="ai-ico">&#128196;</span><div class="ai-name">OSINT Report Generation</div><div class="ai-desc">AI converts raw Google dorking findings into professional penetration test report sections -- structured finding entries with risk ratings, evidence (screenshot references, dork queries used), business impact statements, and specific remediation guidance. Produces the complete OSINT reconnaissance appendix for a penetration test report from structured finding data, formatted appropriately for both technical and management audiences.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#9999;&#65039;</span><div class="ai-name">Custom Dork Generation</div><div class="ai-desc">AI generates highly targeted, organisation-specific dork queries from plain-English requirements -- "find exposed configuration files, login portals, and employee documents for a UK financial services firm using Azure." Claude and ChatGPT produce 30-50 precision queries targeting the exact technologies, file types, and exposure patterns most likely to yield results for that specific target profile, far beyond what generic GHDB queries provide and adapted to the discovered tech stack.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128202;</span><div class="ai-name">Discovered Content Analysis</div><div class="ai-desc">AI analyses discovered documents, configuration files, and page content for intelligence value -- extracting employee names and roles from document metadata, identifying internal hostnames from SQL dumps, parsing configuration files to identify all referenced services and credentials, and correlating information across multiple discovered files to build a comprehensive target intelligence picture from fragmented data points that human analysts would spend hours connecting manually.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128270;</span><div class="ai-name">Attack Surface Mapping</div><div class="ai-desc">AI correlates dorking discoveries into a structured attack surface model -- mapping subdomains to technologies, identifying which exposed services have known CVEs, prioritising entry points by exploitability and access value, and generating a visual attack surface narrative that explains how discovered exposures connect into potential attack chains. Converts a list of raw dork findings into an actionable penetration testing roadmap with MITRE ATT&amp;CK TTP references.</div></div>
     <div class="ai-card"><span class="ai-ico">&#128308;</span><div class="ai-name">Defensive Exposure Audit</div><div class="ai-desc">AI generates a comprehensive defensive dorking audit plan -- the complete set of queries an attacker would run against your organisation, prioritised by likelihood of yielding sensitive results. Security teams run these queries against their own infrastructure to identify exposures before attackers do. AI updates the query set based on discovered technologies and infrastructure, making the defensive audit as targeted as an offensive reconnaissance operation.</div></div>
-    <div class="ai-card"><span class="ai-ico">&#128123;</span><div class="ai-name">Real-Time Dork Interpretation</div><div class="ai-desc">AI interprets complex dork results in real time during active reconnaissance -- "this SQL error message reveals the database is MySQL 5.7.38, the table name is wp_users, and the query structure suggests the login parameter is injectable. Here are the next dorks to run and the SQLMap command to validate." Provides expert analyst reasoning and next-step recommendations from raw discovered data without requiring senior security expertise.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128123;</span><div class="ai-name">Real-Time Dork Interpretation</div><div class="ai-desc">AI interprets complex dork results in real time during active reconnaissance -- "this SQL error message reveals the database is MySQL, the table name is wp_users, and the query structure suggests the login parameter is injectable. Here are the next dorks to run and the sqlmap command to validate." Provides expert analyst reasoning and next-step recommendations from raw discovered data without requiring senior security expertise at every step.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128196;</span><div class="ai-name">OSINT Report Generation</div><div class="ai-desc">AI converts raw Google dorking findings into professional penetration test report sections -- structured finding entries with risk ratings, evidence (screenshot references, dork queries used), business impact statements, and specific remediation guidance. Produces the complete OSINT reconnaissance appendix formatted for both technical and management audiences, maps findings to compliance frameworks (ISO 27001, Cyber Essentials, NIST CSF), and generates Google Search Console removal request guidance for confirmed exposures.</div></div>
   </div>
+
+  <h3 style="font-family:var(--mono);font-size:11px;letter-spacing:3px;color:var(--p);text-transform:uppercase;margin:32px 0 16px">AI Platforms &amp; Defensive OSINT Tools</h3>
+  <div class="ai-grid rv">
+    <div class="ai-card"><span class="ai-ico">&#128065;</span><div class="ai-name">Perplexity AI</div><div class="ai-desc"><strong style="color:var(--c)">Perplexity AI</strong> is an AI-native search engine that combines web search with LLM interpretation -- enabling natural-language OSINT queries that return synthesised, cited answers rather than raw search results. Ideal for reconnaissance queries that require understanding and correlation across multiple sources: "what publicly known infrastructure does TargetCorp use, what security incidents have they had, and what employee names appear in security conference talks?"</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128737;&#65039;</span><div class="ai-name">Microsoft Copilot for Security</div><div class="ai-desc">Microsoft's AI layer across Defender and Sentinel can answer natural-language threat intelligence questions -- "has this domain been associated with phishing campaigns, what IP ranges does this organisation own, what CVEs affect the technologies identified in this OSINT report?" Combines Microsoft's threat intelligence graph with LLM reasoning to provide contextualised OSINT answers that go beyond raw search results.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128301;</span><div class="ai-name">Maltego + AI Transforms</div><div class="ai-desc"><strong style="color:var(--c)">Maltego</strong> with AI-powered transforms enables visual entity relationship mapping of dorking discoveries -- graphing the connections between discovered domains, email addresses, IP ranges, technologies, and people into a navigable attack surface graph. AI transforms automatically enrich discovered entities with threat intelligence, certificate data, DNS history, and breach database information, building a comprehensive OSINT picture from initial dork discoveries.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128202;</span><div class="ai-name">SpiderFoot + AI Analysis</div><div class="ai-desc"><strong style="color:var(--c)">SpiderFoot</strong> orchestrates automated OSINT collection across 200+ data sources including Google dorking, Shodan, HaveIBeenPwned, certificate transparency logs, and DNS history -- feeding aggregated results to AI for correlation and prioritisation. The combination provides the breadth of automated OSINT collection with the analytical depth of frontier LLM reasoning, producing comprehensive attack surface assessments in minutes.</div></div>
+  </div>
+
   <div class="panel panel-ai rv" style="margin-top:28px">
-    <div class="panel-t">AI Tools for Google Dorking Operations</div>
-    <table class="ptbl">
+    <div class="panel-t">AI Tools for Google Dorking &amp; OSINT -- No Version Lock-In</div>
+    <div style="overflow-x:auto;-webkit-overflow-scrolling:touch">
+    <table class="ptbl" style="min-width:580px">
       <thead><tr>
-        <th style="color:#bf00ff;border-bottom-color:rgba(191,0,255,.25)">Tool</th>
-        <th style="color:#bf00ff;border-bottom-color:rgba(191,0,255,.25)">Capability</th>
+        <th style="color:#bf00ff;border-bottom-color:rgba(191,0,255,.25)">Tool / Platform</th>
+        <th style="color:#bf00ff;border-bottom-color:rgba(191,0,255,.25)">AI Capability</th>
         <th style="color:#bf00ff;border-bottom-color:rgba(191,0,255,.25)">Dorking Use Case</th>
       </tr></thead>
       <tbody>
-        <tr><td style="color:var(--g)">GPT-4 / Claude</td><td style="color:var(--t2)">Dork generation, content analysis, reporting</td><td style="color:var(--t2)">Generate targeted queries; analyse discovered files; write OSINT findings</td></tr>
-        <tr><td style="color:var(--g)">Python + OpenAI</td><td style="color:var(--t2)">Automated dork pipeline with AI analysis</td><td style="color:var(--t2)">Run Google API queries; feed results to GPT for automated intelligence extraction</td></tr>
-        <tr><td style="color:var(--g)">Perplexity AI</td><td style="color:var(--t2)">AI-native web search with citations</td><td style="color:var(--t2)">Natural-language OSINT queries with real-time web search and source attribution</td></tr>
-        <tr><td style="color:var(--g)">Maltego + AI</td><td style="color:var(--t2)">Graph-based OSINT correlation</td><td style="color:var(--t2)">Visual entity relationship mapping of dorking discoveries across domains and people</td></tr>
-        <tr><td style="color:var(--g)">SpiderFoot + AI</td><td style="color:var(--t2)">Automated OSINT aggregation</td><td style="color:var(--t2)">Orchestrate multiple OSINT sources including Google; feed results to AI for analysis</td></tr>
+        <tr><td style="color:var(--g)">Claude (Anthropic)</td><td style="color:var(--t2)">Frontier LLM, long context</td><td style="color:var(--t2)">Dork generation, content analysis, attack surface mapping, full OSINT reports</td></tr>
+        <tr><td style="color:var(--g)">ChatGPT (OpenAI)</td><td style="color:var(--t2)">Frontier LLM, reasoning</td><td style="color:var(--t2)">Query strategy, result interpretation, next-step recommendations</td></tr>
+        <tr><td style="color:var(--g)">Gemini (Google)</td><td style="color:var(--t2)">Long context + Google intel</td><td style="color:var(--t2)">Google-native OSINT, Mandiant threat intel correlation, deep web research</td></tr>
+        <tr><td style="color:var(--g)">Perplexity AI</td><td style="color:var(--t2)">AI-native web search + citations</td><td style="color:var(--t2)">Natural-language OSINT queries with real-time web search and source attribution</td></tr>
+        <tr><td style="color:var(--g)">Copilot for Security</td><td style="color:var(--t2)">Microsoft AI + threat intel graph</td><td style="color:var(--t2)">Domain threat intel, CVE correlation with discovered tech, guided OSINT</td></tr>
+        <tr><td style="color:var(--g)">Maltego + AI</td><td style="color:var(--t2)">Graph OSINT + AI transforms</td><td style="color:var(--t2)">Visual entity relationship mapping, automated enrichment of dork discoveries</td></tr>
+        <tr><td style="color:var(--g)">SpiderFoot</td><td style="color:var(--t2)">200+ source OSINT automation</td><td style="color:var(--t2)">Automated multi-source OSINT aggregation including Google dorking at scale</td></tr>
+        <tr><td style="color:var(--g)">GitHub Copilot / Cursor</td><td style="color:var(--t2)">AI code completion</td><td style="color:var(--t2)">Pagodo automation scripts, Google Custom Search API pipelines, OSINT tooling</td></tr>
       </tbody>
     </table>
+    </div>
   </div>
-  <div class="cb cb-ai rv" data-l="AI Pipeline -- Targeted Dork Generator from Target Profile">
+
+  <div class="cb cb-ai rv" data-l="AI Pipeline -- Targeted Dork Generator and Result Analyser">
     <code><span style="color:#bd93f9">#!/usr/bin/env python3</span>
-<span style="color:var(--t3)"># Generate targeted Google dork queries from a target profile using GPT
-# Then execute via Google Custom Search API and analyse results
-# Usage: python3 ai_dork.py "TargetCorp" "target.com" "UK financial services, Azure"</span>
+<span style="color:var(--t3))"># Generate targeted dork queries from target profile using AI
+# Execute via Google Custom Search API, analyse results with AI
+# pip install openai requests</span>
 
-<span style="color:#bd93f9">import</span> openai, requests, json, sys
+<span style="color:#bd93f9">import</span> openai, requests, json, os
 
-GOOGLE_API = <span style="color:#ff79c6">"YOUR_GOOGLE_API_KEY"</span>
-GOOGLE_CX  = <span style="color:#ff79c6">"YOUR_CUSTOM_SEARCH_ID"</span>
+GOOGLE_API = os.getenv(<span style="color:#ff79c6">"GOOGLE_API_KEY"</span>, <span style="color:#ff79c6">"YOUR_KEY"</span>)
+GOOGLE_CX  = os.getenv(<span style="color:#ff79c6">"GOOGLE_CX"</span>, <span style="color:#ff79c6">"YOUR_CX"</span>)
+MODEL      = os.getenv(<span style="color:#ff79c6">"AI_MODEL"</span>, <span style="color:#ff79c6">"gpt-4o"</span>)  <span style="color:var(--t3));"># swap to latest model as needed</span>
 
 <span style="color:#8be9fd">def</span> <span style="color:var(--c)">generate_dorks</span>(org, domain, profile):
-    prompt = (
-        <span style="color:#ff79c6">"You are an expert OSINT analyst performing an authorised penetration test. "
-        "Generate 25 precise Google dork queries for the target below. "
-        "Focus on: exposed credentials/keys, open directories, admin panels, "
-        "sensitive documents, technology fingerprinting, and subdomain discovery. "
-        "Format: one dork per line, no numbering, no explanation.\n\n"
-        f"Organisation: {org}\nDomain: {domain}\nProfile: {profile}"</span>
-    )
+    prompt = (<span style="color:#ff79c6">"You are an expert OSINT analyst on an authorised pentest. Generate 25 precise "</span>
+              <span style="color:#ff79c6">"Google dork queries for the target below. Focus on: credentials/keys, open "</span>
+              <span style="color:#ff79c6">"directories, admin panels, sensitive documents, tech fingerprinting, subdomains. "</span>
+              <span style="color:#ff79c6">"Return ONLY dorks, one per line, no numbering or explanation.\n\n"</span>
+              <span style="color:#ff79c6">f"Organisation: {org}\nDomain: {domain}\nProfile: {profile}"</span>)
     r = openai.OpenAI().chat.completions.create(
-        model=<span style="color:#ff79c6">"gpt-4o"</span>,
+        model=MODEL,
         messages=[{<span style="color:#ff79c6">"role"</span>:<span style="color:#ff79c6">"user"</span>,<span style="color:#ff79c6">"content"</span>:prompt}],
         temperature=0.3
     )
     <span style="color:#bd93f9">return</span> [d.strip() <span style="color:#bd93f9">for</span> d <span style="color:#bd93f9">in</span> r.choices[0].message.content.splitlines() <span style="color:#bd93f9">if</span> d.strip()]
 
-<span style="color:#8be9fd">def</span> <span style="color:var(--c)">google_search</span>(query, num=5):
-    url = <span style="color:#ff79c6">"https://www.googleapis.com/customsearch/v1"</span>
-    params = {<span style="color:#ff79c6">"key"</span>:GOOGLE_API,<span style="color:#ff79c6">"cx"</span>:GOOGLE_CX,<span style="color:#ff79c6">"q"</span>:query,<span style="color:#ff79c6">"num"</span>:num}
-    r = requests.get(url, params=params, timeout=10)
-    items = r.json().get(<span style="color:#ff79c6">"items"</span>, [])
-    <span style="color:#bd93f9">return</span> [{<span style="color:#ff79c6">"title"</span>:i[<span style="color:#ff79c6">"title"</span>],<span style="color:#ff79c6">"url"</span>:i[<span style="color:#ff79c6">"link"</span>],<span style="color:#ff79c6">"snippet"</span>:i.get(<span style="color:#ff79c6">"snippet"</span>,<span style="color:#ff79c6">""</span>)} <span style="color:#bd93f9">for</span> i <span style="color:#bd93f9">in</span> items]
+<span style="color:#8be9fd">def</span> <span style="color:var(--c)">google_search</span>(query, n=5):
+    r = requests.get(<span style="color:#ff79c6">"https://www.googleapis.com/customsearch/v1"</span>,
+                     params={<span style="color:#ff79c6">"key"</span>:GOOGLE_API,<span style="color:#ff79c6">"cx"</span>:GOOGLE_CX,<span style="color:#ff79c6">"q"</span>:query,<span style="color:#ff79c6">"num"</span>:n}, timeout=10)
+    <span style="color:#bd93f9">return</span> [{<span style="color:#ff79c6">"title"</span>:i[<span style="color:#ff79c6">"title"</span>],<span style="color:#ff79c6">"url"</span>:i[<span style="color:#ff79c6">"link"</span>],<span style="color:#ff79c6">"snippet"</span>:i.get(<span style="color:#ff79c6">"snippet"</span>,<span style="color:#ff79c6">""</span>)} <span style="color:#bd93f9">for</span> i <span style="color:#bd93f9">in</span> r.json().get(<span style="color:#ff79c6">"items"</span>,[])]
 
-<span style="color:#8be9fd">def</span> <span style="color:var(--c)">ai_analyse_results</span>(results, org):
-    prompt = (
-        <span style="color:#ff79c6">"You are a senior OSINT analyst. Analyse these Google dorking results for a "
-        f"penetration test against {org}. For each result identify:\n"
-        "1. SENSITIVITY: what sensitive data or access is exposed?\n"
-        "2. RISK RATING: Critical/High/Medium/Low\n"
-        "3. ATTACK VECTOR: how could an attacker exploit this?\n"
-        "4. NEXT DORKS: follow-up queries to investigate further\n\n"
-        "Results:\n"</span> + json.dumps(results, indent=2)
-    )
+<span style="color:#8be9fd">def</span> <span style="color:var(--c)">ai_analyse</span>(results, org):
+    prompt = (<span style="color:#ff79c6">f"You are a senior OSINT analyst. Analyse these Google dorking results for {org}. "</span>
+              <span style="color:#ff79c6">"For each significant finding provide:\n"</span>
+              <span style="color:#ff79c6">"1. SENSITIVITY: what sensitive data or access is exposed\n"</span>
+              <span style="color:#ff79c6">"2. RISK: Critical / High / Medium / Low\n"</span>
+              <span style="color:#ff79c6">"3. ATTACK VECTOR: how an attacker exploits this\n"</span>
+              <span style="color:#ff79c6">"4. NEXT DORKS: follow-up queries to investigate further\n\n"</span>
+              <span style="color:#ff79c6">"Results:\n"</span> + json.dumps(results, indent=2))
     r = openai.OpenAI().chat.completions.create(
-        model=<span style="color:#ff79c6">"gpt-4o"</span>,
-        messages=[{<span style="color:#ff79c6">"role"</span>:<span style="color:#ff79c6">"user"</span>,<span style="color:#ff79c6">"content"</span>:prompt}]
-    )
+        model=MODEL, messages=[{<span style="color:#ff79c6">"role"</span>:<span style="color:#ff79c6">"user"</span>,<span style="color:#ff79c6">"content"</span>:prompt}])
     <span style="color:#bd93f9">return</span> r.choices[0].message.content
 
-org    = sys.argv[1] <span style="color:#bd93f9">if</span> len(sys.argv)>1 <span style="color:#bd93f9">else</span> <span style="color:#ff79c6">"TargetCorp"</span>
-domain = sys.argv[2] <span style="color:#bd93f9">if</span> len(sys.argv)>2 <span style="color:#bd93f9">else</span> <span style="color:#ff79c6">"target.com"</span>
-profile= sys.argv[3] <span style="color:#bd93f9">if</span> len(sys.argv)>3 <span style="color:#bd93f9">else</span> <span style="color:#ff79c6">"technology company"</span>
-
+org = <span style="color:#ff79c6">"TargetCorp"</span>; domain = <span style="color:#ff79c6">"target.com"</span>; profile = <span style="color:#ff79c6">"UK financial services, Azure"</span>
 dorks = generate_dorks(org, domain, profile)
-print(<span style="color:#ff79c6">f"[*] Generated {len(dorks)} dorks for {domain}"</span>)
-
+print(<span style="color:#ff79c6">f"[*] Generated {len(dorks)} dorks"</span>)
 all_results = []
-<span style="color:#bd93f9">for</span> dork <span style="color:#bd93f9">in</span> dorks[:10]:  <span style="color:var(--t3)"># run first 10 (API quota)</span>
+<span style="color:#bd93f9">for</span> dork <span style="color:#bd93f9">in</span> dorks[:10]:
     res = google_search(dork)
-    <span style="color:#bd93f9">if</span> res:
-        all_results.append({<span style="color:#ff79c6">"dork"</span>:dork,<span style="color:#ff79c6">"results"</span>:res})
-        print(<span style="color:#ff79c6">f"  [+] {dork[:60]} → {len(res)} results"</span>)
-
+    <span style="color:#bd93f9">if</span> res: all_results.append({<span style="color:#ff79c6">"dork"</span>:dork,<span style="color:#ff79c6">"results"</span>:res}); print(<span style="color:#ff79c6">f"  [+] {dork[:55]}"</span>)
 print(<span style="color:#ff79c6">"\n[*] AI Analysis:\n"</span>)
-print(ai_analyse_results(all_results, org))</code>
+print(ai_analyse(all_results, org))</code>
   </div>
+
   <div class="cb cb-ai rv" data-l="AI -- Defensive Exposure Audit Generator">
     <code><span style="color:#bd93f9">#!/usr/bin/env python3</span>
-<span style="color:var(--t3)"># Generate a defensive dorking audit -- what attackers would search for YOUR org
-# Run these queries against your own domain to find exposures before attackers do
-# Usage: python3 defensive_audit.py "yourcompany.com" "tech stack details"</span>
+<span style="color:var(--t3))"># Generate defensive dorking audit -- what attackers would search for YOUR org
+# Run against your own domain to find exposures before attackers do</span>
 
-<span style="color:#bd93f9">import</span> openai, sys
+<span style="color:#bd93f9">import</span> openai, sys, os
 
-<span style="color:#8be9fd">def</span> <span style="color:var(--c)">defensive_audit</span>(domain, stack):
-    prompt = (
-        <span style="color:#ff79c6">"You are a red team specialist creating a defensive exposure audit for a "
-        "security team. Generate a comprehensive checklist of Google dork queries "
-        "that attackers would use against this domain. Organise by category:\n"
-        "- Credential/Key Exposure\n- Open Directories\n- Admin Panels\n"
-        "- Database Exposure\n- Source Code / Git\n- Configuration Files\n"
-        "- Error Pages / Debug Info\n- Cloud Storage\n\n"
-        "For each query explain what it finds and the risk if discovered by an attacker. "
-        f"Domain: {domain}\nTech Stack: {stack}"</span>
-    )
-    r = openai.OpenAI().chat.completions.create(
-        model=<span style="color:#ff79c6">"gpt-4o"</span>,
-        messages=[{<span style="color:#ff79c6">"role"</span>:<span style="color:#ff79c6">"user"</span>,<span style="color:#ff79c6">"content"</span>:prompt}]
-    )
-    <span style="color:#bd93f9">return</span> r.choices[0].message.content
+MODEL = os.getenv(<span style="color:#ff79c6">"AI_MODEL"</span>, <span style="color:#ff79c6">"gpt-4o"</span>)
 
-domain = sys.argv[1] <span style="color:#bd93f9">if</span> len(sys.argv)>1 <span style="color:#bd93f9">else</span> <span style="color:#ff79c6">"yourcompany.com"</span>
-stack  = sys.argv[2] <span style="color:#bd93f9">if</span> len(sys.argv)>2 <span style="color:#bd93f9">else</span> <span style="color:#ff79c6">"WordPress, AWS, PHP, MySQL"</span>
-print(<span style="color:#ff79c6">f"[*] Generating defensive audit for {domain}\n"</span>)
-print(defensive_audit(domain, stack))</code>
+domain = sys.argv[1] <span style="color:#bd93f9">if</span> len(sys.argv) > 1 <span style="color:#bd93f9">else</span> <span style="color:#ff79c6">"yourcompany.com"</span>
+stack  = sys.argv[2] <span style="color:#bd93f9">if</span> len(sys.argv) > 2 <span style="color:#bd93f9">else</span> <span style="color:#ff79c6">"WordPress, AWS, PHP, MySQL"</span>
+
+prompt = (<span style="color:#ff79c6">"You are a red team specialist creating a defensive exposure audit. Generate a "</span>
+          <span style="color:#ff79c6">"comprehensive checklist of Google dork queries that attackers would use against "</span>
+          <span style="color:#ff79c6">"this domain. Organise by category:\n"</span>
+          <span style="color:#ff79c6">"- Credential/Key Exposure (.env, api_key, password)\n"</span>
+          <span style="color:#ff79c6">"- Open Directories (index of, parent directory)\n"</span>
+          <span style="color:#ff79c6">"- Admin Panels (inurl:admin, inurl:login)\n"</span>
+          <span style="color:#ff79c6">"- Database Exposure (filetype:sql, phpmyadmin)\n"</span>
+          <span style="color:#ff79c6">"- Source Code / Git (intitle:index of /.git)\n"</span>
+          <span style="color:#ff79c6">"- Configuration Files (filetype:env, filetype:conf)\n"</span>
+          <span style="color:#ff79c6">"- Cloud Storage (s3.amazonaws.com, storage.googleapis.com)\n\n"</span>
+          <span style="color:#ff79c6">"For each query explain risk if discovered by attacker and Google removal steps.\n\n"</span>
+          <span style="color:#ff79c6">f"Domain: {domain}\nTech Stack: {stack}"</span>)
+
+r = openai.OpenAI().chat.completions.create(
+    model=MODEL, messages=[{<span style="color:#ff79c6">"role"</span>:<span style="color:#ff79c6">"user"</span>,<span style="color:#ff79c6">"content"</span>:prompt}])
+print(<span style="color:#ff79c6">f"[*] Defensive audit for {domain}\n"</span>)
+print(r.choices[0].message.content)</code>
   </div>
 </section>
+
 
 <div class="cta rv">
   <div class="cta-t">// Google knows more about your target than your target does. //</div>
@@ -725,6 +869,8 @@ print(defensive_audit(domain, stack))</code>
 </div>
 <script>
 var cur=document.getElementById('cur'),cur2=document.getElementById('cur2'),cur3=document.getElementById('cur3');
+var isTouch=('ontouchstart' in window)||navigator.maxTouchPoints>0;
+if(isTouch){[cur,cur2,cur3].forEach(function(el){if(el)el.style.display='none'});document.body.style.cursor='auto';}
 var mx=0,my=0;
 document.addEventListener('mousemove',function(e){mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
 (function loop(){cur2.style.left=mx+'px';cur2.style.top=my+'px';cur3.style.left=mx+'px';cur3.style.top=my+'px';requestAnimationFrame(loop);})();
@@ -888,7 +1034,7 @@ document.querySelectorAll('.rv,.rv-l').forEach(function(el){rv.observe(el);});
 var sIds=['hero','operators','recon','sensitive','vulns','tools','workflow','ai'];
 var tItems=document.querySelectorAll('.toc-i');
 function updateTOC(){
-  var sy=window.scrollY+120,cur='hero';
+  var sy=window.scrollY+130,cur='hero';
   sIds.forEach(function(id){var el=document.getElementById(id);if(el&&el.offsetTop<=sy)cur=id;});
   tItems.forEach(function(ti){ti.classList.toggle('active',ti.dataset.s===cur);});
 }

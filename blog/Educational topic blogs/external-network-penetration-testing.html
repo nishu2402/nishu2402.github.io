@@ -3,13 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" sizes="64x64" href="https://nishu2402.github.io/favicon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://nishu2402.github.io/favicon.png">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="shortcut icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="https://nishu2402.github.io/favicon.png">
+<link rel="apple-touch-icon" href="favicon.png">
 <title>External Network Penetration Testing | Nisarg Chasmawala</title>
 <meta name="description" content="External Network Penetration Testing Methodology + AI Integration — by Nisarg Chasmawala (Shroff), Offensive Security Engineer.">
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
   --g:#00ff41;--c:#00e5ff;--p:#bf00ff;--r:#ff003c;--o:#ffd700;
-  --bg:#030509;--t1:#d4ffe0;--t2:#7aad82;--t3:#2e4a32;
+  --bg:#030509;--t1:#e8fff2;--t2:#a8d8b0;--t3:#6abf7a;
   --mono:'Share Tech Mono',monospace;--dsp:'Orbitron',sans-serif;--body:'Rajdhani',sans-serif;
   --glow:0 0 20px rgba(0,255,65,.4),0 0 60px rgba(0,255,65,.15);
   --cglow:0 0 20px rgba(0,229,255,.4),0 0 60px rgba(0,229,255,.1);
@@ -104,7 +110,7 @@ body{background:var(--bg);color:var(--t1);font-family:var(--body);font-size:17px
 .panel::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.015) 0%,transparent 60%);pointer-events:none}
 .panel:hover{border-color:rgba(0,229,255,.4);box-shadow:0 0 50px rgba(0,229,255,.07),inset 0 0 40px rgba(0,229,255,.025),0 20px 60px rgba(0,0,0,.3);transform:translateY(-3px) translateZ(6px)}
 .panel:hover::before{opacity:1}
-.panel p{color:var(--t2);margin-bottom:12px}
+.panel p{color:var(--t2);margin-bottom:12px;font-size:16px;line-height:1.85}
 .panel p:last-child{margin-bottom:0}
 .panel-t{font-family:var(--dsp);font-size:12px;font-weight:700;letter-spacing:3px;color:var(--g);text-transform:uppercase;margin-bottom:18px;display:flex;align-items:center;gap:12px}
 .panel-t::after{content:'';flex:1;height:1px;background:linear-gradient(to right,rgba(0,255,65,.2),transparent)}
@@ -156,10 +162,10 @@ body{background:var(--bg);color:var(--t1);font-family:var(--body);font-size:17px
 .ai-card:hover::before{opacity:1}
 .ai-ico{font-size:24px;margin-bottom:10px;display:block}
 .ai-name{font-family:var(--dsp);font-size:11px;font-weight:700;letter-spacing:2px;color:var(--p);text-transform:uppercase;margin-bottom:10px}
-.ai-desc{font-size:14px;color:var(--t2);line-height:1.65;font-weight:300}
+.ai-desc{font-size:15px;color:var(--t2);line-height:1.75;font-weight:400}
 
 /* ── PHASE TOOL TABLE ── */
-.ptbl{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12px;margin:16px 0}
+.ptbl{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:13px;margin:16px 0}
 .ptbl th{text-align:left;padding:11px 14px;color:var(--c);border-bottom:1px solid rgba(0,229,255,.3);letter-spacing:2px;font-size:10px;text-transform:uppercase}
 .ptbl td{padding:10px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05);vertical-align:top}
 .ptbl tr:hover td{background:rgba(0,255,65,.02)}
@@ -188,7 +194,7 @@ body{background:var(--bg);color:var(--t1);font-family:var(--body);font-size:17px
 .al-p{background:rgba(191,0,255,.04);border:1px solid rgba(191,0,255,.18);border-left:3px solid var(--p)}
 .al-ic{font-family:var(--mono);font-size:13px;flex-shrink:0;margin-top:2px}
 .al-w .al-ic{color:var(--o)}.al-i .al-ic{color:var(--c)}.al-p .al-ic{color:var(--p)}
-.al-tx{font-size:14px;color:var(--t2);line-height:1.6}
+.al-tx{font-size:15px;color:var(--t2);line-height:1.75;font-weight:500}
 
 /* ── 3-COL DEFENCE ── */
 .dgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:22px}
@@ -240,6 +246,12 @@ body{background:var(--bg);color:var(--t1);font-family:var(--body);font-size:17px
 
 /* ── RESPONSIVE ── */
 @media(max-width:700px){.vgrid,.tgrid,.mgrid,.ai-grid{grid-template-columns:1fr}.hero-canvas-wrap{display:none}.cta{padding:36px 20px}.cta::before{font-size:80px}}
+@media(max-width:768px){body{font-size:16px}.wrap{padding:0 16px}.hero{padding:80px 0 40px}.hero-content{max-width:100%}.hero-title{font-size:clamp(18px,5vw,30px)}.hero-desc{font-size:15px}.topbar{padding:0 16px}.tb-name{font-size:11px;letter-spacing:2px}.panel{padding:20px}.cta-btns{flex-direction:column;align-items:center}.btn{width:100%;max-width:280px;text-align:center}.footer{flex-direction:column;gap:12px}.f-r{text-align:left}.ptbl th,.ptbl td{padding:7px 8px}}
+@media(max-width:480px){body{font-size:15px}.wrap{padding:0 14px}.hero{padding:70px 0 30px}.hero-title{font-size:clamp(18px,6vw,28px)}.hero-desc{font-size:14px;line-height:1.75}.sec-t{font-size:clamp(14px,4.5vw,18px)}.vgrid,.tgrid,.mgrid,.ai-grid{grid-template-columns:1fr}.ptbl{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch;white-space:nowrap}.cb{padding:12px 14px}.cb code{font-size:11px;line-height:1.8}.topbar{height:50px;padding:0 12px}.tb-name{font-size:10px;letter-spacing:1px}.tb-roles{display:none}.div{margin:36px 0}.sec{margin-bottom:60px}.panel{padding:16px;font-size:15px}.ai-card{padding:16px}.ai-desc{font-size:13px}.cta{padding:28px 16px}.f-r{text-align:left}}
+@media(hover:none){.panel:hover,.ai-card:hover{transform:none}}
+
+@media(pointer:coarse){body{cursor:auto!important}#cur,#cur2,#cur3{display:none!important}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 </style>
 </head>
 <body>
@@ -454,6 +466,52 @@ body{background:var(--bg);color:var(--t1);font-family:var(--body);font-size:17px
 <span class="cmd">nmap</span> <span class="flag">--script</span> smtp-open-relay <span class="flag">-p 25</span> <span class="prm">&lt;MAIL-SERVER-IP&gt;</span></code>
   </div>
 </section>
+<div class="rv" style="margin:0 0 40px 0"><div style="font-family:var(--mono);font-size:10px;letter-spacing:3px;color:var(--p);margin-bottom:14px">DIAGRAM 01 // EXTERNAL NETWORK PENTEST KILL CHAIN</div><div style="overflow-x:auto;-webkit-overflow-scrolling:touch;background:rgba(0,0,0,0.4);border:1px solid rgba(0,229,255,0.12);border-radius:4px;padding:16px"><svg viewBox="0 0 920 210" xmlns="http://www.w3.org/2000/svg" style="width:100%;min-width:580px;max-width:920px;display:block">
+  <defs><marker id="en1" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="rgba(0,229,255,.9)"/></marker>
+  <marker id="en1g" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="rgba(0,255,65,.9)"/></marker></defs>
+  <rect x="8" y="35" width="120" height="80" rx="4" fill="rgba(0,0,0,.82)" stroke="rgba(255,80,80,.85)" stroke-width="1.5"/>
+  <text x="68" y="60" font-family="Share Tech Mono,monospace" font-size="10" fill="#ff5050" text-anchor="middle" font-weight="700">OSINT</text>
+  <text x="68" y="74" font-family="Share Tech Mono,monospace" font-size="10" fill="#ff5050" text-anchor="middle" font-weight="700">RECON</text>
+  <text x="68" y="92" font-family="Share Tech Mono,monospace" font-size="9" fill="#ff8888" text-anchor="middle">Shodan/crt.sh</text>
+  <text x="68" y="105" font-family="Share Tech Mono,monospace" font-size="9" fill="#ff8888" text-anchor="middle">theHarvester</text>
+  <line x1="129" y1="75" x2="147" y2="75" stroke="rgba(0,229,255,.88)" stroke-width="1.5" marker-end="url(#en1)"/>
+  <rect x="149" y="35" width="120" height="80" rx="4" fill="rgba(0,0,0,.82)" stroke="rgba(255,200,80,.85)" stroke-width="1.5"/>
+  <text x="209" y="60" font-family="Share Tech Mono,monospace" font-size="10" fill="#ffc850" text-anchor="middle" font-weight="700">PORT &amp;</text>
+  <text x="209" y="74" font-family="Share Tech Mono,monospace" font-size="10" fill="#ffc850" text-anchor="middle" font-weight="700">SVC SCAN</text>
+  <text x="209" y="92" font-family="Share Tech Mono,monospace" font-size="9" fill="#ffe088" text-anchor="middle">nmap -sV -sC</text>
+  <text x="209" y="105" font-family="Share Tech Mono,monospace" font-size="9" fill="#ffe088" text-anchor="middle">masscan</text>
+  <line x1="270" y1="75" x2="288" y2="75" stroke="rgba(0,229,255,.88)" stroke-width="1.5" marker-end="url(#en1)"/>
+  <rect x="290" y="35" width="120" height="80" rx="4" fill="rgba(0,0,0,.82)" stroke="rgba(0,229,255,.85)" stroke-width="1.5"/>
+  <text x="350" y="60" font-family="Share Tech Mono,monospace" font-size="10" fill="#00e5ff" text-anchor="middle" font-weight="700">VULN</text>
+  <text x="350" y="74" font-family="Share Tech Mono,monospace" font-size="10" fill="#00e5ff" text-anchor="middle" font-weight="700">IDENTIFY</text>
+  <text x="350" y="92" font-family="Share Tech Mono,monospace" font-size="9" fill="#88e8ff" text-anchor="middle">Nessus / OpenVAS</text>
+  <text x="350" y="105" font-family="Share Tech Mono,monospace" font-size="9" fill="#88e8ff" text-anchor="middle">Nuclei / Metasploit</text>
+  <line x1="411" y1="75" x2="429" y2="75" stroke="rgba(0,229,255,.88)" stroke-width="1.5" marker-end="url(#en1)"/>
+  <rect x="431" y="35" width="120" height="80" rx="4" fill="rgba(0,0,0,.82)" stroke="rgba(191,0,255,.85)" stroke-width="1.5"/>
+  <text x="491" y="60" font-family="Share Tech Mono,monospace" font-size="10" fill="#bf00ff" text-anchor="middle" font-weight="700">EXPLOIT</text>
+  <text x="491" y="74" font-family="Share Tech Mono,monospace" font-size="10" fill="#bf00ff" text-anchor="middle" font-weight="700">&amp; ACCESS</text>
+  <text x="491" y="92" font-family="Share Tech Mono,monospace" font-size="9" fill="#df88ff" text-anchor="middle">CVE exploit</text>
+  <text x="491" y="105" font-family="Share Tech Mono,monospace" font-size="9" fill="#df88ff" text-anchor="middle">web app / VPN</text>
+  <line x1="552" y1="75" x2="570" y2="75" stroke="rgba(0,229,255,.88)" stroke-width="1.5" marker-end="url(#en1)"/>
+  <rect x="572" y="35" width="120" height="80" rx="4" fill="rgba(0,0,0,.82)" stroke="rgba(0,229,255,.85)" stroke-width="1.5"/>
+  <text x="632" y="60" font-family="Share Tech Mono,monospace" font-size="10" fill="#00e5ff" text-anchor="middle" font-weight="700">POST</text>
+  <text x="632" y="74" font-family="Share Tech Mono,monospace" font-size="10" fill="#00e5ff" text-anchor="middle" font-weight="700">EXPLOIT</text>
+  <text x="632" y="92" font-family="Share Tech Mono,monospace" font-size="9" fill="#88e8ff" text-anchor="middle">pivot / loot</text>
+  <text x="632" y="105" font-family="Share Tech Mono,monospace" font-size="9" fill="#88e8ff" text-anchor="middle">lateral move</text>
+  <line x1="693" y1="75" x2="711" y2="75" stroke="rgba(0,255,65,.9)" stroke-width="2" marker-end="url(#en1g)"/>
+  <rect x="713" y="25" width="200" height="100" rx="4" fill="rgba(0,0,0,.88)" stroke="rgba(0,255,65,.92)" stroke-width="2"/>
+  <text x="813" y="60" font-family="Orbitron,sans-serif" font-size="11" font-weight="900" fill="#00ff41" text-anchor="middle">INTERNAL</text>
+  <text x="813" y="75" font-family="Orbitron,sans-serif" font-size="11" font-weight="900" fill="#00ff41" text-anchor="middle">NETWORK</text>
+  <text x="813" y="95" font-family="Share Tech Mono,monospace" font-size="9" fill="#88ff99" text-anchor="middle">perimeter breached</text>
+  <text x="813" y="109" font-family="Share Tech Mono,monospace" font-size="9" fill="#88ff99" text-anchor="middle">pivot to internal</text>
+  <text x="68"  y="175" font-family="Share Tech Mono,monospace" font-size="10" fill="rgba(255,80,80,.85)"  text-anchor="middle">STEP 1</text>
+  <text x="209" y="175" font-family="Share Tech Mono,monospace" font-size="10" fill="rgba(255,200,80,.85)" text-anchor="middle">STEP 2</text>
+  <text x="350" y="175" font-family="Share Tech Mono,monospace" font-size="10" fill="rgba(0,229,255,.85)"  text-anchor="middle">STEP 3</text>
+  <text x="491" y="175" font-family="Share Tech Mono,monospace" font-size="10" fill="rgba(191,0,255,.85)"  text-anchor="middle">STEP 4</text>
+  <text x="632" y="175" font-family="Share Tech Mono,monospace" font-size="10" fill="rgba(0,229,255,.85)"  text-anchor="middle">STEP 5</text>
+  <text x="813" y="175" font-family="Share Tech Mono,monospace" font-size="10" fill="rgba(0,255,65,.9)"    text-anchor="middle">OBJECTIVE</text>
+</svg></div></div>
+
 
 <div class="div"></div>
 
@@ -493,6 +551,58 @@ body{background:var(--bg);color:var(--t1);font-family:var(--body);font-size:17px
 <span class="cmd">searchsploit</span> <span class="str">"OpenSSH 8.2"</span></code>
   </div>
 </section>
+<div class="rv" style="margin:0 0 40px 0"><div style="font-family:var(--mono);font-size:10px;letter-spacing:3px;color:var(--p);margin-bottom:14px">DIAGRAM 02 // RECON TO ATTACK SURFACE MAPPING</div><div style="overflow-x:auto;-webkit-overflow-scrolling:touch;background:rgba(0,0,0,0.4);border:1px solid rgba(0,229,255,0.12);border-radius:4px;padding:16px"><svg viewBox="0 0 920 230" xmlns="http://www.w3.org/2000/svg" style="width:100%;min-width:580px;max-width:920px;display:block">
+  <defs><marker id="en2" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="rgba(0,229,255,.9)"/></marker>
+  <marker id="en2g" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="rgba(0,255,65,.9)"/></marker></defs>
+  <!-- Passive OSINT -->
+  <rect x="8" y="55" width="130" height="80" rx="4" fill="rgba(0,0,0,.82)" stroke="rgba(0,229,255,.85)" stroke-width="1.5"/>
+  <text x="73" y="82" font-family="Share Tech Mono,monospace" font-size="10" fill="#00e5ff" text-anchor="middle" font-weight="700">PASSIVE</text>
+  <text x="73" y="96" font-family="Share Tech Mono,monospace" font-size="10" fill="#00e5ff" text-anchor="middle" font-weight="700">OSINT</text>
+  <text x="73" y="115" font-family="Share Tech Mono,monospace" font-size="8" fill="#88e8ff" text-anchor="middle">WHOIS / DNS / Shodan</text>
+  <!-- Arrow OSINT → DNS -->
+  <line x1="139" y1="95" x2="160" y2="75" stroke="rgba(0,229,255,.8)" stroke-width="1.5" marker-end="url(#en2)"/>
+  <line x1="139" y1="105" x2="160" y2="130" stroke="rgba(0,229,255,.8)" stroke-width="1.5" marker-end="url(#en2)"/>
+  <!-- DNS box -->
+  <rect x="162" y="35" width="125" height="55" rx="4" fill="rgba(0,0,0,.82)" stroke="rgba(255,200,80,.82)" stroke-width="1.5"/>
+  <text x="224" y="57" font-family="Share Tech Mono,monospace" font-size="10" fill="#ffc850" text-anchor="middle" font-weight="700">DNS ENUM</text>
+  <text x="224" y="73" font-family="Share Tech Mono,monospace" font-size="8"  fill="#ffe088" text-anchor="middle">amass / subfinder</text>
+  <!-- IP Ranges box -->
+  <rect x="162" y="108" width="125" height="55" rx="4" fill="rgba(0,0,0,.82)" stroke="rgba(255,200,80,.82)" stroke-width="1.5"/>
+  <text x="224" y="130" font-family="Share Tech Mono,monospace" font-size="10" fill="#ffc850" text-anchor="middle" font-weight="700">IP RANGES</text>
+  <text x="224" y="146" font-family="Share Tech Mono,monospace" font-size="8"  fill="#ffe088" text-anchor="middle">ASN lookup / RIPE</text>
+  <!-- Both → Port Scan -->
+  <line x1="288" y1="62" x2="316" y2="90" stroke="rgba(0,229,255,.8)" stroke-width="1.5" marker-end="url(#en2)"/>
+  <line x1="288" y1="135" x2="316" y2="107" stroke="rgba(0,229,255,.8)" stroke-width="1.5" marker-end="url(#en2)"/>
+  <!-- Port Scan -->
+  <rect x="318" y="65" width="130" height="68" rx="4" fill="rgba(0,0,0,.82)" stroke="rgba(0,229,255,.85)" stroke-width="1.5"/>
+  <text x="383" y="90" font-family="Share Tech Mono,monospace" font-size="10" fill="#00e5ff" text-anchor="middle" font-weight="700">PORT SCAN</text>
+  <text x="383" y="104" font-family="Share Tech Mono,monospace" font-size="8"  fill="#88e8ff" text-anchor="middle">nmap / masscan</text>
+  <text x="383" y="118" font-family="Share Tech Mono,monospace" font-size="8"  fill="#88e8ff" text-anchor="middle">Shodan queries</text>
+  <!-- Arrow → Fingerprint -->
+  <line x1="449" y1="99" x2="468" y2="99" stroke="rgba(0,229,255,.88)" stroke-width="1.5" marker-end="url(#en2)"/>
+  <!-- Fingerprint -->
+  <rect x="470" y="65" width="135" height="68" rx="4" fill="rgba(0,0,0,.82)" stroke="rgba(191,0,255,.85)" stroke-width="1.5"/>
+  <text x="537" y="90" font-family="Share Tech Mono,monospace" font-size="10" fill="#bf00ff" text-anchor="middle" font-weight="700">FINGERPRINT</text>
+  <text x="537" y="104" font-family="Share Tech Mono,monospace" font-size="8"  fill="#df88ff" text-anchor="middle">banner / version</text>
+  <text x="537" y="118" font-family="Share Tech Mono,monospace" font-size="8"  fill="#df88ff" text-anchor="middle">Wappalyzer / whatweb</text>
+  <!-- Arrow → Attack Surface -->
+  <line x1="606" y1="99" x2="626" y2="99" stroke="rgba(0,255,65,.9)" stroke-width="2" marker-end="url(#en2g)"/>
+  <!-- Attack Surface Map -->
+  <rect x="628" y="50" width="165" height="98" rx="4" fill="rgba(0,0,0,.88)" stroke="rgba(0,255,65,.92)" stroke-width="2"/>
+  <text x="710" y="78" font-family="Orbitron,sans-serif" font-size="10" font-weight="900" fill="#00ff41" text-anchor="middle">ATTACK</text>
+  <text x="710" y="93" font-family="Orbitron,sans-serif" font-size="10" font-weight="900" fill="#00ff41" text-anchor="middle">SURFACE</text>
+  <text x="710" y="112" font-family="Share Tech Mono,monospace" font-size="9"  fill="#88ff99" text-anchor="middle">open ports / services</text>
+  <text x="710" y="126" font-family="Share Tech Mono,monospace" font-size="9"  fill="#88ff99" text-anchor="middle">web apps / VPNs / APIs</text>
+  <!-- Tool labels -->
+  <text x="73"  y="168" font-family="Share Tech Mono,monospace" font-size="9" fill="rgba(0,229,255,.82)"  text-anchor="middle">passive only</text>
+  <text x="224" y="168" font-family="Share Tech Mono,monospace" font-size="9" fill="rgba(255,200,80,.82)" text-anchor="middle">no direct contact</text>
+  <text x="383" y="168" font-family="Share Tech Mono,monospace" font-size="9" fill="rgba(0,229,255,.82)"  text-anchor="middle">active scanning</text>
+  <text x="537" y="168" font-family="Share Tech Mono,monospace" font-size="9" fill="rgba(191,0,255,.82)"  text-anchor="middle">service detection</text>
+  <text x="710" y="168" font-family="Share Tech Mono,monospace" font-size="9" fill="rgba(0,255,65,.88)"   text-anchor="middle">prioritised target list</text>
+  <text x="460" y="200" font-family="Share Tech Mono,monospace" font-size="9" fill="rgba(0,229,255,.75)" text-anchor="middle">Tools: amass, subfinder, shodan, crt.sh, theHarvester, nmap, masscan, Nuclei, Wappalyzer</text>
+  <text x="460" y="215" font-family="Share Tech Mono,monospace" font-size="9" fill="rgba(0,229,255,.62)" text-anchor="middle">Key outputs: open ports, SSL cert SANs, tech stack, exposed admin panels, VPN endpoints</text>
+</svg></div></div>
+
 
 <div class="div"></div>
 
@@ -583,6 +693,52 @@ body{background:var(--bg);color:var(--t1);font-family:var(--body);font-size:17px
     </div>
   </div>
 </section>
+<div class="rv" style="margin:0 0 40px 0"><div style="font-family:var(--mono);font-size:10px;letter-spacing:3px;color:var(--p);margin-bottom:14px">DIAGRAM 03 // VULNERABILITY EXPLOITATION FLOW</div><div style="overflow-x:auto;-webkit-overflow-scrolling:touch;background:rgba(0,0,0,0.4);border:1px solid rgba(0,229,255,0.12);border-radius:4px;padding:16px"><svg viewBox="0 0 920 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;min-width:580px;max-width:920px;display:block">
+  <defs><marker id="en3" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="rgba(0,229,255,.9)"/></marker>
+  <marker id="en3g" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="rgba(0,255,65,.9)"/></marker>
+  <marker id="en3r" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="rgba(255,80,80,.9)"/></marker></defs>
+  <!-- Scanner -->
+  <rect x="8" y="75" width="125" height="68" rx="4" fill="rgba(0,0,0,.82)" stroke="rgba(255,200,80,.85)" stroke-width="1.5"/>
+  <text x="70" y="100" font-family="Share Tech Mono,monospace" font-size="10" fill="#ffc850" text-anchor="middle" font-weight="700">VULN</text>
+  <text x="70" y="114" font-family="Share Tech Mono,monospace" font-size="10" fill="#ffc850" text-anchor="middle" font-weight="700">SCANNER</text>
+  <text x="70" y="132" font-family="Share Tech Mono,monospace" font-size="8"  fill="#ffe088" text-anchor="middle">Nessus / Nuclei</text>
+  <line x1="134" y1="109" x2="154" y2="109" stroke="rgba(0,229,255,.88)" stroke-width="1.5" marker-end="url(#en3)"/>
+  <!-- CVE match -->
+  <rect x="156" y="75" width="130" height="68" rx="4" fill="rgba(0,0,0,.82)" stroke="rgba(0,229,255,.85)" stroke-width="1.5"/>
+  <text x="221" y="100" font-family="Share Tech Mono,monospace" font-size="10" fill="#00e5ff" text-anchor="middle" font-weight="700">CVE / VULN</text>
+  <text x="221" y="114" font-family="Share Tech Mono,monospace" font-size="10" fill="#00e5ff" text-anchor="middle" font-weight="700">IDENTIFIED</text>
+  <text x="221" y="132" font-family="Share Tech Mono,monospace" font-size="8"  fill="#88e8ff" text-anchor="middle">CVSS scored</text>
+  <!-- Branch high/low -->
+  <line x1="287" y1="95" x2="316" y2="70" stroke="rgba(255,80,80,.85)" stroke-width="1.5" marker-end="url(#en3r)"/>
+  <line x1="287" y1="123" x2="316" y2="148" stroke="rgba(0,229,255,.8)" stroke-width="1.5" marker-end="url(#en3)"/>
+  <text x="302" y="62" font-family="Share Tech Mono,monospace" font-size="8"  fill="#ff8888" text-anchor="middle">Critical/High</text>
+  <text x="302" y="163" font-family="Share Tech Mono,monospace" font-size="8"  fill="#88e8ff" text-anchor="middle">Medium/Low</text>
+  <!-- Exploit path -->
+  <rect x="318" y="42" width="135" height="55" rx="4" fill="rgba(0,0,0,.82)" stroke="rgba(255,80,80,.85)" stroke-width="1.5"/>
+  <text x="385" y="65" font-family="Share Tech Mono,monospace" font-size="10" fill="#ff5050" text-anchor="middle" font-weight="700">EXPLOIT</text>
+  <text x="385" y="80" font-family="Share Tech Mono,monospace" font-size="8"  fill="#ff8888" text-anchor="middle">MSF / custom PoC</text>
+  <!-- Validate path -->
+  <rect x="318" y="130" width="135" height="55" rx="4" fill="rgba(0,0,0,.82)" stroke="rgba(0,229,255,.75)" stroke-width="1.5"/>
+  <text x="385" y="153" font-family="Share Tech Mono,monospace" font-size="10" fill="#00e5ff" text-anchor="middle" font-weight="700">VALIDATE</text>
+  <text x="385" y="168" font-family="Share Tech Mono,monospace" font-size="8"  fill="#88e8ff" text-anchor="middle">manual verify</text>
+  <!-- Both → Access -->
+  <line x1="454" y1="69" x2="480" y2="100" stroke="rgba(255,80,80,.8)" stroke-width="1.5" marker-end="url(#en3r)"/>
+  <line x1="454" y1="157" x2="480" y2="120" stroke="rgba(0,229,255,.8)" stroke-width="1.5" marker-end="url(#en3)"/>
+  <!-- Access achieved -->
+  <rect x="482" y="75" width="135" height="68" rx="4" fill="rgba(0,0,0,.82)" stroke="rgba(191,0,255,.85)" stroke-width="1.5"/>
+  <text x="549" y="100" font-family="Share Tech Mono,monospace" font-size="10" fill="#bf00ff" text-anchor="middle" font-weight="700">ACCESS</text>
+  <text x="549" y="114" font-family="Share Tech Mono,monospace" font-size="10" fill="#bf00ff" text-anchor="middle" font-weight="700">ACHIEVED</text>
+  <text x="549" y="132" font-family="Share Tech Mono,monospace" font-size="8"  fill="#df88ff" text-anchor="middle">shell / session</text>
+  <line x1="618" y1="109" x2="638" y2="109" stroke="rgba(0,255,65,.9)" stroke-width="2" marker-end="url(#en3g)"/>
+  <!-- Post-exploit -->
+  <rect x="640" y="65" width="150" height="88" rx="4" fill="rgba(0,0,0,.88)" stroke="rgba(0,255,65,.92)" stroke-width="2"/>
+  <text x="715" y="95" font-family="Orbitron,sans-serif" font-size="10" font-weight="900" fill="#00ff41" text-anchor="middle">POST</text>
+  <text x="715" y="110" font-family="Orbitron,sans-serif" font-size="10" font-weight="900" fill="#00ff41" text-anchor="middle">EXPLOIT</text>
+  <text x="715" y="130" font-family="Share Tech Mono,monospace" font-size="9"  fill="#88ff99" text-anchor="middle">priv esc / pivot</text>
+  <text x="715" y="144" font-family="Share Tech Mono,monospace" font-size="9"  fill="#88ff99" text-anchor="middle">cred dump / loot</text>
+  <text x="460" y="205" font-family="Share Tech Mono,monospace" font-size="9" fill="rgba(0,229,255,.75)" text-anchor="middle">Exploit sources: Metasploit, ExploitDB, Packet Storm, GitHub PoC, Nuclei templates, custom scripts</text>
+</svg></div></div>
+
 
 <div class="div"></div>
 
@@ -658,109 +814,150 @@ body{background:var(--bg);color:var(--t1);font-family:var(--body);font-size:17px
 
 <!-- ══ 08 — AI INTEGRATION ══ -->
 <section class="sec rv sec-ai" id="ai">
-  <div class="sec-hd"><span class="sec-n">08 //</span><h2 class="sec-t">AI Integration in External Network Penetration Testing<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
-
+  <div class="sec-hd"><span class="sec-n">09 //</span><h2 class="sec-t">AI Integration in External Network Penetration Testing<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
   <div class="panel panel-ai rv-l">
-    <p>Artificial Intelligence is fundamentally changing what is possible in external network penetration testing — dramatically compressing the time between reconnaissance and exploitation, enabling attack surface discovery at a scale no human team could achieve manually, and generating adaptive payloads that evade static detection signatures. On the defensive side, AI provides the continuous monitoring capability needed to detect the kind of low-and-slow reconnaissance that precedes most real-world external breaches.</p>
-    <p>For penetration testers, AI is not a replacement for expertise — it is a force multiplier. An experienced tester augmented with AI-assisted reconnaissance, intelligent vulnerability prioritisation, and automated report generation can deliver the same depth of assessment in significantly less time, or achieve far greater breadth within the same engagement window.</p>
+    <p>AI accelerates external network penetration testing across every phase -- from generating targeted OSINT queries and correlating subdomain and service discovery data, to interpreting Nessus and Nuclei output for prioritised exploit planning, automating credential spray pattern generation tuned to discovered email formats, and converting sprawling external assessment findings into board-ready reports. External network tests produce enormous volumes of scan data that AI can correlate and reason about in seconds.</p>
+    <p>The critical shift: AI tools like <strong style="color:var(--c)">Claude</strong>, <strong style="color:var(--c)">ChatGPT</strong>, and <strong style="color:var(--c)">Gemini</strong> understand network protocols, CVE details, and Metasploit module syntax deeply enough to serve as expert network penetration testing advisors -- generating targeted exploitation strategies from vulnerability scanner output and automating the most time-consuming analysis tasks in minutes rather than hours.</p>
   </div>
-
   <div class="alert al-p rv">
     <span class="al-ic">[ AI ]</span>
-    <p class="al-tx">A 2024 SANS survey found that <strong>68% of penetration testers</strong> now use AI-assisted tools in at least one phase of their engagements. Attack surface enumeration and report generation are the two phases where AI delivers the highest time savings — reducing each by 40–60% in controlled studies.</p>
+    <p class="al-tx">External network penetration testers using AI-assisted vulnerability analysis reduce time-to-exploit planning by over 60%. Feeding Nessus XML output or Nuclei JSON results directly to a frontier LLM returns a prioritised attack plan with specific Metasploit module recommendations, manual exploit steps, and impact assessments -- replacing hours of manual CVE research with minutes of AI-assisted analysis.</p>
   </div>
 
-  <h3 style="font-family:var(--mono);font-size:11px;letter-spacing:3px;color:var(--p);text-transform:uppercase;margin:28px 0 16px;">AI-Powered Offensive Capabilities</h3>
+  <h3 style="font-family:var(--mono);font-size:11px;letter-spacing:3px;color:var(--p);text-transform:uppercase;margin:28px 0 16px">AI-Powered Offensive Capabilities</h3>
   <div class="ai-grid rv">
-    <div class="ai-card"><span class="ai-ico">🌐</span><div class="ai-name">AI Attack Surface Discovery</div><div class="ai-desc">Large language models process OSINT data from dozens of sources simultaneously — correlating certificate transparency logs, DNS records, GitHub repositories, job postings, and dark web data to build a comprehensive external attack surface map in minutes rather than hours.</div></div>
-    <div class="ai-card"><span class="ai-ico">🔍</span><div class="ai-name">Intelligent Vulnerability Research</div><div class="ai-desc">AI models cross-reference discovered software versions against CVE databases, Exploit-DB, and PoC repositories in real time — instantly surfacing the highest-severity exploitable vulnerabilities for a given target's service stack and presenting them ranked by exploitability and business impact.</div></div>
-    <div class="ai-card"><span class="ai-ico">⚗️</span><div class="ai-name">Payload Generation &amp; Mutation</div><div class="ai-desc">LLMs generate custom exploit payloads, WAF bypass strings, and encoding variants tailored to the specific application technology stack observed during reconnaissance — dramatically reducing the trial-and-error iteration cycle that manual payload crafting requires against hardened targets.</div></div>
-    <div class="ai-card"><span class="ai-ico">🎭</span><div class="ai-name">Social Engineering Intelligence</div><div class="ai-desc">AI analyses harvested employee data, organisational structure, and recent public communications to generate highly targeted and contextually credible phishing pretexts — simulating the level of personalisation that advanced persistent threat actors use in real-world campaigns targeting external users.</div></div>
-    <div class="ai-card"><span class="ai-ico">🗂</span><div class="ai-name">Automated Report Generation</div><div class="ai-desc">LLMs convert raw exploitation output — session logs, screenshot annotations, vulnerability scanner results — into structured penetration test findings with CVSS scores, business impact narratives, and step-by-step remediation guidance, reducing post-engagement reporting time by 50–70%.</div></div>
-    <div class="ai-card"><span class="ai-ico">🔗</span><div class="ai-name">Attack Chain Identification</div><div class="ai-desc">Graph-based AI models analyse the full vulnerability set discovered across an external assessment and automatically identify multi-step attack chains — demonstrating how combining a credential exposure on one service with a misconfiguration on another reaches a higher-value target that neither vulnerability alone would access.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128270;</span><div class="ai-name">OSINT &amp; Recon Automation</div><div class="ai-desc">AI generates targeted OSINT queries and correlates passive reconnaissance data -- cross-referencing Shodan results with crt.sh certificate transparency logs, LinkedIn employee data, and WHOIS records to build a complete attack surface map. Claude and ChatGPT interpret raw amass and subfinder output to identify the highest-value targets, unusual subdomain patterns indicating development environments, and exposed services that warrant immediate manual attention.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128202;</span><div class="ai-name">Scanner Output Analysis</div><div class="ai-desc">AI processes Nessus, OpenVAS, and Nuclei scanner output to produce a consolidated, prioritised attack plan -- correlating vulnerabilities across hosts to identify critical chains (vulnerable VPN endpoint + exposed admin panel on same subnet = high-priority attack path), ranking findings by actual exploitability, and generating specific Metasploit module names and manual exploit steps for each critical finding with environment-specific customisation.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#9889;</span><div class="ai-name">CVE Research &amp; Exploit Planning</div><div class="ai-desc">For each identified vulnerability, AI conducts instant CVE research -- explaining the vulnerability mechanism, identifying the specific affected versions present in the scan results, locating available public exploits on ExploitDB and GitHub, assessing reliability and detection risk, and generating a customised exploitation playbook with fallback approaches if the primary exploit fails. Replaces hours of manual CVE research per finding with seconds of AI analysis.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128272;</span><div class="ai-name">Credential Attack Generation</div><div class="ai-desc">AI generates targeted credential attack strategies from discovered employee names, email formats, and company naming conventions -- building organisation-specific password lists based on company name, industry, location, and common patterns. For exposed services (OWA, VPN, SSH, RDP, SMB), AI generates protocol-specific spray strategies that respect lockout thresholds, timing patterns that avoid detection, and post-spray correlation plans to validate access across services using discovered credentials.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128196;</span><div class="ai-name">Post-Exploitation Planning</div><div class="ai-desc">Given initial foothold details (service compromised, OS version, user context, network segment), AI generates a complete post-exploitation roadmap -- privilege escalation paths for the specific OS and service configuration, lateral movement techniques appropriate for the network architecture, data exfiltration approaches matched to the discovered security controls, and persistence mechanisms matched to the organisation's likely monitoring capability. Produces MITRE ATT&amp;CK-mapped TTPs for every suggested action.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128201;</span><div class="ai-name">Report Generation</div><div class="ai-desc">AI converts external network pentest findings into professional assessment reports -- structured finding entries with CVSSv4 scores, CVSS vector strings, MITRE ATT&amp;CK TTP mappings, business impact statements (revenue risk from exposed VPN, regulatory exposure from unpatched public-facing servers), specific remediation guidance with patching timelines, and executive summary narratives that communicate technical risk in business language. Reduces report writing from days to hours.</div></div>
   </div>
 
-  <h3 style="font-family:var(--mono);font-size:11px;letter-spacing:3px;color:var(--p);text-transform:uppercase;margin:32px 0 16px;">AI-Powered Defensive Capabilities</h3>
+  <h3 style="font-family:var(--mono);font-size:11px;letter-spacing:3px;color:var(--p);text-transform:uppercase;margin:32px 0 16px">AI-Powered Network Defence &amp; Detection</h3>
   <div class="ai-grid rv">
-    <div class="ai-card"><span class="ai-ico">🛰</span><div class="ai-name">Continuous External Exposure Monitoring</div><div class="ai-desc">AI-driven attack surface management platforms (ASM) — CyCognito, Censys ASM, Mandiant ASM — continuously scan an organisation's external footprint and alert on newly exposed services, certificate expirations, subdomain takeover risks, and leaked credentials in real time, without requiring a scheduled pen test.</div></div>
-    <div class="ai-card"><span class="ai-ico">🧠</span><div class="ai-name">AI-Driven Threat Intelligence</div><div class="ai-desc">ML models correlate threat intelligence feeds, dark web monitoring, and observed attack patterns to predict which external vulnerabilities in your specific technology stack are most likely to be exploited in the near term — enabling proactive risk prioritisation rather than reactive patching.</div></div>
-    <div class="ai-card"><span class="ai-ico">🚨</span><div class="ai-name">Reconnaissance Detection</div><div class="ai-desc">AI analyses web server logs, DNS query patterns, and firewall events to detect the systematic port scanning, subdomain enumeration, and directory fuzzing that precedes most external attacks — alerting defenders during the reconnaissance phase, not after initial compromise.</div></div>
-    <div class="ai-card"><span class="ai-ico">🔒</span><div class="ai-name">Automated Vulnerability Triage</div><div class="ai-desc">AI processes vulnerability scanner output and contextualises findings against the specific organisation — considering asset criticality, network exposure, exploit availability, and compensating controls to produce a risk-adjusted priority list that replaces the generic CVSS-sorted spreadsheet most organisations still use.</div></div>
-    <div class="ai-card"><span class="ai-ico">🤖</span><div class="ai-name">AI-Powered WAF Rules</div><div class="ai-desc">Modern WAF platforms use ML models trained on attack patterns to generate dynamic blocking rules that adapt to novel attack variants — detecting SQL injection, XSS, and LFI payloads that deliberately evade static signature-based rules through encoding, fragmentation, or parameter manipulation.</div></div>
-    <div class="ai-card"><span class="ai-ico">📈</span><div class="ai-name">Breach Prediction Modelling</div><div class="ai-desc">AI models trained on historical breach data, current threat intelligence, and organisational security posture metrics generate probability scores for specific breach scenarios — enabling security teams to invest in the controls that reduce the highest-probability, highest-impact attack paths first.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128065;</span><div class="ai-name">Microsoft Copilot for Security</div><div class="ai-desc">Microsoft's AI layer across Defender, Sentinel, and Azure translates natural-language threat hunting queries into KQL -- "show all outbound connections on non-standard ports from internet-facing servers in the last 48 hours combined with failed authentication events" -- and correlates network telemetry with identity and endpoint data for complete attack chain reconstruction. Dramatically reduces analyst time on external threat investigation without requiring advanced KQL expertise.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128301;</span><div class="ai-name">CrowdStrike Charlotte AI</div><div class="ai-desc"><strong style="color:var(--c)">CrowdStrike Charlotte AI</strong> brings conversational AI to Falcon's network and endpoint telemetry -- enabling analysts to hunt for external attack indicators using natural language across the entire environment. Surfaces port scan patterns, exploitation attempts, and post-exploitation behaviour characteristic of external network attacks in real time, correlating indicators across endpoints, network logs, and threat intelligence feeds.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#127919;</span><div class="ai-name">AI-Powered IDS / IPS</div><div class="ai-desc"><strong style="color:var(--c)">Darktrace</strong> uses unsupervised ML to baseline normal network behaviour and detect deviations characteristic of external attacks -- unusual port scanning patterns, new service connections from internet IPs, data staging before exfiltration, and lateral movement from recently-compromised external-facing systems. Autonomous response capabilities isolate affected hosts and block malicious connections without waiting for human analyst action.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128202;</span><div class="ai-name">Continuous Attack Surface Mgmt</div><div class="ai-desc"><strong style="color:var(--c)">Censys ASM</strong> and <strong style="color:var(--c)">Runzero</strong> continuously enumerate the external attack surface using the same techniques as attackers -- discovering new internet-exposed assets, detecting misconfigured services, and identifying certificates about to expire before attackers do. AI correlates these discoveries against known vulnerability data to surface the highest-risk external exposures for immediate remediation prioritisation.</div></div>
   </div>
 
-  <div class="cb rv cb-ai" data-l="AI-Assisted — Python Recon Pipeline with LLM Analysis">
-    <code><span class="cmt"># AI-augmented external recon pipeline — combines tool output with GPT analysis</span>
-<span class="kw">import</span> subprocess, openai, json
-
-<span class="cmt"># Step 1: Automated subdomain and service discovery</span>
-subdomains = subprocess.<span class="fn">run</span>(
-    [<span class="str">'subfinder'</span>, <span class="str">'-d'</span>, <span class="prm">target_domain</span>, <span class="str">'-silent'</span>],
-    capture_output=<span class="kw">True</span>, text=<span class="kw">True</span>
-).stdout.strip().split(<span class="str">'\n'</span>)
-
-nmap_out = subprocess.<span class="fn">run</span>(
-    [<span class="str">'nmap'</span>, <span class="str">'-sV'</span>, <span class="str">'-T4'</span>, <span class="str">'-oJ'</span>, <span class="str">'-'</span>] + subdomains[:10],
-    capture_output=<span class="kw">True</span>, text=<span class="kw">True</span>
-).stdout
-
-<span class="cmt"># Step 2: Feed to AI for intelligent attack surface analysis</span>
-client = openai.<span class="fn">OpenAI</span>()
-response = client.chat.completions.<span class="fn">create</span>(
-    model=<span class="str">"gpt-4o"</span>,
-    messages=[{<span class="str">"role"</span>:<span class="str">"user"</span>, <span class="str">"content"</span>: <span class="str">f"""
-You are an expert external network penetration tester.
-Analyse this reconnaissance output for {target_domain}:
-
-Subdomains discovered: {json.dumps(subdomains[:20])}
-Nmap service scan: {nmap_out[:3000]}
-
-Provide:
-1. Top 5 highest-priority attack vectors ranked by exploitability
-2. Specific CVEs to investigate for each discovered service version
-3. Recommended Metasploit modules or tools for each finding
-4. Subdomain takeover candidates from the list
-5. Estimated time to compromise for each attack path
-"""</span>}]
-)
-<span class="fn">print</span>(response.choices[<span class="num">0</span>].message.content)</code>
+  <div class="panel panel-ai rv" style="margin-top:28px">
+    <div class="panel-t">AI Tools for External Network Pentesting -- No Version Lock-In</div>
+    <div style="overflow-x:auto;-webkit-overflow-scrolling:touch">
+    <table class="ptbl" style="min-width:580px">
+      <thead><tr>
+        <th style="color:#bf00ff;border-bottom-color:rgba(191,0,255,.25)">Tool / Platform</th>
+        <th style="color:#bf00ff;border-bottom-color:rgba(191,0,255,.25)">AI Capability</th>
+        <th style="color:#bf00ff;border-bottom-color:rgba(191,0,255,.25)">External Pentest Use Case</th>
+      </tr></thead>
+      <tbody>
+        <tr><td style="color:var(--g)">Claude (Anthropic)</td><td style="color:var(--t2)">Frontier LLM, long context, code</td><td style="color:var(--t2)">Scanner output analysis, CVE research, exploit planning, full report writing</td></tr>
+        <tr><td style="color:var(--g)">ChatGPT (OpenAI)</td><td style="color:var(--t2)">Frontier LLM, reasoning</td><td style="color:var(--t2)">OSINT correlation, credential strategy, post-exploitation roadmaps</td></tr>
+        <tr><td style="color:var(--g)">Gemini (Google)</td><td style="color:var(--t2)">Long context + Mandiant intel</td><td style="color:var(--t2)">Threat actor TTP analysis, vulnerability research, Google Cloud exposure</td></tr>
+        <tr><td style="color:var(--g)">Copilot for Security</td><td style="color:var(--t2)">Microsoft AI across security stack</td><td style="color:var(--t2)">External threat hunting, KQL generation, correlated incident timelines</td></tr>
+        <tr><td style="color:var(--g)">CrowdStrike Charlotte AI</td><td style="color:var(--t2)">Conversational AI on Falcon</td><td style="color:var(--t2)">External attack detection, exploitation attempt hunting, guided response</td></tr>
+        <tr><td style="color:var(--g)">Darktrace</td><td style="color:var(--t2)">Unsupervised ML, autonomous response</td><td style="color:var(--t2)">Anomaly detection, external scan detection, autonomous threat isolation</td></tr>
+        <tr><td style="color:var(--g)">Censys ASM / Runzero</td><td style="color:var(--t2)">Continuous attack surface discovery</td><td style="color:var(--t2)">External asset inventory, exposed service detection, risk scoring</td></tr>
+        <tr><td style="color:var(--g)">GitHub Copilot / Cursor</td><td style="color:var(--t2)">AI code completion in IDE</td><td style="color:var(--t2)">Custom Nuclei templates, Metasploit modules, automation scripts</td></tr>
+      </tbody>
+    </table>
+    </div>
   </div>
 
-  <div class="cb rv cb-ai" data-l="AI — Automated External PT Report Generation">
-    <code><span class="cmt"># Generate a structured finding from raw exploitation evidence</span>
-<span class="kw">import</span> openai
+  <div class="cb cb-ai rv" data-l="AI -- Nessus/Nuclei Output Analyser and Exploit Planner">
+    <code><span style="color:#bd93f9">#!/usr/bin/env python3</span>
+<span style="color:var(--t3))"># Feed scanner output to AI for prioritised exploit planning
+# Model-agnostic: set AI_MODEL env var to latest available model
+# pip install openai</span>
 
-finding = {
-    <span class="str">"vulnerability"</span>: <span class="str">"SQL Injection"</span>,
-    <span class="str">"location"</span>: <span class="str">"https://target.com/search.php?q=1"</span>,
-    <span class="str">"evidence"</span>: <span class="str">"Database version: MySQL 8.0.32; extracted 847 user records"</span>,
-    <span class="str">"tool_output"</span>: <span class="str">"sqlmap confirmed boolean-based and time-based blind SQLi"</span>,
-    <span class="str">"cvss_vector"</span>: <span class="str">"AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H"</span>
+<span style="color:#bd93f9">import</span> openai, json, os, sys, xml.etree.ElementTree <span style="color:#bd93f9">as</span> ET
+
+MODEL = os.getenv(<span style="color:#ff79c6">"AI_MODEL"</span>, <span style="color:#ff79c6">"gpt-4o"</span>)  <span style="color:var(--t3));"># swap to latest model as needed</span>
+
+<span style="color:#8be9fd">def</span> <span style="color:var(--c)">parse_nessus</span>(filepath):
+    <span style="color:var(--t3));"># Parse .nessus XML file, extract critical/high vulns</span>
+    tree = ET.parse(filepath)
+    findings = []
+    <span style="color:#bd93f9">for</span> host <span style="color:#bd93f9">in</span> tree.findall(<span style="color:#ff79c6">'.//ReportHost'</span>):
+        ip = host.get(<span style="color:#ff79c6">'name'</span>)
+        <span style="color:#bd93f9">for</span> item <span style="color:#bd93f9">in</span> host.findall(<span style="color:#ff79c6">'.//ReportItem'</span>):
+            severity = int(item.get(<span style="color:#ff79c6">'severity'</span>, <span style="color:#ff79c6">'0'</span>))
+            <span style="color:#bd93f9">if</span> severity >= 3:  <span style="color:var(--t3));"># Critical(4) and High(3)</span>
+                findings.append({
+                    <span style="color:#ff79c6">'ip'</span>: ip,
+                    <span style="color:#ff79c6">'port'</span>: item.get(<span style="color:#ff79c6">'port'</span>),
+                    <span style="color:#ff79c6">'svc'</span>: item.get(<span style="color:#ff79c6">'svc_name'</span>),
+                    <span style="color:#ff79c6">'plugin'</span>: item.get(<span style="color:#ff79c6">'pluginName'</span>),
+                    <span style="color:#ff79c6">'severity'</span>: <span style="color:#ff79c6">'Critical'</span> <span style="color:#bd93f9">if</span> severity == 4 <span style="color:#bd93f9">else</span> <span style="color:#ff79c6">'High'</span>,
+                    <span style="color:#ff79c6">'cvss'</span>: item.findtext(<span style="color:#ff79c6">'cvss3_base_score'</span>, <span style="color:#ff79c6">''</span>),
+                    <span style="color:#ff79c6">'cve'</span>: item.findtext(<span style="color:#ff79c6">'cve'</span>, <span style="color:#ff79c6">'N/A'</span>),
+                    <span style="color:#ff79c6">'synopsis'</span>: item.findtext(<span style="color:#ff79c6">'synopsis'</span>, <span style="color:#ff79c6">''</span>)[:200]
+                })
+    <span style="color:#bd93f9">return</span> findings
+
+<span style="color:#8be9fd">def</span> <span style="color:var(--c)">ai_exploit_plan</span>(findings):
+    prompt = (<span style="color:#ff79c6">"You are a senior external network penetration tester. "</span>
+              <span style="color:#ff79c6">"Analyse these scanner findings and provide:\n"</span>
+              <span style="color:#ff79c6">"1. TOP 5 ATTACK PATHS ranked by exploitability and impact\n"</span>
+              <span style="color:#ff79c6">"2. METASPLOIT MODULES: exact module paths for each finding\n"</span>
+              <span style="color:#ff79c6">"3. MANUAL STEPS: if no MSF module, step-by-step manual exploit\n"</span>
+              <span style="color:#ff79c6">"4. ATTACK CHAIN: how to chain multiple vulns for max impact\n"</span>
+              <span style="color:#ff79c6">"5. MITRE ATT&CK TTPs for each recommended technique\n\n"</span>
+              <span style="color:#ff79c6">"Findings:\n"</span> + json.dumps(findings[:30], indent=2))
+    r = openai.OpenAI().chat.completions.create(
+        model=MODEL,
+        messages=[{<span style="color:#ff79c6">"role"</span>:<span style="color:#ff79c6">"user"</span>,<span style="color:#ff79c6">"content"</span>:prompt}]
+    )
+    <span style="color:#bd93f9">return</span> r.choices[0].message.content
+
+filepath = sys.argv[1] <span style="color:#bd93f9">if</span> len(sys.argv) > 1 <span style="color:#bd93f9">else</span> <span style="color:#ff79c6">"scan.nessus"</span>
+findings = parse_nessus(filepath)
+print(<span style="color:#ff79c6">f"[*] Parsed {len(findings)} Critical/High findings"</span>)
+print(ai_exploit_plan(findings))</code>
+  </div>
+
+  <div class="cb cb-ai rv" data-l="AI -- OSINT Correlator and Attack Surface Mapper">
+    <code><span style="color:#bd93f9">#!/usr/bin/env python3</span>
+<span style="color:var(--t3))"># Correlate OSINT data from multiple sources using AI
+# Usage: python3 osint_ai.py targetcorp.com</span>
+
+<span style="color:#bd93f9">import</span> openai, subprocess, json, sys, os
+
+MODEL = os.getenv(<span style="color:#ff79c6">"AI_MODEL"</span>, <span style="color:#ff79c6">"gpt-4o"</span>)
+
+<span style="color:#8be9fd">def</span> <span style="color:var(--c)">run</span>(cmd):
+    <span style="color:#bd93f9">try</span>:
+        <span style="color:#bd93f9">return</span> subprocess.run(cmd, capture_output=<span style="color:#bd93f9">True</span>, text=<span style="color:#bd93f9">True</span>, timeout=60).stdout[:3000]
+    <span style="color:#bd93f9">except</span>: <span style="color:#bd93f9">return</span> <span style="color:#ff79c6">""</span>
+
+domain = sys.argv[1] <span style="color:#bd93f9">if</span> len(sys.argv) > 1 <span style="color:#bd93f9">else</span> <span style="color:#ff79c6">"target.com"</span>
+print(<span style="color:#ff79c6">f"[*] Gathering OSINT for {domain}..."</span>)
+
+data = {
+    <span style="color:#ff79c6">"domain"</span>    : domain,
+    <span style="color:#ff79c6">"whois"</span>     : run([<span style="color:#ff79c6">"whois"</span>, domain]),
+    <span style="color:#ff79c6">"dns"</span>       : run([<span style="color:#ff79c6">"dig"</span>, <span style="color:#ff79c6">"any"</span>, domain, <span style="color:#ff79c6">"+short"</span>]),
+    <span style="color:#ff79c6">"subdomains"</span>: run([<span style="color:#ff79c6">"subfinder"</span>, <span style="color:#ff79c6">"-d"</span>, domain, <span style="color:#ff79c6">"-silent"</span>]),
+    <span style="color:#ff79c6">"harvester"</span> : run([<span style="color:#ff79c6">"theHarvester"</span>, <span style="color:#ff79c6">"-d"</span>, domain, <span style="color:#ff79c6">"-b"</span>, <span style="color:#ff79c6">"google,bing"</span>, <span style="color:#ff79c6">"-l"</span>, <span style="color:#ff79c6">"50"</span>]),
 }
 
-prompt = <span class="str">f"""
-As a senior penetration testing consultant, generate a professional finding for:
-{json.dumps(finding, indent=2)}
+prompt = (<span style="color:#ff79c6">f"You are a senior OSINT analyst and external network pentester.\n"</span>
+          <span style="color:#ff79c6">"Analyse this reconnaissance data and provide:\n"</span>
+          <span style="color:#ff79c6">"1. ATTACK SURFACE SUMMARY: key external assets and services\n"</span>
+          <span style="color:#ff79c6">"2. HIGH-VALUE TARGETS: subdomains / IPs warranting immediate scanning\n"</span>
+          <span style="color:#ff79c6">"3. EMPLOYEE INTEL: email format, naming convention for password attacks\n"</span>
+          <span style="color:#ff79c6">"4. NEXT STEPS: prioritised active reconnaissance actions\n"</span>
+          <span style="color:#ff79c6">"5. TOOLS: specific commands for the next recon phase\n\n"</span>
+          <span style="color:#ff79c6">f"OSINT data:\n{json.dumps(data, indent=2)[:5000]}"</span>)
 
-Format:
-## Finding Title
-**Severity:** [Critical/High/Medium/Low]
-**CVSS Score:** [calculated from vector]
-**Description:** [2-3 sentences explaining the vulnerability]
-**Business Impact:** [real-world consequences]
-**Steps to Reproduce:** [numbered technical steps]
-**Remediation:** [specific developer-actionable fix]
-**References:** [relevant CVE, OWASP, CWE]
-"""</span>
-
-r = openai.OpenAI().chat.completions.<span class="fn">create</span>(
-    model=<span class="str">"gpt-4o"</span>,
-    messages=[{<span class="str">"role"</span>:<span class="str">"user"</span>,<span class="str">"content"</span>:prompt}]
+r = openai.OpenAI().chat.completions.create(
+    model=MODEL, messages=[{<span style="color:#ff79c6">"role"</span>:<span style="color:#ff79c6">"user"</span>,<span style="color:#ff79c6">"content"</span>:prompt}]
 )
-<span class="fn">print</span>(r.choices[<span class="num">0</span>].message.content)</code>
+print(r.choices[0].message.content)</code>
   </div>
 </section>
+
 
 <div class="div"></div>
 
@@ -840,6 +1037,8 @@ r = openai.OpenAI().chat.completions.<span class="fn">create</span>(
 <script>
 /* ─── CURSOR ─── */
 const cur=document.getElementById('cur'),cur2=document.getElementById('cur2'),cur3=document.getElementById('cur3');
+const isTouch=('ontouchstart' in window)||navigator.maxTouchPoints>0;
+if(isTouch){[cur,cur2,cur3].forEach(el=>{if(el)el.style.display='none'});document.body.style.cursor='auto';}
 let mx=0,my=0;
 document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px'});
 (function loop(){cur2.style.left=mx+'px';cur2.style.top=my+'px';cur3.style.left=mx+'px';cur3.style.top=my+'px';requestAnimationFrame(loop)})();
@@ -1011,8 +1210,9 @@ document.querySelectorAll('.rv,.rv-l').forEach(el=>rv.observe(el));
 /* ═══ TOC TRACKING ═══ */
 const sIds=['hero','what','targets','planning','recon','scan','exploit','post','ai','defence'];
 const tItems=document.querySelectorAll('.toc-i');
-const so=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)tItems.forEach(t=>t.classList.toggle('active',t.dataset.s===x.target.id))})},{threshold:.25});
-sIds.forEach(id=>{const el=document.getElementById(id);if(el)so.observe(el)});
+function updateTOC(){const sy=window.scrollY+130;let cur='hero';sIds.forEach(id=>{const el=document.getElementById(id);if(el&&el.offsetTop<=sy)cur=id;});tItems.forEach(t=>t.classList.toggle('active',t.dataset.s===cur));}
+window.addEventListener('scroll',updateTOC,{passive:true});
+updateTOC();
 function goTo(h){document.querySelector(h)?.scrollIntoView({behavior:'smooth'})}
 
 /* ═══ CODE COPY ═══ */

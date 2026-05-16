@@ -3,6 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" sizes="64x64" href="https://nishu2402.github.io/favicon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://nishu2402.github.io/favicon.png">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="shortcut icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="https://nishu2402.github.io/favicon.png">
+<link rel="apple-touch-icon" href="favicon.png">
 <title>Database Penetration Testing | Nisarg Chasmawala</title>
 <meta name="description" content="Database Penetration Testing Methodology — a complete field guide by Nisarg Chasmawala (Shroff), Offensive Security Engineer.">
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -10,7 +16,7 @@
 :root {
   --g:#00ff41;--g2:#00c832;--c:#00e5ff;--p:#bf00ff;
   --r:#ff003c;--o:#ffd700;--bg:#030509;
-  --t1:#d4ffe0;--t2:#7aad82;--t3:#2e4a32;
+  --t1:#e8fff2;--t2:#a8d8b0;--t3:#6abf7a;
   --mono:'Share Tech Mono',monospace;
   --dsp:'Orbitron',sans-serif;
   --body:'Rajdhani',sans-serif;
@@ -101,7 +107,7 @@ body{background:var(--bg);color:var(--t1);font-family:var(--body);font-size:17px
 .panel::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.015) 0%,transparent 60%);pointer-events:none}
 .panel:hover{border-color:rgba(0,229,255,.4);box-shadow:0 0 50px rgba(0,229,255,.07),inset 0 0 40px rgba(0,229,255,.025),0 20px 60px rgba(0,0,0,.3);transform:translateY(-3px) translateZ(6px)}
 .panel:hover::before{opacity:1}
-.panel p{color:var(--t2);margin-bottom:12px}
+.panel p{color:var(--t2);margin-bottom:12px;font-size:16px;line-height:1.85}
 .panel p:last-child{margin-bottom:0}
 .panel-t{font-family:var(--dsp);font-size:12px;font-weight:700;letter-spacing:3px;color:var(--g);text-transform:uppercase;margin-bottom:18px;display:flex;align-items:center;gap:12px}
 .panel-t::after{content:'';flex:1;height:1px;background:linear-gradient(to right,rgba(0,255,65,.2),transparent)}
@@ -193,7 +199,7 @@ body{background:var(--bg);color:var(--t1);font-family:var(--body);font-size:17px
 .al-r{background:rgba(255,0,60,.04);border:1px solid rgba(255,0,60,.16);border-left:3px solid var(--r)}
 .al-ic{font-family:var(--mono);font-size:13px;flex-shrink:0;margin-top:2px}
 .al-w .al-ic{color:var(--o)}.al-i .al-ic{color:var(--c)}.al-r .al-ic{color:var(--r)}
-.al-tx{font-size:14px;color:var(--t2);line-height:1.6}
+.al-tx{font-size:15px;color:var(--t2);line-height:1.75;font-weight:500}
 
 /* ── 3-COL DEFENCE GRID ── */
 .dgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:22px}
@@ -233,6 +239,9 @@ body{background:var(--bg);color:var(--t1);font-family:var(--body);font-size:17px
 
 /* ── RESPONSIVE ── */
 @media(max-width:700px){.vgrid,.tgrid,.mgrid,.sgrid,.ai-grid{grid-template-columns:1fr}.hero-canvas-wrap{display:none}.cta{padding:36px 20px}.cta::before{font-size:80px}}
+@media(max-width:768px){body{font-size:16px}.wrap{padding:0 16px}.hero{padding:80px 0 40px}.hero-content{max-width:100%}.hero-title{font-size:clamp(18px,5vw,30px)}.hero-desc{font-size:15px}.topbar{padding:0 16px}.tb-name{font-size:11px;letter-spacing:2px}.panel{padding:20px}.cta-btns{flex-direction:column;align-items:center}.btn{width:100%;max-width:280px;text-align:center}.footer{flex-direction:column;gap:12px}.f-r{text-align:left}.ptbl th,.ptbl td{padding:7px 8px}}
+@media(max-width:480px){body{font-size:15px}.wrap{padding:0 14px}.hero{padding:70px 0 30px}.hero-title{font-size:clamp(18px,6vw,28px)}.hero-desc{font-size:14px;line-height:1.75}.sec-t{font-size:clamp(14px,4.5vw,18px)}.vgrid,.tgrid,.mgrid,.sgrid,.ai-grid{grid-template-columns:1fr}.ptbl{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch;white-space:nowrap}.cb{padding:12px 14px}.cb code{font-size:11px;line-height:1.8}.topbar{height:50px;padding:0 12px}.tb-name{font-size:10px;letter-spacing:1px}.tb-roles{display:none}.div{margin:36px 0}.sec{margin-bottom:60px}.panel{padding:16px;font-size:15px}.ai-card{padding:16px}.ai-desc{font-size:13px}.cta{padding:28px 16px}.f-r{text-align:left}}
+@media(hover:none){.panel:hover,.ai-card:hover{transform:none}}
 
 /* ── AI STYLES ── */
 :root{--pglow:0 0 20px rgba(191,0,255,.4),0 0 60px rgba(191,0,255,.1)}
@@ -253,11 +262,14 @@ body{background:var(--bg);color:var(--t1);font-family:var(--body);font-size:17px
 .ai-card:hover{border-color:rgba(191,0,255,.5);box-shadow:var(--pglow),0 16px 40px rgba(0,0,0,.25);transform:translateY(-3px)}
 .ai-ico{font-size:24px;margin-bottom:10px;display:block}
 .ai-name{font-family:var(--dsp);font-size:11px;font-weight:700;letter-spacing:2px;color:#bf00ff;text-transform:uppercase;margin-bottom:10px}
-.ai-desc{font-size:14px;color:var(--t2);line-height:1.65;font-weight:300}
+.ai-desc{font-size:15px;color:var(--t2);line-height:1.75;font-weight:400}
 .cb-ai{border-left-color:#bf00ff !important}
 .cb-ai::before{color:#bf00ff !important;background:rgba(191,0,255,.07) !important}
 .al-p{background:rgba(191,0,255,.04);border:1px solid rgba(191,0,255,.18);border-left:3px solid #bf00ff}
 .al-p .al-ic{color:#bf00ff}
+
+@media(pointer:coarse){body{cursor:auto!important}#cur,#cur2,#cur3{display:none!important}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 </style>
 </head>
 <body>
@@ -319,8 +331,8 @@ body{background:var(--bg);color:var(--t1);font-family:var(--body);font-size:17px
   <div class="hero-tag">NISARG CHASMAWALA &nbsp;//&nbsp; ALIAS: HEAVEN</div>
 
   <h1 class="hero-title">
-    <div class="gw" data-t="DATABASE PEN-TESTING">
-      <span class="ht-line1">DATABASE PEN-TESTING</span>
+    <div class="gw" data-t="DATABASE PEN">
+      <span class="ht-line1">DATABASE PEN</span>
     </div>
     <span class="ht-sub">TESTING METHODOLOGY — COMPLETE FIELD GUIDE</span>
   </h1>
@@ -463,6 +475,52 @@ body{background:var(--bg);color:var(--t1);font-family:var(--body);font-size:17px
     <div class="tc"><div class="tcname">NoSQLMap</div><div class="tcdesc">Automated NoSQL injection and exploitation targeting MongoDB, CouchDB, and other document-store databases</div></div>
   </div>
 </section>
+<div class="rv" style="margin:0 0 40px 0"><div style="font-family:var(--mono);font-size:10px;letter-spacing:3px;color:var(--p);margin-bottom:14px">DIAGRAM 01 // DATABASE PENTEST KILL CHAIN</div><div style="overflow-x:auto;-webkit-overflow-scrolling:touch;background:rgba(0,0,0,0.4);border:1px solid rgba(0,229,255,0.12);border-radius:4px;padding:16px"><svg viewBox="0 0 920 210" xmlns="http://www.w3.org/2000/svg" style="width:100%;min-width:580px;max-width:920px;display:block">
+  <defs><marker id="db1" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="rgba(0,229,255,.9)"/></marker>
+  <marker id="db1g" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="rgba(0,255,65,.9)"/></marker></defs>
+  <rect x="8" y="35" width="125" height="80" rx="4" fill="rgba(0,0,0,.82)" stroke="rgba(255,80,80,.85)" stroke-width="1.5"/>
+  <text x="70" y="59" font-family="Share Tech Mono,monospace" font-size="10" fill="#ff5050" text-anchor="middle" font-weight="700">RECON</text>
+  <text x="70" y="73" font-family="Share Tech Mono,monospace" font-size="10" fill="#ff5050" text-anchor="middle" font-weight="700">&amp; ENUM</text>
+  <text x="70" y="91" font-family="Share Tech Mono,monospace" font-size="9" fill="#ff8888" text-anchor="middle">nmap / nse</text>
+  <text x="70" y="104" font-family="Share Tech Mono,monospace" font-size="9" fill="#ff8888" text-anchor="middle">banner grab</text>
+  <line x1="134" y1="75" x2="152" y2="75" stroke="rgba(0,229,255,.88)" stroke-width="1.5" marker-end="url(#db1)"/>
+  <rect x="154" y="35" width="125" height="80" rx="4" fill="rgba(0,0,0,.82)" stroke="rgba(255,200,80,.85)" stroke-width="1.5"/>
+  <text x="216" y="59" font-family="Share Tech Mono,monospace" font-size="10" fill="#ffc850" text-anchor="middle" font-weight="700">VULN</text>
+  <text x="216" y="73" font-family="Share Tech Mono,monospace" font-size="10" fill="#ffc850" text-anchor="middle" font-weight="700">SCAN</text>
+  <text x="216" y="91" font-family="Share Tech Mono,monospace" font-size="9" fill="#ffe088" text-anchor="middle">sqlmap / OWASP</text>
+  <text x="216" y="104" font-family="Share Tech Mono,monospace" font-size="9" fill="#ffe088" text-anchor="middle">ZAP / Burp</text>
+  <line x1="280" y1="75" x2="298" y2="75" stroke="rgba(0,229,255,.88)" stroke-width="1.5" marker-end="url(#db1)"/>
+  <rect x="300" y="35" width="125" height="80" rx="4" fill="rgba(0,0,0,.82)" stroke="rgba(0,229,255,.85)" stroke-width="1.5"/>
+  <text x="362" y="59" font-family="Share Tech Mono,monospace" font-size="10" fill="#00e5ff" text-anchor="middle" font-weight="700">EXPLOIT</text>
+  <text x="362" y="73" font-family="Share Tech Mono,monospace" font-size="10" fill="#00e5ff" text-anchor="middle" font-weight="700">SQL INJECT</text>
+  <text x="362" y="91" font-family="Share Tech Mono,monospace" font-size="9" fill="#88e8ff" text-anchor="middle">UNION / Blind</text>
+  <text x="362" y="104" font-family="Share Tech Mono,monospace" font-size="9" fill="#88e8ff" text-anchor="middle">Time-based</text>
+  <line x1="426" y1="75" x2="444" y2="75" stroke="rgba(0,229,255,.88)" stroke-width="1.5" marker-end="url(#db1)"/>
+  <rect x="446" y="35" width="125" height="80" rx="4" fill="rgba(0,0,0,.82)" stroke="rgba(191,0,255,.85)" stroke-width="1.5"/>
+  <text x="508" y="59" font-family="Share Tech Mono,monospace" font-size="10" fill="#bf00ff" text-anchor="middle" font-weight="700">DATA</text>
+  <text x="508" y="73" font-family="Share Tech Mono,monospace" font-size="10" fill="#bf00ff" text-anchor="middle" font-weight="700">EXTRACT</text>
+  <text x="508" y="91" font-family="Share Tech Mono,monospace" font-size="9" fill="#df88ff" text-anchor="middle">schema / tables</text>
+  <text x="508" y="104" font-family="Share Tech Mono,monospace" font-size="9" fill="#df88ff" text-anchor="middle">dump creds / PII</text>
+  <line x1="572" y1="75" x2="590" y2="75" stroke="rgba(0,229,255,.88)" stroke-width="1.5" marker-end="url(#db1)"/>
+  <rect x="592" y="35" width="125" height="80" rx="4" fill="rgba(0,0,0,.82)" stroke="rgba(0,229,255,.85)" stroke-width="1.5"/>
+  <text x="654" y="59" font-family="Share Tech Mono,monospace" font-size="10" fill="#00e5ff" text-anchor="middle" font-weight="700">PRIV</text>
+  <text x="654" y="73" font-family="Share Tech Mono,monospace" font-size="10" fill="#00e5ff" text-anchor="middle" font-weight="700">ESCALATION</text>
+  <text x="654" y="91" font-family="Share Tech Mono,monospace" font-size="9" fill="#88e8ff" text-anchor="middle">xp_cmdshell</text>
+  <text x="654" y="104" font-family="Share Tech Mono,monospace" font-size="9" fill="#88e8ff" text-anchor="middle">UDF / RCE</text>
+  <line x1="718" y1="75" x2="736" y2="75" stroke="rgba(0,255,65,.9)" stroke-width="2" marker-end="url(#db1g)"/>
+  <rect x="738" y="25" width="175" height="100" rx="4" fill="rgba(0,0,0,.88)" stroke="rgba(0,255,65,.92)" stroke-width="2"/>
+  <text x="825" y="58" font-family="Orbitron,sans-serif" font-size="11" font-weight="900" fill="#00ff41" text-anchor="middle">OS / FULL</text>
+  <text x="825" y="73" font-family="Orbitron,sans-serif" font-size="11" font-weight="900" fill="#00ff41" text-anchor="middle">COMPROMISE</text>
+  <text x="825" y="93" font-family="Share Tech Mono,monospace" font-size="9" fill="#88ff99" text-anchor="middle">Shell via DB</text>
+  <text x="825" y="106" font-family="Share Tech Mono,monospace" font-size="9" fill="#88ff99" text-anchor="middle">host pwned</text>
+  <text x="70"  y="175" font-family="Share Tech Mono,monospace" font-size="10" fill="rgba(255,80,80,.85)"  text-anchor="middle">STEP 1</text>
+  <text x="216" y="175" font-family="Share Tech Mono,monospace" font-size="10" fill="rgba(255,200,80,.85)" text-anchor="middle">STEP 2</text>
+  <text x="362" y="175" font-family="Share Tech Mono,monospace" font-size="10" fill="rgba(0,229,255,.85)"  text-anchor="middle">STEP 3</text>
+  <text x="508" y="175" font-family="Share Tech Mono,monospace" font-size="10" fill="rgba(191,0,255,.85)"  text-anchor="middle">STEP 4</text>
+  <text x="654" y="175" font-family="Share Tech Mono,monospace" font-size="10" fill="rgba(0,229,255,.85)"  text-anchor="middle">STEP 5</text>
+  <text x="825" y="175" font-family="Share Tech Mono,monospace" font-size="10" fill="rgba(0,255,65,.9)"    text-anchor="middle">OBJECTIVE</text>
+</svg></div></div>
+
 
 <div class="div"></div>
 
@@ -614,6 +672,56 @@ body{background:var(--bg);color:var(--t1);font-family:var(--body);font-size:17px
 <span class="cmd">sqlmap</span> <span class="flag">-u</span> <span class="str">"http://target.com/page.php?id=1"</span> <span class="flag">--tamper=space2comment,between</span> <span class="flag">--dbs</span></code>
   </div>
 </section>
+<div class="rv" style="margin:0 0 40px 0"><div style="font-family:var(--mono);font-size:10px;letter-spacing:3px;color:var(--p);margin-bottom:14px">DIAGRAM 02 // SQL INJECTION DATA FLOW</div><div style="overflow-x:auto;-webkit-overflow-scrolling:touch;background:rgba(0,0,0,0.4);border:1px solid rgba(0,229,255,0.12);border-radius:4px;padding:16px"><svg viewBox="0 0 920 240" xmlns="http://www.w3.org/2000/svg" style="width:100%;min-width:580px;max-width:920px;display:block">
+  <defs><marker id="sq1" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="rgba(0,229,255,.9)"/></marker>
+  <marker id="sq1r" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="rgba(255,80,80,.9)"/></marker>
+  <marker id="sq1g" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="rgba(0,255,65,.9)"/></marker></defs>
+  <!-- Attacker -->
+  <rect x="8" y="90" width="135" height="60" rx="4" fill="rgba(0,0,0,.82)" stroke="rgba(255,80,80,.85)" stroke-width="1.5"/>
+  <text x="75" y="115" font-family="Share Tech Mono,monospace" font-size="10" fill="#ff5050" text-anchor="middle" font-weight="700">ATTACKER</text>
+  <text x="75" y="129" font-family="Share Tech Mono,monospace" font-size="9"  fill="#ff8888" text-anchor="middle">crafts payload</text>
+  <!-- Arrow: payload → app -->
+  <line x1="144" y1="120" x2="200" y2="120" stroke="rgba(255,80,80,.85)" stroke-width="1.5" marker-end="url(#sq1r)"/>
+  <text x="172" y="112" font-family="Share Tech Mono,monospace" font-size="8" fill="#ff8888" text-anchor="middle">HTTP req</text>
+  <text x="172" y="132" font-family="Share Tech Mono,monospace" font-size="8" fill="#ff8888" text-anchor="middle">+ SQLi payload</text>
+  <!-- Web App -->
+  <rect x="202" y="90" width="135" height="60" rx="4" fill="rgba(0,0,0,.82)" stroke="rgba(255,200,80,.85)" stroke-width="1.5"/>
+  <text x="269" y="115" font-family="Share Tech Mono,monospace" font-size="10" fill="#ffc850" text-anchor="middle" font-weight="700">WEB APP</text>
+  <text x="269" y="129" font-family="Share Tech Mono,monospace" font-size="9"  fill="#ffe088" text-anchor="middle">no input sanity</text>
+  <!-- Arrow: unsanitised → DB -->
+  <line x1="338" y1="120" x2="395" y2="120" stroke="rgba(0,229,255,.88)" stroke-width="1.5" marker-end="url(#sq1)"/>
+  <text x="366" y="112" font-family="Share Tech Mono,monospace" font-size="8" fill="#88e8ff" text-anchor="middle">raw SQL</text>
+  <text x="366" y="132" font-family="Share Tech Mono,monospace" font-size="8" fill="#88e8ff" text-anchor="middle">to engine</text>
+  <!-- DB Engine -->
+  <rect x="397" y="80" width="145" height="80" rx="4" fill="rgba(0,0,0,.82)" stroke="rgba(0,229,255,.85)" stroke-width="1.5"/>
+  <text x="469" y="109" font-family="Share Tech Mono,monospace" font-size="10" fill="#00e5ff" text-anchor="middle" font-weight="700">DATABASE</text>
+  <text x="469" y="123" font-family="Share Tech Mono,monospace" font-size="10" fill="#00e5ff" text-anchor="middle" font-weight="700">ENGINE</text>
+  <text x="469" y="140" font-family="Share Tech Mono,monospace" font-size="8"  fill="#88e8ff" text-anchor="middle">executes attacker SQL</text>
+  <!-- Arrow: data out -->
+  <line x1="543" y1="100" x2="598" y2="65" stroke="rgba(191,0,255,.85)" stroke-width="1.5" marker-end="url(#sq1)"/>
+  <text x="570" y="74" font-family="Share Tech Mono,monospace" font-size="8" fill="#df88ff" text-anchor="middle">data returned</text>
+  <!-- UNION result box -->
+  <rect x="600" y="28" width="150" height="52" rx="4" fill="rgba(0,0,0,.82)" stroke="rgba(191,0,255,.8)" stroke-width="1.5"/>
+  <text x="675" y="50" font-family="Share Tech Mono,monospace" font-size="10" fill="#bf00ff" text-anchor="middle" font-weight="700">UNION SELECT</text>
+  <text x="675" y="65" font-family="Share Tech Mono,monospace" font-size="8"  fill="#df88ff" text-anchor="middle">schema/users/creds</text>
+  <!-- Arrow: time delay -->
+  <line x1="543" y1="140" x2="598" y2="172" stroke="rgba(255,200,80,.85)" stroke-width="1.5" marker-end="url(#sq1)"/>
+  <text x="568" y="168" font-family="Share Tech Mono,monospace" font-size="8" fill="#ffe088" text-anchor="middle">delay resp</text>
+  <!-- Time-based box -->
+  <rect x="600" y="158" width="150" height="52" rx="4" fill="rgba(0,0,0,.82)" stroke="rgba(255,200,80,.8)" stroke-width="1.5"/>
+  <text x="675" y="180" font-family="Share Tech Mono,monospace" font-size="10" fill="#ffc850" text-anchor="middle" font-weight="700">BLIND / TIME</text>
+  <text x="675" y="196" font-family="Share Tech Mono,monospace" font-size="8"  fill="#ffe088" text-anchor="middle">SLEEP / boolean</text>
+  <!-- Both paths to RCE -->
+  <line x1="751" y1="54" x2="782" y2="120" stroke="rgba(0,255,65,.82)" stroke-width="1.5" marker-end="url(#sq1g)"/>
+  <line x1="751" y1="184" x2="782" y2="140" stroke="rgba(0,255,65,.82)" stroke-width="1.5" marker-end="url(#sq1g)"/>
+  <rect x="784" y="95" width="130" height="70" rx="4" fill="rgba(0,0,0,.88)" stroke="rgba(0,255,65,.92)" stroke-width="2"/>
+  <text x="849" y="122" font-family="Orbitron,sans-serif" font-size="10" font-weight="900" fill="#00ff41" text-anchor="middle">DUMP /</text>
+  <text x="849" y="137" font-family="Orbitron,sans-serif" font-size="10" font-weight="900" fill="#00ff41" text-anchor="middle">RCE</text>
+  <text x="849" y="153" font-family="Share Tech Mono,monospace" font-size="9" fill="#88ff99" text-anchor="middle">xp_cmdshell</text>
+  <!-- Bottom label -->
+  <text x="460" y="225" font-family="Share Tech Mono,monospace" font-size="9" fill="rgba(0,229,255,.78)" text-anchor="middle">Prevent with: parameterised queries / prepared statements / ORM / WAF / least-privilege DB accounts</text>
+</svg></div></div>
+
 
 <div class="div"></div>
 
@@ -704,6 +812,51 @@ body{background:var(--bg);color:var(--t1);font-family:var(--body);font-size:17px
     </div>
   </div>
 </section>
+<div class="rv" style="margin:0 0 40px 0"><div style="font-family:var(--mono);font-size:10px;letter-spacing:3px;color:var(--p);margin-bottom:14px">DIAGRAM 03 // DATABASE PRIVILEGE ESCALATION</div><div style="overflow-x:auto;-webkit-overflow-scrolling:touch;background:rgba(0,0,0,0.4);border:1px solid rgba(0,229,255,0.12);border-radius:4px;padding:16px"><svg viewBox="0 0 920 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;min-width:580px;max-width:920px;display:block">
+  <defs><marker id="dp1" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="rgba(0,229,255,.9)"/></marker>
+  <marker id="dp1g" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="rgba(0,255,65,.9)"/></marker></defs>
+  <!-- Node 1: low priv -->
+  <rect x="8" y="65" width="140" height="70" rx="4" fill="rgba(0,0,0,.82)" stroke="rgba(255,80,80,.85)" stroke-width="1.5"/>
+  <text x="78" y="92" font-family="Share Tech Mono,monospace" font-size="10" fill="#ff5050" text-anchor="middle" font-weight="700">LOW-PRIV</text>
+  <text x="78" y="106" font-family="Share Tech Mono,monospace" font-size="10" fill="#ff5050" text-anchor="middle" font-weight="700">DB ACCOUNT</text>
+  <text x="78" y="122" font-family="Share Tech Mono,monospace" font-size="8"  fill="#ff8888" text-anchor="middle">SELECT only</text>
+  <text x="157" y="86" font-family="Share Tech Mono,monospace" font-size="8" fill="rgba(0,229,255,.82)" text-anchor="start">IS_SRVROLEMEMBER</text>
+  <text x="157" y="98" font-family="Share Tech Mono,monospace" font-size="8" fill="rgba(0,229,255,.82)" text-anchor="start">('sysadmin')=1</text>
+  <line x1="149" y1="100" x2="170" y2="100" stroke="rgba(0,229,255,.88)" stroke-width="1.5" marker-end="url(#dp1)"/>
+  <!-- Node 2: sysadmin check -->
+  <rect x="172" y="65" width="140" height="70" rx="4" fill="rgba(0,0,0,.82)" stroke="rgba(255,200,80,.85)" stroke-width="1.5"/>
+  <text x="242" y="92" font-family="Share Tech Mono,monospace" font-size="10" fill="#ffc850" text-anchor="middle" font-weight="700">CHECK</text>
+  <text x="242" y="106" font-family="Share Tech Mono,monospace" font-size="10" fill="#ffc850" text-anchor="middle" font-weight="700">ROLES / UDF</text>
+  <text x="242" y="122" font-family="Share Tech Mono,monospace" font-size="8"  fill="#ffe088" text-anchor="middle">linked servers</text>
+  <line x1="313" y1="100" x2="334" y2="100" stroke="rgba(0,229,255,.88)" stroke-width="1.5" marker-end="url(#dp1)"/>
+  <!-- Node 3: xp_cmdshell -->
+  <rect x="336" y="65" width="145" height="70" rx="4" fill="rgba(0,0,0,.82)" stroke="rgba(0,229,255,.85)" stroke-width="1.5"/>
+  <text x="408" y="92" font-family="Share Tech Mono,monospace" font-size="10" fill="#00e5ff" text-anchor="middle" font-weight="700">ENABLE</text>
+  <text x="408" y="106" font-family="Share Tech Mono,monospace" font-size="10" fill="#00e5ff" text-anchor="middle" font-weight="700">xp_cmdshell</text>
+  <text x="408" y="122" font-family="Share Tech Mono,monospace" font-size="8"  fill="#88e8ff" text-anchor="middle">sp_configure</text>
+  <line x1="482" y1="100" x2="503" y2="100" stroke="rgba(0,229,255,.88)" stroke-width="1.5" marker-end="url(#dp1)"/>
+  <!-- Node 4: exec OS cmd -->
+  <rect x="505" y="65" width="145" height="70" rx="4" fill="rgba(0,0,0,.82)" stroke="rgba(191,0,255,.85)" stroke-width="1.5"/>
+  <text x="577" y="92" font-family="Share Tech Mono,monospace" font-size="10" fill="#bf00ff" text-anchor="middle" font-weight="700">EXEC OS</text>
+  <text x="577" y="106" font-family="Share Tech Mono,monospace" font-size="10" fill="#bf00ff" text-anchor="middle" font-weight="700">COMMANDS</text>
+  <text x="577" y="122" font-family="Share Tech Mono,monospace" font-size="8"  fill="#df88ff" text-anchor="middle">whoami / net user</text>
+  <line x1="651" y1="100" x2="672" y2="100" stroke="rgba(0,255,65,.9)" stroke-width="2" marker-end="url(#dp1g)"/>
+  <!-- Final: OS Shell -->
+  <rect x="674" y="55" width="148" height="90" rx="4" fill="rgba(0,0,0,.88)" stroke="rgba(0,255,65,.92)" stroke-width="2"/>
+  <text x="748" y="88" font-family="Orbitron,sans-serif" font-size="10" font-weight="900" fill="#00ff41" text-anchor="middle">OS SHELL</text>
+  <text x="748" y="103" font-family="Orbitron,sans-serif" font-size="10" font-weight="900" fill="#00ff41" text-anchor="middle">OBTAINED</text>
+  <text x="748" y="122" font-family="Share Tech Mono,monospace" font-size="9"  fill="#88ff99" text-anchor="middle">NT AUTHORITY</text>
+  <text x="748" y="135" font-family="Share Tech Mono,monospace" font-size="9"  fill="#88ff99" text-anchor="middle">\SYSTEM</text>
+  <!-- MySQL alt path label -->
+  <text x="78"  y="165" font-family="Share Tech Mono,monospace" font-size="9" fill="rgba(255,80,80,.82)"  text-anchor="middle">start: SQLi/cred</text>
+  <text x="242" y="165" font-family="Share Tech Mono,monospace" font-size="9" fill="rgba(255,200,80,.82)" text-anchor="middle">enum server roles</text>
+  <text x="408" y="165" font-family="Share Tech Mono,monospace" font-size="9" fill="rgba(0,229,255,.82)"  text-anchor="middle">MSSQL specific</text>
+  <text x="577" y="165" font-family="Share Tech Mono,monospace" font-size="9" fill="rgba(191,0,255,.82)"  text-anchor="middle">MySQL: UDF RCE</text>
+  <text x="748" y="165" font-family="Share Tech Mono,monospace" font-size="9" fill="rgba(0,255,65,.88)"   text-anchor="middle">OS compromise</text>
+  <text x="460" y="198" font-family="Share Tech Mono,monospace" font-size="9" fill="rgba(0,229,255,.75)" text-anchor="middle">MySQL path: load_file() / INTO OUTFILE → UDF shared library → sys_exec() / MySQL UDF privesc</text>
+  <text x="460" y="212" font-family="Share Tech Mono,monospace" font-size="9" fill="rgba(0,229,255,.62)" text-anchor="middle">PostgreSQL: COPY TO/FROM PROGRAM 'cmd' → OS command execution (requires superuser)</text>
+</svg></div></div>
+
 
 <div class="div"></div>
 
@@ -828,173 +981,149 @@ body{background:var(--bg);color:var(--t1);font-family:var(--body);font-size:17px
      AI INTEGRATION
 ══════════════════════════════════ -->
 <section class="sec rv sec-ai" id="ai">
-  <div class="sec-hd">
-    <span class="sec-n">09 //</span>
-    <h2 class="sec-t">AI Integration in Database Penetration Testing<span class="tw-cursor"></span></h2>
-    <div class="sec-ln"></div>
-  </div>
-
+  <div class="sec-hd"><span class="sec-n">09 //</span><h2 class="sec-t">AI Integration in Database Penetration Testing<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
   <div class="panel panel-ai rv-l">
-    <p>Artificial Intelligence is reshaping database security from both directions — accelerating the discovery and exploitation of database vulnerabilities during offensive assessments, while simultaneously powering the anomaly detection, query analysis, and automated response capabilities that defenders rely on to protect the most valuable data stores in any organisation. Databases are uniquely high-value targets: they are where credentials, financial records, customer data, and intellectual property ultimately reside. The stakes on both sides are correspondingly high.</p>
-    <p>For database penetration testers, AI tools compress the time-intensive phases of schema enumeration, SQL injection payload generation, and stored procedure analysis. For database defenders, AI-driven Database Activity Monitoring (DAM) and User Entity Behaviour Analytics (UEBA) provide the continuous, query-level visibility that legacy perimeter controls cannot offer.</p>
+    <p>AI fundamentally accelerates database penetration testing by automating the most tedious analytical phases -- interpreting error messages to identify database type and version, generating targeted SQL injection payloads for specific database engines, analysing stored procedures and schema structures for dangerous patterns, and converting raw database enumeration data into prioritised findings. Modern LLMs understand SQL dialects (MySQL, MSSQL, PostgreSQL, Oracle, SQLite) deeply enough to serve as expert database security advisors for every phase of an assessment.</p>
+    <p>The most impactful shift: AI can generate context-aware SQL injection payloads tuned to the specific database engine, web framework, and input validation detected during recon -- replacing generic payloads with precisely targeted attacks that evade WAFs and bypass application-level filtering that generic tools miss.</p>
   </div>
-
   <div class="alert al-p rv">
     <span class="al-ic">[ AI ]</span>
-    <p class="al-tx">LLMs can analyse a database schema dump and automatically generate targeted SQL injection payloads, privilege escalation queries, and data exfiltration strategies specific to that schema's structure — replacing hours of manual query crafting with seconds of AI-assisted attack planning. This capability is used today by both commercial red team platforms and advanced threat actors.</p>
+    <p class="al-tx">AI-assisted database assessment workflows reduce manual analysis time by over 60%. Feeding raw error messages, schema dumps, or stored procedure source code directly to Claude or ChatGPT returns targeted exploitation paths, privilege escalation vectors, and remediation guidance faster than any manual analysis -- with coverage across all major database platforms simultaneously.</p>
   </div>
 
-  <h3 style="font-family:var(--mono);font-size:11px;letter-spacing:3px;color:#bf00ff;text-transform:uppercase;margin:28px 0 16px;">AI-Powered Offensive Database Assessment</h3>
+  <h3 style="font-family:var(--mono);font-size:11px;letter-spacing:3px;color:var(--p);text-transform:uppercase;margin:28px 0 16px">AI-Powered Offensive DB Capabilities</h3>
   <div class="ai-grid rv">
-    <div class="ai-card">
-      <span class="ai-ico">💉</span>
-      <div class="ai-name">Intelligent SQLi Payload Generation</div>
-      <div class="ai-desc">LLMs generate context-aware SQL injection payloads tuned to the specific DBMS version, WAF signature set, and application input context observed during testing — going beyond generic wordlists to produce payloads that encode, fragment, and obfuscate specifically for the detected defences, dramatically increasing bypass success rates against hardened targets.</div>
-    </div>
-    <div class="ai-card">
-      <span class="ai-ico">🗂</span>
-      <div class="ai-name">Schema-Aware Attack Planning</div>
-      <div class="ai-desc">AI analyses extracted database schemas and automatically identifies the highest-value tables — locating credentials, PII, financial records, and session tokens by column name pattern matching and data type analysis. Produces a prioritised exfiltration plan that routes the assessment toward the most impactful data first, rather than indiscriminate table enumeration.</div>
-    </div>
-    <div class="ai-card">
-      <span class="ai-ico">🔐</span>
-      <div class="ai-name">Credential Hash Cracking Optimisation</div>
-      <div class="ai-desc">ML models analyse extracted password hash metadata — algorithm, salt format, length distribution — and generate optimised hashcat rule sets and wordlists tuned to the specific organisation's likely password patterns (inferred from username formats, company name, and breach data correlations), increasing crack rates compared to generic wordlist approaches.</div>
-    </div>
-    <div class="ai-card">
-      <span class="ai-ico">⚙️</span>
-      <div class="ai-name">Stored Procedure Vulnerability Analysis</div>
-      <div class="ai-desc">LLMs review exported stored procedure and function definitions for dangerous patterns — dynamic SQL construction with unsanitised parameters, EXECUTE with user-controlled input, OPENROWSET abuse paths, and privilege escalation via EXECUTE AS — identifying injection sinks that manual code review frequently misses in large procedure libraries.</div>
-    </div>
-    <div class="ai-card">
-      <span class="ai-ico">🤖</span>
-      <div class="ai-name">Automated WAF Bypass Generation</div>
-      <div class="ai-desc">AI models learn from observed WAF response patterns — which payloads are blocked, which encodings pass — and iteratively generate bypass variants using comment injection, whitespace substitution, alternative syntax, HTTP parameter pollution, and encoding chains until a working payload is identified, compressing what previously required extensive manual trial-and-error.</div>
-    </div>
-    <div class="ai-card">
-      <span class="ai-ico">📊</span>
-      <div class="ai-name">Automated Finding Documentation</div>
-      <div class="ai-desc">LLMs convert raw SQLmap output, manual injection evidence, and extracted data samples into structured penetration test findings — complete with CVSSv3 scores, OWASP category mapping, business impact narratives, and developer-actionable remediation guidance — eliminating the reporting bottleneck that traditionally follows intensive database assessments.</div>
-    </div>
+    <div class="ai-card"><span class="ai-ico">&#128200;</span><div class="ai-name">SQLi Payload Generation</div><div class="ai-desc">AI generates database-specific, context-aware SQL injection payloads -- UNION-based for MySQL with information_schema, stacked queries for MSSQL with xp_cmdshell, error-based for Oracle with XMLType, and time-based blind payloads tuned to the latency profile of the target. Claude and ChatGPT adapt payloads for the specific WAF bypass requirements observed during testing, generating obfuscated variants that evade signature-based detection without generic tooling limitations.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128272;</span><div class="ai-name">Schema &amp; SP Analysis</div><div class="ai-desc">AI analyses database schema dumps, stored procedure source code, and trigger definitions for dangerous patterns -- dynamic SQL execution with user-controlled input, EXECUTE AS clauses that elevate execution context, OPENROWSET calls to external servers, and linked server configurations that enable lateral movement. Finds privilege escalation paths that automated scanners miss by understanding the semantic meaning of schema relationships, not just surface-level pattern matching.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#9889;</span><div class="ai-name">Error Message Interpretation</div><div class="ai-desc">AI interprets verbose database error messages to extract maximum intelligence -- identifying the exact database version, table and column names from failed queries, underlying framework and ORM type, server file system paths from error stack traces, and query structure from syntax errors. Turns a single 500 error page into a complete database fingerprint that informs the entire injection strategy without requiring manual analysis of cryptic error output.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128270;</span><div class="ai-name">Privilege Escalation Paths</div><div class="ai-desc">AI analyses the current database user's roles, permissions, and server configuration to identify privilege escalation chains -- IS_SRVROLEMEMBER checks for MSSQL sysadmin, FILE privilege exploitation in MySQL for UDF loading, COPY TO PROGRAM in PostgreSQL for OS command execution, and Java stored procedures in Oracle. Generates the exact SQL sequence for each escalation path with the specific syntax for the target database engine version.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128196;</span><div class="ai-name">Automated Report Writing</div><div class="ai-desc">AI converts raw database assessment evidence -- sqlmap output, manual injection results, credential dumps, schema extracts -- into structured penetration test findings with CVSSv4 scores, CWE identifiers (CWE-89 SQLi, CWE-250 excessive privileges), OWASP Top 10 A03 mapping, database-specific remediation guidance (parameterised queries, stored procedure refactoring, least-privilege account policies), and business impact statements tailored to the data types discovered.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128301;</span><div class="ai-name">WAF Bypass Generation</div><div class="ai-desc">AI generates WAF-evasion variants of SQL injection payloads by understanding both the WAF ruleset characteristics and the target database parser -- case variation, comment injection, URL encoding chains, whitespace substitution, and database-specific parser quirks that cause WAFs and application parsers to interpret the same string differently. Produces a prioritised bypass attempt list tailored to the specific WAF product detected during recon.</div></div>
   </div>
 
-  <h3 style="font-family:var(--mono);font-size:11px;letter-spacing:3px;color:#bf00ff;text-transform:uppercase;margin:32px 0 16px;">AI-Powered Database Defence &amp; Monitoring</h3>
+  <h3 style="font-family:var(--mono);font-size:11px;letter-spacing:3px;color:var(--p);text-transform:uppercase;margin:32px 0 16px">AI-Powered Database Defence &amp; Detection</h3>
   <div class="ai-grid rv">
-    <div class="ai-card">
-      <span class="ai-ico">👁</span>
-      <div class="ai-name">Database Activity Monitoring (DAM)</div>
-      <div class="ai-desc">ML-powered DAM platforms (Imperva, IBM Guardium, Oracle Audit Vault) baseline normal query patterns per user and application — alerting in real time on anomalous SELECT volumes, schema enumeration queries, bulk data exports, privilege escalation attempts, and after-hours administrative access that rules-based systems cannot reliably detect without overwhelming false positives.</div>
-    </div>
-    <div class="ai-card">
-      <span class="ai-ico">🔍</span>
-      <div class="ai-name">AI SQL Injection Detection</div>
-      <div class="ai-desc">ML models embedded in WAFs and database proxies classify incoming queries by syntax pattern, payload structure, and behavioural fingerprint — detecting SQL injection attempts including heavily obfuscated and encoded payloads that evade signature-based detection. Models retrain continuously on observed attack patterns, narrowing the window between new technique emergence and detection.</div>
-    </div>
-    <div class="ai-card">
-      <span class="ai-ico">🧠</span>
-      <div class="ai-name">Query Behaviour Analytics</div>
-      <div class="ai-desc">AI analyses the full query history of each application account and user — learning which tables are normally accessed, which join patterns are typical, and what data volumes are expected. Any deviation — a reporting account suddenly accessing the users table, a read-only account attempting INSERT, or 10× normal data volume in a single query — triggers an immediate alert for investigation.</div>
-    </div>
-    <div class="ai-card">
-      <span class="ai-ico">🔮</span>
-      <div class="ai-name">Predictive Vulnerability Assessment</div>
-      <div class="ai-desc">ML models scan database configuration, version data, enabled features, and exposed stored procedures against known CVE databases and attack pattern libraries — producing a risk-prioritised vulnerability list that predicts which weaknesses are most likely to be exploited against this specific database configuration, enabling targeted hardening before the next assessment.</div>
-    </div>
-    <div class="ai-card">
-      <span class="ai-ico">🚨</span>
-      <div class="ai-name">Automated Incident Response</div>
-      <div class="ai-desc">AI-driven SOAR playbooks respond automatically to confirmed database attack indicators — blocking the offending IP at the database firewall, terminating the suspicious session, revoking the compromised account's access, triggering a forensic query log snapshot, and notifying the security team with a pre-built incident timeline — all within seconds of detection.</div>
-    </div>
-    <div class="ai-card">
-      <span class="ai-ico">🗝</span>
-      <div class="ai-name">Sensitive Data Discovery</div>
-      <div class="ai-desc">AI-powered data classification tools (Microsoft Purview, Varonis, BigID) scan database schemas and sample data to automatically identify and tag PII, financial data, credentials, and health records — enabling organisations to apply appropriate access controls and encryption to their most sensitive data stores without manual column-by-column review of thousands of tables.</div>
-    </div>
+    <div class="ai-card"><span class="ai-ico">&#128065;</span><div class="ai-name">AI-Native DAM Platforms</div><div class="ai-desc"><strong style="color:var(--c)">Imperva Data Security Fabric</strong> and <strong style="color:var(--c)">IBM Guardium</strong> use ML to baseline normal database access patterns -- query frequency, data volume, access timing, and user behaviour -- alerting on the anomalous patterns characteristic of SQL injection (unusual WHERE clauses, UNION SELECT patterns, xp_cmdshell execution, schema enumeration queries) and credential theft without requiring pre-written signatures for every attack variant.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128737;&#65039;</span><div class="ai-name">Microsoft Copilot for Security</div><div class="ai-desc">Microsoft's AI layer across Defender for SQL, Microsoft Sentinel, and Purview translates natural-language investigation questions into KQL queries against database audit logs -- "show all failed login attempts followed by successful logins from the same IP targeting SQL Server in the last 7 days" -- and correlates database security events with identity and network telemetry for complete attack chain reconstruction across Azure SQL and on-premises SQL Server environments.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128202;</span><div class="ai-name">Semgrep AI for DB Code Review</div><div class="ai-desc"><strong style="color:var(--c)">Semgrep</strong> with AI-generated rules identifies SQL injection vulnerabilities in application source code before deployment -- detecting string concatenation in SQL queries, dynamic EXECUTE statements, and ORM raw query calls across Python, Java, C#, Node.js, and PHP. AI generates organisation-specific detection rules from natural-language vulnerability descriptions, enabling teams to detect custom database interaction patterns that generic rules miss.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#129302;</span><div class="ai-name">Autonomous Vuln Discovery</div><div class="ai-desc"><strong style="color:var(--c)">GitHub Advanced Security</strong> with CodeQL continuously analyses database-touching code for injection vulnerabilities using AI-augmented data flow analysis -- tracing user input through the application stack to identify paths where unsanitised data reaches database query construction. Finds second-order injection vulnerabilities (stored then executed) that traditional DAST tools cannot discover without source code access.</div></div>
   </div>
 
   <div class="panel panel-ai rv" style="margin-top:28px">
-    <div class="panel-t">Practical AI Tools for Database Security</div>
-    <table style="width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12px;margin:8px 0">
+    <div class="panel-t">AI Tools for Database Pentesting -- No Version Lock-In</div>
+    <div style="overflow-x:auto;-webkit-overflow-scrolling:touch">
+    <table class="ptbl" style="min-width:580px">
       <thead><tr>
-        <th style="text-align:left;padding:10px 14px;color:#bf00ff;border-bottom:1px solid rgba(191,0,255,.25);letter-spacing:2px;font-size:10px;text-transform:uppercase">Tool</th>
-        <th style="text-align:left;padding:10px 14px;color:#bf00ff;border-bottom:1px solid rgba(191,0,255,.25);letter-spacing:2px;font-size:10px;text-transform:uppercase">AI Capability</th>
-        <th style="text-align:left;padding:10px 14px;color:#bf00ff;border-bottom:1px solid rgba(191,0,255,.25);letter-spacing:2px;font-size:10px;text-transform:uppercase">DB Security Use Case</th>
+        <th style="color:#bf00ff;border-bottom-color:rgba(191,0,255,.25)">Tool / Platform</th>
+        <th style="color:#bf00ff;border-bottom-color:rgba(191,0,255,.25)">AI Capability</th>
+        <th style="color:#bf00ff;border-bottom-color:rgba(191,0,255,.25)">DB Use Case</th>
       </tr></thead>
       <tbody>
-        <tr><td style="padding:9px 14px;color:var(--g);border-bottom:1px solid rgba(0,255,65,.05);font-weight:700">SQLmap + AI tuning</td><td style="padding:9px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">Adaptive payload selection</td><td style="padding:9px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">AI-guided tamper script selection and encoding chain optimisation for WAF bypass</td></tr>
-        <tr><td style="padding:9px 14px;color:var(--g);border-bottom:1px solid rgba(0,255,65,.05);font-weight:700">GPT-4 / Claude</td><td style="padding:9px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">Schema analysis &amp; query crafting</td><td style="padding:9px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">Paste schema dump → AI identifies HVT tables and generates targeted extraction queries</td></tr>
-        <tr><td style="padding:9px 14px;color:var(--g);border-bottom:1px solid rgba(0,255,65,.05);font-weight:700">Imperva SecureSphere</td><td style="padding:9px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">ML query anomaly detection</td><td style="padding:9px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">Real-time detection of SQLi, data exfiltration, and privilege abuse at query level</td></tr>
-        <tr><td style="padding:9px 14px;color:var(--g);border-bottom:1px solid rgba(0,255,65,.05);font-weight:700">Microsoft Purview</td><td style="padding:9px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">AI data classification</td><td style="padding:9px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">Automatic PII/financial/credential discovery across all connected database instances</td></tr>
-        <tr><td style="padding:9px 14px;color:var(--g);border-bottom:1px solid rgba(0,255,65,.05);font-weight:700">IBM Guardium</td><td style="padding:9px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">Behavioural database analytics</td><td style="padding:9px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">User and application query pattern baselining with real-time deviation alerting</td></tr>
-        <tr><td style="padding:9px 14px;color:var(--g);font-weight:700">Nuclei + AI templates</td><td style="padding:9px 14px;color:var(--t2)">AI-generated vulnerability templates</td><td style="padding:9px 14px;color:var(--t2)">Rapid custom CVE template creation for newly disclosed database vulnerabilities</td></tr>
+        <tr><td style="color:var(--g)">Claude (Anthropic)</td><td style="color:var(--t2)">Frontier LLM, long context, code</td><td style="color:var(--t2)">Error analysis, payload gen, SP review, schema analysis, report writing</td></tr>
+        <tr><td style="color:var(--g)">ChatGPT (OpenAI)</td><td style="color:var(--t2)">Frontier LLM, reasoning, code</td><td style="color:var(--t2)">SQLi payload generation, WAF bypass, DB-specific privilege escalation</td></tr>
+        <tr><td style="color:var(--g)">Gemini (Google)</td><td style="color:var(--t2)">Long context + threat intel</td><td style="color:var(--t2)">Large schema analysis, multi-DB comparison, Google Cloud SQL assessment</td></tr>
+        <tr><td style="color:var(--g)">GitHub Copilot / Cursor</td><td style="color:var(--t2)">AI code completion in IDE</td><td style="color:var(--t2)">sqlmap tamper script dev, custom PoC writing, automated exploit chains</td></tr>
+        <tr><td style="color:var(--g)">Imperva / IBM Guardium</td><td style="color:var(--t2)">ML-based DAM, behavioural baseline</td><td style="color:var(--t2)">SQLi detection, abnormal query pattern alerting, data exfil prevention</td></tr>
+        <tr><td style="color:var(--g)">Semgrep + AI Rules</td><td style="color:var(--t2)">AI-generated SAST patterns</td><td style="color:var(--t2)">Source-level SQLi and second-order injection detection across all languages</td></tr>
+        <tr><td style="color:var(--g)">Copilot for Security</td><td style="color:var(--t2)">Microsoft AI across DB stack</td><td style="color:var(--t2)">SQL audit log hunting, correlated DB incident timelines, guided response</td></tr>
       </tbody>
     </table>
+    </div>
   </div>
 
-  <div class="cb cb-ai rv" data-l="AI-Assisted — Schema Analysis &amp; Attack Planning (Python + GPT)">
-    <code><span class="cmt"># Feed extracted DB schema into AI for targeted attack planning</span>
-<span class="kw">import</span> openai, json
+  <div class="cb cb-ai rv" data-l="AI -- SQL Injection Payload Generator (DB-aware)">
+    <code><span style="color:#bd93f9">#!/usr/bin/env python3</span>
+<span style="color:var(--t3))"># Generate targeted SQL injection payloads for specific DB engine
+# Model-agnostic: set AI_MODEL env var to latest available
+# pip install openai requests</span>
 
-<span class="cmt"># Schema extracted via: SELECT table_name, column_name, data_type
-# FROM information_schema.columns WHERE table_schema = 'targetdb'</span>
-schema = {
-    <span class="str">"users"</span>: [<span class="str">"id"</span>, <span class="str">"username"</span>, <span class="str">"password_hash"</span>, <span class="str">"email"</span>, <span class="str">"role"</span>, <span class="str">"api_key"</span>],
-    <span class="str">"orders"</span>: [<span class="str">"id"</span>, <span class="str">"user_id"</span>, <span class="str">"card_number"</span>, <span class="str">"amount"</span>, <span class="str">"status"</span>],
-    <span class="str">"sessions"</span>: [<span class="str">"session_id"</span>, <span class="str">"user_id"</span>, <span class="str">"token"</span>, <span class="str">"expires_at"</span>],
-    <span class="str">"audit_log"</span>: [<span class="str">"id"</span>, <span class="str">"action"</span>, <span class="str">"user_id"</span>, <span class="str">"timestamp"</span>]
-}
+<span style="color:#bd93f9">import</span> openai, os, sys
 
-client = openai.<span class="fn">OpenAI</span>()
-response = client.chat.completions.<span class="fn">create</span>(
-    model=<span class="str">"gpt-4o"</span>,
-    messages=[{<span class="str">"role"</span>:<span class="str">"user"</span>, <span class="str">"content"</span>: <span class="str">f"""
-You are a senior database penetration tester on an authorised engagement.
-Analyse this database schema and provide a structured attack plan:
+MODEL = os.getenv(<span style="color:#ff79c6">"AI_MODEL"</span>, <span style="color:#ff79c6">"gpt-4o"</span>)  <span style="color:var(--t3));"># swap to latest model as needed</span>
 
-Schema: {json.dumps(schema, indent=2)}
+SYSTEM = (<span style="color:#ff79c6">"You are a senior database penetration tester. Generate targeted SQL injection "</span>
+          <span style="color:#ff79c6">"payloads for the database engine specified. For each payload provide:\n"</span>
+          <span style="color:#ff79c6">"1. PAYLOAD: the exact injection string\n"</span>
+          <span style="color:#ff79c6">"2. TYPE: UNION / Error / Blind-Boolean / Blind-Time / Stacked\n"</span>
+          <span style="color:#ff79c6">"3. PURPOSE: what it extracts or achieves\n"</span>
+          <span style="color:#ff79c6">"4. FULL URL/PARAM: how to use it in the HTTP request\n"</span>
+          <span style="color:#ff79c6">"5. WAF EVASION: obfuscated variant if applicable\n"</span>
+          <span style="color:#ff79c6">"Only generate payloads for authorised penetration testing."</span>)
 
-Provide:
-1. HIGH-VALUE TABLES — ranked by data sensitivity and business impact
-2. PRIORITY EXTRACTION QUERIES — specific SQL for each HVT (SELECT statements only)
-3. PRIVILEGE ESCALATION PATHS — any columns that suggest priv-esc opportunities
-4. AUDIT EVASION — how to minimise entries in the audit_log table
-5. LATERAL MOVEMENT — any credentials/tokens that could pivot to other systems
-6. REMEDIATION RECOMMENDATIONS — how to harden each identified weakness
-"""</span>}]
+db_engine = sys.argv[1] <span style="color:#bd93f9">if</span> len(sys.argv) > 1 <span style="color:#bd93f9">else</span> <span style="color:#ff79c6">"MySQL"</span>
+param     = sys.argv[2] <span style="color:#bd93f9">if</span> len(sys.argv) > 2 <span style="color:#bd93f9">else</span> <span style="color:#ff79c6">"id"</span>
+error_msg = sys.argv[3] <span style="color:#bd93f9">if</span> len(sys.argv) > 3 <span style="color:#bd93f9">else</span> <span style="color:#ff79c6">""</span>
+
+user_prompt = (
+    <span style="color:#ff79c6">f"Target DB: {db_engine}\n"</span>
+    <span style="color:#ff79c6">f"Vulnerable parameter: {param}\n"</span>
+    <span style="color:#ff79c6">f"Error message observed: {error_msg or 'None'}\n\n"</span>
+    <span style="color:#ff79c6">"Generate 8 targeted SQL injection payloads covering: "</span>
+    <span style="color:#ff79c6">"database enumeration, table/column extraction, credential dump, "</span>
+    <span style="color:#ff79c6">"and privilege escalation for this specific engine."</span>
 )
-<span class="fn">print</span>(response.choices[<span class="num">0</span>].message.content)</code>
+
+r = openai.OpenAI().chat.completions.create(
+    model=MODEL,
+    messages=[{<span style="color:#ff79c6">"role"</span>:<span style="color:#ff79c6">"system"</span>,<span style="color:#ff79c6">"content"</span>:SYSTEM},
+              {<span style="color:#ff79c6">"role"</span>:<span style="color:#ff79c6">"user"</span>,  <span style="color:#ff79c6">"content"</span>:user_prompt}]
+)
+print(r.choices[0].message.content)</code>
   </div>
 
-  <div class="cb cb-ai rv" data-l="AI — Automated DB Pentest Finding Report Generator">
-    <code><span class="cmt"># Generate a professional DB pentest finding from raw evidence</span>
-<span class="kw">import</span> openai, json
+  <div class="cb cb-ai rv" data-l="AI -- DB Schema Analyser for Privilege Escalation Paths">
+    <code><span style="color:#bd93f9">#!/usr/bin/env python3</span>
+<span style="color:var(--t3))"># Dump DB schema and stored procedures, send to AI for privesc analysis
+# Usage: python3 db_ai_analyse.py --host 10.0.0.1 --db mydb --user pentester</span>
 
-finding = {
-    <span class="str">"vulnerability"</span>: <span class="str">"Boolean-Based Blind SQL Injection"</span>,
-    <span class="str">"location"</span>: <span class="str">"POST /api/products/search — 'category' parameter"</span>,
-    <span class="str">"dbms"</span>: <span class="str">"MySQL 8.0.32"</span>,
-    <span class="str">"confirmed"</span>: <span class="str">"SQLmap extracted 'users' table — 4,847 rows including bcrypt hashes and API keys"</span>,
-    <span class="str">"waf_bypassed"</span>: <span class="str">"Yes — using space2comment + between tamper scripts"</span>,
-    <span class="str">"privilege"</span>: <span class="str">"DB user 'app_user' with SELECT, INSERT on all tables"</span>
-}
+<span style="color:#bd93f9">import</span> openai, pymysql, os, argparse
 
-prompt = <span class="str">f"""
-As a senior penetration tester, write a complete DB security finding:
-{json.dumps(finding, indent=2)}
+MODEL = os.getenv(<span style="color:#ff79c6">"AI_MODEL"</span>, <span style="color:#ff79c6">"gpt-4o"</span>)
 
-Include: Title, CVSSv3 score and vector, Severity, Technical Description,
-Business Impact (data breach scope), Steps to Reproduce (command sequence),
-Evidence Summary, Remediation (parameterised queries + WAF config),
-and OWASP Top 10 / MITRE ATT&CK mapping.
-"""</span>
+<span style="color:#8be9fd">def</span> <span style="color:var(--c)">collect_db_intel</span>(host, db, user, pwd):
+    conn = pymysql.connect(host=host, user=user, password=pwd, database=db)
+    cur  = conn.cursor()
+    intel = {}
+    <span style="color:var(--t3));"># Current user and privileges</span>
+    cur.execute(<span style="color:#ff79c6">"SELECT CURRENT_USER(), @@version"</span>)
+    intel[<span style="color:#ff79c6">"identity"</span>] = cur.fetchone()
+    cur.execute(<span style="color:#ff79c6">"SHOW GRANTS FOR CURRENT_USER()"</span>)
+    intel[<span style="color:#ff79c6">"grants"</span>] = [r[0] <span style="color:#bd93f9">for</span> r <span style="color:#bd93f9">in</span> cur.fetchall()]
+    <span style="color:var(--t3));"># All tables and row counts</span>
+    cur.execute(<span style="color:#ff79c6">"SELECT table_name, table_rows FROM information_schema.tables WHERE table_schema=%s"</span>, (db,))
+    intel[<span style="color:#ff79c6">"tables"</span>] = cur.fetchall()
+    <span style="color:var(--t3));"># Stored procedures</span>
+    cur.execute(<span style="color:#ff79c6">"SELECT routine_name, routine_definition FROM information_schema.routines WHERE routine_schema=%s LIMIT 20"</span>, (db,))
+    intel[<span style="color:#ff79c6">"procedures"</span>] = cur.fetchall()
+    <span style="color:var(--t3));"># Global variables of interest</span>
+    cur.execute(<span style="color:#ff79c6">"SHOW VARIABLES LIKE '%secure%'"</span>)
+    intel[<span style="color:#ff79c6">"secure_vars"</span>] = cur.fetchall()
+    conn.close()
+    <span style="color:#bd93f9">return</span> intel
 
-r = openai.OpenAI().chat.completions.<span class="fn">create</span>(
-    model=<span class="str">"gpt-4o"</span>,
-    messages=[{<span class="str">"role"</span>:<span class="str">"user"</span>,<span class="str">"content"</span>:prompt}]
-)
-<span class="fn">print</span>(r.choices[<span class="num">0</span>].message.content)</code>
+<span style="color:#8be9fd">def</span> <span style="color:var(--c)">ai_analyse</span>(intel):
+    prompt = (<span style="color:#ff79c6">"You are a database penetration tester. Analyse this MySQL database intelligence:\n"</span>
+              <span style="color:#ff79c6">"1. PRIVILEGE ESCALATION: paths from current user to FILE/SUPER/DBA\n"</span>
+              <span style="color:#ff79c6">"2. UDF RCE: can we load a UDF shared library via secure_file_priv?\n"</span>
+              <span style="color:#ff79c6">"3. SENSITIVE TABLES: likely to contain credentials or PII\n"</span>
+              <span style="color:#ff79c6">"4. DANGEROUS SPs: stored procedures with dynamic SQL or OS interaction\n"</span>
+              <span style="color:#ff79c6">"5. ATTACK CHAIN: step-by-step SQL commands to reach highest privilege\n\n"</span>
+              <span style="color:#ff79c6">f"Intel: {str(intel)[:4000]}"</span>)
+    r = openai.OpenAI().chat.completions.create(
+        model=MODEL,
+        messages=[{<span style="color:#ff79c6">"role"</span>:<span style="color:#ff79c6">"user"</span>,<span style="color:#ff79c6">"content"</span>:prompt}]
+    )
+    <span style="color:#bd93f9">return</span> r.choices[0].message.content
+
+p = argparse.ArgumentParser()
+p.add_argument(<span style="color:#ff79c6">"--host"</span>); p.add_argument(<span style="color:#ff79c6">"--db"</span>)
+p.add_argument(<span style="color:#ff79c6">"--user"</span>); p.add_argument(<span style="color:#ff79c6">"--pwd"</span>, default=<span style="color:#ff79c6">""</span>)
+args = p.parse_args()
+intel = collect_db_intel(args.host, args.db, args.user, args.pwd)
+print(ai_analyse(intel))</code>
   </div>
 </section>
+
 
 <div class="div"></div>
 
@@ -1026,6 +1155,8 @@ r = openai.OpenAI().chat.completions.<span class="fn">create</span>(
 <script>
 /* ─── CURSOR ─── */
 const cur=document.getElementById('cur'),cur2=document.getElementById('cur2'),cur3=document.getElementById('cur3');
+const isTouch=('ontouchstart' in window)||navigator.maxTouchPoints>0;
+if(isTouch){[cur,cur2,cur3].forEach(el=>{if(el)el.style.display='none'});document.body.style.cursor='auto';}
 let mx=0,my=0;
 document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px'});
 (function animC(){cur2.style.left=mx+'px';cur2.style.top=my+'px';cur3.style.left=mx+'px';cur3.style.top=my+'px';requestAnimationFrame(animC)})();
@@ -1129,8 +1260,9 @@ document.querySelectorAll('.rv,.rv-l,.rv-r').forEach(el=>rv.observe(el));
 /* ═══ TOC TRACKING ═══ */
 const sIds=['hero','scope','recon','vulns','sqli','exploit','post','mitigate','ai'];
 const tItems=document.querySelectorAll('.toc-i');
-const so=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)tItems.forEach(t=>t.classList.toggle('active',t.dataset.s===x.target.id))})},{threshold:.25});
-sIds.forEach(id=>{const el=document.getElementById(id);if(el)so.observe(el)});
+function updateTOC(){const sy=window.scrollY+130;let cur='hero';sIds.forEach(id=>{const el=document.getElementById(id);if(el&&el.offsetTop<=sy)cur=id;});tItems.forEach(t=>t.classList.toggle('active',t.dataset.s===cur));}
+window.addEventListener('scroll',updateTOC,{passive:true});
+updateTOC();
 function goTo(h){document.querySelector(h)?.scrollIntoView({behavior:'smooth'})}
 
 /* ═══ CODE COPY ═══ */

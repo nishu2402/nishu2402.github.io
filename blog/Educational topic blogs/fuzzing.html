@@ -3,13 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" sizes="64x64" href="https://nishu2402.github.io/favicon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://nishu2402.github.io/favicon.png">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="shortcut icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="https://nishu2402.github.io/favicon.png">
+<link rel="apple-touch-icon" href="favicon.png">
 <title>Fuzzing — Automated Vulnerability Discovery | Nisarg Chasmawala</title>
 <meta name="description" content="Fuzzing: A deep dive into automated vulnerability discovery — by Nisarg Chasmawala (Shroff), Offensive Security Engineer.">
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
   --g:#00ff41;--c:#00e5ff;--p:#bf00ff;--r:#ff003c;--o:#ffd700;
-  --bg:#030509;--t1:#d4ffe0;--t2:#7aad82;--t3:#2e4a32;
+  --bg:#030509;--t1:#e8fff2;--t2:#a8d8b0;--t3:#6abf7a;
   --mono:'Share Tech Mono',monospace;--dsp:'Orbitron',sans-serif;--body:'Rajdhani',sans-serif;
   --glow:0 0 20px rgba(0,255,65,.4),0 0 60px rgba(0,255,65,.15);
   --cglow:0 0 20px rgba(0,229,255,.4),0 0 60px rgba(0,229,255,.1);
@@ -98,7 +104,7 @@ body{background:var(--bg);color:var(--t1);font-family:var(--body);font-size:17px
 .panel::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.015) 0%,transparent 60%);pointer-events:none}
 .panel:hover{border-color:rgba(0,229,255,.4);box-shadow:0 0 50px rgba(0,229,255,.07),inset 0 0 40px rgba(0,229,255,.025),0 20px 60px rgba(0,0,0,.3);transform:translateY(-3px) translateZ(6px)}
 .panel:hover::before{opacity:1}
-.panel p{color:var(--t2);margin-bottom:12px}
+.panel p{color:var(--t2);margin-bottom:12px;font-size:16px;line-height:1.85}
 .panel p:last-child{margin-bottom:0}
 .panel-t{font-family:var(--dsp);font-size:12px;font-weight:700;letter-spacing:3px;color:var(--g);text-transform:uppercase;margin-bottom:18px;display:flex;align-items:center;gap:12px}
 .panel-t::after{content:'';flex:1;height:1px;background:linear-gradient(to right,rgba(0,255,65,.2),transparent)}
@@ -184,7 +190,7 @@ body{background:var(--bg);color:var(--t1);font-family:var(--body);font-size:17px
 .al-i{background:rgba(0,229,255,.04);border:1px solid rgba(0,229,255,.14);border-left:3px solid var(--c)}
 .al-ic{font-family:var(--mono);font-size:13px;flex-shrink:0;margin-top:2px}
 .al-w .al-ic{color:var(--o)}.al-i .al-ic{color:var(--c)}
-.al-tx{font-size:14px;color:var(--t2);line-height:1.6}
+.al-tx{font-size:15px;color:var(--t2);line-height:1.75;font-weight:500}
 
 /* ── CTA ── */
 .cta{background:linear-gradient(135deg,rgba(0,255,65,.04),rgba(0,229,255,.04));border:1px solid rgba(0,229,255,.3);border-radius:4px;padding:60px 50px;text-align:center;position:relative;overflow:hidden;margin-top:80px}
@@ -220,6 +226,9 @@ body{background:var(--bg);color:var(--t1);font-family:var(--body);font-size:17px
 
 /* ── RESPONSIVE ── */
 @media(max-width:700px){.vgrid,.tgrid,.igrid,.mgrid,.ai-grid{grid-template-columns:1fr}.hero-canvas-wrap{display:none}.cta{padding:36px 20px}.flow{flex-direction:column}.flow-arrow{transform:rotate(90deg)}}
+@media(max-width:768px){body{font-size:16px}.wrap{padding:0 16px}.hero{padding:80px 0 40px}.hero-content{max-width:100%}.hero-title{font-size:clamp(18px,5vw,30px)}.hero-desc{font-size:15px}.topbar{padding:0 16px}.tb-name{font-size:11px;letter-spacing:2px}.panel{padding:20px}.cta-btns{flex-direction:column;align-items:center}.btn{width:100%;max-width:280px;text-align:center}.footer{flex-direction:column;gap:12px}.f-r{text-align:left}}
+@media(max-width:480px){body{font-size:15px}.wrap{padding:0 14px}.hero{padding:70px 0 30px}.hero-title{font-size:clamp(18px,6vw,28px)}.hero-desc{font-size:14px;line-height:1.75}.sec-t{font-size:clamp(14px,4.5vw,18px)}.vgrid,.tgrid,.igrid,.mgrid,.ai-grid{grid-template-columns:1fr}.cb{padding:12px 14px}.cb code{font-size:11px;line-height:1.8}.topbar{height:50px;padding:0 12px}.tb-name{font-size:10px;letter-spacing:1px}.tb-roles{display:none}.div{margin:36px 0}.sec{margin-bottom:60px}.panel{padding:16px;font-size:15px}.ai-card{padding:16px}.ai-desc{font-size:13px}.cta{padding:28px 16px}.f-r{text-align:left}}
+@media(hover:none){.panel:hover,.ai-card:hover{transform:none}}
 
 /* ── AI STYLES ── */
 :root{--pglow:0 0 20px rgba(191,0,255,.4),0 0 60px rgba(191,0,255,.1)}
@@ -240,11 +249,14 @@ body{background:var(--bg);color:var(--t1);font-family:var(--body);font-size:17px
 .ai-card:hover{border-color:rgba(191,0,255,.5);box-shadow:var(--pglow),0 16px 40px rgba(0,0,0,.25);transform:translateY(-3px)}
 .ai-ico{font-size:24px;margin-bottom:10px;display:block}
 .ai-name{font-family:var(--dsp);font-size:11px;font-weight:700;letter-spacing:2px;color:#bf00ff;text-transform:uppercase;margin-bottom:10px}
-.ai-desc{font-size:14px;color:var(--t2);line-height:1.65;font-weight:300}
+.ai-desc{font-size:15px;color:var(--t2);line-height:1.75;font-weight:400}
 .cb-ai{border-left-color:#bf00ff !important}
 .cb-ai::before{color:#bf00ff !important;background:rgba(191,0,255,.07) !important}
 .al-p{background:rgba(191,0,255,.04);border:1px solid rgba(191,0,255,.18);border-left:3px solid #bf00ff}
 .al-p .al-ic{color:#bf00ff}
+
+@media(pointer:coarse){body{cursor:auto!important}#cur,#cur2,#cur3{display:none!important}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 </style>
 </style>
 </head>
@@ -440,6 +452,52 @@ body{background:var(--bg);color:var(--t1);font-family:var(--body);font-size:17px
     </ul>
   </div>
 </section>
+<div class="rv" style="margin:0 0 40px 0"><div style="font-family:var(--mono);font-size:10px;letter-spacing:3px;color:var(--p);margin-bottom:14px">DIAGRAM 01 // FUZZING PROCESS FLOW</div><div style="overflow-x:auto;-webkit-overflow-scrolling:touch;background:rgba(0,0,0,0.4);border:1px solid rgba(0,229,255,0.12);border-radius:4px;padding:16px"><svg viewBox="0 0 920 210" xmlns="http://www.w3.org/2000/svg" style="width:100%;min-width:580px;max-width:920px;display:block">
+  <defs><marker id="fz1" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="rgba(0,229,255,.9)"/></marker>
+  <marker id="fz1g" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="rgba(0,255,65,.9)"/></marker></defs>
+  <rect x="8" y="35" width="120" height="80" rx="4" fill="rgba(0,0,0,.82)" stroke="rgba(0,229,255,.85)" stroke-width="1.5"/>
+  <text x="68" y="60" font-family="Share Tech Mono,monospace" font-size="10" fill="#00e5ff" text-anchor="middle" font-weight="700">TARGET</text>
+  <text x="68" y="74" font-family="Share Tech Mono,monospace" font-size="10" fill="#00e5ff" text-anchor="middle" font-weight="700">SELECT</text>
+  <text x="68" y="92" font-family="Share Tech Mono,monospace" font-size="9" fill="#88e8ff" text-anchor="middle">binary / API</text>
+  <text x="68" y="105" font-family="Share Tech Mono,monospace" font-size="9" fill="#88e8ff" text-anchor="middle">network svc</text>
+  <line x1="129" y1="75" x2="147" y2="75" stroke="rgba(0,229,255,.88)" stroke-width="1.5" marker-end="url(#fz1)"/>
+  <rect x="149" y="35" width="120" height="80" rx="4" fill="rgba(0,0,0,.82)" stroke="rgba(255,200,80,.85)" stroke-width="1.5"/>
+  <text x="209" y="60" font-family="Share Tech Mono,monospace" font-size="10" fill="#ffc850" text-anchor="middle" font-weight="700">CORPUS</text>
+  <text x="209" y="74" font-family="Share Tech Mono,monospace" font-size="10" fill="#ffc850" text-anchor="middle" font-weight="700">PREPARE</text>
+  <text x="209" y="92" font-family="Share Tech Mono,monospace" font-size="9" fill="#ffe088" text-anchor="middle">seed inputs</text>
+  <text x="209" y="105" font-family="Share Tech Mono,monospace" font-size="9" fill="#ffe088" text-anchor="middle">format samples</text>
+  <line x1="270" y1="75" x2="288" y2="75" stroke="rgba(0,229,255,.88)" stroke-width="1.5" marker-end="url(#fz1)"/>
+  <rect x="290" y="35" width="120" height="80" rx="4" fill="rgba(0,0,0,.82)" stroke="rgba(191,0,255,.85)" stroke-width="1.5"/>
+  <text x="350" y="60" font-family="Share Tech Mono,monospace" font-size="10" fill="#bf00ff" text-anchor="middle" font-weight="700">MUTATE</text>
+  <text x="350" y="74" font-family="Share Tech Mono,monospace" font-size="10" fill="#bf00ff" text-anchor="middle" font-weight="700">&amp; INJECT</text>
+  <text x="350" y="92" font-family="Share Tech Mono,monospace" font-size="9" fill="#df88ff" text-anchor="middle">AFL++ / libFuzzer</text>
+  <text x="350" y="105" font-family="Share Tech Mono,monospace" font-size="9" fill="#df88ff" text-anchor="middle">honggfuzz</text>
+  <line x1="411" y1="75" x2="429" y2="75" stroke="rgba(0,229,255,.88)" stroke-width="1.5" marker-end="url(#fz1)"/>
+  <rect x="431" y="35" width="120" height="80" rx="4" fill="rgba(0,0,0,.82)" stroke="rgba(255,80,80,.85)" stroke-width="1.5"/>
+  <text x="491" y="60" font-family="Share Tech Mono,monospace" font-size="10" fill="#ff5050" text-anchor="middle" font-weight="700">MONITOR</text>
+  <text x="491" y="74" font-family="Share Tech Mono,monospace" font-size="10" fill="#ff5050" text-anchor="middle" font-weight="700">&amp; DETECT</text>
+  <text x="491" y="92" font-family="Share Tech Mono,monospace" font-size="9" fill="#ff8888" text-anchor="middle">ASAN / UBSAN</text>
+  <text x="491" y="105" font-family="Share Tech Mono,monospace" font-size="9" fill="#ff8888" text-anchor="middle">crash / hang</text>
+  <line x1="552" y1="75" x2="570" y2="75" stroke="rgba(0,229,255,.88)" stroke-width="1.5" marker-end="url(#fz1)"/>
+  <rect x="572" y="35" width="120" height="80" rx="4" fill="rgba(0,0,0,.82)" stroke="rgba(0,229,255,.85)" stroke-width="1.5"/>
+  <text x="632" y="60" font-family="Share Tech Mono,monospace" font-size="10" fill="#00e5ff" text-anchor="middle" font-weight="700">TRIAGE</text>
+  <text x="632" y="74" font-family="Share Tech Mono,monospace" font-size="10" fill="#00e5ff" text-anchor="middle" font-weight="700">&amp; REPRO</text>
+  <text x="632" y="92" font-family="Share Tech Mono,monospace" font-size="9" fill="#88e8ff" text-anchor="middle">dedup / root</text>
+  <text x="632" y="105" font-family="Share Tech Mono,monospace" font-size="9" fill="#88e8ff" text-anchor="middle">cause analysis</text>
+  <line x1="693" y1="75" x2="711" y2="75" stroke="rgba(0,255,65,.9)" stroke-width="2" marker-end="url(#fz1g)"/>
+  <rect x="713" y="25" width="200" height="100" rx="4" fill="rgba(0,0,0,.88)" stroke="rgba(0,255,65,.92)" stroke-width="2"/>
+  <text x="813" y="62" font-family="Orbitron,sans-serif" font-size="11" font-weight="900" fill="#00ff41" text-anchor="middle">VULN</text>
+  <text x="813" y="77" font-family="Orbitron,sans-serif" font-size="11" font-weight="900" fill="#00ff41" text-anchor="middle">CONFIRMED</text>
+  <text x="813" y="97" font-family="Share Tech Mono,monospace" font-size="9" fill="#88ff99" text-anchor="middle">PoC + CVE report</text>
+  <text x="813" y="110" font-family="Share Tech Mono,monospace" font-size="9" fill="#88ff99" text-anchor="middle">patch + retest</text>
+  <text x="68"  y="175" font-family="Share Tech Mono,monospace" font-size="10" fill="rgba(0,229,255,.85)"  text-anchor="middle">STEP 1</text>
+  <text x="209" y="175" font-family="Share Tech Mono,monospace" font-size="10" fill="rgba(255,200,80,.85)" text-anchor="middle">STEP 2</text>
+  <text x="350" y="175" font-family="Share Tech Mono,monospace" font-size="10" fill="rgba(191,0,255,.85)"  text-anchor="middle">STEP 3</text>
+  <text x="491" y="175" font-family="Share Tech Mono,monospace" font-size="10" fill="rgba(255,80,80,.85)"  text-anchor="middle">STEP 4</text>
+  <text x="632" y="175" font-family="Share Tech Mono,monospace" font-size="10" fill="rgba(0,229,255,.85)"  text-anchor="middle">STEP 5</text>
+  <text x="813" y="175" font-family="Share Tech Mono,monospace" font-size="10" fill="rgba(0,255,65,.9)"    text-anchor="middle">OBJECTIVE</text>
+</svg></div></div>
+
 
 <div class="div"></div>
 
@@ -642,6 +700,54 @@ session.<span class="fn">fuzz</span>()   <span class="cmt"># Automatically itera
 <span class="cmd">tail</span> <span class="flag">-f</span> hfuzz.log</code>
   </div>
 </section>
+<div class="rv" style="margin:0 0 40px 0"><div style="font-family:var(--mono);font-size:10px;letter-spacing:3px;color:var(--p);margin-bottom:14px">DIAGRAM 02 // AFL++ COVERAGE-GUIDED FEEDBACK LOOP</div><div style="overflow-x:auto;-webkit-overflow-scrolling:touch;background:rgba(0,0,0,0.4);border:1px solid rgba(0,229,255,0.12);border-radius:4px;padding:16px"><svg viewBox="0 0 920 240" xmlns="http://www.w3.org/2000/svg" style="width:100%;min-width:580px;max-width:920px;display:block">
+  <defs><marker id="fz2" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="rgba(0,229,255,.9)"/></marker>
+  <marker id="fz2g" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="rgba(0,255,65,.9)"/></marker>
+  <marker id="fz2r" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="rgba(255,80,80,.9)"/></marker></defs>
+  <!-- Seed corpus -->
+  <rect x="10" y="90" width="130" height="60" rx="4" fill="rgba(0,0,0,.82)" stroke="rgba(255,200,80,.85)" stroke-width="1.5"/>
+  <text x="75" y="115" font-family="Share Tech Mono,monospace" font-size="10" fill="#ffc850" text-anchor="middle" font-weight="700">SEED CORPUS</text>
+  <text x="75" y="130" font-family="Share Tech Mono,monospace" font-size="8"  fill="#ffe088" text-anchor="middle">initial test inputs</text>
+  <!-- → Mutator -->
+  <line x1="141" y1="120" x2="165" y2="120" stroke="rgba(0,229,255,.85)" stroke-width="1.5" marker-end="url(#fz2)"/>
+  <!-- Mutator -->
+  <rect x="167" y="90" width="130" height="60" rx="4" fill="rgba(0,0,0,.82)" stroke="rgba(191,0,255,.85)" stroke-width="1.5"/>
+  <text x="232" y="115" font-family="Share Tech Mono,monospace" font-size="10" fill="#bf00ff" text-anchor="middle" font-weight="700">MUTATOR</text>
+  <text x="232" y="130" font-family="Share Tech Mono,monospace" font-size="8"  fill="#df88ff" text-anchor="middle">bit flip / splice / dict</text>
+  <!-- → Target -->
+  <line x1="298" y1="120" x2="322" y2="120" stroke="rgba(0,229,255,.85)" stroke-width="1.5" marker-end="url(#fz2)"/>
+  <!-- Target (instrumented) -->
+  <rect x="324" y="80" width="140" height="80" rx="4" fill="rgba(0,0,0,.82)" stroke="rgba(0,229,255,.85)" stroke-width="1.5"/>
+  <text x="394" y="108" font-family="Share Tech Mono,monospace" font-size="10" fill="#00e5ff" text-anchor="middle" font-weight="700">TARGET</text>
+  <text x="394" y="122" font-family="Share Tech Mono,monospace" font-size="10" fill="#00e5ff" text-anchor="middle" font-weight="700">(instrumented)</text>
+  <text x="394" y="140" font-family="Share Tech Mono,monospace" font-size="8"  fill="#88e8ff" text-anchor="middle">ASAN + coverage SHM</text>
+  <!-- → Coverage map -->
+  <line x1="465" y1="100" x2="490" y2="70" stroke="rgba(0,255,65,.82)" stroke-width="1.5" marker-end="url(#fz2g)"/>
+  <line x1="465" y1="140" x2="490" y2="165" stroke="rgba(255,80,80,.85)" stroke-width="1.5" marker-end="url(#fz2r)"/>
+  <!-- New coverage box -->
+  <rect x="492" y="42" width="150" height="50" rx="4" fill="rgba(0,0,0,.82)" stroke="rgba(0,255,65,.82)" stroke-width="1.5"/>
+  <text x="567" y="63" font-family="Share Tech Mono,monospace" font-size="10" fill="#00ff41" text-anchor="middle" font-weight="700">NEW COVERAGE</text>
+  <text x="567" y="78" font-family="Share Tech Mono,monospace" font-size="8"  fill="#88ff99" text-anchor="middle">add to corpus ↺ loop</text>
+  <!-- Crash box -->
+  <rect x="492" y="148" width="150" height="50" rx="4" fill="rgba(0,0,0,.82)" stroke="rgba(255,80,80,.82)" stroke-width="1.5"/>
+  <text x="567" y="169" font-family="Share Tech Mono,monospace" font-size="10" fill="#ff5050" text-anchor="middle" font-weight="700">CRASH / HANG</text>
+  <text x="567" y="184" font-family="Share Tech Mono,monospace" font-size="8"  fill="#ff8888" text-anchor="middle">save + deduplicate</text>
+  <!-- New coverage → back to mutator (loop arrow) -->
+  <path d="M567,42 Q567,18 232,18 Q100,18 75,90" stroke="rgba(0,255,65,.6)" stroke-width="1.5" fill="none" stroke-dasharray="5,3" marker-end="url(#fz2g)"/>
+  <text x="310" y="12" font-family="Share Tech Mono,monospace" font-size="8" fill="rgba(0,255,65,.75)" text-anchor="middle">coverage-guided feedback loop</text>
+  <!-- Crash → Triage -->
+  <line x1="643" y1="173" x2="664" y2="173" stroke="rgba(255,80,80,.85)" stroke-width="1.5" marker-end="url(#fz2r)"/>
+  <rect x="666" y="148" width="130" height="50" rx="4" fill="rgba(0,0,0,.82)" stroke="rgba(255,80,80,.82)" stroke-width="1.5"/>
+  <text x="731" y="169" font-family="Share Tech Mono,monospace" font-size="10" fill="#ff5050" text-anchor="middle" font-weight="700">TRIAGE</text>
+  <text x="731" y="184" font-family="Share Tech Mono,monospace" font-size="8"  fill="#ff8888" text-anchor="middle">root cause / CVSS</text>
+  <!-- Triage → Final -->
+  <line x1="797" y1="173" x2="817" y2="130" stroke="rgba(0,255,65,.85)" stroke-width="2" marker-end="url(#fz2g)"/>
+  <rect x="819" y="90" width="95" height="80" rx="4" fill="rgba(0,0,0,.88)" stroke="rgba(0,255,65,.92)" stroke-width="2"/>
+  <text x="866" y="122" font-family="Orbitron,sans-serif" font-size="9" font-weight="900" fill="#00ff41" text-anchor="middle">CVE /</text>
+  <text x="866" y="136" font-family="Orbitron,sans-serif" font-size="9" font-weight="900" fill="#00ff41" text-anchor="middle">REPORT</text>
+  <text x="460" y="220" font-family="Share Tech Mono,monospace" font-size="9" fill="rgba(0,229,255,.78)" text-anchor="middle">AFL++ runs thousands of mutations per second -- coverage map in shared memory detects new code paths instantly</text>
+</svg></div></div>
+
 
 <div class="div"></div>
 
@@ -692,6 +798,42 @@ session.<span class="fn">fuzz</span>()   <span class="cmt"># Automatically itera
     </div>
   </div>
 </section>
+<div class="rv" style="margin:0 0 40px 0"><div style="font-family:var(--mono);font-size:10px;letter-spacing:3px;color:var(--p);margin-bottom:14px">DIAGRAM 03 // CRASH TRIAGE DATA FLOW</div><div style="overflow-x:auto;-webkit-overflow-scrolling:touch;background:rgba(0,0,0,0.4);border:1px solid rgba(0,229,255,0.12);border-radius:4px;padding:16px"><svg viewBox="0 0 920 215" xmlns="http://www.w3.org/2000/svg" style="width:100%;min-width:580px;max-width:920px;display:block">
+  <defs><marker id="fz3" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="rgba(0,229,255,.9)"/></marker>
+  <marker id="fz3g" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="rgba(0,255,65,.9)"/></marker></defs>
+  <rect x="8" y="55" width="130" height="75" rx="4" fill="rgba(0,0,0,.82)" stroke="rgba(255,80,80,.85)" stroke-width="1.5"/>
+  <text x="73" y="82" font-family="Share Tech Mono,monospace" font-size="10" fill="#ff5050" text-anchor="middle" font-weight="700">RAW CRASH</text>
+  <text x="73" y="96" font-family="Share Tech Mono,monospace" font-size="10" fill="#ff5050" text-anchor="middle" font-weight="700">CORPUS</text>
+  <text x="73" y="114" font-family="Share Tech Mono,monospace" font-size="8"  fill="#ff8888" text-anchor="middle">1000s of crashes</text>
+  <line x1="139" y1="93" x2="159" y2="93" stroke="rgba(0,229,255,.88)" stroke-width="1.5" marker-end="url(#fz3)"/>
+  <rect x="161" y="55" width="135" height="75" rx="4" fill="rgba(0,0,0,.82)" stroke="rgba(255,200,80,.85)" stroke-width="1.5"/>
+  <text x="228" y="82" font-family="Share Tech Mono,monospace" font-size="10" fill="#ffc850" text-anchor="middle" font-weight="700">DEDUP</text>
+  <text x="228" y="96" font-family="Share Tech Mono,monospace" font-size="10" fill="#ffc850" text-anchor="middle" font-weight="700">&amp; CLUSTER</text>
+  <text x="228" y="114" font-family="Share Tech Mono,monospace" font-size="8"  fill="#ffe088" text-anchor="middle">stack hash / asan</text>
+  <line x1="297" y1="93" x2="317" y2="93" stroke="rgba(0,229,255,.88)" stroke-width="1.5" marker-end="url(#fz3)"/>
+  <rect x="319" y="55" width="135" height="75" rx="4" fill="rgba(0,0,0,.82)" stroke="rgba(0,229,255,.85)" stroke-width="1.5"/>
+  <text x="386" y="82" font-family="Share Tech Mono,monospace" font-size="10" fill="#00e5ff" text-anchor="middle" font-weight="700">ROOT CAUSE</text>
+  <text x="386" y="96" font-family="Share Tech Mono,monospace" font-size="10" fill="#00e5ff" text-anchor="middle" font-weight="700">ANALYSIS</text>
+  <text x="386" y="114" font-family="Share Tech Mono,monospace" font-size="8"  fill="#88e8ff" text-anchor="middle">GDB / pwndbg / rr</text>
+  <line x1="455" y1="93" x2="475" y2="93" stroke="rgba(0,229,255,.88)" stroke-width="1.5" marker-end="url(#fz3)"/>
+  <rect x="477" y="55" width="135" height="75" rx="4" fill="rgba(0,0,0,.82)" stroke="rgba(191,0,255,.85)" stroke-width="1.5"/>
+  <text x="544" y="82" font-family="Share Tech Mono,monospace" font-size="10" fill="#bf00ff" text-anchor="middle" font-weight="700">SEVERITY</text>
+  <text x="544" y="96" font-family="Share Tech Mono,monospace" font-size="10" fill="#bf00ff" text-anchor="middle" font-weight="700">ASSESS</text>
+  <text x="544" y="114" font-family="Share Tech Mono,monospace" font-size="8"  fill="#df88ff" text-anchor="middle">CVSSv4 / CWE</text>
+  <line x1="613" y1="93" x2="633" y2="93" stroke="rgba(0,255,65,.9)" stroke-width="2" marker-end="url(#fz3g)"/>
+  <rect x="635" y="45" width="140" height="95" rx="4" fill="rgba(0,0,0,.88)" stroke="rgba(0,255,65,.92)" stroke-width="2"/>
+  <text x="705" y="78" font-family="Orbitron,sans-serif" font-size="10" font-weight="900" fill="#00ff41" text-anchor="middle">VULN</text>
+  <text x="705" y="93" font-family="Orbitron,sans-serif" font-size="10" font-weight="900" fill="#00ff41" text-anchor="middle">REPORT</text>
+  <text x="705" y="113" font-family="Share Tech Mono,monospace" font-size="9"  fill="#88ff99" text-anchor="middle">PoC + patch ref</text>
+  <text x="705" y="127" font-family="Share Tech Mono,monospace" font-size="9"  fill="#88ff99" text-anchor="middle">CVE submission</text>
+  <text x="73"  y="165" font-family="Share Tech Mono,monospace" font-size="9" fill="rgba(255,80,80,.82)"  text-anchor="middle">raw output</text>
+  <text x="228" y="165" font-family="Share Tech Mono,monospace" font-size="9" fill="rgba(255,200,80,.82)" text-anchor="middle">unique crashes</text>
+  <text x="386" y="165" font-family="Share Tech Mono,monospace" font-size="9" fill="rgba(0,229,255,.82)"  text-anchor="middle">exploitability</text>
+  <text x="544" y="165" font-family="Share Tech Mono,monospace" font-size="9" fill="rgba(191,0,255,.82)"  text-anchor="middle">risk rating</text>
+  <text x="705" y="165" font-family="Share Tech Mono,monospace" font-size="9" fill="rgba(0,255,65,.88)"   text-anchor="middle">disclosure</text>
+  <text x="460" y="195" font-family="Share Tech Mono,monospace" font-size="9" fill="rgba(0,229,255,.75)" text-anchor="middle">Tools: ASAN symbolizer, GDB + pwndbg, rr (time-travel debug), Crashwalk, ClusterFuzz, OSS-Fuzz triage</text>
+</svg></div></div>
+
 
 <div class="div"></div>
 
@@ -850,185 +992,123 @@ EOF</span>
      AI INTEGRATION
 ══════════════════════════════════ -->
 <section class="sec rv sec-ai" id="ai">
-  <div class="sec-hd">
-    <span class="sec-n">09 //</span>
-    <h2 class="sec-t">AI Integration in Fuzzing &amp; Vulnerability Discovery<span class="tw-cursor"></span></h2>
-    <div class="sec-ln"></div>
-  </div>
-
+  <div class="sec-hd"><span class="sec-n">09 //</span><h2 class="sec-t">AI Integration in Fuzzing &amp; Vulnerability Research<span class="tw-cursor"></span></h2><div class="sec-ln"></div></div>
   <div class="panel panel-ai rv-l">
-    <p>Fuzzing and Artificial Intelligence are a natural partnership — fuzzing is fundamentally a problem of generating vast numbers of inputs intelligently to maximise the discovery of unexpected behaviour, and AI excels at learning patterns, making intelligent decisions under uncertainty, and generating structured outputs at scale. The convergence of ML with coverage-guided fuzzing has produced a new generation of fuzzers that reach vulnerability-triggering code paths that traditional mutation-based approaches would take months to discover, if ever.</p>
-    <p>On the defensive side, AI is transforming how organisations triage crash reports, deduplicate fuzzing findings, predict which code areas are most likely to harbour vulnerabilities, and prioritise remediation from the enormous finding sets that continuous fuzzing pipelines generate. Understanding AI's role across both sides of the fuzzing discipline is now essential for any security engineer working on vulnerability discovery or secure software development.</p>
+    <p>AI is fundamentally transforming fuzzing and vulnerability research -- from generating intelligent seed inputs tuned to the target's input grammar, to automatically triaging thousands of crashes into unique root causes, writing fuzzing harnesses from API documentation, and interpreting complex sanitiser output into plain-English exploitability assessments. The combination of coverage-guided fuzzing engines and frontier LLMs creates a vulnerability discovery pipeline that finds what neither approach could find alone.</p>
+    <p>The most impactful shift: AI dramatically reduces the human expert time required at the two hardest phases of fuzzing -- <strong style="color:var(--c)">harness writing</strong> (which requires deep understanding of the target API) and <strong style="color:var(--c)">crash triage</strong> (which requires expertise in memory corruption, sanitiser output, and exploitability assessment). Both of these phases now yield to frontier LLMs fed with the right context.</p>
   </div>
-
   <div class="alert al-p rv">
     <span class="al-ic">[ AI ]</span>
-    <p class="al-tx">Google's AI-powered fuzzing research demonstrated that LLM-generated fuzz targets for open-source projects achieved <strong>higher code coverage than human-written fuzz targets</strong> in controlled comparisons — with the AI automatically identifying edge cases, boundary conditions, and API interaction patterns that human fuzzer authors commonly overlook.</p>
+    <p class="al-tx">Google OSS-Fuzz with AI-generated harnesses found hundreds of vulnerabilities in widely-deployed open source libraries that years of previous fuzzing campaigns had missed. The AI-generated harnesses achieved better API coverage and discovered deeper code paths than manually-written harnesses, because LLMs understand library semantics from documentation and existing usage examples without requiring human expertise to translate that understanding into fuzzer harness code.</p>
   </div>
 
-  <h3 style="font-family:var(--mono);font-size:11px;letter-spacing:3px;color:#bf00ff;text-transform:uppercase;margin:28px 0 16px;">AI-Powered Offensive Fuzzing Capabilities</h3>
+  <h3 style="font-family:var(--mono);font-size:11px;letter-spacing:3px;color:var(--p);text-transform:uppercase;margin:28px 0 16px">AI-Powered Offensive Fuzzing Capabilities</h3>
   <div class="ai-grid rv">
-    <div class="ai-card">
-      <span class="ai-ico">🧠</span>
-      <div class="ai-name">ML-Guided Input Generation</div>
-      <div class="ai-desc">Machine learning models trained on coverage data learn which input mutations consistently increase code coverage and steer generation toward unexplored paths — moving beyond random byte flipping to semantically-aware mutations that exercise parser state machines, trigger conditional branches, and reach deeply-nested code paths that random fuzzing statistically never reaches.</div>
-    </div>
-    <div class="ai-card">
-      <span class="ai-ico">📝</span>
-      <div class="ai-name">LLM-Generated Fuzz Targets</div>
-      <div class="ai-desc">Large language models analyse target library source code or documentation and automatically generate complete, compilable libFuzzer / AFL++ harnesses — identifying the most useful entry points, constructing appropriate input grammars, and writing driver code that exercises the API surface effectively. Google's OSS-Fuzz AI integration uses this approach at scale across hundreds of open-source projects.</div>
-    </div>
-    <div class="ai-card">
-      <span class="ai-ico">🎯</span>
-      <div class="ai-name">Directed / Targeted Fuzzing</div>
-      <div class="ai-desc">AI models analyse the call graph, data flow, and code history of a target to identify the highest-risk code regions — recently modified functions, complex parsing logic, unsafe memory operations, and historically buggy subsystems — then direct fuzzing energy specifically toward those areas rather than diffusing effort uniformly across the entire codebase.</div>
-    </div>
-    <div class="ai-card">
-      <span class="ai-ico">🔤</span>
-      <div class="ai-name">Grammar &amp; Protocol Inference</div>
-      <div class="ai-desc">ML models infer the implicit grammar of target input formats from a small corpus of valid samples — learning the structure of file formats, network protocols, and API schemas without requiring manually-specified grammars. This enables grammatically-valid fuzzing of structured targets (PDF parsers, network daemons, JSON APIs) where purely random mutation wastes nearly all executions on inputs rejected at the parser before reaching interesting code.</div>
-    </div>
-    <div class="ai-card">
-      <span class="ai-ico">🧬</span>
-      <div class="ai-name">Mutation Strategy Optimisation</div>
-      <div class="ai-desc">Reinforcement learning agents observe which mutation operators — bit flip, byte replacement, block insertion, dictionary substitution — produce coverage increases in the current fuzzing session and dynamically adjust mutation probability weights, concentrating effort on the strategies that are working for this specific target rather than applying fixed operator probabilities.</div>
-    </div>
-    <div class="ai-card">
-      <span class="ai-ico">⚡</span>
-      <div class="ai-name">Seed Corpus Generation</div>
-      <div class="ai-desc">LLMs generate diverse, high-quality initial seed corpora for fuzzing campaigns — producing structurally varied, edge-case-rich inputs that maximise initial coverage without requiring a manually curated seed collection. For targets with complex input formats, AI-generated seeds consistently outperform random or minimal seeds in triggering interesting code paths from the very start of a fuzzing campaign.</div>
-    </div>
+    <div class="ai-card"><span class="ai-ico">&#128736;&#65039;</span><div class="ai-name">AI Harness Generation</div><div class="ai-desc">AI generates complete fuzzing harness code from target library documentation, header files, and existing usage examples -- writing the LLVMFuzzerTestOneInput function, proper API initialisation and teardown, input-to-API mapping, and error handling that prevents false crashes. Claude and ChatGPT produce production-quality harnesses for C/C++ libraries, Go packages, Rust crates, and Python C extensions in minutes, replacing the harness writing bottleneck that previously required expert knowledge of each library's internal structure.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128200;</span><div class="ai-name">Intelligent Seed Generation</div><div class="ai-desc">AI generates high-quality seed corpora by understanding the target's expected input format -- creating valid-but-edge-case inputs for file format fuzzers (PDF, ZIP, ELF, PE), protocol fuzzers (HTTP, TLS, DNS, SMB), and API fuzzers. Frontier LLMs understand format specifications deeply enough to generate inputs that exercise boundary conditions, optional fields, and nested structures that generic random mutation would take millions of iterations to reach organically, significantly accelerating coverage growth.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128270;</span><div class="ai-name">Crash Triage Automation</div><div class="ai-desc">AI analyses ASAN, UBSAN, and MSAN sanitiser output to produce instant crash triage reports -- identifying crash type (heap-buffer-overflow, use-after-free, stack-overflow, null-deref), assessing exploitability from the crash context and access pattern, performing deduplication based on semantic root cause rather than just stack hash, and generating a plain-English summary of the vulnerability for CVE submission. Transforms thousands of raw crashes into a prioritised, analyst-ready vulnerability list.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#9889;</span><div class="ai-name">Grammar &amp; Dictionary Generation</div><div class="ai-desc">AI generates AFL++ dictionaries, Radamsa format files, and Boofuzz grammar specifications from target protocol documentation or captured traffic samples -- creating token lists of valid keywords, magic bytes, format identifiers, and boundary values that dramatically improve mutation efficiency. AI-generated grammars achieve in hours what manual token extraction takes days to produce, and discover vocabulary that manual inspection misses by understanding the protocol semantics rather than just pattern-matching tokens.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128196;</span><div class="ai-name">Vulnerability Write-Up Generation</div><div class="ai-desc">AI converts raw fuzzing findings -- ASAN output, crash reproducers, GDB backtraces, CVSS calculation inputs -- into complete vulnerability disclosure reports with CWE classification, CVSSv4 scoring and vector string, technical root cause analysis, proof-of-concept code, affected version analysis, and coordinated disclosure timeline recommendations. Produces publication-ready security advisories and CVE submission drafts from raw technical evidence, compressing post-discovery work from days to hours.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128301;</span><div class="ai-name">Symbolic Execution Augmentation</div><div class="ai-desc">AI bridges the gap between symbolic execution engines (angr, Manticore, KLEE) and actionable exploits -- interpreting solved path constraints as concrete input bytes, explaining why specific code paths are unreachable, suggesting path explosion mitigations for complex loop structures, and translating symbolic execution findings into fuzzing seeds that target specific deep code paths. Combines the precision of formal analysis with the speed of coverage-guided fuzzing for maximum vulnerability discovery depth.</div></div>
   </div>
 
-  <h3 style="font-family:var(--mono);font-size:11px;letter-spacing:3px;color:#bf00ff;text-transform:uppercase;margin:32px 0 16px;">AI-Powered Fuzzing Defence &amp; Triage</h3>
+  <h3 style="font-family:var(--mono);font-size:11px;letter-spacing:3px;color:var(--p);text-transform:uppercase;margin:32px 0 16px">AI-Powered Fuzzing Platforms &amp; Defence</h3>
   <div class="ai-grid rv">
-    <div class="ai-card">
-      <span class="ai-ico">📊</span>
-      <div class="ai-name">Automated Crash Triage &amp; Deduplication</div>
-      <div class="ai-desc">ML models cluster crash reports by root cause — grouping the hundreds of unique crash inputs that trigger the same underlying bug into a single deduplicated finding. Stack trace similarity analysis, memory access pattern comparison, and code path clustering collapse a continuous fuzzing pipeline's raw crash output into a manageable, prioritised set of unique vulnerabilities for human review.</div>
-    </div>
-    <div class="ai-card">
-      <span class="ai-ico">🔮</span>
-      <div class="ai-name">Vulnerability Prediction</div>
-      <div class="ai-desc">ML models trained on historical vulnerability data analyse code metrics — function complexity, pointer arithmetic density, loop bound patterns, and inter-procedural data flow — to predict which code regions are statistically most likely to contain exploitable vulnerabilities, enabling security teams to focus fuzzing compute budget on the highest-risk areas first.</div>
-    </div>
-    <div class="ai-card">
-      <span class="ai-ico">🛡</span>
-      <div class="ai-name">AI-Integrated CI/CD Fuzzing</div>
-      <div class="ai-desc">AI orchestration layers manage continuous fuzzing pipelines in CI/CD — automatically triggering fuzz campaigns against changed code paths when PRs are merged, scaling compute resources based on campaign progress, rotating seed corpora, and posting triage-annotated crash reports directly to the issue tracker with root cause analysis and suggested remediation before any human reviews the output.</div>
-    </div>
-    <div class="ai-card">
-      <span class="ai-ico">🔍</span>
-      <div class="ai-name">Root Cause Analysis Automation</div>
-      <div class="ai-desc">LLMs analyse crash stack traces, memory sanitiser output (ASAN/MSAN/UBSAN), and the triggering input to automatically classify vulnerability type (stack overflow, heap use-after-free, integer overflow, OOB read/write), explain the root cause in plain language, and identify the specific line of code responsible — dramatically reducing the time from crash discovery to developer-ready bug report.</div>
-    </div>
-    <div class="ai-card">
-      <span class="ai-ico">🧹</span>
-      <div class="ai-name">Input Minimisation</div>
-      <div class="ai-desc">AI-guided delta debugging reduces crash-triggering inputs to their minimal form — stripping every byte that is not necessary to reproduce the crash. Minimal test cases are faster to reproduce, easier to analyse, and produce cleaner bug reports. ML models learn which input regions are structurally critical to the crash and avoid mutations in those areas during minimisation.</div>
-    </div>
-    <div class="ai-card">
-      <span class="ai-ico">📈</span>
-      <div class="ai-name">Coverage Gap Analysis</div>
-      <div class="ai-desc">AI analyses accumulated coverage maps from long-running fuzzing campaigns to identify code regions that have never been reached — automatically generating targeted seeds, modifying mutation strategies, and suggesting additional harness entry points specifically designed to exercise the uncovered paths, ensuring fuzzing campaigns continue to make progress rather than plateauing.</div>
-    </div>
+    <div class="ai-card"><span class="ai-ico">&#128065;</span><div class="ai-name">Google OSS-Fuzz + AI Harnesses</div><div class="ai-desc"><strong style="color:var(--c)">Google OSS-Fuzz</strong> now integrates LLM-generated fuzzing harnesses -- automatically writing harness code for any target library based on its API surface and documentation, then running them continuously in Google's cloud infrastructure. The AI-harness pipeline has dramatically expanded the number of open source libraries receiving continuous fuzzing coverage, finding hundreds of vulnerabilities in projects that previously had no fuzzing infrastructure at all.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#129302;</span><div class="ai-name">ForAllSecure Mayhem</div><div class="ai-desc"><strong style="color:var(--c)">ForAllSecure Mayhem</strong> is an autonomous fuzzing platform that combines symbolic execution, coverage-guided fuzzing, and AI-driven test generation to continuously test binaries without requiring source code or harness writing expertise. Automatically discovers vulnerabilities, validates exploitability, and generates crash reproducers -- integrating into CI/CD pipelines to provide continuous autonomous security testing across the entire software delivery lifecycle.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128202;</span><div class="ai-name">ClusterFuzz + AI Triage</div><div class="ai-desc"><strong style="color:var(--c)">ClusterFuzz</strong> (Google's production fuzzing infrastructure behind Chrome and Android security) uses AI to automate crash deduplication, exploitability classification, and bisection to the commit that introduced the vulnerability. ML models trained on millions of crash reports identify the likely root cause and security impact of new crashes in seconds, enabling engineering teams to focus human attention on the highest-risk findings from millions of daily fuzzing iterations.</div></div>
+    <div class="ai-card"><span class="ai-ico">&#128272;</span><div class="ai-name">GitHub Copilot / Cursor for Fuzzing</div><div class="ai-desc"><strong style="color:var(--c)">GitHub Copilot</strong> and <strong style="color:var(--c)">Cursor</strong> dramatically accelerate fuzzing harness and exploit development -- autocompleting libFuzzer harness boilerplate, suggesting AFL++ persistent mode wrappers, generating Boofuzz protocol grammar definitions, and completing pwntools exploit scripts as you type. Security researchers report 50-70% reduction in harness development time using AI code completion, freeing expert time for the analysis work that AI cannot yet fully automate.</div></div>
   </div>
 
   <div class="panel panel-ai rv" style="margin-top:28px">
-    <div class="panel-t">AI-Enhanced Fuzzing Tools &amp; Platforms</div>
-    <table style="width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12px;margin:8px 0">
+    <div class="panel-t">AI Tools for Fuzzing -- No Version Lock-In</div>
+    <div style="overflow-x:auto;-webkit-overflow-scrolling:touch">
+    <table style="width:100%;border-collapse:collapse;font-family:var(--mono);font-size:13px;margin:8px 0;min-width:580px">
       <thead><tr>
-        <th style="text-align:left;padding:10px 14px;color:#bf00ff;border-bottom:1px solid rgba(191,0,255,.25);letter-spacing:2px;font-size:10px;text-transform:uppercase">Tool</th>
-        <th style="text-align:left;padding:10px 14px;color:#bf00ff;border-bottom:1px solid rgba(191,0,255,.25);letter-spacing:2px;font-size:10px;text-transform:uppercase">AI Capability</th>
-        <th style="text-align:left;padding:10px 14px;color:#bf00ff;border-bottom:1px solid rgba(191,0,255,.25);letter-spacing:2px;font-size:10px;text-transform:uppercase">Fuzzing Use Case</th>
+        <th style="text-align:left;padding:11px 14px;color:#bf00ff;border-bottom:1px solid rgba(191,0,255,.25);letter-spacing:2px;font-size:10px;text-transform:uppercase">Tool / Platform</th>
+        <th style="text-align:left;padding:11px 14px;color:#bf00ff;border-bottom:1px solid rgba(191,0,255,.25);letter-spacing:2px;font-size:10px;text-transform:uppercase">AI Capability</th>
+        <th style="text-align:left;padding:11px 14px;color:#bf00ff;border-bottom:1px solid rgba(191,0,255,.25);letter-spacing:2px;font-size:10px;text-transform:uppercase">Fuzzing Use Case</th>
       </tr></thead>
       <tbody>
-        <tr><td style="padding:9px 14px;color:var(--g);border-bottom:1px solid rgba(0,255,65,.05);font-weight:700">AFL++ + ML scheduling</td><td style="padding:9px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">Reinforcement learning mutation weighting</td><td style="padding:9px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">Dynamic mutation strategy that learns which operators produce coverage gains for this target</td></tr>
-        <tr><td style="padding:9px 14px;color:var(--g);border-bottom:1px solid rgba(0,255,65,.05);font-weight:700">Google OSS-Fuzz + LLM</td><td style="padding:9px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">GPT-4 fuzz target generation</td><td style="padding:9px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">Automatic libFuzzer harness writing for open-source libraries at scale</td></tr>
-        <tr><td style="padding:9px 14px;color:var(--g);border-bottom:1px solid rgba(0,255,65,.05);font-weight:700">LibAFL</td><td style="padding:9px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">Composable ML-integrated fuzzer framework</td><td style="padding:9px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">Build custom AI-guided fuzzers with pluggable ML mutation and scheduling components</td></tr>
-        <tr><td style="padding:9px 14px;color:var(--g);border-bottom:1px solid rgba(0,255,65,.05);font-weight:700">ClusterFuzz / FuzzBench</td><td style="padding:9px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">Automated campaign orchestration + triage</td><td style="padding:9px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">Google's infrastructure for continuous at-scale fuzzing with automated crash deduplication</td></tr>
-        <tr><td style="padding:9px 14px;color:var(--g);border-bottom:1px solid rgba(0,255,65,.05);font-weight:700">GPT-4 / Claude</td><td style="padding:9px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">Harness generation + crash analysis</td><td style="padding:9px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">Write fuzz harnesses from API docs, analyse ASAN output, generate seed corpora</td></tr>
-        <tr><td style="padding:9px 14px;color:var(--g);font-weight:700">Mayhem (ForAllSecure)</td><td style="padding:9px 14px;color:var(--t2)">Autonomous AI-driven fuzzing platform</td><td style="padding:9px 14px;color:var(--t2)">Fully automated binary fuzzing with AI-powered triage, deduplication, and PoC generation</td></tr>
+        <tr><td style="padding:10px 14px;color:var(--g);border-bottom:1px solid rgba(0,255,65,.05)">Claude (Anthropic)</td><td style="padding:10px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">Frontier LLM, long context, code</td><td style="padding:10px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">Harness generation, crash triage, ASAN output analysis, vuln write-ups</td></tr>
+        <tr><td style="padding:10px 14px;color:var(--g);border-bottom:1px solid rgba(0,255,65,.05)">ChatGPT (OpenAI)</td><td style="padding:10px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">Frontier LLM, code reasoning</td><td style="padding:10px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">Grammar generation, seed corpus creation, CVSSv4 scoring, CVE drafting</td></tr>
+        <tr><td style="padding:10px 14px;color:var(--g);border-bottom:1px solid rgba(0,255,65,.05)">Google OSS-Fuzz + AI</td><td style="padding:10px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">LLM-generated harnesses at scale</td><td style="padding:10px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">Continuous automated fuzzing of open source libraries with AI-written harnesses</td></tr>
+        <tr><td style="padding:10px 14px;color:var(--g);border-bottom:1px solid rgba(0,255,65,.05)">ForAllSecure Mayhem</td><td style="padding:10px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">Autonomous fuzzing + symex</td><td style="padding:10px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">Binary-only autonomous fuzzing, CI/CD integration, validated exploitability</td></tr>
+        <tr><td style="padding:10px 14px;color:var(--g);border-bottom:1px solid rgba(0,255,65,.05)">ClusterFuzz</td><td style="padding:10px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">ML crash dedup + bisection</td><td style="padding:10px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">Production-scale fuzzing infrastructure, automated triage, regression tracking</td></tr>
+        <tr><td style="padding:10px 14px;color:var(--g);border-bottom:1px solid rgba(0,255,65,.05)">GitHub Copilot / Cursor</td><td style="padding:10px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">AI code completion in IDE</td><td style="padding:10px 14px;color:var(--t2);border-bottom:1px solid rgba(0,255,65,.05)">libFuzzer harness autocomplete, AFL++ integration, Boofuzz grammar writing</td></tr>
+        <tr><td style="padding:10px 14px;color:var(--g)">Gemini (Google)</td><td style="padding:10px 14px;color:var(--t2)">Long context + code analysis</td><td style="padding:10px 14px;color:var(--t2)">Large binary analysis, protocol specification parsing, multi-target harness generation</td></tr>
       </tbody>
     </table>
+    </div>
   </div>
 
-  <div class="cb cb-ai rv" data-l="AI-Assisted — LLM Fuzz Harness Generation (Python + GPT)">
-    <code><span class="cmt"># Use GPT to generate a libFuzzer harness for a target library</span>
-<span class="kw">import</span> openai
+  <div class="cb cb-ai rv" data-l="AI -- Fuzzing Harness Generator from Header File">
+    <code><span style="color:#bd93f9">#!/usr/bin/env python3</span>
+<span style="color:var(--t3))"># Generate libFuzzer harness from C header file using latest LLM
+# Set AI_MODEL env var to latest available model
+# pip install openai</span>
 
-<span class="cmt"># Provide the target function signature and API context</span>
-target_api = <span class="str">"""
-// Target: libpng image parsing library
-// Function to fuzz: png_read_png()
-// Header: png.h
-// Key structs: png_structp, png_infop
+<span style="color:#bd93f9">import</span> openai, sys, os
 
-#include "png.h"
-png_structp png_create_read_struct(const char *user_png_ver,
-    png_voidp error_ptr, png_error_ptr error_fn, png_error_ptr warn_fn);
-png_infop png_create_info_struct(png_structp png_ptr);
-void png_read_png(png_structp png_ptr, png_infop info_ptr,
-    int transforms, png_voidp params);
-"""</span>
+MODEL = os.getenv(<span style="color:#ff79c6">"AI_MODEL"</span>, <span style="color:#ff79c6">"gpt-4o"</span>)  <span style="color:var(--t3));"># swap to latest model as needed</span>
 
-client = openai.<span class="fn">OpenAI</span>()
-response = client.chat.completions.<span class="fn">create</span>(
-    model=<span class="str">"gpt-4o"</span>,
-    messages=[{<span class="str">"role"</span>:<span class="str">"user"</span>, <span class="str">"content"</span>: <span class="str">f"""
-You are an expert fuzzing engineer writing a libFuzzer harness.
-Generate a complete, compilable C libFuzzer harness for this API:
+SYSTEM = (<span style="color:#ff79c6">"You are an expert fuzzing engineer specialising in libFuzzer harness development. "</span>
+          <span style="color:#ff79c6">"When given a C/C++ header file, generate a complete, correct libFuzzer harness that:\n"</span>
+          <span style="color:#ff79c6">"1. Implements LLVMFuzzerTestOneInput with correct signature\n"</span>
+          <span style="color:#ff79c6">"2. Exercises ALL public API functions with fuzz-derived inputs\n"</span>
+          <span style="color:#ff79c6">"3. Includes proper initialisation and cleanup\n"</span>
+          <span style="color:#ff79c6">"4. Uses FuzzedDataProvider for structured input consumption\n"</span>
+          <span style="color:#ff79c6">"5. Handles errors without false crashes (no exit/abort)\n"</span>
+          <span style="color:#ff79c6">"6. Includes compile command: clang++ -fsanitize=fuzzer,address\n"</span>
+          <span style="color:#ff79c6">"Return ONLY the C++ harness code with brief inline comments."</span>)
 
-{target_api}
+header = open(sys.argv[1]).read() <span style="color:#bd93f9">if</span> len(sys.argv) > 1 <span style="color:#bd93f9">else</span> <span style="color:#ff79c6">"/* paste header here */"</span>
 
-Requirements:
-1. Implement LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
-2. Pass fuzzer data as a memory-backed PNG stream
-3. Handle all errors gracefully (no aborts on invalid input — those hide crashes)
-4. Include setjmp/longjmp error handling for libpng
-5. Free all allocated resources to avoid false positive memory leaks
-6. Add comments explaining each section
-7. Include compilation command at the top as a comment
-"""</span>}]
+r = openai.OpenAI().chat.completions.create(
+    model=MODEL,
+    messages=[{<span style="color:#ff79c6">"role"</span>:<span style="color:#ff79c6">"system"</span>,<span style="color:#ff79c6">"content"</span>:SYSTEM},
+              {<span style="color:#ff79c6">"role"</span>:<span style="color:#ff79c6">"user"</span>,<span style="color:#ff79c6">"content"</span>:<span style="color:#ff79c6">f"Generate harness for:\n```c\n{header[:5000]}\n```"</span>}],
+    temperature=0.1
 )
-<span class="fn">print</span>(response.choices[<span class="num">0</span>].message.content)</code>
+harness = r.choices[0].message.content
+print(harness)
+<span style="color:var(--t3));"># Save harness</span>
+out = <span style="color:#ff79c6">"fuzz_harness.cpp"</span>
+<span style="color:#bd93f9">with</span> open(out,<span style="color:#ff79c6">"w"</span>) <span style="color:#bd93f9">as</span> f: f.write(harness)
+print(<span style="color:#ff79c6">f"\n[+] Saved to {out}"</span>)</code>
   </div>
 
-  <div class="cb cb-ai rv" data-l="AI — Automated Crash Triage &amp; Bug Report Generation">
-    <code><span class="cmt"># Feed ASAN crash output into GPT for automated root cause analysis</span>
-<span class="kw">import</span> openai
+  <div class="cb cb-ai rv" data-l="AI -- ASAN Crash Triage and Exploitability Assessor">
+    <code><span style="color:#bd93f9">#!/usr/bin/env python3</span>
+<span style="color:var(--t3))"># Feed ASAN/UBSAN crash output to AI for triage and exploitability assessment
+# Usage: python3 crash_triage.py crash_output.txt reproducer.input</span>
 
-asan_output = <span class="str">"""
-=================================================================
-==12345==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x602000001a50
-READ of size 4 at 0x602000001a50 thread T0
-    #0 0x5555557a1234 in parse_chunk /src/parser.c:287
-    #1 0x5555557a5678 in process_data /src/parser.c:412
-    #2 0x5555557a9012 in LLVMFuzzerTestOneInput /src/fuzz_target.c:23
-SUMMARY: AddressSanitizer: heap-buffer-overflow /src/parser.c:287 in parse_chunk
-Shadow bytes around the buggy address: ...
-"""</span>
+<span style="color:#bd93f9">import</span> openai, sys, os
 
-response = openai.OpenAI().chat.completions.<span class="fn">create</span>(
-    model=<span class="str">"gpt-4o"</span>,
-    messages=[{<span class="str">"role"</span>:<span class="str">"user"</span>, <span class="str">"content"</span>: <span class="str">f"""
-You are a vulnerability researcher. Analyse this ASAN crash report:
+MODEL = os.getenv(<span style="color:#ff79c6">"AI_MODEL"</span>, <span style="color:#ff79c6">"gpt-4o"</span>)
 
-{asan_output}
+crash_log = open(sys.argv[1]).read() <span style="color:#bd93f9">if</span> len(sys.argv) > 1 <span style="color:#bd93f9">else</span> <span style="color:#ff79c6">"paste ASAN output here"</span>
 
-Provide:
-1. VULNERABILITY TYPE — exact CWE classification
-2. ROOT CAUSE — what went wrong at the code level
-3. EXPLOITABILITY — can this be exploited? Why/why not?
-4. CVSSv3 SCORE — estimated score with vector string
-5. REMEDIATION — specific code fix for parse_chunk() at line 287
-6. REGRESSION TEST — what input property should a unit test verify?
-7. MITRE ATT&CK — relevant technique if this were exploited
-"""</span>}]
+prompt = (<span style="color:#ff79c6">"You are a senior vulnerability researcher specialising in memory corruption. "</span>
+          <span style="color:#ff79c6">"Analyse this sanitiser crash output and provide:\n"</span>
+          <span style="color:#ff79c6">"1. CRASH TYPE: heap-buffer-overflow / use-after-free / stack-overflow / etc\n"</span>
+          <span style="color:#ff79c6">"2. ROOT CAUSE: which function and line introduced the vulnerability\n"</span>
+          <span style="color:#ff79c6">"3. EXPLOITABILITY: None / Low / Medium / High / Critical + reasoning\n"</span>
+          <span style="color:#ff79c6">"4. CWE: most specific applicable CWE identifier\n"</span>
+          <span style="color:#ff79c6">"5. CVSSv4 SCORE: base score and vector string\n"</span>
+          <span style="color:#ff79c6">"6. ATTACK SCENARIO: how an attacker would weaponise this\n"</span>
+          <span style="color:#ff79c6">"7. RECOMMENDED FIX: specific code-level remediation\n"</span>
+          <span style="color:#ff79c6">"8. GDB COMMANDS: commands to investigate further\n\n"</span>
+          <span style="color:#ff79c6">f"ASAN output:\n```\n{crash_log[:6000]}\n```"</span>)
+
+r = openai.OpenAI().chat.completions.create(
+    model=MODEL,
+    messages=[{<span style="color:#ff79c6">"role"</span>:<span style="color:#ff79c6">"user"</span>,<span style="color:#ff79c6">"content"</span>:prompt}]
 )
-<span class="fn">print</span>(response.choices[<span class="num">0</span>].message.content)</code>
+print(r.choices[0].message.content)</code>
   </div>
 </section>
+
 
 <div class="div"></div>
 
@@ -1060,6 +1140,8 @@ Provide:
 <script>
 /* ─── CURSOR ─── */
 const cur=document.getElementById('cur'),cur2=document.getElementById('cur2'),cur3=document.getElementById('cur3');
+const isTouch=('ontouchstart' in window)||navigator.maxTouchPoints>0;
+if(isTouch){[cur,cur2,cur3].forEach(el=>{if(el)el.style.display='none'});document.body.style.cursor='auto';}
 let mx=0,my=0;
 document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px'});
 (function loop(){cur2.style.left=mx+'px';cur2.style.top=my+'px';cur3.style.left=mx+'px';cur3.style.top=my+'px';requestAnimationFrame(loop)})();
@@ -1184,8 +1266,9 @@ document.querySelectorAll('.rv,.rv-l,.rv-r').forEach(el=>rv.observe(el));
 /* ═══ TOC ═══ */
 const sIds=['hero','what','how','types','tools','impact','setup','defence','ai'];
 const tItems=document.querySelectorAll('.toc-i');
-const so=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)tItems.forEach(t=>t.classList.toggle('active',t.dataset.s===x.target.id))})},{threshold:.25});
-sIds.forEach(id=>{const el=document.getElementById(id);if(el)so.observe(el)});
+function updateTOC(){const sy=window.scrollY+130;let cur='hero';sIds.forEach(id=>{const el=document.getElementById(id);if(el&&el.offsetTop<=sy)cur=id;});tItems.forEach(t=>t.classList.toggle('active',t.dataset.s===cur));}
+window.addEventListener('scroll',updateTOC,{passive:true});
+updateTOC();
 function goTo(h){document.querySelector(h)?.scrollIntoView({behavior:'smooth'})}
 
 /* ═══ CODE COPY ═══ */
